@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LogOut, Users, MessageSquare, PhoneCall } from 'lucide-react';
+import { LogOut, Users, MessageSquare, PhoneCall, History } from 'lucide-react';
 import { useVoxImplant } from '../components/hooks/useVoxImplant';
 import { base44 } from '@/api/base44Client';
 import LoginForm from '../components/voximplant/LoginForm';
@@ -7,34 +7,46 @@ import CallUI from '../components/voximplant/CallUI';
 import ChatUI from '../components/voximplant/ChatUI';
 import ContactItem from '../components/voximplant/ContactItem';
 import IncomingCallDialog from '../components/voximplant/IncomingCallDialog';
+import ConferenceUI from '../components/voximplant/ConferenceUI';
+import CallHistoryCard from '../components/voximplant/CallHistoryCard';
+import ContactListItem from '../components/voximplant/ContactListItem';
 
 export default function Dashboard() {
-  const { isAuthenticated, logout, startCall, currentUser, callHistory, messages, notification, incomingCall, acceptIncomingCall, rejectIncomingCall } = useVoxImplant();
+  const { isAuthenticated, logout, startCall, currentUser, callHistory, messages, notification, incomingCall, acceptIncomingCall, rejectIncomingCall, activeConference } = useVoxImplant();
   const [selectedChatContact, setSelectedChatContact] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [loadingContacts, setLoadingContacts] = useState(true);
+  const [callHistoryData, setCallHistoryData] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
 
-  // Load contacts from Base44 Client entity
+  // Load contacts and call history
   useEffect(() => {
-    const fetchContacts = async () => {
+    const fetchData = async () => {
       try {
-        const clients = await base44.entities.Client.list();
+        const [clients, history] = await Promise.all([
+          base44.entities.Client.list(),
+          base44.entities.CallHistory.list()
+        ]);
+
         const mappedContacts = clients.map(client => ({
           id: client.id,
           name: client.company_name,
           email: client.email,
           phone: client.company_name.toLowerCase().replace(/\s+/g, ''),
         }));
+
         setContacts(mappedContacts);
+        setCallHistoryData(history || []);
       } catch (error) {
-        console.error('Erro ao carregar contatos:', error);
+        console.error('Erro ao carregar dados:', error);
         setContacts([]);
+        setCallHistoryData([]);
       } finally {
         setLoadingContacts(false);
       }
     };
 
-    fetchContacts();
+    fetchData();
   }, []);
 
   if (!isAuthenticated) {
@@ -77,79 +89,85 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Contacts List */}
-          <div className="md:col-span-2 bg-white rounded-lg shadow">
-            <div className="p-6 border-b border-slate-200">
-              <div className="flex items-center gap-2 mb-2">
-                <Users className="w-5 h-5 text-blue-600" />
-                <h2 className="text-lg font-bold text-slate-900">Contatos</h2>
-              </div>
-              <p className="text-sm text-slate-600">
-                {loadingContacts ? 'Carregando...' : `${contacts.length} contatos disponíveis`}
-              </p>
-            </div>
+        <div className="grid lg:grid-cols-4 gap-6">
+                  {/* Sidebar */}
+                  <div className="space-y-4">
+                    {/* Stats */}
+                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow p-6 text-white">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-blue-100 text-sm">Chamadas</p>
+                          <p className="text-3xl font-bold">{callHistoryData.length}</p>
+                        </div>
+                        <PhoneCall className="w-12 h-12 opacity-20" />
+                      </div>
+                    </div>
 
-            <div className="divide-y divide-slate-200">
-              {loadingContacts ? (
-                <div className="p-8 text-center text-slate-600">
-                  <p>Carregando contatos...</p>
-                </div>
-              ) : contacts.length === 0 ? (
-                <div className="p-8 text-center text-slate-600">
-                  <p>Nenhum contato disponível</p>
-                </div>
-              ) : (
-                contacts.map((contact) => (
-                  <ContactItem
-                    key={contact.id}
-                    contact={contact}
-                    onCall={handleCall}
-                    onChat={handleChat}
-                    isOnline={Math.random() > 0.5}
-                  />
-                ))
-              )}
-            </div>
-          </div>
+                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow p-6 text-white">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-green-100 text-sm">Mensagens</p>
+                          <p className="text-3xl font-bold">{messages.length}</p>
+                        </div>
+                        <MessageSquare className="w-12 h-12 opacity-20" />
+                      </div>
+                    </div>
 
-          {/* Stats */}
-          <div className="space-y-4">
-            {/* Calls Card */}
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow p-6 text-white">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-blue-100 text-sm">Chamadas Hoje</p>
-                  <p className="text-3xl font-bold">{callHistory.length}</p>
-                </div>
-                <PhoneCall className="w-12 h-12 opacity-20" />
-              </div>
-            </div>
-
-            {/* Messages Card */}
-            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow p-6 text-white">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-green-100 text-sm">Mensagens</p>
-                  <p className="text-3xl font-bold">{messages.length}</p>
-                </div>
-                <MessageSquare className="w-12 h-12 opacity-20" />
-              </div>
-            </div>
-
-            {/* Online Contacts */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-semibold text-slate-900 mb-4">Online Agora</h3>
-              <div className="space-y-2">
-                {contacts.slice(0, 3).map((contact) => (
-                  <div key={contact.id} className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    <span className="text-sm text-slate-700">{contact.name}</span>
+                    <button
+                      onClick={() => setShowHistory(!showHistory)}
+                      className="w-full px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all"
+                    >
+                      <History className="w-4 h-4" />
+                      Histórico
+                    </button>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
+
+                  {/* Main Content */}
+                  <div className="lg:col-span-3">
+                    {showHistory ? (
+                      <div className="bg-white rounded-lg shadow p-6">
+                        <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                          <History className="w-5 h-5 text-blue-600" />
+                          Histórico de Chamadas
+                        </h2>
+                        <div className="space-y-3 max-h-96 overflow-y-auto">
+                          {callHistoryData.length === 0 ? (
+                            <p className="text-center text-slate-500">Nenhuma chamada registrada</p>
+                          ) : (
+                            callHistoryData.slice().reverse().map((call) => (
+                              <CallHistoryCard key={call.id} call={call} />
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-white rounded-lg shadow p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Users className="w-5 h-5 text-blue-600" />
+                          <h2 className="text-lg font-bold text-slate-900">Contatos</h2>
+                        </div>
+                        <div className="space-y-3 max-h-96 overflow-y-auto">
+                          {loadingContacts ? (
+                            <p className="text-center text-slate-600">Carregando contatos...</p>
+                          ) : contacts.length === 0 ? (
+                            <p className="text-center text-slate-500">Nenhum contato disponível</p>
+                          ) : (
+                            contacts.map((contact) => (
+                              <ContactListItem
+                                key={contact.id}
+                                contact={contact}
+                                isOnline={Math.random() > 0.6}
+                                onCall={handleCall}
+                                onChat={handleChat}
+                              />
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+
         </div>
       </main>
 
@@ -173,6 +191,11 @@ export default function Dashboard() {
         }`}>
           <span>{notification.message}</span>
         </div>
+      )}
+
+      {/* Conference UI */}
+      {activeConference && (
+        <ConferenceUI onClose={() => {}} />
       )}
 
       {/* Incoming Call Dialog */}
