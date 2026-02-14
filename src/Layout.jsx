@@ -1,8 +1,8 @@
 import React from 'react';
 import { ThemeProvider } from './components/hooks/useTheme';
 import { VoxImplantProvider } from './components/voximplant/context';
-import Header from './components/shared/Header';
-import Footer from './components/shared/Footer';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 export default function Layout({ children, currentPageName }) {
   return (
