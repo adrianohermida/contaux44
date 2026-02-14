@@ -253,6 +253,10 @@ export function VoxImplantProvider({ children }) {
     activeChat,
     sendMessage,
 
+    // Media Controls
+    toggleAudio,
+    toggleVideo,
+
     // Conference
     activeConference,
     participants,
