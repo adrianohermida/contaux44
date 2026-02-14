@@ -47,45 +47,37 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Blog from './pages/Blog';
-import Contact from './pages/Contact';
-import Home from './pages/Home';
-import index from './pages/index';
-import processor from './pages/processor';
-import Dashboard from './pages/Dashboard';
 import About from './pages/About';
-import Services from './pages/Services';
-import Pricing from './pages/Pricing';
+import Admin from './pages/Admin';
+import Blog from './pages/Blog';
+import BlogSingle from './pages/BlogSingle';
+import Contact from './pages/Contact';
+import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
 import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
-import Admin from './pages/Admin';
-import Onboarding from './pages/Onboarding';
-import ClientDashboard from './pages/ClientDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import BlogPost from './pages/BlogPost';
-import BlogAdmin from './pages/BlogAdmin';
+import Pricing from './pages/Pricing';
+import Services from './pages/Services';
+import index from './pages/index';
+import processor from './pages/processor';
 import QuoteRequest from './pages/QuoteRequest';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Blog": Blog,
-    "Contact": Contact,
-    "Home": Home,
-    "index": index,
-    "processor": processor,
-    "Dashboard": Dashboard,
     "About": About,
-    "Services": Services,
-    "Pricing": Pricing,
+    "Admin": Admin,
+    "Blog": Blog,
+    "BlogSingle": BlogSingle,
+    "Contact": Contact,
+    "Dashboard": Dashboard,
+    "Home": Home,
     "Portfolio": Portfolio,
     "PortfolioSingle": PortfolioSingle,
-    "Admin": Admin,
-    "Onboarding": Onboarding,
-    "ClientDashboard": ClientDashboard,
-    "AdminDashboard": AdminDashboard,
-    "BlogPost": BlogPost,
-    "BlogAdmin": BlogAdmin,
+    "Pricing": Pricing,
+    "Services": Services,
+    "index": index,
+    "processor": processor,
     "QuoteRequest": QuoteRequest,
 }
 
