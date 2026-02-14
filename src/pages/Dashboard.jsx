@@ -131,9 +131,6 @@ export default function Dashboard() {
     loadDashboardData();
   }, []);
 
-  const defaultStats = [
-
-
   return (
     <ProtectedRoute>
       <DashboardLayout>
