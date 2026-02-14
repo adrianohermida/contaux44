@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import StatCard from '../components/dashboard/StatCard';
+import AlertsCenter from '../components/dashboard/AlertsCenter';
 
 export default function Dashboard() {
-  const stats = [
+  const [tenantId, setTenantId] = useState(null);
+  const [stats, setStats] = useState([
     {
       icon: Users,
       title: 'Clientes Ativos',
@@ -48,7 +51,88 @@ export default function Dashboard() {
       subtitle: 'Aguardando aprovação',
       color: 'blue'
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        const user = await base44.auth.me();
+        const tenant = user.email.split('@')[0];
+        setTenantId(tenant);
+
+        const [clients, processes, tickets, invoices, quotes] = await Promise.all([
+          base44.entities.Client.filter({ tenant_id: tenant, status: 'active' }),
+          base44.entities.LegalProcess.filter({ tenant_id: tenant, status: 'in_progress' }),
+          base44.entities.Ticket.filter({ tenant_id: tenant, status: 'open' }),
+          base44.entities.Invoice.filter({ tenant_id: tenant }),
+          base44.entities.Quote.filter({ tenant_id: tenant, status: 'draft' })
+        ]);
+
+        const currentMonth = new Date().getMonth();
+        const monthlyInvoices = invoices.filter(i => new Date(i.issue_date).getMonth() === currentMonth);
+        const monthlyRevenue = monthlyInvoices.reduce((sum, i) => sum + (i.total_amount || 0), 0);
+
+        const upcomingDeadlines = processes.filter(p => {
+          const nextDate = new Date(p.next_hearing_date);
+          const today = new Date();
+          const daysUntil = Math.ceil((nextDate - today) / (1000 * 60 * 60 * 24));
+          return daysUntil <= 7 && daysUntil > 0;
+        }).length;
+
+        setStats([
+          {
+            icon: Users,
+            title: 'Clientes Ativos',
+            value: clients.length.toString(),
+            subtitle: 'Total de clientes',
+            color: 'blue'
+          },
+          {
+            icon: FileText,
+            title: 'Processos em Andamento',
+            value: processes.length.toString(),
+            subtitle: 'Processos ativos',
+            color: 'green'
+          },
+          {
+            icon: Ticket,
+            title: 'Tickets Abertos',
+            value: tickets.length.toString(),
+            subtitle: 'Aguardando atendimento',
+            color: 'yellow'
+          },
+          {
+            icon: DollarSign,
+            title: 'Receita do Mês',
+            value: `R$ ${monthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+            subtitle: 'Faturamento atual',
+            color: 'purple'
+          },
+          {
+            icon: AlertCircle,
+            title: 'Prazos Críticos',
+            value: upcomingDeadlines.toString(),
+            subtitle: 'Próximos 7 dias',
+            color: 'red'
+          },
+          {
+            icon: TrendingUp,
+            title: 'Orçamentos Pendentes',
+            value: quotes.length.toString(),
+            subtitle: 'Aguardando aprovação',
+            color: 'blue'
+          }
+        ]);
+      } catch (error) {
+        console.error('Erro ao carregar dados do dashboard:', error);
+      }
+    };
+
+    loadDashboardData();
+  }, []);
+
+  const defaultStats = [
+
 
   return (
     <ProtectedRoute>
@@ -67,10 +151,18 @@ export default function Dashboard() {
             ))}
           </div>
 
+          {/* Alerts Center */}
+           {tenantId && (
+             <div>
+               <h2 className="text-lg font-semibold mb-3 text-slate-900">Alertas</h2>
+               <AlertsCenter tenantId={tenantId} />
+             </div>
+           )}
+
           {/* Quick Actions */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Ações Rápidas</h3>
+           <div className="grid md:grid-cols-2 gap-6">
+             <div className="bg-white rounded-lg shadow p-6">
+               <h3 className="text-lg font-semibold mb-4">Ações Rápidas</h3>
               <div className="space-y-2">
                 <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
                   + Novo Cliente
