@@ -154,10 +154,17 @@ export default function About() {
           </div>
 
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
-            {teamMembers.map((member, idx) => (
+            {teamMembers.map((member, idx) => {
+              const teamImages = [
+                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8da421752_t1.jpg',
+                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/5e76acbb9_t2.jpg',
+                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/d9a30fbe5_t3.jpg',
+                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/77f17b817_t4.jpg'
+              ];
+              return (
               <div key={idx} className="text-center">
                 <img 
-                  src={`https://i.pravatar.cc/300?img=${idx}`}
+                  src={teamImages[idx]}
                   alt={member.name}
                   className="w-full rounded-lg mb-4"
                 />
