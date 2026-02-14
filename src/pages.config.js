@@ -66,6 +66,7 @@ import Clients from './pages/Clients';
 import Tickets from './pages/Tickets';
 import Communication from './pages/Communication';
 import LegalProcesses from './pages/LegalProcesses';
+import Invoicing from './pages/Invoicing';
 import __Layout from './Layout.jsx';
 
 
@@ -89,6 +90,7 @@ export const PAGES = {
     "Tickets": Tickets,
     "Communication": Communication,
     "LegalProcesses": LegalProcesses,
+    "Invoicing": Invoicing,
 }
 
 export const pagesConfig = {
