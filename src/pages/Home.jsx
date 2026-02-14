@@ -36,19 +36,22 @@ export default function Home() {
       name: 'Dr. João Silva',
       company: 'Azevedo Advocacia',
       location: 'Recife (PE)',
-      text: 'Antes de conhecer a Contaux, eu perdia muito tempo tentando organizar as despesas contábeis dos processos. Agora, tudo é mais simples.'
+      text: 'Antes de conhecer a Contaux, eu perdia muito tempo tentando organizar as despesas contábeis dos processos. Agora, tudo é mais simples.',
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/c320b29fd_testi1.jpg'
     },
     {
       name: 'Dra. Camila Mendes',
       company: 'Advogada',
       location: 'São Paulo (SP)',
-      text: 'Como advogada autônoma, eu sempre precisei cuidar de tudo sozinha. A Contaux mudou isso! Hoje, consigo gerenciar meus processos com mais facilidade.'
+      text: 'Como advogada autônoma, eu sempre precisei cuidar de tudo sozinha. A Contaux mudou isso! Hoje, consigo gerenciar meus processos com mais facilidade.',
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/c594dd82d_testi2.jpg'
     },
     {
       name: 'Dr. Ricardo Almeida',
       company: 'Almeida & Associados',
       location: 'Porto Alegre (RS)',
-      text: 'Trabalhar com a Contaux foi uma das melhores decisões para o nosso escritório. Eles são ágeis, organizados e sempre disponíveis.'
+      text: 'Trabalhar com a Contaux foi uma das melhores decisões para o nosso escritório. Eles são ágeis, organizados e sempre disponíveis.',
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/a2d722e78_testi3.jpg'
     }
   ];
 
