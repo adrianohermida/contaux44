@@ -12,9 +12,7 @@ export default function Header() {
         <nav className="flex items-center justify-between py-4">
           {/* Logo */}
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">C</span>
-            </div>
+            <img src="/assets/images/contaux_blue.png" alt="Contaux" className="w-10 h-10" />
             <span className="text-blue-600 font-bold text-lg">Contaux</span>
           </Link>
 
