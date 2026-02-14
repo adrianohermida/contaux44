@@ -84,7 +84,7 @@ export default function Blog() {
               <div className="grid md:grid-cols-2 gap-8 mb-12">
                 {paginatedPosts.map(post => (
                   <div key={post.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                    <img src={`/assets/images/blog-${(post.id % 3) + 1}.jpg`} alt={post.title} className="w-full h-48 object-cover" />
+                    <img src={post.id === 1 || post.id === 4 ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/533400192_blog-1.jpg' : post.id === 2 || post.id === 5 ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/173396dc9_blog-2.jpg' : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8bbde3a94_blog-3.jpg'} alt={post.title} className="w-full h-48 object-cover" />
                     <div className="p-6">
                       <h4 className="font-bold text-lg mb-2 hover:text-blue-600 cursor-pointer"><a href="#">{post.title}</a></h4>
                       <p className="text-gray-600 text-sm mb-4">{post.desc}</p>
