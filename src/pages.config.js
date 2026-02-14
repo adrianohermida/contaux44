@@ -60,6 +60,8 @@ import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
 import QuoteRequest from './pages/QuoteRequest';
 import Services from './pages/Services';
+import index from './pages/index';
+import processor from './pages/processor';
 import Clients from './pages/Clients';
 import Tickets from './pages/Tickets';
 import Communication from './pages/Communication';
@@ -80,6 +82,8 @@ export const PAGES = {
     "Pricing": Pricing,
     "QuoteRequest": QuoteRequest,
     "Services": Services,
+    "index": index,
+    "processor": processor,
     "Clients": Clients,
     "Tickets": Tickets,
     "Communication": Communication,
