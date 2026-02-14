@@ -58,6 +58,7 @@ import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
 import Services from './pages/Services';
+import index from './pages/index';
 import processor from './pages/processor';
 import QuoteRequest from './pages/QuoteRequest';
 import Processor from './pages/Processor';
@@ -76,6 +77,7 @@ export const PAGES = {
     "PortfolioSingle": PortfolioSingle,
     "Pricing": Pricing,
     "Services": Services,
+    "index": index,
     "processor": processor,
     "QuoteRequest": QuoteRequest,
     "Processor": Processor,

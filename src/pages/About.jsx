@@ -178,12 +178,16 @@ export default function About() {
       </section>
 
       {/* Video Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-        <div className="max-w-6xl mx-auto px-4 text-center">
+      <section 
+        className="bg-cover bg-center text-white py-32 relative"
+        style={{backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/715a66c58_video-bg.png)'}}
+      >
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
           <span className="text-blue-100 font-semibold">Create your own experience</span>
           <h2 className="text-4xl font-bold mt-2 mb-4">Ready to grow faster?</h2>
           <p className="text-blue-100 mb-8 max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-          
+
           <a 
             href="https://www.youtube.com/watch?v=r44RKWyfcFw"
             target="_blank"
