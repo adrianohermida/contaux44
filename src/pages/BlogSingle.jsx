@@ -32,19 +32,13 @@ export default function BlogSingle() {
       {/* Blog Content */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4">
-          {/* Post Header */}
-          <div className="mb-12">
-            <img src="https://via.placeholder.com/1000x600" alt="Post" className="w-full rounded-lg mb-6" />
-            <div className="flex items-center gap-3 mb-6">
-              <img src="https://i.pravatar.cc/50?img=1" alt="Author" className="w-10 h-10 rounded-full" />
-              <span className="text-gray-600">BY TIM NORTON</span>
-            </div>
-          </div>
-
           {/* Post Details */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-4xl font-bold mb-6">Start & Run a Successful Web Design Business in 2020</h2>
+              <div className="flex items-center gap-3 mb-6">
+                <img src="https://i.pravatar.cc/50?img=1" alt="Author" className="w-10 h-10 rounded-full" />
+                <span className="text-gray-600">BY TIM NORTON</span>
+              </div>
               <div className="flex gap-6 text-sm text-gray-600 mb-6">
                 <a href="#" className="flex items-center gap-2 hover:text-blue-600"><Calendar className="w-4 h-4" /> 20th March 2023</a>
                 <a href="#" className="flex items-center gap-2 hover:text-blue-600"><MessageCircle className="w-4 h-4" /> 35 Comments</a>
