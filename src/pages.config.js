@@ -71,6 +71,17 @@ import Payments from './pages/Payments';
 import Quotes from './pages/Quotes';
 import ChartOfAccounts from './pages/ChartOfAccounts';
 import Entries from './pages/Entries';
+import Reports from './pages/Reports';
+import Settings from './pages/Settings';
+import ClientPortal from './pages/ClientPortal';
+import Sales from './pages/Sales';
+import CashFlow from './pages/CashFlow';
+import ImportCSV from './pages/ImportCSV';
+import BankReconciliation from './pages/BankReconciliation';
+import ManualPosting from './pages/ManualPosting';
+import TaxInvoices from './pages/TaxInvoices';
+import AccountingCalendar from './pages/AccountingCalendar';
+import Automations from './pages/Automations';
 import __Layout from './Layout.jsx';
 
 
@@ -99,6 +110,17 @@ export const PAGES = {
     "Quotes": Quotes,
     "ChartOfAccounts": ChartOfAccounts,
     "Entries": Entries,
+    "Reports": Reports,
+    "Settings": Settings,
+    "ClientPortal": ClientPortal,
+    "Sales": Sales,
+    "CashFlow": CashFlow,
+    "ImportCSV": ImportCSV,
+    "BankReconciliation": BankReconciliation,
+    "ManualPosting": ManualPosting,
+    "TaxInvoices": TaxInvoices,
+    "AccountingCalendar": AccountingCalendar,
+    "Automations": Automations,
 }
 
 export const pagesConfig = {

@@ -1,0 +1,82 @@
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import DashboardLayout from '../components/dashboard/DashboardLayout';
+import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Save, LogOut } from 'lucide-react';
+
+export default function Settings() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  React.useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const userData = await base44.auth.me();
+        setUser(userData);
+        setFormData(userData);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUser();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await base44.auth.updateMe(formData);
+      setUser(formData);
+      alert('Configurações salvas com sucesso!');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleLogout = () => {
+    if (confirm('Tem certeza que deseja fazer logout?')) {
+      base44.auth.logout();
+    }
+  };
+
+  if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+
+  return (
+    <ProtectedRoute>
+      <DashboardLayout>
+        <div className="space-y-6 max-w-2xl">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Configurações</h1>
+            <p className="text-slate-600 mt-1">Gerencie suas preferências e informações</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6 space-y-4">
+            <h2 className="text-lg font-semibold">Informações da Conta</h2>
+            <Input label="Email" type="email" value={formData.email || ''} disabled />
+            <Input label="Nome Completo" name="full_name" value={formData.full_name || ''} onChange={handleChange} />
+            <Input label="Função" value={formData.role || ''} disabled />
+            
+            <div className="flex gap-3 pt-4">
+              <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700">
+                <Save className="w-4 h-4 mr-2" />
+                {saving ? 'Salvando...' : 'Salvar Alterações'}
+              </Button>
+              <Button onClick={handleLogout} variant="outline" className="text-red-600 hover:text-red-700">
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    </ProtectedRoute>
+  );
+}
