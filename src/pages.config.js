@@ -48,79 +48,79 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import About from './pages/About';
+import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
+import Automations from './pages/Automations';
+import BankReconciliation from './pages/BankReconciliation';
 import Blog from './pages/Blog';
 import BlogSingle from './pages/BlogSingle';
+import CashFlow from './pages/CashFlow';
+import ChartOfAccounts from './pages/ChartOfAccounts';
+import ClientPortal from './pages/ClientPortal';
+import Clients from './pages/Clients';
+import Communication from './pages/Communication';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
+import Entries from './pages/Entries';
 import Home from './pages/Home';
+import ImportCSV from './pages/ImportCSV';
+import Invoicing from './pages/Invoicing';
+import LegalProcesses from './pages/LegalProcesses';
+import ManualPosting from './pages/ManualPosting';
 import OnboardClient from './pages/OnboardClient';
+import Payments from './pages/Payments';
 import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
 import QuoteRequest from './pages/QuoteRequest';
+import Quotes from './pages/Quotes';
+import Reports from './pages/Reports';
+import Sales from './pages/Sales';
 import Services from './pages/Services';
+import Settings from './pages/Settings';
+import TaxInvoices from './pages/TaxInvoices';
+import Tickets from './pages/Tickets';
 import index from './pages/index';
 import processor from './pages/processor';
-import Clients from './pages/Clients';
-import Tickets from './pages/Tickets';
-import Communication from './pages/Communication';
-import LegalProcesses from './pages/LegalProcesses';
-import Invoicing from './pages/Invoicing';
-import Payments from './pages/Payments';
-import Quotes from './pages/Quotes';
-import ChartOfAccounts from './pages/ChartOfAccounts';
-import Entries from './pages/Entries';
-import Reports from './pages/Reports';
-import Settings from './pages/Settings';
-import ClientPortal from './pages/ClientPortal';
-import Sales from './pages/Sales';
-import CashFlow from './pages/CashFlow';
-import ImportCSV from './pages/ImportCSV';
-import BankReconciliation from './pages/BankReconciliation';
-import ManualPosting from './pages/ManualPosting';
-import TaxInvoices from './pages/TaxInvoices';
-import AccountingCalendar from './pages/AccountingCalendar';
-import Automations from './pages/Automations';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "About": About,
+    "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
+    "Automations": Automations,
+    "BankReconciliation": BankReconciliation,
     "Blog": Blog,
     "BlogSingle": BlogSingle,
+    "CashFlow": CashFlow,
+    "ChartOfAccounts": ChartOfAccounts,
+    "ClientPortal": ClientPortal,
+    "Clients": Clients,
+    "Communication": Communication,
     "Contact": Contact,
     "Dashboard": Dashboard,
+    "Entries": Entries,
     "Home": Home,
+    "ImportCSV": ImportCSV,
+    "Invoicing": Invoicing,
+    "LegalProcesses": LegalProcesses,
+    "ManualPosting": ManualPosting,
     "OnboardClient": OnboardClient,
+    "Payments": Payments,
     "Portfolio": Portfolio,
     "PortfolioSingle": PortfolioSingle,
     "Pricing": Pricing,
     "QuoteRequest": QuoteRequest,
+    "Quotes": Quotes,
+    "Reports": Reports,
+    "Sales": Sales,
     "Services": Services,
+    "Settings": Settings,
+    "TaxInvoices": TaxInvoices,
+    "Tickets": Tickets,
     "index": index,
     "processor": processor,
-    "Clients": Clients,
-    "Tickets": Tickets,
-    "Communication": Communication,
-    "LegalProcesses": LegalProcesses,
-    "Invoicing": Invoicing,
-    "Payments": Payments,
-    "Quotes": Quotes,
-    "ChartOfAccounts": ChartOfAccounts,
-    "Entries": Entries,
-    "Reports": Reports,
-    "Settings": Settings,
-    "ClientPortal": ClientPortal,
-    "Sales": Sales,
-    "CashFlow": CashFlow,
-    "ImportCSV": ImportCSV,
-    "BankReconciliation": BankReconciliation,
-    "ManualPosting": ManualPosting,
-    "TaxInvoices": TaxInvoices,
-    "AccountingCalendar": AccountingCalendar,
-    "Automations": Automations,
 }
 
 export const pagesConfig = {
