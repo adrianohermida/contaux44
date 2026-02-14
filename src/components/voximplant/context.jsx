@@ -1,6 +1,8 @@
 import React, { createContext, useState, useCallback, useRef, useEffect } from 'react';
-import { CALL_STATES, CONNECTION_STATES, VOX_EVENTS } from './config';
+import { CALL_STATES, CONNECTION_STATES, VOX_EVENTS, VOX_APP_ID } from './config';
 import { VoxLogger } from './logger';
+import VoxImplantSDK from './VoxImplantSDK';
+import { loadVoxImplantSDK } from './VoxImplantLoader';
 
 /**
  * Contexto global para Voximplant
@@ -11,6 +13,10 @@ export const VoxImplantContext = createContext();
 const logger = new VoxLogger('VoxImplantContext');
 
 export function VoxImplantProvider({ children }) {
+  // SDK
+  const sdkRef = useRef(null);
+  const [sdkReady, setSdkReady] = useState(false);
+  
   // Autenticação
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -59,24 +65,32 @@ export function VoxImplantProvider({ children }) {
    */
   const login = useCallback(async (username, password) => {
     try {
+      if (!sdkRef.current || !sdkReady) {
+        throw new Error('SDK não está pronto');
+      }
+
       logger.info('Iniciando login...');
       updateConnectionState(CONNECTION_STATES.CONNECTING);
 
-      // SDK será inicializado aqui (Fase 2)
-      // Por enquanto, apenas atualizar estado
-
-      setCurrentUser({ username, email: `${username}@contaux.app` });
-      setIsAuthenticated(true);
-      updateConnectionState(CONNECTION_STATES.CONNECTED);
-
-      logger.success(`Login bem-sucedido: ${username}`);
-      return true;
+      const success = await sdkRef.current.login(username, password);
+      
+      if (success) {
+        setCurrentUser({ username, email: `${username}@${VOX_APP_ID}.voximplant.com` });
+        setIsAuthenticated(true);
+        updateConnectionState(CONNECTION_STATES.CONNECTED);
+        logger.success(`Login bem-sucedido: ${username}`);
+        return true;
+      } else {
+        updateConnectionState(CONNECTION_STATES.FAILED);
+        logger.error('Login falhou');
+        return false;
+      }
     } catch (error) {
       logger.error('Erro ao fazer login:', error);
       updateConnectionState(CONNECTION_STATES.FAILED);
       return false;
     }
-  }, [updateConnectionState]);
+  }, [sdkReady, updateConnectionState]);
 
   /**
    * Logout
@@ -84,6 +98,11 @@ export function VoxImplantProvider({ children }) {
   const logout = useCallback(async () => {
     try {
       logger.info('Desconectando...');
+      
+      if (sdkRef.current) {
+        await sdkRef.current.logout();
+      }
+      
       setIsAuthenticated(false);
       setCurrentUser(null);
       setActiveCall(null);
@@ -167,9 +186,27 @@ export function VoxImplantProvider({ children }) {
   }, []);
 
   /**
-   * Limpar timeouts ao desmontar
+   * Inicializar SDK ao montar
    */
   useEffect(() => {
+    const initSDK = async () => {
+      try {
+        logger.info('Inicializando Voximplant SDK...');
+        await loadVoxImplantSDK();
+        sdkRef.current = new VoxImplantSDK(VOX_APP_ID);
+        const success = await sdkRef.current.init();
+        setSdkReady(success);
+        if (success) {
+          logger.success('SDK pronto para uso');
+        }
+      } catch (error) {
+        logger.error('Erro ao inicializar SDK:', error);
+        setSdkReady(false);
+      }
+    };
+
+    initSDK();
+
     return () => {
       if (notificationTimeoutRef.current) {
         clearTimeout(notificationTimeoutRef.current);
@@ -178,6 +215,10 @@ export function VoxImplantProvider({ children }) {
   }, []);
 
   const value = {
+    // SDK
+    sdkReady,
+    sdk: sdkRef.current,
+
     // Auth
     isAuthenticated,
     currentUser,
