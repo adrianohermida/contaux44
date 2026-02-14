@@ -50,7 +50,11 @@
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Home from './pages/Home';
+import index from './pages/index';
+import processor from './pages/processor';
 import Dashboard from './pages/Dashboard';
+import About from './pages/About';
+import Services from './pages/Services';
 import __Layout from './Layout.jsx';
 
 
@@ -58,7 +62,11 @@ export const PAGES = {
     "Blog": Blog,
     "Contact": Contact,
     "Home": Home,
+    "index": index,
+    "processor": processor,
     "Dashboard": Dashboard,
+    "About": About,
+    "Services": Services,
 }
 
 export const pagesConfig = {
