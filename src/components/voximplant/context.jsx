@@ -6,6 +6,7 @@ import { loadVoxImplantSDK } from './VoxImplantLoader';
 import { EventHandler } from './EventHandler';
 import { PersistenceHandler } from './PersistenceHandler';
 import { CallHandler } from './CallHandler';
+import { ConferenceHandler } from './ConferenceHandler';
 
 /**
  * Contexto global para Voximplant
@@ -20,6 +21,7 @@ export function VoxImplantProvider({ children }) {
   const sdkRef = useRef(null);
   const eventHandlerRef = useRef(null);
   const callHandlerRef = useRef(null);
+  const conferenceHandlerRef = useRef(null);
   const persistenceHandlerRef = useRef(new PersistenceHandler());
   const [sdkReady, setSdkReady] = useState(false);
   
@@ -236,6 +238,52 @@ export function VoxImplantProvider({ children }) {
   }, [localStream]);
 
   /**
+   * Criar conference
+   */
+  const createConference = useCallback((roomId, options = {}) => {
+    try {
+      if (!conferenceHandlerRef.current) {
+        conferenceHandlerRef.current = new ConferenceHandler(sdkRef.current);
+      }
+      const conf = conferenceHandlerRef.current.createConference(roomId, options);
+      if (conf) {
+        setActiveConference(conf);
+      }
+      return conf;
+    } catch (error) {
+      logger.error('Erro ao criar conferência:', error);
+      showNotification('Erro ao criar conferência', 'error');
+      return null;
+    }
+  }, []);
+
+  /**
+   * Adicionar participante à conference
+   */
+  const addConferenceParticipant = useCallback((participantId, participantName, options = {}) => {
+    try {
+      if (!conferenceHandlerRef.current) {
+        throw new Error('Conference handler não inicializado');
+      }
+      const participant = conferenceHandlerRef.current.addParticipant(
+        participantId,
+        participantName,
+        options
+      );
+      if (participant) {
+        const updated = conferenceHandlerRef.current.getConferenceInfo();
+        setParticipants(updated.participants);
+        setActiveConference(updated);
+      }
+      return participant;
+    } catch (error) {
+      logger.error('Erro ao adicionar participante:', error);
+      showNotification('Erro ao adicionar participante', 'error');
+      return null;
+    }
+  }, []);
+
+  /**
    * Entrar em conference
    */
   const joinConference = useCallback((roomId) => {
@@ -248,6 +296,9 @@ export function VoxImplantProvider({ children }) {
    */
   const leaveConference = useCallback(() => {
     logger.info('Saindo de conference');
+    if (conferenceHandlerRef.current) {
+      conferenceHandlerRef.current.endConference();
+    }
     setActiveConference(null);
     setParticipants([]);
   }, []);
@@ -298,6 +349,10 @@ export function VoxImplantProvider({ children }) {
                 if (type === 'remote') setRemoteStream(stream);
               }
             );
+          }
+
+          if (!conferenceHandlerRef.current && sdkRef.current) {
+            conferenceHandlerRef.current = new ConferenceHandler(sdkRef.current);
           }
         }
       } catch (error) {
@@ -355,6 +410,8 @@ export function VoxImplantProvider({ children }) {
     participants,
     joinConference,
     leaveConference,
+    createConference,
+    addConferenceParticipant,
 
     // Hardware
     audioDevices,
@@ -380,6 +437,7 @@ export function VoxImplantProvider({ children }) {
     persistence: persistenceHandlerRef.current,
     callHandler: callHandlerRef.current,
     eventHandler: eventHandlerRef.current,
+    conferenceHandler: conferenceHandlerRef.current,
 
     // Internal
     updateConnectionState,

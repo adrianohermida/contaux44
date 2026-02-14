@@ -18,7 +18,7 @@ export default function ChatUI({ contact, onClose }) {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (input.trim()) {
-      sendMessage(input);
+      sendMessage(input, contact.id, contact.name);
       setInput('');
     }
   };
