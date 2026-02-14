@@ -7,6 +7,8 @@ import { EventHandler } from './EventHandler';
 import { PersistenceHandler } from './PersistenceHandler';
 import { CallHandler } from './CallHandler';
 import { ConferenceHandler } from './ConferenceHandler';
+import { IncomingCallHandler } from './IncomingCallHandler';
+import { ConnectionHandler } from './ConnectionHandler';
 
 /**
  * Contexto global para Voximplant
@@ -22,6 +24,8 @@ export function VoxImplantProvider({ children }) {
   const eventHandlerRef = useRef(null);
   const callHandlerRef = useRef(null);
   const conferenceHandlerRef = useRef(null);
+  const incomingCallHandlerRef = useRef(null);
+  const connectionHandlerRef = useRef(null);
   const persistenceHandlerRef = useRef(new PersistenceHandler());
   const [sdkReady, setSdkReady] = useState(false);
   
@@ -30,6 +34,9 @@ export function VoxImplantProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionState, setConnectionState] = useState(CONNECTION_STATES.DISCONNECTED);
+  
+  // Chamadas recebidas
+  const [incomingCall, setIncomingCall] = useState(null);
 
   // Chamadas
   const [activeCall, setActiveCall] = useState(null);
@@ -107,6 +114,52 @@ export function VoxImplantProvider({ children }) {
   }, [sdkReady, updateConnectionState]);
 
   /**
+   * Aceitar chamada recebida
+   */
+  const acceptIncomingCall = useCallback(async (options = {}) => {
+    try {
+      if (!incomingCallHandlerRef.current || !incomingCall) {
+        throw new Error('Nenhuma chamada recebida');
+      }
+
+      const result = await incomingCallHandlerRef.current.acceptCall(options);
+      if (result) {
+        setActiveCall({ targetUser: incomingCall.from, callType: incomingCall.type });
+        setCallState(CALL_STATES.ACTIVE);
+        setIncomingCall(null);
+        showNotification('Chamada aceita', 'success');
+        return true;
+      }
+      return false;
+    } catch (error) {
+      logger.error('Erro ao aceitar chamada:', error);
+      showNotification('Erro ao aceitar chamada', 'error');
+      return false;
+    }
+  }, [incomingCall]);
+
+  /**
+   * Rejeitar chamada recebida
+   */
+  const rejectIncomingCall = useCallback(() => {
+    try {
+      if (!incomingCallHandlerRef.current) {
+        throw new Error('Handler de chamadas recebidas não disponível');
+      }
+
+      const success = incomingCallHandlerRef.current.rejectCall();
+      if (success) {
+        setIncomingCall(null);
+        showNotification('Chamada rejeitada', 'info');
+      }
+      return success;
+    } catch (error) {
+      logger.error('Erro ao rejeitar chamada:', error);
+      return false;
+    }
+  }, []);
+
+  /**
    * Logout
    */
   const logout = useCallback(async () => {
@@ -120,6 +173,7 @@ export function VoxImplantProvider({ children }) {
       setIsAuthenticated(false);
       setCurrentUser(null);
       setActiveCall(null);
+      setIncomingCall(null);
       setCallState(CALL_STATES.IDLE);
       setMessages([]);
       updateConnectionState(CONNECTION_STATES.DISCONNECTED);
@@ -354,6 +408,28 @@ export function VoxImplantProvider({ children }) {
           if (!conferenceHandlerRef.current && sdkRef.current) {
             conferenceHandlerRef.current = new ConferenceHandler(sdkRef.current);
           }
+
+          if (!incomingCallHandlerRef.current && sdkRef.current) {
+            incomingCallHandlerRef.current = new IncomingCallHandler(
+              sdkRef.current,
+              (callInfo) => {
+                setIncomingCall(callInfo);
+                showNotification(`Chamada de ${callInfo.displayName}`, 'info');
+              },
+              (callInfo) => {
+                logger.info('Chamada rejeitada:', callInfo);
+              }
+            );
+            incomingCallHandlerRef.current.registerIncomingCallHandler();
+          }
+
+          if (!connectionHandlerRef.current && sdkRef.current) {
+            connectionHandlerRef.current = new ConnectionHandler(
+              sdkRef.current,
+              updateConnectionState
+            );
+            connectionHandlerRef.current.registerConnectionHandlers();
+          }
         }
       } catch (error) {
         logger.error('Erro ao inicializar SDK:', error);
@@ -372,6 +448,12 @@ export function VoxImplantProvider({ children }) {
       }
       if (eventHandlerRef.current) {
         eventHandlerRef.current.cleanup();
+      }
+      if (incomingCallHandlerRef.current) {
+        incomingCallHandlerRef.current.cleanup();
+      }
+      if (connectionHandlerRef.current) {
+        connectionHandlerRef.current.cleanup();
       }
     };
   }, [updateConnectionState]);
@@ -395,6 +477,9 @@ export function VoxImplantProvider({ children }) {
     callHistory,
     startCall,
     endCall,
+    incomingCall,
+    acceptIncomingCall,
+    rejectIncomingCall,
 
     // Chat
     messages,
@@ -438,6 +523,8 @@ export function VoxImplantProvider({ children }) {
     callHandler: callHandlerRef.current,
     eventHandler: eventHandlerRef.current,
     conferenceHandler: conferenceHandlerRef.current,
+    incomingCallHandler: incomingCallHandlerRef.current,
+    connectionHandler: connectionHandlerRef.current,
 
     // Internal
     updateConnectionState,
