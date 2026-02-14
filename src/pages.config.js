@@ -47,11 +47,6 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-<<<<<<< HEAD
-import Home from './pages/Home';
-import Contact from './pages/Contact';
-import Blog from './pages/Blog';
-=======
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Home from './pages/Home';
@@ -61,12 +56,16 @@ import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import Services from './pages/Services';
 import Pricing from './pages/Pricing';
-import BlogSingle from './pages/BlogSingle';
 import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
 import Admin from './pages/Admin';
+import Onboarding from './pages/Onboarding';
+import ClientDashboard from './pages/ClientDashboard';
+import AdminDashboard from './pages/AdminDashboard';
+import BlogPost from './pages/BlogPost';
+import BlogAdmin from './pages/BlogAdmin';
+import QuoteRequest from './pages/QuoteRequest';
 import __Layout from './Layout.jsx';
->>>>>>> a32001357ecb680fce60c1b2fc5ae89128b92729
 
 
 export const PAGES = {
@@ -79,10 +78,15 @@ export const PAGES = {
     "About": About,
     "Services": Services,
     "Pricing": Pricing,
-    "BlogSingle": BlogSingle,
     "Portfolio": Portfolio,
     "PortfolioSingle": PortfolioSingle,
     "Admin": Admin,
+    "Onboarding": Onboarding,
+    "ClientDashboard": ClientDashboard,
+    "AdminDashboard": AdminDashboard,
+    "BlogPost": BlogPost,
+    "BlogAdmin": BlogAdmin,
+    "QuoteRequest": QuoteRequest,
 }
 
 export const pagesConfig = {
