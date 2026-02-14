@@ -129,7 +129,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <img 
-              src="https://via.placeholder.com/500x400" 
+              src="/assets/images/about.jpg" 
               alt="Sobre Contaux" 
               className="rounded-lg"
             />

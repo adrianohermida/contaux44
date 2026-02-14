@@ -65,7 +65,7 @@ export default function Blog() {
               <div className="grid md:grid-cols-2 gap-8 mb-12">
                 {paginatedPosts.map(post => (
                   <div key={post.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                    <img src={`https://via.placeholder.com/400x300?text=${post.id}`} alt={post.title} className="w-full h-48 object-cover" />
+                    <img src={`/assets/images/blog-${(post.id % 3) + 1}.jpg`} alt={post.title} className="w-full h-48 object-cover" />
                     <div className="p-6">
                       <h4 className="font-bold text-lg mb-2 hover:text-blue-600 cursor-pointer"><a href="#">{post.title}</a></h4>
                       <p className="text-gray-600 text-sm mb-4">{post.desc}</p>

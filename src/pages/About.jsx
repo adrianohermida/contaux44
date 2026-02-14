@@ -114,7 +114,7 @@ export default function About() {
             {/* Right Image */}
             <div>
               <img 
-                src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=400&fit=crop"
+                src="/assets/images/team-working.jpg"
                 alt="Team working"
                 className="rounded-lg w-full"
               />
