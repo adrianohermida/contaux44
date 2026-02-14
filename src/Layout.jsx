@@ -13,6 +13,17 @@ export default function Layout({ children, currentPageName }) {
       }
     }, []);
 
+    // Dashboard pages should not use the main layout
+    const dashboardPages = ['Dashboard', 'Clients', 'Tickets', 'LegalProcesses', 'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 'AccountingCalendar', 'Automations', 'Reports', 'Communication', 'ClientPortal', 'Settings'];
+    
+    if (dashboardPages.includes(currentPageName)) {
+      return (
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      );
+    }
+
     return (
       <ThemeProvider>
         <div className="flex flex-col min-h-screen">
