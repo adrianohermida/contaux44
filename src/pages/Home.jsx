@@ -222,6 +222,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Partners */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Nossos Parceiros</h2>
+            <p className="text-slate-600">Confiamos em parceiros de excelência para oferecer os melhores serviços</p>
+          </div>
+          <div className="flex justify-center items-center gap-12 flex-wrap">
+            <a href="https://certificasc.com.br" target="_blank" rel="noopener noreferrer" className="hover:opacity-75 transition-opacity">
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/52d96ddf6_parceiro_ar_certifica.jpg" alt="CertificaSC" className="h-12" />
+            </a>
+            <a href="https://juno.com.br" target="_blank" rel="noopener noreferrer" className="hover:opacity-75 transition-opacity">
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/3907fe15b_parceiro_juno.jpg" alt="Juno" className="h-12" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Newsletter */}
       <section className="py-20 bg-slate-50">
         <div className="container mx-auto px-4">
