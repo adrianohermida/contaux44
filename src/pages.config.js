@@ -50,6 +50,8 @@
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Home from './pages/Home';
+import index from './pages/index';
+import processor from './pages/processor';
 import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import Services from './pages/Services';
@@ -57,6 +59,7 @@ import Pricing from './pages/Pricing';
 import BlogSingle from './pages/BlogSingle';
 import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
+import Admin from './pages/Admin';
 import __Layout from './Layout.jsx';
 
 
@@ -64,6 +67,8 @@ export const PAGES = {
     "Blog": Blog,
     "Contact": Contact,
     "Home": Home,
+    "index": index,
+    "processor": processor,
     "Dashboard": Dashboard,
     "About": About,
     "Services": Services,
@@ -71,6 +76,7 @@ export const PAGES = {
     "BlogSingle": BlogSingle,
     "Portfolio": Portfolio,
     "PortfolioSingle": PortfolioSingle,
+    "Admin": Admin,
 }
 
 export const pagesConfig = {
