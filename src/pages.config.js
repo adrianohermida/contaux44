@@ -60,7 +60,6 @@ import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
 import QuoteRequest from './pages/QuoteRequest';
 import Services from './pages/Services';
-import index from './pages/index';
 import processor from './pages/processor';
 import Clients from './pages/Clients';
 import Tickets from './pages/Tickets';
@@ -69,6 +68,7 @@ import LegalProcesses from './pages/LegalProcesses';
 import Invoicing from './pages/Invoicing';
 import Payments from './pages/Payments';
 import Quotes from './pages/Quotes';
+import Index from './pages/Index';
 import __Layout from './Layout.jsx';
 
 
@@ -86,7 +86,6 @@ export const PAGES = {
     "Pricing": Pricing,
     "QuoteRequest": QuoteRequest,
     "Services": Services,
-    "index": index,
     "processor": processor,
     "Clients": Clients,
     "Tickets": Tickets,
@@ -95,6 +94,7 @@ export const PAGES = {
     "Invoicing": Invoicing,
     "Payments": Payments,
     "Quotes": Quotes,
+    "Index": Index,
 }
 
 export const pagesConfig = {
