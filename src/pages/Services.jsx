@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 
 const servicesList = [
   { icon: '🔬', title: 'Discover the world, Explore the Product', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' },
@@ -10,6 +11,25 @@ const servicesList = [
 ];
 
 export default function Services() {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState('');
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await base44.functions.invoke('subscribeNewsletter', {
+        email: newsletterEmail,
+        source: 'services'
+      });
+      setNewsletterStatus('success');
+      setNewsletterEmail('');
+      setTimeout(() => setNewsletterStatus(''), 3000);
+    } catch (error) {
+      setNewsletterStatus('error');
+      setTimeout(() => setNewsletterStatus(''), 3000);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumbs */}
@@ -55,13 +75,22 @@ export default function Services() {
             <div>
               <h3 className="text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
               <p className="text-gray-600 mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
-              <form className="flex gap-2">
+              {newsletterStatus === 'success' && (
+                <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">✓ Inscrição realizada com sucesso!</div>
+              )}
+              {newsletterStatus === 'error' && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">✗ Erro ao inscrever. Tente novamente.</div>
+              )}
+              <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
                 <input 
                   type="email" 
                   placeholder="Seu endereço de e-mail"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  required
                   className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
-                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                   Registre-se
                 </button>
               </form>
