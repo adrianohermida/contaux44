@@ -124,7 +124,7 @@ export function VoxImplantProvider({ children }) {
 
       const result = await incomingCallHandlerRef.current.acceptCall(options);
       if (result) {
-        setActiveCall({ targetUser: incomingCall.from, callType: incomingCall.type });
+        setActiveCall({ targetUser: incomingCall.from, callType: incomingCall.type, timestamp: new Date() });
         setCallState(CALL_STATES.ACTIVE);
         setIncomingCall(null);
         showNotification('Chamada aceita', 'success');
@@ -136,7 +136,7 @@ export function VoxImplantProvider({ children }) {
       showNotification('Erro ao aceitar chamada', 'error');
       return false;
     }
-  }, [incomingCall]);
+  }, [incomingCall, showNotification]);
 
   /**
    * Rejeitar chamada recebida
@@ -195,7 +195,7 @@ export function VoxImplantProvider({ children }) {
         video: callType === 'video',
       });
       setLocalStream(stream);
-      setActiveCall({ targetUser, callType });
+      setActiveCall({ targetUser, callType, timestamp: new Date() });
       setCallState(CALL_STATES.CONNECTING);
     } catch (error) {
       logger.error('Erro ao acessar mídia:', error);

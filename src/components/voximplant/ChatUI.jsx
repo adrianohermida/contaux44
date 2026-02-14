@@ -24,7 +24,7 @@ export default function ChatUI({ contact, onClose }) {
   };
 
   const contactMessages = messages.filter(
-    (m) => m.from === contact.name || m.from === contact.id || contact.name === 'all'
+    (m) => m.from === contact.id || contact.name === 'all'
   );
 
   return (
