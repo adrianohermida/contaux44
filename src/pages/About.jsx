@@ -171,7 +171,8 @@ export default function About() {
                 <h4 className="font-bold text-lg">{member.name}</h4>
                 <p className="text-gray-600 text-sm">{member.role}</p>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>
