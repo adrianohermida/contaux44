@@ -14,6 +14,13 @@ export default function KPICard({ icon: Icon, label, value, trend, color = 'blue
     down: 'text-red-600'
   };
 
+  const iconColors = {
+    blue: 'text-blue-600',
+    green: 'text-green-600',
+    red: 'text-red-600',
+    purple: 'text-purple-600'
+  };
+
   return (
     <div className={`${colors[color]} border rounded-lg p-6`}>
       <div className="flex items-start justify-between">
@@ -27,7 +34,7 @@ export default function KPICard({ icon: Icon, label, value, trend, color = 'blue
             </div>
           )}
         </div>
-        <Icon className={`w-8 h-8 text-${color}-600`} />
+        <Icon className={`w-8 h-8 ${iconColors[color]}`} />
       </div>
     </div>
   );
