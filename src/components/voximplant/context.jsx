@@ -3,6 +3,9 @@ import { CALL_STATES, CONNECTION_STATES, VOX_EVENTS, VOX_APP_ID } from './config
 import { VoxLogger } from './logger';
 import VoxImplantSDK from './VoxImplantSDK';
 import { loadVoxImplantSDK } from './VoxImplantLoader';
+import { EventHandler } from './EventHandler';
+import { PersistenceHandler } from './PersistenceHandler';
+import { CallHandler } from './CallHandler';
 
 /**
  * Contexto global para Voximplant
@@ -15,6 +18,9 @@ const logger = new VoxLogger('VoxImplantContext');
 export function VoxImplantProvider({ children }) {
   // SDK
   const sdkRef = useRef(null);
+  const eventHandlerRef = useRef(null);
+  const callHandlerRef = useRef(null);
+  const persistenceHandlerRef = useRef(new PersistenceHandler());
   const [sdkReady, setSdkReady] = useState(false);
   
   // Autenticação
@@ -78,6 +84,12 @@ export function VoxImplantProvider({ children }) {
         setCurrentUser({ username, email: `${username}@${VOX_APP_ID}.voximplant.com` });
         setIsAuthenticated(true);
         updateConnectionState(CONNECTION_STATES.CONNECTED);
+        
+        // Registrar event listeners após login bem-sucedido
+        if (eventHandlerRef.current) {
+          eventHandlerRef.current.registerEvents();
+        }
+        
         logger.success(`Login bem-sucedido: ${username}`);
         return true;
       } else {
@@ -136,27 +148,46 @@ export function VoxImplantProvider({ children }) {
   }, []);
 
   /**
-    * Finalizar chamada
-    */
-  const endCall = useCallback(() => {
-    logger.info('Finalizando chamada');
-    if (activeCall) {
-      setCallHistory(prev => [...prev, { ...activeCall, timestamp: new Date() }]);
-    }
-    // Encerrar streams de mídia local
-    if (localStream) {
-      localStream.getTracks().forEach(track => track.stop());
-      setLocalStream(null);
-    }
-    setActiveCall(null);
-    setCallState(CALL_STATES.IDLE);
-    setRemoteStream(null);
-  }, [activeCall, localStream]);
+     * Finalizar chamada
+     */
+   const endCall = useCallback(async () => {
+     logger.info('Finalizando chamada');
+     if (activeCall) {
+       const callRecord = {
+         ...activeCall,
+         timestamp: new Date(),
+         endTime: new Date(),
+       };
+
+       // Salvar no histórico
+       if (persistenceHandlerRef.current) {
+         await persistenceHandlerRef.current.saveCallHistory({
+           clientId: activeCall.clientId,
+           contactName: activeCall.targetUser,
+           callType: activeCall.callType,
+           status: 'completed',
+           startTime: activeCall.timestamp,
+           endTime: new Date(),
+         });
+       }
+
+       setCallHistory(prev => [...prev, callRecord]);
+     }
+
+     // Encerrar streams de mídia local
+     if (localStream) {
+       localStream.getTracks().forEach(track => track.stop());
+       setLocalStream(null);
+     }
+     setActiveCall(null);
+     setCallState(CALL_STATES.IDLE);
+     setRemoteStream(null);
+   }, [activeCall, localStream]);
 
   /**
    * Enviar mensagem
    */
-  const sendMessage = useCallback((content) => {
+  const sendMessage = useCallback(async (content, clientId = null, contactName = null) => {
     logger.info('Enviando mensagem:', content);
     const message = {
       id: Math.random().toString(36),
@@ -165,6 +196,18 @@ export function VoxImplantProvider({ children }) {
       timestamp: new Date(),
     };
     setMessages(prev => [...prev, message]);
+    
+    // Persistir mensagem se temos contexto
+    if (clientId && contactName && persistenceHandlerRef.current) {
+      await persistenceHandlerRef.current.saveChatMessage({
+        clientId,
+        contactName,
+        fromUser: currentUser?.username,
+        content,
+        messageType: 'text',
+      });
+    }
+    
     return message;
   }, [currentUser]);
 
@@ -238,6 +281,24 @@ export function VoxImplantProvider({ children }) {
         setSdkReady(success);
         if (success) {
           logger.success('SDK pronto para uso');
+          
+          // Inicializar handlers
+          if (!eventHandlerRef.current && sdkRef.current) {
+            eventHandlerRef.current = new EventHandler(sdkRef.current, {
+              updateConnectionState,
+              showNotification: (msg, type) => setNotification({ message: msg, type, id: Math.random() }),
+            });
+          }
+          
+          if (!callHandlerRef.current && sdkRef.current) {
+            callHandlerRef.current = new CallHandler(
+              sdkRef.current,
+              (state) => setCallState(state),
+              (type, stream) => {
+                if (type === 'remote') setRemoteStream(stream);
+              }
+            );
+          }
         }
       } catch (error) {
         logger.error('Erro ao inicializar SDK:', error);
@@ -251,8 +312,14 @@ export function VoxImplantProvider({ children }) {
       if (notificationTimeoutRef.current) {
         clearTimeout(notificationTimeoutRef.current);
       }
+      if (callHandlerRef.current) {
+        callHandlerRef.current.cleanup();
+      }
+      if (eventHandlerRef.current) {
+        eventHandlerRef.current.cleanup();
+      }
     };
-  }, []);
+  }, [updateConnectionState]);
 
   const value = {
     // SDK
@@ -308,6 +375,11 @@ export function VoxImplantProvider({ children }) {
     // Notifications
     notification,
     showNotification,
+
+    // Persistence
+    persistence: persistenceHandlerRef.current,
+    callHandler: callHandlerRef.current,
+    eventHandler: eventHandlerRef.current,
 
     // Internal
     updateConnectionState,
