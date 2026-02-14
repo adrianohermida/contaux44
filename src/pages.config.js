@@ -49,11 +49,17 @@
  */
 import index from './pages/index';
 import processor from './pages/processor';
+import Home from './pages/Home';
+import Contact from './pages/Contact';
+import Blog from './pages/Blog';
 
 
 export const PAGES = {
     "index": index,
     "processor": processor,
+    "Home": Home,
+    "Contact": Contact,
+    "Blog": Blog,
 }
 
 export const pagesConfig = {
