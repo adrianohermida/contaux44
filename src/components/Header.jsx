@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import { Menu, X } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -11,10 +10,7 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between py-4">
           {/* Logo */}
-          <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-            <img src="/assets/images/contaux_blue.png" alt="Contaux" className="w-10 h-10" />
-            <span className="text-blue-600 font-bold text-lg">Contaux</span>
-          </Link>
+          <Logo />
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center gap-8">
