@@ -69,7 +69,6 @@ import LegalProcesses from './pages/LegalProcesses';
 import Invoicing from './pages/Invoicing';
 import Payments from './pages/Payments';
 import Quotes from './pages/Quotes';
-import Index from './pages/Index';
 import ChartOfAccounts from './pages/ChartOfAccounts';
 import Entries from './pages/Entries';
 import __Layout from './Layout.jsx';
@@ -98,7 +97,6 @@ export const PAGES = {
     "Invoicing": Invoicing,
     "Payments": Payments,
     "Quotes": Quotes,
-    "Index": Index,
     "ChartOfAccounts": ChartOfAccounts,
     "Entries": Entries,
 }
