@@ -136,17 +136,22 @@ export function VoxImplantProvider({ children }) {
   }, [showNotification]);
 
   /**
-   * Finalizar chamada
-   */
+    * Finalizar chamada
+    */
   const endCall = useCallback(() => {
     logger.info('Finalizando chamada');
     if (activeCall) {
       setCallHistory(prev => [...prev, { ...activeCall, timestamp: new Date() }]);
     }
+    // Encerrar streams de mídia local
+    if (localStream) {
+      localStream.getTracks().forEach(track => track.stop());
+      setLocalStream(null);
+    }
     setActiveCall(null);
     setCallState(CALL_STATES.IDLE);
     setRemoteStream(null);
-  }, [activeCall]);
+  }, [activeCall, localStream]);
 
   /**
    * Enviar mensagem
