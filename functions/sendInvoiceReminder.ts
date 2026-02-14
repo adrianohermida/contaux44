@@ -64,8 +64,15 @@ const sendReminderForInvoice = async (base44, invoice, client) => {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const body = await req.json();
-    const { tenantId, invoiceId } = body;
+    let tenantId, invoiceId;
+    
+    try {
+      const body = await req.json();
+      tenantId = body.tenantId;
+      invoiceId = body.invoiceId;
+    } catch {
+      // Empty body - automated run
+    }
 
     // Case 1: Direct call with specific invoice
     if (invoiceId && tenantId) {

@@ -46,8 +46,15 @@ const syncBankAccountData = async (base44, bankAccount) => {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const body = await req.json();
-    const { tenantId, bankAccountId } = body;
+    let tenantId, bankAccountId;
+    
+    try {
+      const body = await req.json();
+      tenantId = body.tenantId;
+      bankAccountId = body.bankAccountId;
+    } catch {
+      // Empty body - automated run
+    }
 
     // Case 1: Sync specific bank account
     if (bankAccountId && tenantId) {
