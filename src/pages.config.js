@@ -49,11 +49,13 @@
  */
 import Home from './pages/Home';
 import Clients from './pages/Clients';
+import ChartOfAccounts from './pages/ChartOfAccounts';
 
 
 export const PAGES = {
     "Home": Home,
     "Clients": Clients,
+    "ChartOfAccounts": ChartOfAccounts,
 }
 
 export const pagesConfig = {
