@@ -54,12 +54,14 @@ import BlogSingle from './pages/BlogSingle';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
+import OnboardClient from './pages/OnboardClient';
 import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
-import Services from './pages/Services';
 import QuoteRequest from './pages/QuoteRequest';
-import OnboardClient from './pages/OnboardClient';
+import Services from './pages/Services';
+import index from './pages/index';
+import processor from './pages/processor';
 import __Layout from './Layout.jsx';
 
 
@@ -71,12 +73,14 @@ export const PAGES = {
     "Contact": Contact,
     "Dashboard": Dashboard,
     "Home": Home,
+    "OnboardClient": OnboardClient,
     "Portfolio": Portfolio,
     "PortfolioSingle": PortfolioSingle,
     "Pricing": Pricing,
-    "Services": Services,
     "QuoteRequest": QuoteRequest,
-    "OnboardClient": OnboardClient,
+    "Services": Services,
+    "index": index,
+    "processor": processor,
 }
 
 export const pagesConfig = {

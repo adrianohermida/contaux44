@@ -21,8 +21,10 @@ function DashboardContent() {
   const [showHistory, setShowHistory] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  // Load contacts and call history
+  // Load contacts and call history only after authentication
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchData = async () => {
       try {
         const [clients, history] = await Promise.all([
@@ -49,7 +51,7 @@ function DashboardContent() {
     };
 
     fetchData();
-  }, []);
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return (
