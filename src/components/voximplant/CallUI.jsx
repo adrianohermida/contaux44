@@ -3,7 +3,7 @@ import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff, Share2 } from 'lucide-re
 import { useVoxImplant } from '../hooks/useVoxImplant';
 
 export default function CallUI() {
-  const { activeCall, callState, endCall, toggleAudio, toggleVideo, remoteStream } = useVoxImplant();
+  const { activeCall, callState, endCall, toggleAudio, toggleVideo, remoteStream, localStream } = useVoxImplant();
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const localVideoRef = useRef(null);
@@ -14,6 +14,12 @@ export default function CallUI() {
       remoteVideoRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);
+
+  useEffect(() => {
+    if (localStream && localVideoRef.current) {
+      localVideoRef.current.srcObject = localStream;
+    }
+  }, [localStream]);
 
   if (!activeCall) {
     return null;
