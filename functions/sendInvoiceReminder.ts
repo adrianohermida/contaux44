@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
     }
 
     // Case 2: Automated run - process all invoices due soon or overdue
-    const allInvoices = await base44.asServiceRole.entities.Invoice.list(null, 1000);
+    const allInvoices = await base44.asServiceRole.entities.Invoice.list('-created_date', 1000);
     let processed = 0;
     let sent = 0;
 

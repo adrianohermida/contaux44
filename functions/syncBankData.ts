@@ -68,9 +68,7 @@ Deno.serve(async (req) => {
     }
 
     // Case 2: Automated run - sync all active bank accounts
-    const allBankAccounts = await base44.asServiceRole.entities.BankAccount.filter({
-      status: 'active'
-    });
+    const allBankAccounts = await base44.asServiceRole.entities.BankAccount.list('-created_date', 1000);
 
     if (allBankAccounts.length === 0) {
       return Response.json({ 
