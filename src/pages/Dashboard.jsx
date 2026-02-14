@@ -1,117 +1,118 @@
-import React, { useState } from 'react';
-import { Phone, MessageSquare, Users, Settings, LogOut } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
-import CommunicationCenter from '../components/CommunicationCenter';
+import React from 'react';
+import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
+import DashboardLayout from '../components/dashboard/DashboardLayout';
+import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import StatCard from '../components/dashboard/StatCard';
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [user, setUser] = React.useState(null);
-
-  React.useEffect(() => {
-    const getUser = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-      } catch {
-        setUser(null);
-      }
-    };
-    getUser();
-  }, []);
-
-  const handleLogout = async () => {
-    await base44.auth.logout();
-  };
+  const stats = [
+    {
+      icon: Users,
+      title: 'Clientes Ativos',
+      value: '0',
+      subtitle: 'Total de clientes',
+      color: 'blue'
+    },
+    {
+      icon: FileText,
+      title: 'Processos em Andamento',
+      value: '0',
+      subtitle: 'Processos ativos',
+      color: 'green'
+    },
+    {
+      icon: Ticket,
+      title: 'Tickets Abertos',
+      value: '0',
+      subtitle: 'Aguardando atendimento',
+      color: 'yellow'
+    },
+    {
+      icon: DollarSign,
+      title: 'Receita do Mês',
+      value: 'R$ 0,00',
+      subtitle: 'Faturamento atual',
+      color: 'purple'
+    },
+    {
+      icon: AlertCircle,
+      title: 'Prazos Críticos',
+      value: '0',
+      subtitle: 'Próximos 7 dias',
+      color: 'red'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Orçamentos Pendentes',
+      value: '0',
+      subtitle: 'Aguardando aprovação',
+      color: 'blue'
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <ProtectedRoute>
+      <DashboardLayout>
+        <div className="space-y-6">
+          {/* Welcome */}
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Contaux</h1>
-            <p className="text-sm text-slate-600">
-              Bem-vindo, {user?.full_name || 'Usuário'}
-            </p>
+            <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
+            <p className="text-slate-600 mt-1">Bem-vindo ao sistema Contaux</p>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
-          >
-            <LogOut className="w-4 h-4" />
-            Sair
-          </button>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {stats.map((stat, index) => (
+              <StatCard key={index} {...stat} />
+            ))}
+          </div>
+
+          {/* Quick Actions */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-4">Ações Rápidas</h3>
+              <div className="space-y-2">
+                <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                  + Novo Cliente
+                </button>
+                <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                  + Novo Processo
+                </button>
+                <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                  + Novo Ticket
+                </button>
+                <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                  + Nova Fatura
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-4">Atividades Recentes</h3>
+              <div className="text-center text-slate-500 py-8">
+                <p className="text-sm">Nenhuma atividade recente</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Charts Placeholder */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-4">Receita Mensal</h3>
+              <div className="h-64 flex items-center justify-center text-slate-400">
+                <p className="text-sm">Gráfico será implementado</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-4">Status de Processos</h3>
+              <div className="h-64 flex items-center justify-center text-slate-400">
+                <p className="text-sm">Gráfico será implementado</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </header>
-
-      {/* Navigation */}
-      <nav className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex gap-8">
-            <button
-              onClick={() => setActiveTab('overview')}
-              className={`px-4 py-4 font-medium border-b-2 transition-all ${
-                activeTab === 'overview'
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Dashboard
-            </button>
-            <button
-              onClick={() => setActiveTab('communication')}
-              className={`px-4 py-4 font-medium border-b-2 transition-all flex items-center gap-2 ${
-                activeTab === 'communication'
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Phone className="w-4 h-4" />
-              Central de Comunicação
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {activeTab === 'overview' ? (
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-slate-600 text-sm">Chamadas</p>
-                  <p className="text-3xl font-bold text-slate-900">--</p>
-                </div>
-                <Phone className="w-12 h-12 text-blue-100" />
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-slate-600 text-sm">Mensagens</p>
-                  <p className="text-3xl font-bold text-slate-900">--</p>
-                </div>
-                <MessageSquare className="w-12 h-12 text-green-100" />
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-slate-600 text-sm">Contatos</p>
-                  <p className="text-3xl font-bold text-slate-900">--</p>
-                </div>
-                <Users className="w-12 h-12 text-purple-100" />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <CommunicationCenter />
-        )}
-      </main>
-    </div>
+      </DashboardLayout>
+    </ProtectedRoute>
   );
 }
