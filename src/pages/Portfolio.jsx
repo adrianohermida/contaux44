@@ -71,10 +71,10 @@ export default function Portfolio() {
                 className="group relative overflow-hidden rounded-lg bg-gray-900 cursor-pointer"
               >
                 <img
-                  src={`https://via.placeholder.com/600x500?text=${item.id}`}
-                  alt={item.title}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
-                />
+                   src={`/assets/images/portfolio-${(item.id % 3) + 1}.jpg`}
+                   alt={item.title}
+                   className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <div className="text-center text-white">
                     <span className="text-sm font-semibold text-blue-400">{item.category.toUpperCase()}</span>
