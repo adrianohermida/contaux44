@@ -54,17 +54,17 @@ export default function Home() {
 
   const news = [
     {
-      image: 'https://via.placeholder.com/400x300',
+      image: '/assets/images/blog/blog-1.webp',
       title: 'A importância das certidões negativas para sua regularidade jurídica.',
       link: '#'
     },
     {
-      image: 'https://via.placeholder.com/400x300',
+      image: '/assets/images/blog/blog-2.webp',
       title: 'Obtenha certidões negativas com rapidez e segurança com a Contaux.',
       link: '#'
     },
     {
-      image: 'https://via.placeholder.com/400x300',
+      image: '/assets/images/blog/blog-3.webp',
       title: 'Certidões negativas: o que são e como obtê-las de forma simples?',
       link: '#'
     }
@@ -129,7 +129,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <img 
-              src="/assets/images/about.jpg" 
+              src="/assets/images/hero/about-img.webp" 
               alt="Sobre Contaux" 
               className="rounded-lg"
             />
