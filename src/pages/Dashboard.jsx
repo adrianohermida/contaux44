@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LogOut, Users, MessageSquare, PhoneCall, History } from 'lucide-react';
+import { VoxImplantProvider } from '../components/voximplant/context';
 import { useVoxImplant } from '../components/hooks/useVoxImplant';
 import { base44 } from '@/api/base44Client';
 import LoginForm from '../components/voximplant/LoginForm';
@@ -11,7 +12,7 @@ import CallHistoryCard from '../components/voximplant/CallHistoryCard';
 import ContactListItem from '../components/voximplant/ContactListItem';
 import SettingsPanel from '../components/voximplant/SettingsPanel';
 
-export default function Dashboard() {
+function DashboardContent() {
   const { isAuthenticated, logout, startCall, currentUser, callHistory, messages, notification, incomingCall, acceptIncomingCall, rejectIncomingCall, activeConference } = useVoxImplant();
   const [selectedChatContact, setSelectedChatContact] = useState(null);
   const [contacts, setContacts] = useState([]);
@@ -220,6 +221,14 @@ export default function Dashboard() {
       {showSettings && (
         <SettingsPanel onClose={() => setShowSettings(false)} />
       )}
-      </div>
-      );
-      }
+    </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <VoxImplantProvider>
+      <DashboardContent />
+    </VoxImplantProvider>
+  );
+}
