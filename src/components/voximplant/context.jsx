@@ -9,9 +9,11 @@ import { CallHandler } from './CallHandler';
 import { ConferenceHandler } from './ConferenceHandler';
 import { IncomingCallHandler } from './IncomingCallHandler';
 import { ConnectionHandler } from './ConnectionHandler';
+import { PresenceManager } from './PresenceManager';
+import { OfflineCache } from './OfflineCache';
 
-/**
- * Contexto global para Voximplant
+      /**
+       * Contexto global para Voximplant
  * Gerencia estado de autenticação, chamadas, chat e conference
  */
 export const VoxImplantContext = createContext();
@@ -27,6 +29,8 @@ export function VoxImplantProvider({ children }) {
   const incomingCallHandlerRef = useRef(null);
   const connectionHandlerRef = useRef(null);
   const persistenceHandlerRef = useRef(new PersistenceHandler());
+  const presenceManagerRef = useRef(null);
+  const offlineCacheRef = useRef(null);
   const [sdkReady, setSdkReady] = useState(false);
   
   // Autenticação
@@ -65,6 +69,9 @@ export function VoxImplantProvider({ children }) {
   // Notificações
   const [notification, setNotification] = useState(null);
   const notificationTimeoutRef = useRef(null);
+
+  // Presença e Cache Offline
+  const [contactsPresence, setContactsPresence] = useState(new Map());
 
   /**
    * Atualizar estado de conexão
@@ -429,6 +436,23 @@ export function VoxImplantProvider({ children }) {
               updateConnectionState
             );
             connectionHandlerRef.current.registerConnectionHandlers();
+          }
+
+          // Inicializar PresenceManager
+          if (!presenceManagerRef.current && sdkRef.current) {
+            presenceManagerRef.current = new PresenceManager(sdkRef.current);
+            presenceManagerRef.current.init();
+            presenceManagerRef.current.subscribe((contactId, status) => {
+              setContactsPresence(prev => new Map(prev).set(contactId, status));
+            });
+          }
+
+          // Inicializar OfflineCache
+          if (!offlineCacheRef.current) {
+            offlineCacheRef.current = new OfflineCache();
+            offlineCacheRef.current.init().catch(err => {
+              logger.warn('OfflineCache não disponível:', err);
+            });
           }
         }
       } catch (error) {
