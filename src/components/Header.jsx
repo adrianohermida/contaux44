@@ -13,8 +13,13 @@ export default function Header() {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const currentUser = await base44.auth.me();
+          setUser(currentUser);
+        } else {
+          setUser(null);
+        }
       } catch {
         setUser(null);
       }
@@ -66,9 +71,12 @@ export default function Header() {
                 )}
               </div>
             ) : (
-              <Link to={createPageUrl('Login')} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button 
+                onClick={() => base44.auth.redirectToLogin(window.location.origin + createPageUrl('Dashboard'))}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
                 Login
-              </Link>
+              </button>
             )}
           </div>
 
@@ -92,9 +100,12 @@ export default function Header() {
                   Sair
                 </button>
               ) : (
-                <Link to={createPageUrl('Login')} className="block py-2 text-blue-600 font-semibold">
+                <button 
+                  onClick={() => base44.auth.redirectToLogin(window.location.origin + createPageUrl('Dashboard'))}
+                  className="block py-2 text-blue-600 font-semibold"
+                >
                   Login
-                </Link>
+                </button>
               )}
             </li>
           </ul>
