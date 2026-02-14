@@ -2,6 +2,48 @@ import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
+function NewsletterForm({ source }) {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await base44.functions.invoke('subscribeNewsletter', { email, source });
+      setStatus('success');
+      setEmail('');
+      setTimeout(() => setStatus(''), 3000);
+    } catch (error) {
+      setStatus('error');
+      setTimeout(() => setStatus(''), 3000);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex gap-2">
+      {status === 'success' && (
+        <div className="mb-3 p-3 bg-green-100 text-green-700 rounded-lg text-sm w-full">✓ Inscrição realizada!</div>
+      )}
+      {status === 'error' && (
+        <div className="mb-3 p-3 bg-red-100 text-red-700 rounded-lg text-sm w-full">✗ Erro ao inscrever.</div>
+      )}
+      <div className="flex gap-2 w-full">
+        <input 
+          type="email" 
+          placeholder="Seu endereço de e-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          Registre-se
+        </button>
+      </div>
+    </form>
+  );
+}
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
