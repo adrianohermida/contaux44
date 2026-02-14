@@ -82,6 +82,7 @@ import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import index from './pages/index';
 import processor from './pages/processor';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -121,6 +122,7 @@ export const PAGES = {
     "Tickets": Tickets,
     "index": index,
     "processor": processor,
+    "AnalyticsDashboard": AnalyticsDashboard,
 }
 
 export const pagesConfig = {
