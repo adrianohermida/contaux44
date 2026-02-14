@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Calendar, MessageCircle, Eye } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 const blogPosts = [
   { id: 1, title: 'Make your team a Design driven company', author: 'Tim Norton', date: '05th Nov 2023', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
@@ -29,7 +30,25 @@ const tags = ['Popular Template', 'Design', 'UX', 'Icon', 'Usability', 'Tech', '
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState('');
   const postsPerPage = 6;
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await base44.functions.invoke('subscribeNewsletter', {
+        email: newsletterEmail,
+        source: 'blog'
+      });
+      setNewsletterStatus('success');
+      setNewsletterEmail('');
+      setTimeout(() => setNewsletterStatus(''), 3000);
+    } catch (error) {
+      setNewsletterStatus('error');
+      setTimeout(() => setNewsletterStatus(''), 3000);
+    }
+  };
 
   const filteredPosts = blogPosts.filter(post => 
     post.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -139,25 +158,38 @@ export default function Blog() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
-              <p className="text-gray-600 mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
-              <form className="flex gap-2">
-                <input type="email" placeholder="Seu endereço de e-mail" className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" />
-                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Registre-se</button>
-              </form>
-            </div>
-            <div className="bg-white p-8 rounded-lg border border-gray-200">
-              <h4 className="text-2xl font-bold mb-3">Quer abrir sua empresa grátis?</h4>
-              <p className="text-gray-600 mb-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Fale com um especialista</button>
-            </div>
-          </div>
-        </div>
-      </section>
+           <section className="py-20 bg-gray-50">
+             <div className="max-w-6xl mx-auto px-4">
+               <div className="grid lg:grid-cols-2 gap-12">
+                 <div>
+                   <h3 className="text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
+                   <p className="text-gray-600 mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
+                   {newsletterStatus === 'success' && (
+                     <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">✓ Inscrição realizada com sucesso!</div>
+                   )}
+                   {newsletterStatus === 'error' && (
+                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">✗ Erro ao inscrever. Tente novamente.</div>
+                   )}
+                   <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+                     <input 
+                       type="email" 
+                       placeholder="Seu endereço de e-mail" 
+                       value={newsletterEmail}
+                       onChange={(e) => setNewsletterEmail(e.target.value)}
+                       required
+                       className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" 
+                     />
+                     <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Registre-se</button>
+                   </form>
+                 </div>
+                 <div className="bg-white p-8 rounded-lg border border-gray-200">
+                   <h4 className="text-2xl font-bold mb-3">Quer abrir sua empresa grátis?</h4>
+                   <p className="text-gray-600 mb-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                   <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Fale com um especialista</button>
+                 </div>
+               </div>
+             </div>
+           </section>
     </div>
   );
 }
