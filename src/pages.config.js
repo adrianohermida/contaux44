@@ -58,8 +58,6 @@ import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
 import Services from './pages/Services';
-import index from './pages/index';
-import processor from './pages/processor';
 import QuoteRequest from './pages/QuoteRequest';
 import OnboardClient from './pages/OnboardClient';
 import __Layout from './Layout.jsx';
@@ -77,8 +75,6 @@ export const PAGES = {
     "PortfolioSingle": PortfolioSingle,
     "Pricing": Pricing,
     "Services": Services,
-    "index": index,
-    "processor": processor,
     "QuoteRequest": QuoteRequest,
     "OnboardClient": OnboardClient,
 }
