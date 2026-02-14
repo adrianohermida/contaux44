@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LogOut, Users, MessageSquare, PhoneCall } from 'lucide-react';
 import { useVoxImplant } from '../components/hooks/useVoxImplant';
+import { base44 } from '@/api/base44Client';
 import LoginForm from '../components/voximplant/LoginForm';
 import CallUI from '../components/voximplant/CallUI';
 import ChatUI from '../components/voximplant/ChatUI';
@@ -9,14 +10,31 @@ import ContactItem from '../components/voximplant/ContactItem';
 export default function Dashboard() {
   const { isAuthenticated, logout, startCall, currentUser } = useVoxImplant();
   const [selectedChatContact, setSelectedChatContact] = useState(null);
+  const [contacts, setContacts] = useState([]);
+  const [loadingContacts, setLoadingContacts] = useState(true);
 
-  // Mock contacts data
-  const contacts = [
-    { id: 1, name: 'Dr. João Silva', email: 'joao@contaux.com', phone: 'joao' },
-    { id: 2, name: 'Dra. Camila Mendes', email: 'camila@contaux.com', phone: 'camila' },
-    { id: 3, name: 'Dr. Ricardo Almeida', email: 'ricardo@contaux.com', phone: 'ricardo' },
-    { id: 4, name: 'Maria Santos', email: 'maria@contaux.com', phone: 'maria' },
-  ];
+  // Load contacts from Base44 Client entity
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const clients = await base44.entities.Client.list();
+        const mappedContacts = clients.map(client => ({
+          id: client.id,
+          name: client.company_name,
+          email: client.email,
+          phone: client.company_name.toLowerCase().replace(/\s+/g, ''),
+        }));
+        setContacts(mappedContacts);
+      } catch (error) {
+        console.error('Erro ao carregar contatos:', error);
+        setContacts([]);
+      } finally {
+        setLoadingContacts(false);
+      }
+    };
+
+    fetchContacts();
+  }, []);
 
   if (!isAuthenticated) {
     return (
