@@ -8,7 +8,7 @@ import ChatUI from '../components/voximplant/ChatUI';
 import ContactItem from '../components/voximplant/ContactItem';
 
 export default function Dashboard() {
-  const { isAuthenticated, logout, startCall, currentUser } = useVoxImplant();
+  const { isAuthenticated, logout, startCall, currentUser, callHistory, messages, notification } = useVoxImplant();
   const [selectedChatContact, setSelectedChatContact] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [loadingContacts, setLoadingContacts] = useState(true);
@@ -119,7 +119,7 @@ export default function Dashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100 text-sm">Chamadas Hoje</p>
-                  <p className="text-3xl font-bold">0</p>
+                  <p className="text-3xl font-bold">{callHistory.length}</p>
                 </div>
                 <PhoneCall className="w-12 h-12 opacity-20" />
               </div>
@@ -130,7 +130,7 @@ export default function Dashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-green-100 text-sm">Mensagens</p>
-                  <p className="text-3xl font-bold">5</p>
+                  <p className="text-3xl font-bold">{messages.length}</p>
                 </div>
                 <MessageSquare className="w-12 h-12 opacity-20" />
               </div>
@@ -162,6 +162,17 @@ export default function Dashboard() {
           onClose={() => setSelectedChatContact(null)}
         />
       )}
-    </div>
-  );
-}
+
+      {/* Notification */}
+      {notification && (
+        <div className={`fixed bottom-4 left-4 px-4 py-3 rounded-lg shadow-lg text-white flex items-center gap-2 z-50 ${
+          notification.type === 'error' ? 'bg-red-500' :
+          notification.type === 'success' ? 'bg-green-500' :
+          'bg-blue-500'
+        }`}>
+          <span>{notification.message}</span>
+        </div>
+      )}
+      </div>
+      );
+      }
