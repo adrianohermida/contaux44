@@ -153,6 +153,20 @@ export function VoxImplantProvider({ children }) {
   }, [currentUser]);
 
   /**
+   * Toggle áudio
+   */
+  const toggleAudio = useCallback((enabled) => {
+    logger.info(`Áudio ${enabled ? 'ativado' : 'desativado'}`);
+  }, []);
+
+  /**
+   * Toggle vídeo
+   */
+  const toggleVideo = useCallback((enabled) => {
+    logger.info(`Vídeo ${enabled ? 'ativado' : 'desativado'}`);
+  }, []);
+
+  /**
    * Entrar em conference
    */
   const joinConference = useCallback((roomId) => {
