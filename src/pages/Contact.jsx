@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -18,8 +19,7 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Aqui integrar com backend para enviar email
-      console.log('Form submitted:', formData);
+      await base44.functions.invoke('submitContactForm', formData);
       setSubmitted(true);
       setTimeout(() => {
         setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
@@ -209,22 +209,13 @@ export default function Contact() {
 
       {/* CTA Section */}
       <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Boletim Informativo</h3>
-              <p className="text-gray-600 mb-6">Inscreva-se e receba conteúdo exclusivo sobre contabilidade especializada</p>
-              <form className="flex gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Seu endereço de e-mail"
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                />
-                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  Registre-se
-                </button>
-              </form>
-            </div>
+       <div className="max-w-6xl mx-auto px-4">
+         <div className="grid lg:grid-cols-2 gap-12">
+           <div>
+             <h3 className="text-2xl font-bold mb-4">Boletim Informativo</h3>
+             <p className="text-gray-600 mb-6">Inscreva-se e receba conteúdo exclusivo sobre contabilidade especializada</p>
+             <NewsletterForm source="contact" />
+           </div>
 
             <div className="bg-white p-8 rounded-lg border border-gray-200">
               <h4 className="text-2xl font-bold mb-3">Quer abrir sua PJ gratuitamente?</h4>
