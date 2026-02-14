@@ -1,15 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 export default function IndexPage() {
-  const navigate = React.useEffect(() => {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
     navigate(createPageUrl('Home'));
-  }, []);
-
-  React.useEffect(() => {
-    navigate(createPageUrl('Home'));
-  }, []);
+  }, [navigate]);
   
   return null;
 }
