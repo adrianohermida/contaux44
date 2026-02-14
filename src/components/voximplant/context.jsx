@@ -74,6 +74,22 @@ export function VoxImplantProvider({ children }) {
   const [contactsPresence, setContactsPresence] = useState(new Map());
 
   /**
+   * Mostrar notificação
+   */
+  const showNotification = useCallback((message, type = 'info') => {
+    logger.info(`Notificação [${type}]:`, message);
+    setNotification({ message, type, id: Math.random() });
+
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current);
+    }
+
+    notificationTimeoutRef.current = setTimeout(() => {
+      setNotification(null);
+    }, 4000);
+  }, []);
+
+  /**
    * Atualizar estado de conexão
    */
   const updateConnectionState = useCallback((state) => {
@@ -365,24 +381,8 @@ export function VoxImplantProvider({ children }) {
   }, []);
 
   /**
-   * Mostrar notificação
-   */
-  const showNotification = useCallback((message, type = 'info') => {
-    logger.info(`Notificação [${type}]:`, message);
-    setNotification({ message, type, id: Math.random() });
-
-    if (notificationTimeoutRef.current) {
-      clearTimeout(notificationTimeoutRef.current);
-    }
-
-    notificationTimeoutRef.current = setTimeout(() => {
-      setNotification(null);
-    }, 4000);
-  }, []);
-
-  /**
-   * Inicializar SDK ao montar
-   */
+  * Inicializar SDK ao montar
+  */
   useEffect(() => {
     const initSDK = async () => {
       try {
