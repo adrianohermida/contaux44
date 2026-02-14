@@ -10,7 +10,11 @@ export default function Footer() {
           {/* About */}
           <div>
             <div className="mb-4">
-              <Logo />
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/aaa0f7f85_contaux_blue.png" 
+                alt="Contaux" 
+                className="h-12"
+              />
             </div>
             <p className="text-slate-400 text-sm mb-4">Aberto das 9 às 17h, seg. à sexta, horário de Brasília.</p>
             <p className="text-slate-400 text-sm mb-4">Tel: +55 51 3021-8206</p>
