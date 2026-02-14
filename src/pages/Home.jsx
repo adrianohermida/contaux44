@@ -54,17 +54,17 @@ export default function Home() {
 
   const news = [
     {
-      image: '/assets/images/blog/blog-1.webp',
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/533400192_blog-1.jpg',
       title: 'A importância das certidões negativas para sua regularidade jurídica.',
       link: '#'
     },
     {
-      image: '/assets/images/blog/blog-2.webp',
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/173396dc9_blog-2.jpg',
       title: 'Obtenha certidões negativas com rapidez e segurança com a Contaux.',
       link: '#'
     },
     {
-      image: '/assets/images/blog/blog-3.webp',
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8bbde3a94_blog-3.jpg',
       title: 'Certidões negativas: o que são e como obtê-las de forma simples?',
       link: '#'
     }
