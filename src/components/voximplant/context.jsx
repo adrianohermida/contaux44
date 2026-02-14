@@ -153,18 +153,28 @@ export function VoxImplantProvider({ children }) {
   }, [currentUser]);
 
   /**
-   * Toggle áudio
-   */
+    * Toggle áudio
+    */
   const toggleAudio = useCallback((enabled) => {
     logger.info(`Áudio ${enabled ? 'ativado' : 'desativado'}`);
-  }, []);
+    if (localStream) {
+      localStream.getAudioTracks().forEach(track => {
+        track.enabled = enabled;
+      });
+    }
+  }, [localStream]);
 
   /**
-   * Toggle vídeo
-   */
+    * Toggle vídeo
+    */
   const toggleVideo = useCallback((enabled) => {
     logger.info(`Vídeo ${enabled ? 'ativado' : 'desativado'}`);
-  }, []);
+    if (localStream) {
+      localStream.getVideoTracks().forEach(track => {
+        track.enabled = enabled;
+      });
+    }
+  }, [localStream]);
 
   /**
    * Entrar em conference
