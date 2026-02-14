@@ -10,18 +10,35 @@ import {
 
 export default function DashboardHeader() {
   const [user, setUser] = useState(null);
+  const [tenantId, setTenantId] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const getUser = async () => {
+    const loadUserAndNotifications = async () => {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        const tenant = currentUser.email.split('@')[0];
+        setTenantId(tenant);
+        
+        const notifs = await base44.entities.Notification.filter({
+          tenant_id: tenant,
+          user_email: currentUser.email
+        });
+        
+        const sorted = notifs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+        setNotifications(sorted.slice(0, 5));
+        setUnreadCount(notifs.filter(n => !n.is_read).length);
       } catch {
         setUser(null);
       }
     };
-    getUser();
+    
+    loadUserAndNotifications();
+    const interval = setInterval(loadUserAndNotifications, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogout = async () => {
@@ -50,21 +67,27 @@ export default function DashboardHeader() {
             <DropdownMenuTrigger asChild>
               <button className="relative p-2 hover:bg-slate-100 rounded-lg transition-colors">
                 <Bell className="w-5 h-5 text-slate-600" />
-                {notifications.length > 0 && (
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{unreadCount}</span>
                 )}
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuContent align="end" className="w-96">
               <div className="p-4">
-                <h3 className="font-semibold mb-2">Notificações</h3>
+                <h3 className="font-semibold mb-3">Notificações</h3>
                 {notifications.length === 0 ? (
-                  <p className="text-sm text-slate-500">Nenhuma notificação</p>
+                  <p className="text-sm text-slate-500 text-center py-4">Nenhuma notificação</p>
                 ) : (
-                  <div className="space-y-2">
-                    {notifications.map((notif, i) => (
-                      <div key={i} className="p-2 hover:bg-slate-50 rounded">
-                        <p className="text-sm">{notif.message}</p>
+                  <div className="space-y-2 max-h-80 overflow-y-auto">
+                    {notifications.map((notif) => (
+                      <div key={notif.id} className={`p-3 rounded-lg text-sm border-l-4 ${
+                        notif.type === 'success' ? 'bg-green-50 border-green-500' :
+                        notif.type === 'error' ? 'bg-red-50 border-red-500' :
+                        notif.type === 'warning' ? 'bg-yellow-50 border-yellow-500' :
+                        'bg-blue-50 border-blue-500'
+                      } ${!notif.is_read ? 'font-medium' : ''}`}>
+                        <p>{notif.title}</p>
+                        <p className="text-xs text-slate-600 mt-1">{notif.message}</p>
                       </div>
                     ))}
                   </div>
