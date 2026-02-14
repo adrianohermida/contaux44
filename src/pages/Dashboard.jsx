@@ -85,20 +85,30 @@ export default function Dashboard() {
                 <h2 className="text-lg font-bold text-slate-900">Contatos</h2>
               </div>
               <p className="text-sm text-slate-600">
-                {contacts.length} contatos disponíveis
+                {loadingContacts ? 'Carregando...' : `${contacts.length} contatos disponíveis`}
               </p>
             </div>
 
             <div className="divide-y divide-slate-200">
-              {contacts.map((contact) => (
-                <ContactItem
-                  key={contact.id}
-                  contact={contact}
-                  onCall={handleCall}
-                  onChat={handleChat}
-                  isOnline={Math.random() > 0.5}
-                />
-              ))}
+              {loadingContacts ? (
+                <div className="p-8 text-center text-slate-600">
+                  <p>Carregando contatos...</p>
+                </div>
+              ) : contacts.length === 0 ? (
+                <div className="p-8 text-center text-slate-600">
+                  <p>Nenhum contato disponível</p>
+                </div>
+              ) : (
+                contacts.map((contact) => (
+                  <ContactItem
+                    key={contact.id}
+                    contact={contact}
+                    onCall={handleCall}
+                    onChat={handleChat}
+                    isOnline={Math.random() > 0.5}
+                  />
+                ))
+              )}
             </div>
           </div>
 
