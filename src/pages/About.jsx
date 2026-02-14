@@ -162,16 +162,16 @@ export default function About() {
                 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/77f17b817_t4.jpg'
               ];
               return (
-              <div key={idx} className="text-center">
-                <img 
-                  src={teamImages[idx]}
-                  alt={member.name}
-                  className="w-full rounded-lg mb-4"
-                />
-                <h4 className="font-bold text-lg">{member.name}</h4>
-                <p className="text-gray-600 text-sm">{member.role}</p>
-              </div>
-            );
+                <div key={idx} className="text-center">
+                  <img 
+                    src={teamImages[idx]}
+                    alt={member.name}
+                    className="w-full rounded-lg mb-4"
+                  />
+                  <h4 className="font-bold text-lg">{member.name}</h4>
+                  <p className="text-gray-600 text-sm">{member.role}</p>
+                </div>
+              );
             })}
           </div>
         </div>
