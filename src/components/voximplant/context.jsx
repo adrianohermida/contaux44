@@ -131,9 +131,9 @@ export function VoxImplantProvider({ children }) {
       setCallState(CALL_STATES.CONNECTING);
     } catch (error) {
       logger.error('Erro ao acessar mídia:', error);
-      showNotification('Erro ao acessar câmera/microfone', 'error');
+      setNotification({ message: 'Erro ao acessar câmera/microfone', type: 'error', id: Math.random() });
     }
-  }, [showNotification]);
+  }, []);
 
   /**
     * Finalizar chamada
