@@ -3,13 +3,13 @@ import { base44 } from '@/api/base44Client';
 import { Plus } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
-import TicketForm from '../components/dashboard/TicketForm';
-import TicketList from '../components/dashboard/TicketList';
+import LegalProcessForm from '../components/dashboard/LegalProcessForm';
+import LegalProcessList from '../components/dashboard/LegalProcessList';
 import { Button } from '@/components/ui/button';
 
-export default function Tickets() {
+export default function LegalProcesses() {
   const [showForm, setShowForm] = useState(false);
-  const [editingTicket, setEditingTicket] = useState(null);
+  const [editingProcess, setEditingProcess] = useState(null);
   const [tenantId, setTenantId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -27,12 +27,12 @@ export default function Tickets() {
 
   const handleSave = () => {
     setShowForm(false);
-    setEditingTicket(null);
+    setEditingProcess(null);
     setRefreshKey(prev => prev + 1);
   };
 
-  const handleEdit = (ticket) => {
-    setEditingTicket(ticket);
+  const handleEdit = (process) => {
+    setEditingProcess(process);
     setShowForm(true);
   };
 
@@ -52,28 +52,28 @@ export default function Tickets() {
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Helpdesk - Tickets</h1>
-              <p className="text-slate-600 mt-1">Gerenciar solicitações de suporte</p>
+              <h1 className="text-3xl font-bold text-slate-900">Processos Judiciais</h1>
+              <p className="text-slate-600 mt-1">Gerenciar processos e casos legais</p>
             </div>
             <Button 
-              onClick={() => { setEditingTicket(null); setShowForm(true); }}
+              onClick={() => { setEditingProcess(null); setShowForm(true); }}
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-5 h-5 mr-2" />
-              Novo Ticket
+              Novo Processo
             </Button>
           </div>
 
           {showForm && (
-            <TicketForm
-              ticket={editingTicket}
+            <LegalProcessForm
+              process={editingProcess}
               tenantId={tenantId}
               onSave={handleSave}
-              onCancel={() => { setShowForm(false); setEditingTicket(null); }}
+              onCancel={() => { setShowForm(false); setEditingProcess(null); }}
             />
           )}
 
-          <TicketList
+          <LegalProcessList
             tenantId={tenantId}
             onEdit={handleEdit}
             onRefresh={refreshKey}
