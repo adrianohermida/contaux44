@@ -114,7 +114,7 @@ export default function About() {
             {/* Right Image */}
             <div>
               <img 
-                src="/assets/images/team-working.jpg"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/fc3eb6844_pf-single1.jpg"
                 alt="Team working"
                 className="rounded-lg w-full"
               />

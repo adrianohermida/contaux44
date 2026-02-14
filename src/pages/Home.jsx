@@ -129,7 +129,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <img 
-              src="/assets/images/hero/about-img.webp" 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/9d17aefc1_about-img.png" 
               alt="Sobre Contaux" 
               className="rounded-lg"
             />
