@@ -52,6 +52,7 @@ import processor from './pages/processor';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
 import Blog from './pages/Blog';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -65,4 +66,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "index",
     Pages: PAGES,
+    Layout: __Layout,
 };
