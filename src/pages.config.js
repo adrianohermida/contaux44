@@ -82,8 +82,6 @@ import ManualPosting from './pages/ManualPosting';
 import TaxInvoices from './pages/TaxInvoices';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Automations from './pages/Automations';
-import Sprint6Overview from './pages/Sprint6Overview';
-import sprint6overviewMd from './pages/Sprint6Overview.md';
 import __Layout from './Layout.jsx';
 
 
@@ -123,8 +121,6 @@ export const PAGES = {
     "TaxInvoices": TaxInvoices,
     "AccountingCalendar": AccountingCalendar,
     "Automations": Automations,
-    "Sprint6Overview": Sprint6Overview,
-    "Sprint6Overview.md": sprint6overviewMd,
 }
 
 export const pagesConfig = {
