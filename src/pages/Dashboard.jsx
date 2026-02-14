@@ -6,9 +6,10 @@ import LoginForm from '../components/voximplant/LoginForm';
 import CallUI from '../components/voximplant/CallUI';
 import ChatUI from '../components/voximplant/ChatUI';
 import ContactItem from '../components/voximplant/ContactItem';
+import IncomingCallDialog from '../components/voximplant/IncomingCallDialog';
 
 export default function Dashboard() {
-  const { isAuthenticated, logout, startCall, currentUser, callHistory, messages, notification } = useVoxImplant();
+  const { isAuthenticated, logout, startCall, currentUser, callHistory, messages, notification, incomingCall, acceptIncomingCall, rejectIncomingCall } = useVoxImplant();
   const [selectedChatContact, setSelectedChatContact] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [loadingContacts, setLoadingContacts] = useState(true);
@@ -172,6 +173,15 @@ export default function Dashboard() {
         }`}>
           <span>{notification.message}</span>
         </div>
+      )}
+
+      {/* Incoming Call Dialog */}
+      {incomingCall && (
+        <IncomingCallDialog
+          call={incomingCall}
+          onAccept={acceptIncomingCall}
+          onReject={rejectIncomingCall}
+        />
       )}
       </div>
       );
