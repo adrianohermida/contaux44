@@ -5,11 +5,11 @@ import { base44 } from '@/api/base44Client';
 import LoginForm from '../components/voximplant/LoginForm';
 import CallUI from '../components/voximplant/CallUI';
 import ChatUI from '../components/voximplant/ChatUI';
-import ContactItem from '../components/voximplant/ContactItem';
 import IncomingCallDialog from '../components/voximplant/IncomingCallDialog';
 import ConferenceUI from '../components/voximplant/ConferenceUI';
 import CallHistoryCard from '../components/voximplant/CallHistoryCard';
 import ContactListItem from '../components/voximplant/ContactListItem';
+import SettingsPanel from '../components/voximplant/SettingsPanel';
 
 export default function Dashboard() {
   const { isAuthenticated, logout, startCall, currentUser, callHistory, messages, notification, incomingCall, acceptIncomingCall, rejectIncomingCall, activeConference } = useVoxImplant();
@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [loadingContacts, setLoadingContacts] = useState(true);
   const [callHistoryData, setCallHistoryData] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   // Load contacts and call history
   useEffect(() => {
@@ -77,13 +78,21 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
-          >
-            <LogOut className="w-4 h-4" />
-            Sair
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowSettings(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-all"
+            >
+              ⚙️ Configurações
+            </button>
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+              Sair
+            </button>
+          </div>
         </div>
       </header>
 
@@ -205,6 +214,11 @@ export default function Dashboard() {
           onAccept={acceptIncomingCall}
           onReject={rejectIncomingCall}
         />
+      )}
+
+      {/* Settings Panel */}
+      {showSettings && (
+        <SettingsPanel onClose={() => setShowSettings(false)} />
       )}
       </div>
       );
