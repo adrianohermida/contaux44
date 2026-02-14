@@ -479,6 +479,12 @@ export function VoxImplantProvider({ children }) {
       if (connectionHandlerRef.current) {
         connectionHandlerRef.current.cleanup();
       }
+      if (presenceManagerRef.current) {
+        presenceManagerRef.current.cleanup();
+      }
+      if (offlineCacheRef.current) {
+        offlineCacheRef.current.cleanup();
+      }
     };
   }, [updateConnectionState]);
 
@@ -549,6 +555,11 @@ export function VoxImplantProvider({ children }) {
     conferenceHandler: conferenceHandlerRef.current,
     incomingCallHandler: incomingCallHandlerRef.current,
     connectionHandler: connectionHandlerRef.current,
+
+    // Presence & Offline
+    contactsPresence,
+    presenceManager: presenceManagerRef.current,
+    offlineCache: offlineCacheRef.current,
 
     // Internal
     updateConnectionState,
