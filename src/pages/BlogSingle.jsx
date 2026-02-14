@@ -10,11 +10,15 @@ export default function BlogSingle() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Breadcrumbs */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">Blog Single</h1>
-          <p className="text-blue-100 mb-6">Business plan draws on a wide range of knowledge from different business disciplines.</p>
+      {/* Header with Image */}
+      <section 
+        className="bg-cover bg-center text-white py-24 relative"
+        style={{backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/533400192_blog-1.jpg)'}}
+      >
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <h1 className="text-4xl font-bold mb-4">A importância das certidões negativas para sua regularidade jurídica.</h1>
+          <p className="text-blue-100 mb-6">Conheça a importância das certidões negativas e como elas afetam sua regularidade.</p>
           <div className="flex gap-2 text-sm">
             <a href="/" className="hover:underline">Home</a>
             <span>/</span>
