@@ -1,28 +1,75 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
-import { Calculator } from 'lucide-react';
+import ServicesForm from '../components/dashboard/ServicesForm';
+import ServicesList from '../components/dashboard/ServicesList';
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Services() {
+  const [showForm, setShowForm] = useState(false);
+  const [editingService, setEditingService] = useState(null);
+  const [tenantId, setTenantId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const getCurrentTenant = async () => {
+      try {
+        const user = await base44.auth.me();
+        setTenantId(user.email.split('@')[0]);
+      } catch (error) {
+        console.error('Erro ao obter tenant:', error);
+      }
+    };
+    getCurrentTenant();
+  }, []);
+
+  const handleSave = () => {
+    setShowForm(false);
+    setEditingService(null);
+    setRefreshKey(prev => prev + 1);
+  };
+
+  const handleEdit = (service) => {
+    setEditingService(service);
+    setShowForm(true);
+  };
+
+  if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+
   return (
     <ProtectedRoute>
       <DashboardLayout>
         <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Prestação de Serviços</h1>
-            <p className="text-slate-600 mt-1">Gerenciar serviços prestados</p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">Prestação de Serviços</h1>
+              <p className="text-slate-600 mt-1">Gerenciar serviços prestados</p>
+            </div>
+            <Button 
+              onClick={() => { setEditingService(null); setShowForm(true); }}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Novo Serviço
+            </Button>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Calculator className="w-6 h-6 text-blue-600" />
-              <h2 className="text-lg font-semibold">Serviços Disponíveis</h2>
-            </div>
-            <div className="text-center text-slate-500 py-12">
-              <p className="mb-2">Módulo de prestação de serviços</p>
-              <p className="text-sm">Funcionalidades a serem implementadas</p>
-            </div>
-          </div>
+          {showForm && (
+            <ServicesForm
+              service={editingService}
+              tenantId={tenantId}
+              onSave={handleSave}
+              onCancel={() => { setShowForm(false); setEditingService(null); }}
+            />
+          )}
+
+          <ServicesList
+            tenantId={tenantId}
+            onEdit={handleEdit}
+            onRefresh={refreshKey}
+          />
         </div>
       </DashboardLayout>
     </ProtectedRoute>
