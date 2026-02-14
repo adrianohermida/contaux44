@@ -1,9 +1,30 @@
-import React from 'react';
-import { Menu, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Menu, X, LogOut, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
 import Logo from './Logo';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [user, setUser] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch {
+        setUser(null);
+      }
+    };
+    getUser();
+  }, []);
+
+  const handleLogout = async () => {
+    await base44.auth.logout();
+  };
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -21,10 +42,35 @@ export default function Header() {
             <li><Link to={createPageUrl('Contact')} className="text-slate-700 hover:text-blue-600">Contato</Link></li>
           </ul>
 
-          {/* Login Button */}
-          <a href="https://contauxcontadoria.freshdesk.com/support/login" className="hidden md:block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            Login
-          </a>
+          {/* Auth Section */}
+          <div className="hidden md:flex items-center gap-3">
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 rounded-lg"
+                >
+                  <User className="w-4 h-4" />
+                  <span className="text-sm">{user.full_name || user.email}</span>
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg">
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sair
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to={createPageUrl('Login')} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                Login
+              </Link>
+            )}
+          </div>
 
           {/* Mobile Menu Button */}
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
@@ -40,7 +86,17 @@ export default function Header() {
             <li><a href="#servicos" className="block py-2 text-slate-700">Serviços</a></li>
             <li><Link to={createPageUrl('Blog')} className="block py-2 text-slate-700">Blog</Link></li>
             <li><Link to={createPageUrl('Contact')} className="block py-2 text-slate-700">Contato</Link></li>
-            <li><a href="https://contauxcontadoria.freshdesk.com/support/login" className="block py-2 text-blue-600 font-semibold">Login</a></li>
+            <li>
+              {user ? (
+                <button onClick={handleLogout} className="block py-2 text-red-600 font-semibold w-full text-left">
+                  Sair
+                </button>
+              ) : (
+                <Link to={createPageUrl('Login')} className="block py-2 text-blue-600 font-semibold">
+                  Login
+                </Link>
+              )}
+            </li>
           </ul>
         )}
       </div>
