@@ -1,60 +1,163 @@
-import React from 'react';
-import NewsCard from '../components/NewsCard';
+import React, { useState } from 'react';
+import { Search, Calendar, MessageCircle, Eye } from 'lucide-react';
+
+const blogPosts = [
+  { id: 1, title: 'Make your team a Design driven company', author: 'Tim Norton', date: '05th Nov 2023', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
+  { id: 2, title: 'The newest web framework that changed the world', author: 'Tim Norton', date: '24th March 2023', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
+  { id: 3, title: '5 ways to improve user retention for your startup', author: 'Tim Norton', date: '30th Jan 2023', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
+  { id: 4, title: 'Make your team a Design driven company', author: 'Tim Norton', date: '15th Dec 2022', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
+  { id: 5, title: 'The newest web framework that changed the world', author: 'Tim Norton', date: '10th Nov 2022', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
+  { id: 6, title: '5 ways to improve user retention for your startup', author: 'Tim Norton', date: '05th Oct 2022', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
+];
+
+const popularPosts = [
+  { id: 1, title: '8 simple ways to utilize a blog to improve SEO results', date: '05th Nov 2023' },
+  { id: 2, title: '7 most important SEO focus areas for colleges and universities', date: '24th March 2023' },
+  { id: 3, title: 'How to drive conversions with on-brand SEO copywriting', date: '30th Jan 2023' },
+];
+
+const categories = [
+  { name: 'Business', count: 26 },
+  { name: 'Consultant', count: 30 },
+  { name: 'Creative', count: 71 },
+  { name: 'UI/UX', count: 56 },
+  { name: 'Technology', count: 60 },
+];
+
+const tags = ['Popular Template', 'Design', 'UX', 'Icon', 'Usability', 'Tech', 'Mouse', 'Kit', 'Consult', 'Business', 'Keyboard', 'Develop'];
 
 export default function Blog() {
-  const blogPosts = [
-    {
-      image: 'https://via.placeholder.com/400x300',
-      title: 'A importância das certidões negativas para sua regularidade jurídica.',
-      link: '#'
-    },
-    {
-      image: 'https://via.placeholder.com/400x300',
-      title: 'Obtenha certidões negativas com rapidez e segurança com a Contaux.',
-      link: '#'
-    },
-    {
-      image: 'https://via.placeholder.com/400x300',
-      title: 'Certidões negativas: o que são e como obtê-las de forma simples?',
-      link: '#'
-    },
-    {
-      image: 'https://via.placeholder.com/400x300',
-      title: 'Guia completo sobre custas judiciais e como economizar.',
-      link: '#'
-    },
-    {
-      image: 'https://via.placeholder.com/400x300',
-      title: 'Recuperação judicial: passo a passo para sua empresa.',
-      link: '#'
-    },
-    {
-      image: 'https://via.placeholder.com/400x300',
-      title: 'Planejamento contábil para escritórios de advocacia.',
-      link: '#'
-    }
-  ];
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 6;
+
+  const filteredPosts = blogPosts.filter(post => 
+    post.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+  const startIdx = (currentPage - 1) * postsPerPage;
+  const paginatedPosts = filteredPosts.slice(startIdx, startIdx + postsPerPage);
 
   return (
-    <>
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-slate-50">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Blog</h1>
-          <p className="text-slate-600 max-w-2xl">
-            Mantenha-se atualizado com as últimas novidades em contabilidade para o setor jurídico.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-6">
-            {blogPosts.map((post, i) => (
-              <NewsCard key={i} {...post} />
-            ))}
+    <div className="min-h-screen bg-white">
+      {/* Breadcrumbs */}
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <h1 className="text-4xl font-bold mb-4">Blog Grid Sidebar</h1>
+          <p className="text-blue-100 mb-6">Business plan draws on a wide range of knowledge from different business disciplines.</p>
+          <div className="flex gap-2 text-sm">
+            <a href="/" className="hover:underline">Home</a>
+            <span>/</span>
+            <span>Blog</span>
+            <span>/</span>
+            <span>Blog List</span>
           </div>
         </div>
       </section>
-    </>
+
+      {/* Blog Section */}
+      <section className="py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Posts */}
+            <div className="lg:col-span-2">
+              <div className="grid md:grid-cols-2 gap-8 mb-12">
+                {paginatedPosts.map(post => (
+                  <div key={post.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                    <img src={`https://via.placeholder.com/400x300?text=${post.id}`} alt={post.title} className="w-full h-48 object-cover" />
+                    <div className="p-6">
+                      <h4 className="font-bold text-lg mb-2 hover:text-blue-600 cursor-pointer"><a href="#">{post.title}</a></h4>
+                      <p className="text-gray-600 text-sm mb-4">{post.desc}</p>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <img src={`https://i.pravatar.cc/30?img=${post.id}`} alt={post.author} className="w-6 h-6 rounded-full" />
+                        <span>BY {post.author}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              <div className="flex justify-center gap-2 mb-8">
+                <button onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-50">← Prev</button>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-2 rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-50'}`}>
+                    {i + 1}
+                  </button>
+                ))}
+                <button onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-50">Next →</button>
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-8">
+              {/* Search */}
+              <div className="bg-white border border-gray-200 p-6 rounded-lg">
+                <h5 className="font-bold mb-4">Search Objects</h5>
+                <div className="flex gap-2">
+                  <input type="text" placeholder="Search Here..." value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value); setCurrentPage(1);}} className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" />
+                  <button className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"><Search className="w-4 h-4" /></button>
+                </div>
+              </div>
+
+              {/* Popular Posts */}
+              <div className="bg-white border border-gray-200 p-6 rounded-lg">
+                <h5 className="font-bold mb-4">Popular Feeds</h5>
+                <div className="space-y-4">
+                  {popularPosts.map(post => (
+                    <div key={post.id} className="pb-4 border-b border-gray-200 last:border-0">
+                      <h6 className="font-semibold text-sm hover:text-blue-600 cursor-pointer mb-1"><a href="#">{post.title}</a></h6>
+                      <span className="text-xs text-gray-500 flex items-center gap-1"><Calendar className="w-3 h-3" /> {post.date}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Categories */}
+              <div className="bg-white border border-gray-200 p-6 rounded-lg">
+                <h5 className="font-bold mb-4">Categories</h5>
+                <ul className="space-y-2">
+                  {categories.map((cat, idx) => (
+                    <li key={idx}><a href="#" className="text-blue-600 hover:underline text-sm flex justify-between"><span>{cat.name}</span> <span className="text-gray-400">{cat.count}</span></a></li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Tags */}
+              <div className="bg-white border border-gray-200 p-6 rounded-lg">
+                <h5 className="font-bold mb-4">Popular Tags</h5>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag, idx) => (
+                    <a key={idx} href="#" className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded hover:bg-blue-600 hover:text-white transition-colors">{tag}</a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div>
+              <h3 className="text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
+              <p className="text-gray-600 mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
+              <form className="flex gap-2">
+                <input type="email" placeholder="Seu endereço de e-mail" className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" />
+                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Registre-se</button>
+              </form>
+            </div>
+            <div className="bg-white p-8 rounded-lg border border-gray-200">
+              <h4 className="text-2xl font-bold mb-3">Quer abrir sua empresa grátis?</h4>
+              <p className="text-gray-600 mb-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Fale com um especialista</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
