@@ -50,7 +50,6 @@
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Home from './pages/Home';
-import index from './pages/index';
 import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
@@ -59,7 +58,6 @@ export const PAGES = {
     "Blog": Blog,
     "Contact": Contact,
     "Home": Home,
-    "index": index,
     "Dashboard": Dashboard,
 }
 
