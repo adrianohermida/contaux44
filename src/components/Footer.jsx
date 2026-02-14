@@ -1,5 +1,6 @@
 import React from 'react';
 import { Instagram, Twitter, Linkedin, Facebook } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
@@ -8,7 +9,9 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* About */}
           <div>
-            <h3 className="font-bold mb-4">Contaux</h3>
+            <div className="mb-4">
+              <Logo />
+            </div>
             <p className="text-slate-400 text-sm mb-4">Aberto das 9 às 17h, seg. à sexta, horário de Brasília.</p>
             <p className="text-slate-400 text-sm mb-4">Tel: +55 51 3021-8206</p>
             <div className="flex gap-4">
