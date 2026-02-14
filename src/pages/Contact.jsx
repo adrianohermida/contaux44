@@ -1,13 +1,45 @@
-import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import { Mail, Phone, MapPin } from 'lucide-react';
 
 export default function Contact() {
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await base44.integrations.Core.SendEmail({
+        to: formData.email,
+        subject: `Contaux: Confirmação de recebimento - ${formData.subject}`,
+        body: `Obrigado por entrar em contato! Recebemos sua mensagem e responderemos em breve.\n\nMensagem: ${formData.message}`
+      });
+      
+      await base44.integrations.Core.SendEmail({
+        to: 'contato@contaux.com',
+        subject: `Novo contato: ${formData.subject}`,
+        body: `Nome: ${formData.name}\nEmail: ${formData.email}\n\nMensagem:\n${formData.message}`
+      });
+      
+      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setSubmitted(false), 5000);
+    } catch (error) {
+      console.error('Erro ao enviar:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
-      <Header />
-      
       <section className="py-20 bg-gradient-to-br from-blue-50 to-slate-50">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">Contato</h1>
@@ -51,11 +83,20 @@ export default function Contact() {
             </div>
 
             {/* Contact Form */}
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {submitted && (
+                <div className="p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                  ✓ Mensagem enviada com sucesso! Responderemos em breve.
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-semibold text-slate-900 mb-2">Nome</label>
                 <input 
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder="Seu nome"
                   required
@@ -66,6 +107,9 @@ export default function Contact() {
                 <label className="block text-sm font-semibold text-slate-900 mb-2">Email</label>
                 <input 
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder="seu@email.com"
                   required
@@ -76,6 +120,9 @@ export default function Contact() {
                 <label className="block text-sm font-semibold text-slate-900 mb-2">Assunto</label>
                 <input 
                   type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder="Assunto da mensagem"
                   required
@@ -85,6 +132,9 @@ export default function Contact() {
               <div>
                 <label className="block text-sm font-semibold text-slate-900 mb-2">Mensagem</label>
                 <textarea 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 h-32"
                   placeholder="Sua mensagem aqui..."
                   required
@@ -93,16 +143,15 @@ export default function Contact() {
 
               <button 
                 type="submit"
-                className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+                disabled={loading}
+                className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Enviar Mensagem
+                {loading ? 'Enviando...' : 'Enviar Mensagem'}
               </button>
             </form>
           </div>
         </div>
       </section>
-
-      <Footer />
     </>
   );
 }

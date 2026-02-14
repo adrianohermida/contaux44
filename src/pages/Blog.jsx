@@ -1,6 +1,4 @@
 import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import NewsCard from '../components/NewsCard';
 
 export default function Blog() {
@@ -39,8 +37,6 @@ export default function Blog() {
 
   return (
     <>
-      <Header />
-      
       <section className="py-20 bg-gradient-to-br from-blue-50 to-slate-50">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">Blog</h1>
@@ -59,8 +55,6 @@ export default function Blog() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </>
   );
 }

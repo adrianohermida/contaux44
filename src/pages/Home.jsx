@@ -1,6 +1,4 @@
 import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
 import NewsCard from '../components/NewsCard';
@@ -93,8 +91,6 @@ export default function Home() {
 
   return (
     <>
-      <Header />
-      
       {/* Hero */}
       <section id="home" className="bg-gradient-to-br from-blue-50 to-slate-50 py-20">
         <div className="container mx-auto px-4">
@@ -258,8 +254,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </>
   );
 }
