@@ -60,8 +60,6 @@ import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
 import QuoteRequest from './pages/QuoteRequest';
 import Services from './pages/Services';
-import index from './pages/index';
-import processor from './pages/processor';
 import __Layout from './Layout.jsx';
 
 
@@ -79,8 +77,6 @@ export const PAGES = {
     "Pricing": Pricing,
     "QuoteRequest": QuoteRequest,
     "Services": Services,
-    "index": index,
-    "processor": processor,
 }
 
 export const pagesConfig = {
