@@ -116,13 +116,24 @@ export function VoxImplantProvider({ children }) {
   }, [updateConnectionState]);
 
   /**
-   * Iniciar chamada
-   */
-  const startCall = useCallback((targetUser, callType) => {
+    * Iniciar chamada
+    */
+  const startCall = useCallback(async (targetUser, callType) => {
     logger.info(`Iniciando chamada ${callType} para ${targetUser}`);
-    setActiveCall({ targetUser, callType });
-    setCallState(CALL_STATES.CONNECTING);
-  }, []);
+    try {
+      // Requisitar acesso a mídia local
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: callType === 'video',
+      });
+      setLocalStream(stream);
+      setActiveCall({ targetUser, callType });
+      setCallState(CALL_STATES.CONNECTING);
+    } catch (error) {
+      logger.error('Erro ao acessar mídia:', error);
+      showNotification('Erro ao acessar câmera/microfone', 'error');
+    }
+  }, [showNotification]);
 
   /**
    * Finalizar chamada
