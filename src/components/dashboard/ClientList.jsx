@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Edit2, Trash2, Plus } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Edit2, Trash2, Search } from 'lucide-react';
+import { useDebounce } from '../hooks/useDebounce';
 
 export default function ClientList({ tenantId, onEdit, onRefresh }) {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebounce(searchTerm, 300);
 
   useEffect(() => {
     loadClients();
@@ -27,10 +31,33 @@ export default function ClientList({ tenantId, onEdit, onRefresh }) {
     }
   };
 
+  const filteredClients = useMemo(() => {
+    if (!debouncedSearch) return clients;
+    
+    const search = debouncedSearch.toLowerCase();
+    return clients.filter(client => 
+      client.company_name?.toLowerCase().includes(search) ||
+      client.email?.toLowerCase().includes(search) ||
+      client.phone?.toLowerCase().includes(search)
+    );
+  }, [clients, debouncedSearch]);
+
   if (loading) return <div className="text-center py-8">Carregando...</div>;
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div className="space-y-4">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+        <Input
+          type="text"
+          placeholder="Buscar por empresa, email ou telefone..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
+      <div className="bg-white rounded-lg shadow overflow-hidden">
       <table className="w-full">
         <thead className="bg-slate-50 border-b border-slate-200">
           <tr>
@@ -42,7 +69,7 @@ export default function ClientList({ tenantId, onEdit, onRefresh }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-200">
-          {clients.map((client) => (
+          {filteredClients.map((client) => (
             <tr key={client.id} className="hover:bg-slate-50">
               <td className="px-6 py-4 text-sm font-medium text-slate-900">{client.company_name}</td>
               <td className="px-6 py-4 text-sm text-slate-600">{client.email}</td>
@@ -68,11 +95,26 @@ export default function ClientList({ tenantId, onEdit, onRefresh }) {
           ))}
         </tbody>
       </table>
-      {clients.length === 0 && (
-        <div className="text-center py-8 text-slate-500">
-          Nenhum cliente cadastrado
-        </div>
-      )}
+        {filteredClients.length === 0 && clients.length > 0 && (
+          <tbody>
+            <tr>
+              <td colSpan="5" className="text-center py-8 text-slate-500">
+                Nenhum cliente encontrado
+              </td>
+            </tr>
+          </tbody>
+        )}
+        {clients.length === 0 && (
+          <tbody>
+            <tr>
+              <td colSpan="5" className="text-center py-8 text-slate-500">
+                Nenhum cliente cadastrado
+              </td>
+            </tr>
+          </tbody>
+        )}
+      </table>
+    </div>
     </div>
   );
 }

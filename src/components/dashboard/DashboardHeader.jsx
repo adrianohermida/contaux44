@@ -8,11 +8,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useUserAndTenant } from '../hooks/useUserAndTenant';
+import { useDebounce } from '../hooks/useDebounce';
 
 export default function DashboardHeader() {
   const { user, tenantId } = useUserAndTenant();
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   useEffect(() => {
     const loadNotifications = async () => {
@@ -51,6 +54,8 @@ export default function DashboardHeader() {
             <input
               type="text"
               placeholder="Buscar clientes, processos, tickets..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
