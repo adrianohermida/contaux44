@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FileText, Download, Plus, Eye, Share2, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import ReportForm from '../components/dashboard/ReportForm';
 
 export default function AdvancedReports() {
   const { tenantId, user } = useUserAndTenant();
@@ -17,6 +18,7 @@ export default function AdvancedReports() {
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [showForm, setShowForm] = useState(false);
 
   const loadReports = useCallback(async () => {
     if (!tenantId) return;
@@ -43,9 +45,8 @@ export default function AdvancedReports() {
     return matchesType && matchesStatus;
   });
 
-  const handleGenerateReport = async () => {
-    // TODO: Implement report generation logic
-    alert('Função de geração de relatório em desenvolvimento');
+  const handleGenerateReport = () => {
+    setShowForm(true);
   };
 
   const handleDeleteReport = async (reportId) => {
@@ -71,6 +72,17 @@ export default function AdvancedReports() {
 
   return (
     <ProtectedRoute>
+      {showForm && (
+        <ReportForm
+          tenantId={tenantId}
+          userId={user?.email}
+          onSuccess={() => {
+            setShowForm(false);
+            loadReports();
+          }}
+          onClose={() => setShowForm(false)}
+        />
+      )}
       <DashboardLayout>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
