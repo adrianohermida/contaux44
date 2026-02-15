@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -55,17 +55,17 @@ const menuItems = [
   { icon: Settings, label: 'Configurações', path: '/settings' }
 ];
 
-export default function Sidebar({ collapsed, setCollapsed }) {
+const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   const location = useLocation();
   const [openMenus, setOpenMenus] = useState({});
 
-  const toggleSubmenu = (label) => {
+  const toggleSubmenu = useCallback((label) => {
     setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
-  };
+  }, []);
 
-  const isActive = (path) => {
+  const isActive = useCallback((path) => {
     return location.pathname === path;
-  };
+  }, [location.pathname]);
 
   return (
     <aside className={`bg-slate-900 text-white min-h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col`}>
@@ -136,4 +136,6 @@ export default function Sidebar({ collapsed, setCollapsed }) {
       </nav>
     </aside>
   );
-}
+});
+
+export default Sidebar;

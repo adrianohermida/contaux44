@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { Bell, Search, User, LogOut } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import {
@@ -10,39 +10,42 @@ import {
 import { useUserAndTenant } from '../hooks/useUserAndTenant';
 import { useDebounce } from '../hooks/useDebounce';
 
-export default function DashboardHeader() {
+const DashboardHeader = memo(function DashboardHeader() {
   const { user, tenantId } = useUserAndTenant();
-  const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebounce(searchQuery, 300);
 
-  useEffect(() => {
-    const loadNotifications = async () => {
-      if (!tenantId || !user) return;
-      
-      try {
-        const notifs = await base44.entities.Notification.filter({
-          tenant_id: tenantId,
-          user_email: user.email
-        });
-        
-        const sorted = notifs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-        setNotifications(sorted.slice(0, 5));
-        setUnreadCount(notifs.filter(n => !n.is_read).length);
-      } catch (error) {
-        console.error('Erro ao carregar notificações:', error);
-      }
-    };
+  const loadNotifications = useCallback(async () => {
+    if (!tenantId || !user) return;
     
+    try {
+      const notifs = await base44.entities.Notification.filter({
+        tenant_id: tenantId,
+        user_email: user.email
+      });
+      
+      const sorted = notifs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+      setNotifications(sorted.slice(0, 5));
+    } catch (error) {
+      console.error('Erro ao carregar notificações:', error);
+    }
+  }, [tenantId, user]);
+
+  useEffect(() => {
     loadNotifications();
     const interval = setInterval(loadNotifications, 60000);
     return () => clearInterval(interval);
-  }, [tenantId, user]);
+  }, [loadNotifications]);
 
-  const handleLogout = async () => {
+  const unreadCount = useMemo(() => 
+    notifications.filter(n => !n.is_read).length,
+    [notifications]
+  );
+
+  const handleLogout = useCallback(async () => {
     await base44.auth.logout();
-  };
+  }, []);
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
@@ -123,4 +126,6 @@ export default function DashboardHeader() {
       </div>
     </header>
   );
-}
+});
+
+export default DashboardHeader;
