@@ -1,12 +1,28 @@
-import React from 'react';
+let currentCall; // call object (instance of class Call) with methods
+let transferCall; // call object storing instance of transfer call
+const logger = new Logger(document.getElementById('logarea')); // create instance of Logger with method write
 
-export default function Index() {
-  return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-slate-900 mb-4">Bem-vindo ao Contaux</h1>
-        <p className="text-slate-600">Sistema de gestão contábil e jurídica.</p>
-      </div>
-    </div>
-  );
+const sdk = VoxImplant.getInstance();
+
+// login
+document.getElementById('login-btn').onclick = async () => {
+  await login(); // initialize, connect, login to Voximplant Cloud (./js/login.js)
+  await setHardwareSettings(); // get available cameras, microphones and output devices and create a dropdown for selection (./js/hardware-settings.js)
+  accessFunctionality(); // add event listeners to interactive elements ('./js/actions.js')
+  manageConnectingView(); // changes connection window interactive elements, depending on chosen option (./js/action.js)
+};
+
+// handle incoming call
+sdk.on(VoxImplant.Events.IncomingCall, (e) => {
+  handleIncomingCall(e);
+});
+
+enableDropdownSelect();
+
+document.addEventListener('click', (event) => {
+  closeDropdown(event);
+});
+
+export default function IndexPage() {
+  return <div id="logarea" />;
 }

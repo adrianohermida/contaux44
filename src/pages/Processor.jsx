@@ -1,12 +1,29 @@
-import React from 'react';
+class Processor extends AudioWorkletProcessor {
+  constructor() {
+    super();
+    this.cycle = 0;
+    this.fullValue = 0;
+  }
+  process(inputs, outputs, parameters) {
+    this.cycle++;
+    const sum = inputs[0].reduce((pred, item) => {
+      const fItem = parseFloat(item);
+      return pred + fItem * fItem;
+    }, 0.0);
+    this.fullValue += Math.sqrt(sum);
+    if (this.cycle === 10) {
+      this.port.postMessage({
+        level: this.fullValue / this.cycle,
+      });
+      this.cycle = 0;
+      this.fullValue = 0;
+    }
+    return true;
+  }
+}
 
-export default function Processor() {
-  return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-slate-900 mb-4">Processor</h1>
-        <p className="text-slate-600">Página de processamento.</p>
-      </div>
-    </div>
-  );
+registerProcessor('processor', Processor);
+
+export default function ProcessorPage() {
+  return null;
 }
