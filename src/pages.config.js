@@ -50,6 +50,7 @@
 import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import Automations from './pages/Automations';
 import BankReconciliation from './pages/BankReconciliation';
 import Blog from './pages/Blog';
@@ -80,8 +81,7 @@ import Services from './pages/Services';
 import Settings from './pages/Settings';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
-import index from './pages/index';
-import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import processor from './pages/processor';
 import __Layout from './Layout.jsx';
 
 
@@ -89,6 +89,7 @@ export const PAGES = {
     "About": About,
     "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
+    "AnalyticsDashboard": AnalyticsDashboard,
     "Automations": Automations,
     "BankReconciliation": BankReconciliation,
     "Blog": Blog,
@@ -119,8 +120,7 @@ export const PAGES = {
     "Settings": Settings,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
-    "index": index,
-    "AnalyticsDashboard": AnalyticsDashboard,
+    "processor": processor,
 }
 
 export const pagesConfig = {
