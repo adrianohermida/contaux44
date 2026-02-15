@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import InvoiceForm from '../components/dashboard/InvoiceForm';
 import InvoiceList from '../components/dashboard/InvoiceList';
 import { Button } from '@/components/ui/button';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
 
 export default function Invoicing() {
-  const { tenantId } = useUserAndTenant();
+  const { workspaceId } = useMultitenantAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -24,18 +24,8 @@ export default function Invoicing() {
     setShowForm(true);
   }, []);
 
-  if (!tenantId) {
-    return (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <div className="text-center py-8">Carregando...</div>
-        </DashboardLayout>
-      </ProtectedRoute>
-    );
-  }
-
   return (
-    <ProtectedRoute>
+    <ProtectedInternalRoute>
       <DashboardLayout>
         <div className="space-y-6">
           <div className="flex justify-between items-center">
@@ -55,19 +45,19 @@ export default function Invoicing() {
           {showForm && (
             <InvoiceForm
               invoice={editingInvoice}
-              tenantId={tenantId}
+              tenantId={workspaceId}
               onSave={handleSave}
               onCancel={() => { setShowForm(false); setEditingInvoice(null); }}
             />
           )}
 
           <InvoiceList
-            tenantId={tenantId}
+            tenantId={workspaceId}
             onEdit={handleEdit}
             onRefresh={refreshKey}
           />
         </div>
       </DashboardLayout>
-    </ProtectedRoute>
+    </ProtectedInternalRoute>
   );
 }

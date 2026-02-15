@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import LegalProcessForm from '../components/dashboard/LegalProcessForm';
 import LegalProcessList from '../components/dashboard/LegalProcessList';
 import { Button } from '@/components/ui/button';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
 
 export default function LegalProcesses() {
-  const { tenantId } = useUserAndTenant();
+  const { workspaceId } = useMultitenantAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingProcess, setEditingProcess] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -34,18 +34,8 @@ export default function LegalProcesses() {
     setEditingProcess(null);
   }, []);
 
-  if (!tenantId) {
-    return (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <div className="text-center py-8">Carregando...</div>
-        </DashboardLayout>
-      </ProtectedRoute>
-    );
-  }
-
   return (
-    <ProtectedRoute>
+    <ProtectedInternalRoute>
       <DashboardLayout>
         <div className="space-y-6">
           <div className="flex justify-between items-center">
@@ -65,19 +55,19 @@ export default function LegalProcesses() {
           {showForm && (
             <LegalProcessForm
               process={editingProcess}
-              tenantId={tenantId}
+              tenantId={workspaceId}
               onSave={handleSave}
               onCancel={handleCancel}
             />
           )}
 
           <LegalProcessList
-            tenantId={tenantId}
+            tenantId={workspaceId}
             onEdit={handleEdit}
             onRefresh={refreshKey}
           />
         </div>
       </DashboardLayout>
-    </ProtectedRoute>
+    </ProtectedInternalRoute>
   );
 }

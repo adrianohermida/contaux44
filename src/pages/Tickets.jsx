@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import TicketForm from '../components/dashboard/TicketForm';
 import TicketList from '../components/dashboard/TicketList';
 import { Button } from '@/components/ui/button';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
 
 export default function Tickets() {
-  const { tenantId } = useUserAndTenant();
+  const { workspaceId } = useMultitenantAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingTicket, setEditingTicket] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -34,18 +34,8 @@ export default function Tickets() {
     setEditingTicket(null);
   }, []);
 
-  if (!tenantId) {
-    return (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <div className="text-center py-8">Carregando...</div>
-        </DashboardLayout>
-      </ProtectedRoute>
-    );
-  }
-
   return (
-    <ProtectedRoute>
+    <ProtectedInternalRoute>
       <DashboardLayout>
         <div className="space-y-6">
           <div className="flex justify-between items-center">
@@ -65,19 +55,19 @@ export default function Tickets() {
           {showForm && (
             <TicketForm
               ticket={editingTicket}
-              tenantId={tenantId}
+              tenantId={workspaceId}
               onSave={handleSave}
               onCancel={handleCancel}
             />
           )}
 
           <TicketList
-            tenantId={tenantId}
+            tenantId={workspaceId}
             onEdit={handleEdit}
             onRefresh={refreshKey}
           />
         </div>
       </DashboardLayout>
-    </ProtectedRoute>
+    </ProtectedInternalRoute>
   );
 }
