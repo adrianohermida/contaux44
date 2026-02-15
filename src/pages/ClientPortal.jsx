@@ -1,39 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedClientRoute from '../components/auth/ProtectedClientRoute';
 import { FileText, DollarSign, AlertCircle } from 'lucide-react';
+import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
 
 export default function ClientPortal() {
-  const [user, setUser] = useState(null);
+  const { user, loading, workspaceId } = useMultitenantAuth('client');
   const [invoices, setInvoices] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadInvoices = async () => {
+      if (!workspaceId) return;
       try {
-        const userData = await base44.auth.me();
-        setUser(userData);
-        
-        const tenantId = userData.email.split('@')[0];
-        const invoiceData = await base44.entities.Invoice.filter({ tenant_id: tenantId });
+        const invoiceData = await base44.entities.Invoice.filter({ workspace_id: workspaceId });
         setInvoices(invoiceData);
-      } finally {
-        setLoading(false);
+      } catch (err) {
+        console.error('Erro ao carregar faturas:', err);
       }
     };
-    loadData();
-  }, []);
+    loadInvoices();
+  }, [workspaceId]);
 
-  if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+  if (loading) return <ProtectedClientRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedClientRoute>;
 
   return (
-    <ProtectedRoute>
+    <ProtectedClientRoute>
       <DashboardLayout>
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Meu Painel</h1>
-            <p className="text-slate-600 mt-1">Bem-vindo, {user?.full_name}</p>
+            <p className="text-slate-600 mt-1">Bem-vindo, {user?.full_name || 'Cliente'}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -103,6 +100,6 @@ export default function ClientPortal() {
           </div>
         </div>
       </DashboardLayout>
-    </ProtectedRoute>
+    </ProtectedClientRoute>
   );
 }
