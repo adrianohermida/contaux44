@@ -50,7 +50,10 @@
 import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
+import Analytics from './pages/Analytics';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import App from './pages/App';
+import AuditLogs from './pages/AuditLogs';
 import Automations from './pages/Automations';
 import BankReconciliation from './pages/BankReconciliation';
 import Blog from './pages/Blog';
@@ -77,16 +80,15 @@ import QuoteRequest from './pages/QuoteRequest';
 import Quotes from './pages/Quotes';
 import Reports from './pages/Reports';
 import Sales from './pages/Sales';
+import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
 import Settings from './pages/Settings';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import index from './pages/index';
 import processor from './pages/processor';
-import App from './pages/App';
-import Analytics from './pages/Analytics';
-import AuditLogs from './pages/AuditLogs';
-import SecurityCenter from './pages/SecurityCenter';
+import Transactions from './pages/Transactions';
+import CashFlowForecast from './pages/CashFlowForecast';
 import __Layout from './Layout.jsx';
 
 
@@ -94,7 +96,10 @@ export const PAGES = {
     "About": About,
     "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
+    "Analytics": Analytics,
     "AnalyticsDashboard": AnalyticsDashboard,
+    "App": App,
+    "AuditLogs": AuditLogs,
     "Automations": Automations,
     "BankReconciliation": BankReconciliation,
     "Blog": Blog,
@@ -121,16 +126,15 @@ export const PAGES = {
     "Quotes": Quotes,
     "Reports": Reports,
     "Sales": Sales,
+    "SecurityCenter": SecurityCenter,
     "Services": Services,
     "Settings": Settings,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "index": index,
     "processor": processor,
-    "App": App,
-    "Analytics": Analytics,
-    "AuditLogs": AuditLogs,
-    "SecurityCenter": SecurityCenter,
+    "Transactions": Transactions,
+    "CashFlowForecast": CashFlowForecast,
 }
 
 export const pagesConfig = {
