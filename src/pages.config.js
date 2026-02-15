@@ -91,6 +91,7 @@ import Transactions from './pages/Transactions';
 import index from './pages/index';
 import processor from './pages/processor';
 import SettingsPage from './pages/SettingsPage';
+import AdvancedReportsPage from './pages/AdvancedReportsPage';
 import __Layout from './Layout.jsx';
 
 
@@ -139,6 +140,7 @@ export const PAGES = {
     "index": index,
     "processor": processor,
     "SettingsPage": SettingsPage,
+    "AdvancedReportsPage": AdvancedReportsPage,
 }
 
 export const pagesConfig = {
