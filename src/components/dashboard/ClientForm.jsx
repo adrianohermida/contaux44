@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { X } from 'lucide-react';
 
 export default function ClientForm({ client, onSave, onCancel, tenantId }) {
-  const [formData, setFormData] = useState(client || {
+  const initialFormData = useMemo(() => client || {
     tenant_id: tenantId,
     company_name: '',
     email: '',
@@ -15,19 +15,21 @@ export default function ClientForm({ client, onSave, onCancel, tenantId }) {
     fiscal_year_start: '',
     currency: 'BRL',
     status: 'active'
-  });
+  }, [client, tenantId]);
+
+  const [formData, setFormData] = useState(initialFormData);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleSelectChange = (name, value) => {
+  const handleSelectChange = useCallback((name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -40,7 +42,7 @@ export default function ClientForm({ client, onSave, onCancel, tenantId }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [client, formData, onSave]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

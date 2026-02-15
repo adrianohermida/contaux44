@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { X } from 'lucide-react';
 
 export default function LegalProcessForm({ process, onSave, onCancel, tenantId }) {
-  const [formData, setFormData] = useState(process || {
+  const initialFormData = useMemo(() => process || {
     tenant_id: tenantId,
     client_id: '',
     process_number: '',
@@ -21,19 +21,21 @@ export default function LegalProcessForm({ process, onSave, onCancel, tenantId }
     description: '',
     responsible_lawyer: '',
     notes: ''
-  });
+  }, [process, tenantId]);
+
+  const [formData, setFormData] = useState(initialFormData);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleSelectChange = (name, value) => {
+  const handleSelectChange = useCallback((name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -46,7 +48,7 @@ export default function LegalProcessForm({ process, onSave, onCancel, tenantId }
     } finally {
       setLoading(false);
     }
-  };
+  }, [process, formData, onSave]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
