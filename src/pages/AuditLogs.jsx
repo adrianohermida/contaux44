@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
+import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,18 +12,18 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export default function AuditLogs() {
-  const { tenantId } = useUserAndTenant();
+  const { workspaceId } = useMultitenantAuth('internal');
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterAction, setFilterAction] = useState('all');
 
   const loadLogs = useCallback(async () => {
-    if (!tenantId) return;
+    if (!workspaceId) return;
     
     try {
       const data = await base44.entities.AuditLog.filter(
-        { tenant_id: tenantId },
+        { tenant_id: workspaceId },
         '-timestamp',
         100
       );
@@ -31,7 +31,7 @@ export default function AuditLogs() {
     } finally {
       setLoading(false);
     }
-  }, [tenantId]);
+  }, [workspaceId]);
 
   useEffect(() => {
     loadLogs();
@@ -64,18 +64,8 @@ export default function AuditLogs() {
     a.click();
   }, [filteredLogs]);
 
-  if (!tenantId) {
-    return (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <div className="text-center py-8">Carregando...</div>
-        </DashboardLayout>
-      </ProtectedRoute>
-    );
-  }
-
   return (
-    <ProtectedRoute>
+    <ProtectedInternalRoute>
       <DashboardLayout>
         <div className="space-y-6">
           <div>
@@ -171,6 +161,6 @@ export default function AuditLogs() {
           </Card>
         </div>
       </DashboardLayout>
-    </ProtectedRoute>
+    </ProtectedInternalRoute>
   );
 }
