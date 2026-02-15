@@ -46,11 +46,11 @@ export default function Header() {
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center gap-6 lg:gap-8">
-            <li><Link to={createPageUrl('Home')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors">Início</Link></li>
-            <li><Link to={createPageUrl('About')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors">Sobre</Link></li>
-            <li><a href="#servicos" className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors">Serviços</a></li>
-            <li><Link to={createPageUrl('Blog')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors">Blog</Link></li>
-            <li><Link to={createPageUrl('Contact')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors">Contato</Link></li>
+            <li><Link to={createPageUrl('Home')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Início</Link></li>
+            <li><Link to={createPageUrl('About')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Sobre</Link></li>
+            <li><a href="#servicos" className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Serviços</a></li>
+            <li><Link to={createPageUrl('Blog')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Blog</Link></li>
+            <li><Link to={createPageUrl('Contact')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Contato</Link></li>
           </ul>
 
           {/* Desktop Auth Section */}

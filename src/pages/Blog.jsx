@@ -83,8 +83,8 @@ export default function Blog() {
             <div className="sm:col-span-2 lg:col-span-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
                 {paginatedPosts.map(post => (
-                  <div key={post.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                    <img src={post.id === 1 || post.id === 4 ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/533400192_blog-1.jpg' : post.id === 2 || post.id === 5 ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/173396dc9_blog-2.jpg' : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8bbde3a94_blog-3.jpg'} alt={post.title} className="w-full h-40 sm:h-48 object-cover" />
+                  <div key={post.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                    <img src={post.id === 1 || post.id === 4 ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/533400192_blog-1.jpg' : post.id === 2 || post.id === 5 ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/173396dc9_blog-2.jpg' : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8bbde3a94_blog-3.jpg'} alt={post.title} className="w-full h-40 sm:h-48 object-cover" loading="lazy" />
                     <div className="p-4 sm:p-6">
                       <h4 className="font-bold text-base sm:text-lg mb-2 hover:text-blue-600 cursor-pointer line-clamp-2"><a href="#">{post.title}</a></h4>
                       <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{post.desc}</p>
