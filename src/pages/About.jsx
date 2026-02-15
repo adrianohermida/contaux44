@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle2, Play, Users, BarChart3 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const teamMembers = [
   { name: 'Dahlia Moore', role: 'Senior Manager' },
@@ -26,7 +28,7 @@ export default function About() {
           <h1 className="text-4xl font-bold mb-4">About Us</h1>
           <p className="text-blue-100 mb-6">Business plan draws on a wide range of knowledge from different business disciplines.</p>
           <div className="flex gap-2 text-sm">
-            <a href="/" className="hover:underline">Home</a>
+            <Link to={createPageUrl('Home')} className="hover:underline">Home</Link>
             <span>/</span>
             <span>About Us</span>
           </div>

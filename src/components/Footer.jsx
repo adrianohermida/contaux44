@@ -1,5 +1,7 @@
 import React from 'react';
 import { Instagram, Twitter, Linkedin, Facebook } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import Logo from './Logo';
 
 export default function Footer() {
@@ -38,10 +40,10 @@ export default function Footer() {
           <div>
             <h3 className="font-bold mb-4">Menu</h3>
             <ul className="space-y-2">
-              <li><a href="#sobre" className="text-slate-400 hover:text-white text-sm">Sobre</a></li>
-              <li><a href="#servicos" className="text-slate-400 hover:text-white text-sm">Serviços</a></li>
-              <li><a href="#blog" className="text-slate-400 hover:text-white text-sm">Blog</a></li>
-              <li><a href="#contato" className="text-slate-400 hover:text-white text-sm">Contato</a></li>
+              <li><Link to={createPageUrl('About')} className="text-slate-400 hover:text-white text-sm">Sobre</Link></li>
+              <li><Link to={createPageUrl('Home')} className="text-slate-400 hover:text-white text-sm">Serviços</Link></li>
+              <li><Link to={createPageUrl('Blog')} className="text-slate-400 hover:text-white text-sm">Blog</Link></li>
+              <li><Link to={createPageUrl('Contact')} className="text-slate-400 hover:text-white text-sm">Contato</Link></li>
             </ul>
           </div>
 
