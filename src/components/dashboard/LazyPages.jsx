@@ -24,3 +24,4 @@ export const LazyReports = lazy(() => import('../../pages/Reports'));
 export const LazyCommunication = lazy(() => import('../../pages/Communication'));
 export const LazyClientPortal = lazy(() => import('../../pages/ClientPortal'));
 export const LazySettings = lazy(() => import('../../pages/SettingsPage'));
+const LazyBlogManager = lazy(() => import('../../pages/BlogManager'));

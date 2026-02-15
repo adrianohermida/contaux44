@@ -23,7 +23,8 @@ import {
   LazyReports,
   LazyCommunication,
   LazyClientPortal,
-  LazySettings
+  LazySettings,
+  LazyBlogManager
 } from './LazyPages';
 
 const LazyAnalytics = lazy(() => import('../../pages/Analytics'));
@@ -176,6 +177,12 @@ export default function DashboardRoutes() {
       <Route path="/settings" element={
         <LazyPageWrapper>
           <LazySettings />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/blogmanager" element={
+        <LazyPageWrapper>
+          <LazyBlogManager />
         </LazyPageWrapper>
       } />
       
