@@ -60,6 +60,27 @@ export default function DocumentManagement() {
     setShowForm(true);
   };
 
+  const handleCopyTemplate = async (template) => {
+    try {
+      const copiedTemplate = {
+        ...template,
+        template_name: `${template.template_name} (Cópia)`,
+        is_default: false,
+        id: undefined
+      };
+      delete copiedTemplate.id;
+      delete copiedTemplate.created_date;
+      delete copiedTemplate.updated_date;
+      
+      await base44.entities.DocumentTemplate.create(copiedTemplate);
+      loadTemplates();
+      alert('Modelo duplicado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao duplicar modelo:', error);
+      alert('Erro ao duplicar modelo. Tente novamente.');
+    }
+  };
+
   if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
   return (
@@ -158,25 +179,32 @@ export default function DocumentManagement() {
                           </div>
                         </div>
                         <div className="flex gap-2 ml-4">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => handleEditTemplate(template)}
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => handleDeleteTemplate(template.id)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                           <Button 
+                             variant="outline" 
+                             size="sm"
+                             onClick={() => handleEditTemplate(template)}
+                             title="Editar"
+                           >
+                             <Edit2 className="w-4 h-4" />
+                           </Button>
+                           <Button 
+                             variant="outline" 
+                             size="sm"
+                             onClick={() => handleCopyTemplate(template)}
+                             title="Duplicar"
+                           >
+                             <Copy className="w-4 h-4" />
+                           </Button>
+                           <Button 
+                             variant="outline" 
+                             size="sm"
+                             onClick={() => handleDeleteTemplate(template.id)}
+                             className="text-red-600 hover:text-red-700"
+                             title="Excluir"
+                           >
+                             <Trash2 className="w-4 h-4" />
+                           </Button>
+                         </div>
                       </div>
                     </div>
                   ))}
