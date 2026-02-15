@@ -88,7 +88,6 @@ import Services from './pages/Services';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
-import processor from './pages/processor';
 import SettingsPage from './pages/SettingsPage';
 import AdvancedReportsPage from './pages/AdvancedReportsPage';
 import ClientPanel from './pages/ClientPanel';
@@ -139,7 +138,6 @@ export const PAGES = {
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
-    "processor": processor,
     "SettingsPage": SettingsPage,
     "AdvancedReportsPage": AdvancedReportsPage,
     "ClientPanel": ClientPanel,
