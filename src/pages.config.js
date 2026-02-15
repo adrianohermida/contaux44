@@ -88,9 +88,11 @@ import Services from './pages/Services';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
+import index from './pages/index';
 import processor from './pages/processor';
 import SettingsPage from './pages/SettingsPage';
 import AdvancedReportsPage from './pages/AdvancedReportsPage';
+import ClientPanel from './pages/ClientPanel';
 import __Layout from './Layout.jsx';
 
 
@@ -136,9 +138,11 @@ export const PAGES = {
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
+    "index": index,
     "processor": processor,
     "SettingsPage": SettingsPage,
     "AdvancedReportsPage": AdvancedReportsPage,
+    "ClientPanel": ClientPanel,
 }
 
 export const pagesConfig = {
