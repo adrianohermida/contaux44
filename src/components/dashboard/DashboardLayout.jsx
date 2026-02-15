@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import Sidebar from './Sidebar';
 import DashboardHeader from './DashboardHeader';
 
-export default function DashboardLayout({ children }) {
+const DashboardLayout = memo(function DashboardLayout({ children }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  
+  const handleSetCollapsed = useCallback((value) => {
+    setSidebarCollapsed(value);
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-slate-50">
-      <Sidebar collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+      <Sidebar collapsed={sidebarCollapsed} setCollapsed={handleSetCollapsed} />
       
       <div className="flex-1 flex flex-col">
         <DashboardHeader />
@@ -18,4 +22,6 @@ export default function DashboardLayout({ children }) {
       </div>
     </div>
   );
-}
+});
+
+export default DashboardLayout;
