@@ -6,6 +6,7 @@ import EncryptionSetup from './integrations/EncryptionSetup';
 import VoximplantSetup from './integrations/VoximplantSetup';
 import GoogleSheetsSetup from './integrations/GoogleSheetsSetup';
 import GoogleCalendarSetup from './integrations/GoogleCalendarSetup';
+import BackupStorageSetup from './integrations/BackupStorageSetup';
 
 const INTEGRATIONS = [
   {
@@ -75,7 +76,8 @@ export default function IntegrationsManager() {
     encryption: EncryptionSetup,
     voximplant: VoximplantSetup,
     'google-sheets': GoogleSheetsSetup,
-    'google-calendar': GoogleCalendarSetup
+    'google-calendar': GoogleCalendarSetup,
+    'backup-storage': BackupStorageSetup
   };
 
   const SelectedSetup = selectedIntegration ? setupComponents[selectedIntegration] : null;
