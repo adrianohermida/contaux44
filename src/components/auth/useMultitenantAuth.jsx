@@ -47,11 +47,20 @@ export function useMultitenantAuth(requiredType = null) {
   }, [requiredType]);
 
   const hasAccess = (type) => {
-    return user?.user_type === type;
+    if (!user) return false;
+    // Suportar ambos os formatos: user_type e role
+    return user?.user_type === type || user?.role === `user_${type}`;
   };
 
-  const isInternal = () => user?.user_type === 'internal';
-  const isClient = () => user?.user_type === 'client';
+  const isInternal = () => {
+    if (!user) return false;
+    return user?.user_type === 'internal' || user?.role === 'user_internal' || user?.role === 'admin';
+  };
+
+  const isClient = () => {
+    if (!user) return false;
+    return user?.user_type === 'client' || user?.role === 'user_client';
+  };
 
   return {
     user,
