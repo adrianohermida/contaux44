@@ -1,31 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2 } from 'lucide-react';
+
+const EntryRow = React.memo(({ entry, onEdit, onDelete }) => (
+  <tr className="hover:bg-slate-50">
+    <td className="px-6 py-4 text-sm">{new Date(entry.entry_date).toLocaleDateString('pt-BR')}</td>
+    <td className="px-6 py-4 text-sm font-medium">{entry.reference_number}</td>
+    <td className="px-6 py-4 text-sm">{entry.description}</td>
+    <td className="px-6 py-4 text-sm">{entry.line_items?.length || 0}</td>
+    <td className="px-6 py-4 text-sm">
+      <span className={`px-2 py-1 rounded text-xs font-medium ${entry.is_posted ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+        {entry.is_posted ? 'Lançada' : 'Rascunho'}
+      </span>
+    </td>
+    <td className="px-6 py-4 text-right">
+      <div className="flex justify-end gap-2">
+        <Button variant="ghost" size="sm" onClick={() => onEdit(entry)}>
+          <Edit2 className="w-4 h-4" />
+        </Button>
+        <Button variant="ghost" size="sm" onClick={() => onDelete(entry.id)}>
+          <Trash2 className="w-4 h-4 text-red-500" />
+        </Button>
+      </div>
+    </td>
+  </tr>
+));
+
+EntryRow.displayName = 'EntryRow';
 
 export default function JournalEntryList({ tenantId, onEdit, onRefresh }) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadEntries();
-  }, [tenantId, onRefresh]);
-
-  const loadEntries = async () => {
+  const loadEntries = useCallback(async () => {
     try {
       const data = await base44.entities.JournalEntry.filter({ tenant_id: tenantId });
       setEntries(data);
     } finally {
       setLoading(false);
     }
-  };
+  }, [tenantId]);
 
-  const handleDelete = async (id) => {
+  useEffect(() => {
+    loadEntries();
+  }, [loadEntries, onRefresh]);
+
+  const handleDelete = useCallback(async (id) => {
     if (confirm('Tem certeza?')) {
       await base44.entities.JournalEntry.delete(id);
       loadEntries();
     }
-  };
+  }, [loadEntries]);
 
   if (loading) return <div className="text-center py-8">Carregando...</div>;
 
@@ -44,27 +70,7 @@ export default function JournalEntryList({ tenantId, onEdit, onRefresh }) {
         </thead>
         <tbody className="divide-y divide-slate-200">
           {entries.map((entry) => (
-            <tr key={entry.id} className="hover:bg-slate-50">
-              <td className="px-6 py-4 text-sm">{new Date(entry.entry_date).toLocaleDateString('pt-BR')}</td>
-              <td className="px-6 py-4 text-sm font-medium">{entry.reference_number}</td>
-              <td className="px-6 py-4 text-sm">{entry.description}</td>
-              <td className="px-6 py-4 text-sm">{entry.line_items?.length || 0}</td>
-              <td className="px-6 py-4 text-sm">
-                <span className={`px-2 py-1 rounded text-xs font-medium ${entry.is_posted ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                  {entry.is_posted ? 'Lançada' : 'Rascunho'}
-                </span>
-              </td>
-              <td className="px-6 py-4 text-right">
-                <div className="flex justify-end gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => onEdit(entry)}>
-                    <Edit2 className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(entry.id)}>
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </Button>
-                </div>
-              </td>
-            </tr>
+            <EntryRow key={entry.id} entry={entry} onEdit={onEdit} onDelete={handleDelete} />
           ))}
         </tbody>
       </table>
