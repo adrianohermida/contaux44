@@ -60,6 +60,20 @@ export default function AdvancedReports() {
     }
   };
 
+  const handleDownloadReport = async (report) => {
+    if (!report.file_url) {
+      alert('Relatório ainda não foi gerado');
+      return;
+    }
+    window.open(report.file_url, '_blank');
+  };
+
+  const handleShareReport = async (report) => {
+    const shareUrl = `${window.location.origin}/reports/${report.id}`;
+    const emailList = report.shared_with?.join(', ') || 'Ninguém';
+    alert(`Relatório compartilhado com:\n${emailList}\n\nURL: ${shareUrl}`);
+  };
+
   const statusColors = {
     draft: 'bg-gray-100 text-gray-800',
     generated: 'bg-blue-100 text-blue-800',
@@ -166,26 +180,41 @@ export default function AdvancedReports() {
                           </div>
                         </div>
                         <div className="flex gap-2 ml-4">
-                          {report.file_url && (
-                            <Button variant="outline" size="sm">
-                              <Download className="w-4 h-4" />
-                            </Button>
-                          )}
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <Share2 className="w-4 h-4" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => handleDeleteReport(report.id)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                           {report.file_url && (
+                             <Button 
+                               variant="outline" 
+                               size="sm"
+                               onClick={() => handleDownloadReport(report)}
+                               title="Download"
+                             >
+                               <Download className="w-4 h-4" />
+                             </Button>
+                           )}
+                           <Button 
+                             variant="outline" 
+                             size="sm"
+                             title="Visualizar"
+                           >
+                             <Eye className="w-4 h-4" />
+                           </Button>
+                           <Button 
+                             variant="outline" 
+                             size="sm"
+                             onClick={() => handleShareReport(report)}
+                             title="Compartilhar"
+                           >
+                             <Share2 className="w-4 h-4" />
+                           </Button>
+                           <Button 
+                             variant="outline" 
+                             size="sm"
+                             onClick={() => handleDeleteReport(report.id)}
+                             className="text-red-600 hover:text-red-700"
+                             title="Excluir"
+                           >
+                             <Trash2 className="w-4 h-4" />
+                           </Button>
+                         </div>
                       </div>
                     </div>
                   ))}
