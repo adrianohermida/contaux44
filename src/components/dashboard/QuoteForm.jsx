@@ -17,7 +17,7 @@ const VALIDATION_RULES = {
 
 export default function QuoteForm({ quote, onSave, onCancel, tenantId, isOpen = true }) {
   const initialData = useMemo(() => quote || {
-    tenant_id: tenantId,
+    workspace_id: tenantId,
     client_id: '',
     quote_number: '',
     status: 'draft',

@@ -14,7 +14,7 @@ const VALIDATION_RULES = {
 
 export default function PaymentForm({ payment, onSave, onCancel, tenantId, isOpen = true }) {
   const initialData = useMemo(() => payment || {
-    tenant_id: tenantId,
+    workspace_id: tenantId,
     client_id: '',
     invoice_id: '',
     payment_number: '',
@@ -33,14 +33,14 @@ export default function PaymentForm({ payment, onSave, onCancel, tenantId, isOpe
 
   useEffect(() => {
     (async () => {
-      try {
-        const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
-        setInvoices(data || []);
-      } catch (error) {
-        console.error('Erro ao carregar faturas:', error);
-      }
-    })();
-  }, [tenantId]);
+       try {
+         const data = await base44.entities.Invoice.filter({ workspace_id: tenantId });
+         setInvoices(data || []);
+       } catch (error) {
+         console.error('Erro ao carregar faturas:', error);
+       }
+     })();
+    }, [tenantId]);
 
   const paymentMethodOptions = [
     { value: 'bank_transfer', label: 'Transferência Bancária' },
