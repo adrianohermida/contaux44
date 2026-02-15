@@ -9,28 +9,24 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { title, keywords = [] } = await req.json();
+    const { title, keywords } = await req.json();
 
-    const imagePrompt = `
-Professional blog cover image for an article titled "${title}".
-Keywords: ${keywords.join(', ')}.
+    if (!title) {
+      return Response.json({ error: 'Title is required' }, { status: 400 });
+    }
 
-Design requirements:
-- Modern, professional design
-- Relevant to accounting/legal topics
-- High-quality, clean layout
-- Include subtle visual elements representing finance/law
-- Color scheme: blues, greens, professional whites
-- 1200x630px aspect ratio
-- No text on the image
-- Corporate and trustworthy appearance
-`;
-
-    const result = await base44.integrations.Core.GenerateImage({
-      prompt: imagePrompt
+    const response = await base44.integrations.Core.GenerateImage({
+      prompt: `Create a professional and attractive blog header image for the article titled "${title}".
+      Keywords/Topics: ${keywords || 'accounting'}
+      
+      Style: Modern, professional, suitable for accounting/law firm website
+      Dimensions: 16:9 aspect ratio
+      Elements: Include relevant icons or visuals related to the topic, clean design, professional colors`,
     });
 
-    return Response.json({ image_url: result.url });
+    return Response.json({ 
+      image_url: response.url
+    });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
