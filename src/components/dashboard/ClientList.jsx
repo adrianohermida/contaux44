@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,25 +11,25 @@ export default function ClientList({ tenantId, onEdit, onRefresh }) {
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebounce(searchTerm, 300);
 
-  useEffect(() => {
-    loadClients();
-  }, [tenantId, onRefresh]);
-
-  const loadClients = async () => {
+  const loadClients = useCallback(async () => {
     try {
       const data = await base44.entities.Client.filter({ tenant_id: tenantId });
       setClients(data);
     } finally {
       setLoading(false);
     }
-  };
+  }, [tenantId]);
 
-  const handleDelete = async (id) => {
+  useEffect(() => {
+    loadClients();
+  }, [loadClients, onRefresh]);
+
+  const handleDelete = useCallback(async (id) => {
     if (confirm('Tem certeza que deseja deletar este cliente?')) {
       await base44.entities.Client.delete(id);
       loadClients();
     }
-  };
+  }, [loadClients]);
 
   const filteredClients = useMemo(() => {
     if (!debouncedSearch) return clients;

@@ -50,6 +50,7 @@ const menuItems = [
   { icon: Calendar, label: 'Calendário Contábil', path: '/accountingcalendar' },
   { icon: Zap, label: 'Automações', path: '/automations' },
   { icon: BarChart3, label: 'Relatórios', path: '/reports' },
+  { icon: BarChart3, label: 'Análises', path: '/analytics' },
   { icon: Phone, label: 'Comunicação', path: '/communication' },
   { icon: UserCircle, label: 'Meu Painel', path: '/clientportal' },
   { icon: Settings, label: 'Configurações', path: '/settings' }
