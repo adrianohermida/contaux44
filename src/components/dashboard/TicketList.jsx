@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
 const TicketRow = React.memo(({ ticket, onEdit, onDelete, getStatusColor }) => (
   <tr className="hover:bg-slate-50">
@@ -34,8 +35,20 @@ export default function TicketList({ tenantId, onEdit, onRefresh }) {
 
   const loadTickets = useCallback(async () => {
     try {
+      const user = await base44.auth.me();
+      const userTenantId = user.tenant_id || user.email.split('@')[0];
+      
+      if (tenantId !== userTenantId) {
+        toast.error('Acesso negado: tenant inválido');
+        setTickets([]);
+        return;
+      }
+
       const data = await base44.entities.Ticket.filter({ tenant_id: tenantId });
-      setTickets(data);
+      setTickets(data || []);
+    } catch (error) {
+      console.error('Erro ao carregar tickets:', error);
+      toast.error('Erro ao carregar tickets');
     } finally {
       setLoading(false);
     }
@@ -47,17 +60,37 @@ export default function TicketList({ tenantId, onEdit, onRefresh }) {
 
   const handleDelete = useCallback(async (id) => {
     if (confirm('Tem certeza?')) {
-      await base44.entities.Ticket.delete(id);
-      loadTickets();
+      try {
+        await base44.entities.Ticket.delete(id);
+        toast.success('Ticket deletado');
+        loadTickets();
+      } catch (error) {
+        toast.error('Erro ao deletar ticket');
+      }
     }
   }, [loadTickets]);
 
   const getStatusColor = useCallback((status) => {
-    const colors = { open: 'bg-red-100 text-red-800', in_progress: 'bg-blue-100 text-blue-800', waiting_client: 'bg-yellow-100 text-yellow-800', resolved: 'bg-green-100 text-green-800', closed: 'bg-slate-100 text-slate-800' };
+    const colors = {
+      open: 'bg-red-100 text-red-800',
+      in_progress: 'bg-blue-100 text-blue-800',
+      waiting_client: 'bg-yellow-100 text-yellow-800',
+      resolved: 'bg-green-100 text-green-800',
+      closed: 'bg-slate-100 text-slate-800'
+    };
     return colors[status] || 'bg-slate-100';
   }, []);
 
-  if (loading) return <div className="text-center py-8">Carregando...</div>;
+  if (loading) return <div className="text-center py-8 text-slate-500">Carregando tickets...</div>;
+
+  if (tickets.length === 0) {
+    return (
+      <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 text-center">
+        <AlertCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+        <p className="text-slate-600">Nenhum ticket cadastrado</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -83,7 +116,6 @@ export default function TicketList({ tenantId, onEdit, onRefresh }) {
           ))}
         </tbody>
       </table>
-      {tickets.length === 0 && <div className="text-center py-8 text-slate-500">Nenhum ticket cadastrado</div>}
     </div>
   );
 }
