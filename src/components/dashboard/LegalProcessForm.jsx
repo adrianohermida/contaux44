@@ -14,7 +14,7 @@ const VALIDATION_RULES = {
 
 export default function LegalProcessForm({ process, onSave, onCancel, tenantId, isOpen = true }) {
   const initialData = useMemo(() => process || {
-    tenant_id: tenantId,
+    workspace_id: tenantId,
     client_id: '',
     process_number: '',
     title: '',

@@ -14,7 +14,7 @@ const VALIDATION_RULES = {
 
 export default function TicketForm({ ticket, onSave, onCancel, tenantId, isOpen = true }) {
   const initialData = useMemo(() => ticket || {
-    tenant_id: tenantId,
+    workspace_id: tenantId,
     client_id: '',
     ticket_number: '',
     title: '',

@@ -17,7 +17,7 @@ const VALIDATION_RULES = {
 
 export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpen = true }) {
   const initialData = useMemo(() => invoice || {
-    tenant_id: tenantId,
+    workspace_id: tenantId,
     client_id: '',
     invoice_number: '',
     status: 'draft',
