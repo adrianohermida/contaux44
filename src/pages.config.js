@@ -85,7 +85,7 @@ import Services from './pages/Services';
 import Settings from './pages/Settings';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
-import processor from './pages/processor';
+import index from './pages/index';
 import Transactions from './pages/Transactions';
 import CashFlowForecast from './pages/CashFlowForecast';
 import AdvancedReports from './pages/AdvancedReports';
@@ -132,7 +132,7 @@ export const PAGES = {
     "Settings": Settings,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
-    "processor": processor,
+    "index": index,
     "Transactions": Transactions,
     "CashFlowForecast": CashFlowForecast,
     "AdvancedReports": AdvancedReports,
