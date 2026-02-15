@@ -1,3 +1,4 @@
+
 import { lazy } from 'react';
 
 // Lazy load all dashboard pages
@@ -22,4 +23,4 @@ export const LazyAutomations = lazy(() => import('../../pages/Automations'));
 export const LazyReports = lazy(() => import('../../pages/Reports'));
 export const LazyCommunication = lazy(() => import('../../pages/Communication'));
 export const LazyClientPortal = lazy(() => import('../../pages/ClientPortal'));
-export const LazySettings = lazy(() => import('../../pages/Settings'));
+export const LazySettings = lazy(() => import('../../pages/SettingsPage'));
