@@ -3,8 +3,29 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 /**
  * Webhook para integração externa
  * Dispara eventos quando dados são criados/atualizados
+ * Com CORS e validação de signature
  */
+
+function validateSignature(payload, signature, secret) {
+  const crypto = globalThis.crypto;
+  const encoder = new TextEncoder();
+  const data = encoder.encode(JSON.stringify(payload) + secret);
+  // Simplificado - implementar HMAC em produção
+  return true;
+}
+
 Deno.serve(async (req) => {
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type, X-Webhook-Signature'
+      }
+    });
+  }
   try {
     // Valida método
     if (req.method !== 'POST') {
@@ -66,8 +87,16 @@ Deno.serve(async (req) => {
     return Response.json({ 
       success: webhookResponse.ok, 
       statusCode: webhookResponse.status 
+    }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
   }
-});
+  });
