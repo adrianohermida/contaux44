@@ -50,6 +50,7 @@
 import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
+import AdvancedReports from './pages/AdvancedReports';
 import Analytics from './pages/Analytics';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import App from './pages/App';
@@ -59,12 +60,14 @@ import BankReconciliation from './pages/BankReconciliation';
 import Blog from './pages/Blog';
 import BlogSingle from './pages/BlogSingle';
 import CashFlow from './pages/CashFlow';
+import CashFlowForecast from './pages/CashFlowForecast';
 import ChartOfAccounts from './pages/ChartOfAccounts';
 import ClientPortal from './pages/ClientPortal';
 import Clients from './pages/Clients';
 import Communication from './pages/Communication';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
+import DocumentManagement from './pages/DocumentManagement';
 import Entries from './pages/Entries';
 import Home from './pages/Home';
 import ImportCSV from './pages/ImportCSV';
@@ -86,9 +89,8 @@ import Settings from './pages/Settings';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
-import CashFlowForecast from './pages/CashFlowForecast';
-import AdvancedReports from './pages/AdvancedReports';
-import DocumentManagement from './pages/DocumentManagement';
+import index from './pages/index';
+import processor from './pages/processor';
 import __Layout from './Layout.jsx';
 
 
@@ -96,6 +98,7 @@ export const PAGES = {
     "About": About,
     "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
+    "AdvancedReports": AdvancedReports,
     "Analytics": Analytics,
     "AnalyticsDashboard": AnalyticsDashboard,
     "App": App,
@@ -105,12 +108,14 @@ export const PAGES = {
     "Blog": Blog,
     "BlogSingle": BlogSingle,
     "CashFlow": CashFlow,
+    "CashFlowForecast": CashFlowForecast,
     "ChartOfAccounts": ChartOfAccounts,
     "ClientPortal": ClientPortal,
     "Clients": Clients,
     "Communication": Communication,
     "Contact": Contact,
     "Dashboard": Dashboard,
+    "DocumentManagement": DocumentManagement,
     "Entries": Entries,
     "Home": Home,
     "ImportCSV": ImportCSV,
@@ -132,9 +137,8 @@ export const PAGES = {
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
-    "CashFlowForecast": CashFlowForecast,
-    "AdvancedReports": AdvancedReports,
-    "DocumentManagement": DocumentManagement,
+    "index": index,
+    "processor": processor,
 }
 
 export const pagesConfig = {
