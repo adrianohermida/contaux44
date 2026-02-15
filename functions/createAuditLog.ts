@@ -16,7 +16,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const tenantId = data?.tenant_id || user.tenant_id || user.email.split('@')[0];
+    const workspaceId = data?.workspace_id || user.workspace_id;
+    
+    if (!workspaceId) {
+      return Response.json({ error: 'Workspace ID required' }, { status: 403 });
+    }
 
     // Determina ação baseada no tipo de evento
     let action = 'update';
@@ -25,7 +29,7 @@ Deno.serve(async (req) => {
 
     // Cria log de auditoria
     await base44.asServiceRole.entities.AuditLog.create({
-      tenant_id: tenantId,
+      tenant_id: workspaceId,
       user_email: user.email,
       action,
       entity_type: event.entity_name,
