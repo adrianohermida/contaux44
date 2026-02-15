@@ -146,14 +146,28 @@ Deno.serve(async (req) => {
     const secret = generateRandomSecret(32);
     const { otpauthUrl, qrCodeUrl } = generateQRCode(secret, email);
 
+    // Gera códigos de backup (10 códigos)
+    const backupCodes = Array.from({ length: 10 }, () => {
+      return Array.from({ length: 8 }, () => 
+        Math.floor(Math.random() * 10)
+      ).join('');
+    });
+
+    // Atualiza user com MFA
+    await base44.auth.updateMe({
+      mfa_enabled: true,
+      mfa_secret: secret,
+      mfa_backup_codes: backupCodes
+    });
+
     // Log no audit
     await base44.asServiceRole.entities.AuditLog.create({
-      tenant_id: user.id,
+      tenant_id: user.tenant_id,
       user_email: email,
       action: 'update',
       entity_type: 'User',
       entity_id: user.id,
-      new_values: { mfa_enabled: true },
+      new_values: { mfa_enabled: true, backup_codes_generated: 10 },
       ip_address: req.headers.get('x-forwarded-for') || 'unknown',
       user_agent: req.headers.get('user-agent') || 'unknown',
       status: 'success',
@@ -165,7 +179,8 @@ Deno.serve(async (req) => {
       secret,
       qrCodeUrl,
       otpauthUrl,
-      message: 'Escanear código QR com seu autenticador'
+      backupCodes,
+      message: 'Escanear código QR com seu autenticador. Guarde os códigos de backup!'
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
