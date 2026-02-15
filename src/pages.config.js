@@ -84,8 +84,6 @@ import Tickets from './pages/Tickets';
 import index from './pages/index';
 import processor from './pages/processor';
 import App from './pages/App';
-import Index from './pages/Index';
-import Processor from './pages/Processor';
 import Analytics from './pages/Analytics';
 import AuditLogs from './pages/AuditLogs';
 import SecurityCenter from './pages/SecurityCenter';
@@ -130,8 +128,6 @@ export const PAGES = {
     "index": index,
     "processor": processor,
     "App": App,
-    "Index": Index,
-    "Processor": Processor,
     "Analytics": Analytics,
     "AuditLogs": AuditLogs,
     "SecurityCenter": SecurityCenter,
