@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-export default function StatCard({ icon: Icon, title, value, subtitle, trend, color = 'blue' }) {
+const StatCard = memo(function StatCard({ icon: Icon, title, value, subtitle, trend, color = 'blue' }) {
   const colorClasses = {
     blue: 'bg-blue-50 text-blue-600',
     green: 'bg-green-50 text-green-600',
@@ -26,4 +26,6 @@ export default function StatCard({ icon: Icon, title, value, subtitle, trend, co
       {subtitle && <p className="text-xs text-slate-500">{subtitle}</p>}
     </div>
   );
-}
+});
+
+export default StatCard;
