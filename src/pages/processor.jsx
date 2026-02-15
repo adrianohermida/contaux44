@@ -1,5 +1,4 @@
-// AudioWorkletProcessor for VoxImplant (legacy)
-// Exporting stub for page config
+// VoxImplant processor stub (legacy)
 export default function Processor() {
   return null;
 }

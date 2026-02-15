@@ -1,5 +1,4 @@
-// This file is for VoxImplant initialization (legacy)
-// Exporting empty component to satisfy page config
+// VoxImplant initialization page (legacy)
 export default function VoxImplantPage() {
   return null;
 }
