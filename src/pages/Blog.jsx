@@ -158,34 +158,34 @@ export default function Blog() {
       </section>
 
       {/* CTA Section */}
-           <section className="py-20 bg-gray-50">
-             <div className="max-w-6xl mx-auto px-4">
-               <div className="grid lg:grid-cols-2 gap-12">
+           <section className="py-12 sm:py-20 bg-gray-50">
+             <div className="max-w-6xl mx-auto px-4 sm:px-6">
+               <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
                  <div>
-                   <h3 className="text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
-                   <p className="text-gray-600 mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
+                   <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Inscreva-se na Newsletter</h3>
+                   <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
                    {newsletterStatus === 'success' && (
-                     <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">✓ Inscrição realizada com sucesso!</div>
+                     <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-xs sm:text-sm">✓ Inscrição realizada com sucesso!</div>
                    )}
                    {newsletterStatus === 'error' && (
-                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">✗ Erro ao inscrever. Tente novamente.</div>
+                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-xs sm:text-sm">✗ Erro ao inscrever. Tente novamente.</div>
                    )}
-                   <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+                   <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-2">
                      <input 
                        type="email" 
                        placeholder="Seu endereço de e-mail" 
                        value={newsletterEmail}
                        onChange={(e) => setNewsletterEmail(e.target.value)}
                        required
-                       className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" 
+                       className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm" 
                      />
-                     <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Registre-se</button>
+                     <button type="submit" className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base whitespace-nowrap">Registre-se</button>
                    </form>
                  </div>
-                 <div className="bg-white p-8 rounded-lg border border-gray-200">
-                   <h4 className="text-2xl font-bold mb-3">Quer abrir sua empresa grátis?</h4>
-                   <p className="text-gray-600 mb-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                   <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Fale com um especialista</button>
+                 <div className="bg-white p-4 sm:p-8 rounded-lg border border-gray-200">
+                   <h4 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Quer abrir sua empresa grátis?</h4>
+                   <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                   <button className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base">Fale com um especialista</button>
                  </div>
                </div>
              </div>
