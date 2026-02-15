@@ -94,6 +94,7 @@ import SettingsPage from './pages/SettingsPage';
 import AdvancedReportsPage from './pages/AdvancedReportsPage';
 import ClientPanel from './pages/ClientPanel';
 import Welcome from './pages/Welcome';
+import RLSDebugger from './pages/RLSDebugger';
 import __Layout from './Layout.jsx';
 
 
@@ -145,6 +146,7 @@ export const PAGES = {
     "AdvancedReportsPage": AdvancedReportsPage,
     "ClientPanel": ClientPanel,
     "Welcome": Welcome,
+    "RLSDebugger": RLSDebugger,
 }
 
 export const pagesConfig = {
