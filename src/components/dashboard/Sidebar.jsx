@@ -19,40 +19,40 @@ import {
 } from 'lucide-react';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: 'Dashboard' },
-  { icon: Users, label: 'CRM - Clientes', path: 'Clients' },
-  { icon: Ticket, label: 'Helpdesk - Tickets', path: 'Tickets' },
-  { icon: FileText, label: 'Processos Judiciais', path: 'LegalProcesses' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+  { icon: Users, label: 'CRM - Clientes', path: '/clients' },
+  { icon: Ticket, label: 'Helpdesk - Tickets', path: '/tickets' },
+  { icon: FileText, label: 'Processos Judiciais', path: '/legalprocesses' },
   {
     icon: DollarSign,
     label: 'Financeiro',
     submenu: [
-      { label: 'Faturamento', path: 'Invoicing' },
-      { label: 'Pagamentos', path: 'Payments' },
-      { label: 'Orçamentos', path: 'Quotes' },
-      { label: 'Vendas', path: 'Sales' },
-      { label: 'Fluxo de Caixa', path: 'CashFlow' }
+      { label: 'Faturamento', path: '/invoicing' },
+      { label: 'Pagamentos', path: '/payments' },
+      { label: 'Orçamentos', path: '/quotes' },
+      { label: 'Vendas', path: '/sales' },
+      { label: 'Fluxo de Caixa', path: '/cashflow' }
     ]
   },
-  { icon: Calculator, label: 'Prestação de Serviços', path: 'Services' },
+  { icon: Calculator, label: 'Prestação de Serviços', path: '/services' },
   {
     icon: FileSpreadsheet,
     label: 'Contabilidade',
     submenu: [
-      { label: 'Lançamentos', path: 'Entries' },
-      { label: 'Importação CSV', path: 'ImportCSV' },
-      { label: 'Conciliação Bancária', path: 'BankReconciliation' },
-      { label: 'Baixa Manual', path: 'ManualPosting' },
-      { label: 'Plano de Contas', path: 'ChartOfAccounts' }
+      { label: 'Lançamentos', path: '/entries' },
+      { label: 'Importação CSV', path: '/importcsv' },
+      { label: 'Conciliação Bancária', path: '/bankreconciliation' },
+      { label: 'Baixa Manual', path: '/manualposting' },
+      { label: 'Plano de Contas', path: '/chartofaccounts' }
     ]
   },
-  { icon: FileText, label: 'Notas Fiscais', path: 'TaxInvoices' },
-  { icon: Calendar, label: 'Calendário Contábil', path: 'AccountingCalendar' },
-  { icon: Zap, label: 'Automações', path: 'Automations' },
-  { icon: BarChart3, label: 'Relatórios', path: 'Reports' },
-  { icon: Phone, label: 'Comunicação', path: 'Communication' },
-  { icon: UserCircle, label: 'Meu Painel', path: 'ClientPortal' },
-  { icon: Settings, label: 'Configurações', path: 'Settings' }
+  { icon: FileText, label: 'Notas Fiscais', path: '/taxinvoices' },
+  { icon: Calendar, label: 'Calendário Contábil', path: '/accountingcalendar' },
+  { icon: Zap, label: 'Automações', path: '/automations' },
+  { icon: BarChart3, label: 'Relatórios', path: '/reports' },
+  { icon: Phone, label: 'Comunicação', path: '/communication' },
+  { icon: UserCircle, label: 'Meu Painel', path: '/clientportal' },
+  { icon: Settings, label: 'Configurações', path: '/settings' }
 ];
 
 export default function Sidebar({ collapsed, setCollapsed }) {
@@ -64,7 +64,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
   };
 
   const isActive = (path) => {
-    return location.pathname === createPageUrl(path);
+    return location.pathname === path;
   };
 
   return (
@@ -108,7 +108,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
                     {item.submenu.map((sub, subIndex) => (
                       <Link
                         key={subIndex}
-                        to={createPageUrl(sub.path)}
+                        to={sub.path}
                         className={`block px-12 py-2 text-sm hover:bg-slate-800 transition-colors ${
                           isActive(sub.path) ? 'bg-slate-800 text-blue-400' : ''
                         }`}
@@ -121,7 +121,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
               </>
             ) : (
               <Link
-                to={createPageUrl(item.path)}
+                to={item.path}
                 className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
                   isActive(item.path) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
                 }`}
