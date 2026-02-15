@@ -93,6 +93,8 @@ import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import Welcome from './pages/Welcome';
+import index from './pages/index';
+import processor from './pages/processor';
 import __Layout from './Layout.jsx';
 
 
@@ -143,6 +145,8 @@ export const PAGES = {
     "Tickets": Tickets,
     "Transactions": Transactions,
     "Welcome": Welcome,
+    "index": index,
+    "processor": processor,
 }
 
 export const pagesConfig = {
