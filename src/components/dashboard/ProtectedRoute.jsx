@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Loader2 } from 'lucide-react';
 
+/**
+ * @deprecated Use ProtectedInternalRoute or ProtectedClientRoute
+ * Esta função mantém compatibilidade com código antigo
+ */
 export default function ProtectedRoute({ children, requireAdmin = false }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
