@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { AlertCircle, TrendingDown, Clock, DollarSign } from 'lucide-react';
 
-export default function AlertsCenter({ tenantId }) {
+const AlertsCenter = memo(function AlertsCenter({ tenantId }) {
   const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
@@ -90,4 +90,6 @@ export default function AlertsCenter({ tenantId }) {
       })}
     </div>
   );
-}
+});
+
+export default AlertsCenter;
