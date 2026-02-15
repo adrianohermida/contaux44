@@ -7,39 +7,35 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useUserAndTenant } from '../hooks/useUserAndTenant';
 
 export default function DashboardHeader() {
-  const [user, setUser] = useState(null);
-  const [tenantId, setTenantId] = useState(null);
+  const { user, tenantId } = useUserAndTenant();
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const loadUserAndNotifications = async () => {
+    const loadNotifications = async () => {
+      if (!tenantId || !user) return;
+      
       try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        
-        const tenant = currentUser.email.split('@')[0];
-        setTenantId(tenant);
-        
         const notifs = await base44.entities.Notification.filter({
-          tenant_id: tenant,
-          user_email: currentUser.email
+          tenant_id: tenantId,
+          user_email: user.email
         });
         
         const sorted = notifs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
         setNotifications(sorted.slice(0, 5));
         setUnreadCount(notifs.filter(n => !n.is_read).length);
-      } catch {
-        setUser(null);
+      } catch (error) {
+        console.error('Erro ao carregar notificações:', error);
       }
     };
     
-    loadUserAndNotifications();
-    const interval = setInterval(loadUserAndNotifications, 30000);
+    loadNotifications();
+    const interval = setInterval(loadNotifications, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [tenantId, user]);
 
   const handleLogout = async () => {
     await base44.auth.logout();
