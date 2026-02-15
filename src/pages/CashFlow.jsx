@@ -3,27 +3,26 @@ import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import { TrendingDown, TrendingUp } from 'lucide-react';
+import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 
 export default function CashFlow() {
-  const [tenantId, setTenantId] = useState(null);
+  const { tenantId } = useUserAndTenant();
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!tenantId) return;
+    
     const loadData = async () => {
       try {
-        const user = await base44.auth.me();
-        const tenant = user.email.split('@')[0];
-        setTenantId(tenant);
-        
-        const data = await base44.entities.Payment.filter({ tenant_id: tenant });
+        const data = await base44.entities.Payment.filter({ tenant_id: tenantId });
         setPayments(data);
       } finally {
         setLoading(false);
       }
     };
     loadData();
-  }, []);
+  }, [tenantId]);
 
   const inflow = payments.filter(p => p.status === 'confirmed').reduce((sum, p) => sum + p.amount, 0);
   const outflow = payments.filter(p => p.payment_method === 'check').reduce((sum, p) => sum + p.amount, 0);

@@ -3,27 +3,26 @@ import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import { TrendingUp } from 'lucide-react';
+import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 
 export default function Sales() {
-  const [tenantId, setTenantId] = useState(null);
+  const { tenantId } = useUserAndTenant();
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!tenantId) return;
+    
     const loadData = async () => {
       try {
-        const user = await base44.auth.me();
-        const tenant = user.email.split('@')[0];
-        setTenantId(tenant);
-        
-        const data = await base44.entities.Invoice.filter({ tenant_id: tenant });
+        const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
         setInvoices(data);
       } finally {
         setLoading(false);
       }
     };
     loadData();
-  }, []);
+  }, [tenantId]);
 
   const totalRevenue = invoices.reduce((sum, inv) => sum + inv.total_amount, 0);
   const paidInvoices = invoices.filter(inv => inv.status === 'paid').length;
