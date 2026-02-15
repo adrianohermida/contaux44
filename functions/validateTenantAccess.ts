@@ -16,18 +16,22 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { tenantId, entityType, entityId } = body;
 
-    // Extrai tenant_id do usuário
-    const userTenantId = user.tenant_id || user.email.split('@')[0];
+    // Extrai workspace_id do usuário (Sprint 8: migração concluída)
+    const userWorkspaceId = user.workspace_id;
+    
+    if (!userWorkspaceId) {
+      return Response.json({ valid: false, error: 'User must have workspace_id' }, { status: 403 });
+    }
 
-    // Valida se tenant solicitado pertence ao usuário
-    if (tenantId !== userTenantId) {
+    // Valida se workspace solicitado pertence ao usuário
+    if (tenantId !== userWorkspaceId) {
       // Log de tentativa de acesso não autorizado
       await base44.asServiceRole.entities.SecurityLog.create({
-        tenant_id: userTenantId,
+        tenant_id: userWorkspaceId,
         user_email: user.email,
         event_type: 'permission_denied',
         severity: 'high',
-        description: `Tentativa de acesso ao tenant ${tenantId} por usuário do tenant ${userTenantId}`,
+        description: `Tentativa de acesso ao workspace ${tenantId} por usuário do workspace ${userWorkspaceId}`,
         ip_address: req.headers.get('x-forwarded-for') || 'unknown',
         device_info: req.headers.get('user-agent') || 'unknown',
         action_taken: 'blocked',
@@ -38,18 +42,18 @@ Deno.serve(async (req) => {
       return Response.json({ valid: false, error: 'Tenant mismatch' }, { status: 403 });
     }
 
-    // Se entityId foi fornecido, valida que o record pertence ao tenant
+    // Se entityId foi fornecido, valida que o record pertence ao workspace
     if (entityId && entityType) {
       const entity = await base44.asServiceRole.entities[entityType].list();
-      const record = entity.find(r => r.id === entityId && r.tenant_id === tenantId);
+      const record = entity.find(r => r.id === entityId && r.workspace_id === userWorkspaceId);
       
       if (!record) {
         await base44.asServiceRole.entities.SecurityLog.create({
-          tenant_id: userTenantId,
+          tenant_id: userWorkspaceId,
           user_email: user.email,
           event_type: 'permission_denied',
           severity: 'medium',
-          description: `Tentativa de acesso a ${entityType}/${entityId} não pertencente ao tenant`,
+          description: `Tentativa de acesso a ${entityType}/${entityId} não pertencente ao workspace`,
           ip_address: req.headers.get('x-forwarded-for') || 'unknown',
           device_info: req.headers.get('user-agent') || 'unknown',
           action_taken: 'blocked',
@@ -61,7 +65,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return Response.json({ valid: true, tenantId: userTenantId });
+    return Response.json({ valid: true, workspaceId: userWorkspaceId });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
