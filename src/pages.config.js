@@ -93,7 +93,6 @@ import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import Welcome from './pages/Welcome';
-import index from './pages/index';
 import BlogManager from './pages/BlogManager';
 import __Layout from './Layout.jsx';
 
@@ -145,7 +144,6 @@ export const PAGES = {
     "Tickets": Tickets,
     "Transactions": Transactions,
     "Welcome": Welcome,
-    "index": index,
     "BlogManager": BlogManager,
 }
 
