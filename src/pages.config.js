@@ -51,6 +51,7 @@ import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
 import AdvancedReports from './pages/AdvancedReports';
+import AdvancedReportsPage from './pages/AdvancedReportsPage';
 import Analytics from './pages/Analytics';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import App from './pages/App';
@@ -62,6 +63,7 @@ import BlogSingle from './pages/BlogSingle';
 import CashFlow from './pages/CashFlow';
 import CashFlowForecast from './pages/CashFlowForecast';
 import ChartOfAccounts from './pages/ChartOfAccounts';
+import ClientPanel from './pages/ClientPanel';
 import ClientPortal from './pages/ClientPortal';
 import Clients from './pages/Clients';
 import Communication from './pages/Communication';
@@ -81,18 +83,18 @@ import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
 import QuoteRequest from './pages/QuoteRequest';
 import Quotes from './pages/Quotes';
+import RLSDebugger from './pages/RLSDebugger';
 import Reports from './pages/Reports';
 import Sales from './pages/Sales';
 import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
+import SettingsPage from './pages/SettingsPage';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
-import SettingsPage from './pages/SettingsPage';
-import AdvancedReportsPage from './pages/AdvancedReportsPage';
-import ClientPanel from './pages/ClientPanel';
 import Welcome from './pages/Welcome';
-import RLSDebugger from './pages/RLSDebugger';
+import index from './pages/index';
+import processor from './pages/processor';
 import __Layout from './Layout.jsx';
 
 
@@ -101,6 +103,7 @@ export const PAGES = {
     "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
     "AdvancedReports": AdvancedReports,
+    "AdvancedReportsPage": AdvancedReportsPage,
     "Analytics": Analytics,
     "AnalyticsDashboard": AnalyticsDashboard,
     "App": App,
@@ -112,6 +115,7 @@ export const PAGES = {
     "CashFlow": CashFlow,
     "CashFlowForecast": CashFlowForecast,
     "ChartOfAccounts": ChartOfAccounts,
+    "ClientPanel": ClientPanel,
     "ClientPortal": ClientPortal,
     "Clients": Clients,
     "Communication": Communication,
@@ -131,18 +135,18 @@ export const PAGES = {
     "Pricing": Pricing,
     "QuoteRequest": QuoteRequest,
     "Quotes": Quotes,
+    "RLSDebugger": RLSDebugger,
     "Reports": Reports,
     "Sales": Sales,
     "SecurityCenter": SecurityCenter,
     "Services": Services,
+    "SettingsPage": SettingsPage,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
-    "SettingsPage": SettingsPage,
-    "AdvancedReportsPage": AdvancedReportsPage,
-    "ClientPanel": ClientPanel,
     "Welcome": Welcome,
-    "RLSDebugger": RLSDebugger,
+    "index": index,
+    "processor": processor,
 }
 
 export const pagesConfig = {

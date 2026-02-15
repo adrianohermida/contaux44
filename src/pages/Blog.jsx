@@ -61,11 +61,11 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumbs */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">Blog Grid Sidebar</h1>
-          <p className="text-blue-100 mb-6">Business plan draws on a wide range of knowledge from different business disciplines.</p>
-          <div className="flex gap-2 text-sm">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 sm:py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4">Blog Grid Sidebar</h1>
+          <p className="text-blue-100 mb-4 sm:mb-6 text-sm sm:text-base">Business plan draws on a wide range of knowledge from different business disciplines.</p>
+          <div className="flex gap-2 text-xs sm:text-sm flex-wrap">
             <a href="/" className="hover:underline">Home</a>
             <span>/</span>
             <span>Blog</span>
@@ -76,9 +76,9 @@ export default function Blog() {
       </section>
 
       {/* Blog Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-3 gap-12">
+      <section className="py-12 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
             {/* Posts */}
             <div className="lg:col-span-2">
               <div className="grid md:grid-cols-2 gap-8 mb-12">
