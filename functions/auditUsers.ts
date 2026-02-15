@@ -19,8 +19,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    // Apenas SuperAdmin (tenant_id = 'superadmin')
-    if (user.tenant_id !== 'superadmin' || user.role !== 'admin') {
+    // Apenas SuperAdmin (workspace_id = 'superadmin')
+    if (user.workspace_id !== 'superadmin' || user.role !== 'admin') {
       return Response.json(
         { error: 'Apenas SuperAdmin pode auditar usuários' },
         { status: 403 }
@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
 
     // LOG da auditoria
     await base44.asServiceRole.entities.AuditLog.create({
-      tenant_id: 'superadmin',
+      workspace_id: 'superadmin',
       user_email: user.email,
       action: 'audit_users',
       entity_type: 'User',
