@@ -36,33 +36,33 @@ export default function About() {
       </section>
 
       {/* About Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div>
-              <div className="mb-8">
-                <span className="text-blue-600 font-semibold">What we do</span>
-                <h2 className="text-4xl font-bold mt-2 mb-4">Websites that tell your brand's story</h2>
-                <p className="text-gray-600">We're a digital product and UX agency Strategy, design and development across all platforms.</p>
-              </div>
+       <section className="py-12 md:py-20">
+         <div className="max-w-6xl mx-auto px-4">
+           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+             {/* Left Content */}
+             <div>
+               <div className="mb-8">
+                 <span className="text-blue-600 font-semibold text-sm md:text-base">What we do</span>
+                 <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Websites that tell your brand's story</h2>
+                 <p className="text-gray-600 text-sm md:text-base">We're a digital product and UX agency Strategy, design and development across all platforms.</p>
+               </div>
 
               {/* Tabs */}
-              <div className="border-b border-gray-200 mb-6">
-                <div className="flex gap-8">
-                  {['content', 'strategy', 'development'].map(tab => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`py-4 font-semibold capitalize ${
-                        activeTab === tab ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'
-                      }`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                  <div className="border-b border-gray-200 mb-6 overflow-x-auto">
+                      <div className="flex gap-4 md:gap-8">
+                        {['content', 'strategy', 'development'].map(tab => (
+                          <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`py-4 font-semibold capitalize whitespace-nowrap text-sm md:text-base ${
+                              activeTab === tab ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'
+                            }`}
+                          >
+                            {tab}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
               {/* Tab Content */}
               <div className="space-y-4">
@@ -126,15 +126,15 @@ export default function About() {
       </section>
 
       {/* Services Section */}
-      <section className="bg-gray-50 py-20">
+      <section className="bg-gray-50 py-12 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-blue-600 font-semibold">Care Features</span>
-            <h2 className="text-4xl font-bold mt-2 mb-4">Provide Awesome Service With Our Tools</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
+          <div className="text-center mb-8 md:mb-12">
+            <span className="text-blue-600 font-semibold text-sm md:text-base">Care Features</span>
+            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Provide Awesome Service With Our Tools</h2>
+            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
           </div>
 
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {services.map((service, idx) => (
               <div key={idx} className="bg-white p-8 rounded-lg text-center hover:shadow-lg transition-shadow">
                 <div className="text-4xl mb-4">{service.icon}</div>
@@ -147,15 +147,15 @@ export default function About() {
       </section>
 
       {/* Team Section */}
-      <section className="py-20">
+      <section className="py-12 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-blue-600 font-semibold">Meet our Creative Team</span>
-            <h2 className="text-4xl font-bold mt-2 mb-4">Our Awesome Team</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
+          <div className="text-center mb-8 md:mb-12">
+            <span className="text-blue-600 font-semibold text-sm md:text-base">Meet our Creative Team</span>
+            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Our Awesome Team</h2>
+            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
           </div>
 
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {teamMembers.map((member, idx) => {
               const teamImages = [
                 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8da421752_t1.jpg',
@@ -181,14 +181,14 @@ export default function About() {
 
       {/* Video Section */}
       <section 
-        className="bg-cover bg-center text-white py-32 relative"
+        className="bg-cover bg-center text-white py-16 md:py-32 relative"
         style={{backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/715a66c58_video-bg.png)'}}
       >
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
-          <span className="text-blue-100 font-semibold">Create your own experience</span>
-          <h2 className="text-4xl font-bold mt-2 mb-4">Ready to grow faster?</h2>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
+          <span className="text-blue-100 font-semibold text-sm md:text-base">Create your own experience</span>
+          <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Ready to grow faster?</h2>
+          <p className="text-blue-100 text-sm md:text-base mb-8 max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
 
           <a 
             href="https://www.youtube.com/watch?v=r44RKWyfcFw"
@@ -202,28 +202,28 @@ export default function About() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 md:py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-12">
             <div>
-              <h3 className="text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
-              <p className="text-gray-600 mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
-              <form className="flex gap-2">
+              <h3 className="text-xl md:text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
+              <p className="text-gray-600 text-sm md:text-base mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
+              <form className="flex flex-col sm:flex-row gap-2">
                 <input 
                   type="email" 
                   placeholder="Seu endereço de e-mail"
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
                 />
-                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <button className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm whitespace-nowrap">
                   Registre-se
                 </button>
               </form>
             </div>
 
-            <div className="bg-white p-8 rounded-lg">
-              <h4 className="text-2xl font-bold mb-3">Quer abrir sua empresa grátis?</h4>
-              <p className="text-gray-600 mb-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <div className="bg-white p-4 md:p-8 rounded-lg">
+              <h4 className="text-xl md:text-2xl font-bold mb-3">Quer abrir sua empresa grátis?</h4>
+              <p className="text-gray-600 text-sm md:text-base mb-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+              <button className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
                 Fale com um especialista
               </button>
             </div>
