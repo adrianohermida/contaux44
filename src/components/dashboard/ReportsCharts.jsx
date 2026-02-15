@@ -2,19 +2,21 @@ import React, { memo, useMemo } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const ReportsCharts = memo(function ReportsCharts({ invoices = [], payments = [] }) {
-  const monthlyRevenue = invoices.reduce((acc, inv) => {
-    const month = new Date(inv.issue_date).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
-    const existing = acc.find(m => m.month === month);
-    if (existing) existing.valor += inv.total_amount;
-    else acc.push({ month, valor: inv.total_amount });
-    return acc;
-  }, []);
+  const monthlyRevenue = useMemo(() => 
+    invoices.reduce((acc, inv) => {
+      const month = new Date(inv.issue_date).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
+      const existing = acc.find(m => m.month === month);
+      if (existing) existing.valor += inv.total_amount;
+      else acc.push({ month, valor: inv.total_amount });
+      return acc;
+    }, [])
+  , [invoices]);
 
-  const statusDistribution = [
+  const statusDistribution = useMemo(() => [
     { name: 'Pagas', value: invoices.filter(i => i.status === 'paid').length },
     { name: 'Pendentes', value: invoices.filter(i => i.status !== 'paid').length },
     { name: 'Canceladas', value: invoices.filter(i => i.status === 'cancelled').length }
-  ];
+  ], [invoices]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
