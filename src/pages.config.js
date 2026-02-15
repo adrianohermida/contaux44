@@ -86,6 +86,7 @@ import processor from './pages/processor';
 import App from './pages/App';
 import Index from './pages/Index';
 import Processor from './pages/Processor';
+import Analytics from './pages/Analytics';
 import __Layout from './Layout.jsx';
 
 
@@ -129,6 +130,7 @@ export const PAGES = {
     "App": App,
     "Index": Index,
     "Processor": Processor,
+    "Analytics": Analytics,
 }
 
 export const pagesConfig = {
