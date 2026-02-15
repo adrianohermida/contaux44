@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FileText, Plus, Edit2, Trash2, Copy } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import DocumentTemplateForm from '../components/dashboard/DocumentTemplateForm';
 
 export default function DocumentManagement() {
   const { tenantId, user } = useUserAndTenant();
@@ -54,10 +55,31 @@ export default function DocumentManagement() {
     }
   };
 
+  const handleEditTemplate = (template) => {
+    setEditingTemplate(template);
+    setShowForm(true);
+  };
+
   if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
   return (
     <ProtectedRoute>
+      {showForm && (
+        <DocumentTemplateForm
+          tenantId={tenantId}
+          userId={user?.email}
+          editingTemplate={editingTemplate}
+          onSuccess={() => {
+            setShowForm(false);
+            setEditingTemplate(null);
+            loadTemplates();
+          }}
+          onClose={() => {
+            setShowForm(false);
+            setEditingTemplate(null);
+          }}
+        />
+      )}
       <DashboardLayout>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
@@ -139,7 +161,7 @@ export default function DocumentManagement() {
                           <Button 
                             variant="outline" 
                             size="sm"
-                            onClick={() => setEditingTemplate(template)}
+                            onClick={() => handleEditTemplate(template)}
                           >
                             <Edit2 className="w-4 h-4" />
                           </Button>
