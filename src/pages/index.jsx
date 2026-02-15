@@ -1,3 +1,4 @@
-import Welcome from './Welcome';
+
+import Welcome from './Welcome.jsx';
 
 export default Welcome;
