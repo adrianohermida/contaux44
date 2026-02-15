@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import StatCard from '../components/dashboard/StatCard';
 import AlertsCenter from '../components/dashboard/AlertsCenter';
+import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 
 export default function Dashboard() {
-  const [tenantId, setTenantId] = useState(null);
+  const { tenantId } = useUserAndTenant();
   const [stats, setStats] = useState([
     {
       icon: Users,
@@ -55,17 +56,15 @@ export default function Dashboard() {
 
   useEffect(() => {
     const loadDashboardData = async () => {
+      if (!tenantId) return;
+      
       try {
-        const user = await base44.auth.me();
-        const tenant = user.email.split('@')[0];
-        setTenantId(tenant);
-
         const [clients, processes, tickets, invoices, quotes] = await Promise.all([
-          base44.entities.Client.filter({ tenant_id: tenant, status: 'active' }),
-          base44.entities.LegalProcess.filter({ tenant_id: tenant, status: 'in_progress' }),
-          base44.entities.Ticket.filter({ tenant_id: tenant, status: 'open' }),
-          base44.entities.Invoice.filter({ tenant_id: tenant }),
-          base44.entities.Quote.filter({ tenant_id: tenant, status: 'draft' })
+          base44.entities.Client.filter({ tenant_id: tenantId, status: 'active' }),
+          base44.entities.LegalProcess.filter({ tenant_id: tenantId, status: 'in_progress' }),
+          base44.entities.Ticket.filter({ tenant_id: tenantId, status: 'open' }),
+          base44.entities.Invoice.filter({ tenant_id: tenantId }),
+          base44.entities.Quote.filter({ tenant_id: tenantId, status: 'draft' })
         ]);
 
         const currentMonth = new Date().getMonth();
@@ -129,7 +128,7 @@ export default function Dashboard() {
     };
 
     loadDashboardData();
-  }, []);
+  }, [tenantId]);
 
   return (
     <ProtectedRoute>

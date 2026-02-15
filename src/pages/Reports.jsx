@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import ReportsCharts from '../components/dashboard/ReportsCharts';
+import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 
 export default function Reports() {
-  const [tenantId, setTenantId] = useState(null);
+  const { tenantId } = useUserAndTenant();
   const [invoices, setInvoices] = useState([]);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
+      if (!tenantId) return;
+      
       try {
-        const user = await base44.auth.me();
-        const tenant = user.email.split('@')[0];
-        setTenantId(tenant);
-        
-        const invData = await base44.entities.Invoice.filter({ tenant_id: tenant });
-        const payData = await base44.entities.Payment.filter({ tenant_id: tenant });
+        const invData = await base44.entities.Invoice.filter({ tenant_id: tenantId });
+        const payData = await base44.entities.Payment.filter({ tenant_id: tenantId });
         
         setInvoices(invData);
         setPayments(payData);
@@ -27,11 +26,11 @@ export default function Reports() {
       }
     };
     loadData();
-  }, []);
+  }, [tenantId]);
 
-  const totalRevenue = invoices.reduce((sum, inv) => sum + inv.total_amount, 0);
-  const totalPaid = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.total_amount, 0);
-  const totalPending = totalRevenue - totalPaid;
+  const totalRevenue = useMemo(() => invoices.reduce((sum, inv) => sum + inv.total_amount, 0), [invoices]);
+  const totalPaid = useMemo(() => invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.total_amount, 0), [invoices]);
+  const totalPending = useMemo(() => totalRevenue - totalPaid, [totalRevenue, totalPaid]);
 
   if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
