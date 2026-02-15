@@ -2,26 +2,26 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import StatCard from '../components/dashboard/StatCard';
 import AlertsCenter from '../components/dashboard/AlertsCenter';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
 
 export default function Dashboard() {
-  const { tenantId } = useUserAndTenant();
+  const { workspaceId, loading } = useMultitenantAuth('internal');
   const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
     const loadDashboardData = async () => {
-      if (!tenantId) return;
+      if (!workspaceId) return;
       
       try {
         const [clients, processes, tickets, invoices, quotes] = await Promise.all([
-          base44.entities.Client.filter({ tenant_id: tenantId, status: 'active' }),
-          base44.entities.LegalProcess.filter({ tenant_id: tenantId, status: 'in_progress' }),
-          base44.entities.Ticket.filter({ tenant_id: tenantId, status: 'open' }),
-          base44.entities.Invoice.filter({ tenant_id: tenantId }),
-          base44.entities.Quote.filter({ tenant_id: tenantId, status: 'draft' })
+          base44.entities.Client.filter({ workspace_id: workspaceId, status: 'active' }),
+          base44.entities.LegalProcess.filter({ workspace_id: workspaceId, status: 'in_progress' }),
+          base44.entities.Ticket.filter({ workspace_id: workspaceId, status: 'open' }),
+          base44.entities.Invoice.filter({ workspace_id: workspaceId }),
+          base44.entities.Quote.filter({ workspace_id: workspaceId, status: 'draft' })
         ]);
 
         const currentMonth = new Date().getMonth();
@@ -49,7 +49,7 @@ export default function Dashboard() {
     };
 
     loadDashboardData();
-  }, [tenantId]);
+  }, [workspaceId]);
 
   const stats = useMemo(() => {
     if (!dashboardData) {
@@ -74,29 +74,29 @@ export default function Dashboard() {
   }, [dashboardData]);
 
   return (
-    <ProtectedRoute>
+    <ProtectedInternalRoute>
       <DashboardLayout>
         <div className="space-y-6">
-          {/* Welcome */}
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
-            <p className="text-slate-600 mt-1">Bem-vindo ao sistema Contaux</p>
-          </div>
+           {/* Welcome */}
+           <div>
+             <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
+             <p className="text-slate-600 mt-1">Bem-vindo ao sistema Contaux</p>
+           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stats.map((stat, index) => (
-              <StatCard key={index} {...stat} />
-            ))}
-          </div>
+           {/* Stats Grid */}
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {stats.map((stat, index) => (
+               <StatCard key={index} {...stat} />
+             ))}
+           </div>
 
-          {/* Alerts Center */}
-           {tenantId && (
-             <div>
-               <h2 className="text-lg font-semibold mb-3 text-slate-900">Alertas</h2>
-               <AlertsCenter tenantId={tenantId} />
-             </div>
-           )}
+           {/* Alerts Center */}
+            {workspaceId && (
+              <div>
+                <h2 className="text-lg font-semibold mb-3 text-slate-900">Alertas</h2>
+                <AlertsCenter tenantId={workspaceId} />
+              </div>
+            )}
 
           {/* Quick Actions */}
            <div className="grid md:grid-cols-2 gap-6">
@@ -159,6 +159,6 @@ export default function Dashboard() {
           </div>
         </div>
       </DashboardLayout>
-    </ProtectedRoute>
+    </ProtectedInternalRoute>
   );
 }

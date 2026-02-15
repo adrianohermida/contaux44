@@ -1,18 +1,38 @@
 import React, { Suspense } from 'react';
+import { useMultitenantAuth } from '../auth/useMultitenantAuth';
 import { Loader2 } from 'lucide-react';
 
+/**
+ * Wrapper para páginas lazy-loaded
+ * Valida autenticação e tipo de usuário
+ */
 export default function LazyPageWrapper({ children }) {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
-          <div className="text-center">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-3" />
-            <p className="text-slate-600">Carregando página...</p>
-          </div>
+  const { loading, error } = useMultitenantAuth('internal');
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="bg-white rounded-lg shadow p-6 max-w-md text-center">
+          <p className="text-red-600 font-medium">{error}</p>
         </div>
-      }
-    >
+      </div>
+    );
+  }
+
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    }>
       {children}
     </Suspense>
   );
