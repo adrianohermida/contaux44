@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-export default function ReportsCharts({ invoices = [], payments = [] }) {
+const ReportsCharts = memo(function ReportsCharts({ invoices = [], payments = [] }) {
   const monthlyRevenue = invoices.reduce((acc, inv) => {
     const month = new Date(inv.issue_date).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
     const existing = acc.find(m => m.month === month);
@@ -45,4 +45,6 @@ export default function ReportsCharts({ invoices = [], payments = [] }) {
       </div>
     </div>
   );
-}
+});
+
+export default ReportsCharts;
