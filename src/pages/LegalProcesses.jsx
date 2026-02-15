@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
@@ -13,16 +13,26 @@ export default function LegalProcesses() {
   const [editingProcess, setEditingProcess] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     setShowForm(false);
     setEditingProcess(null);
     setRefreshKey(prev => prev + 1);
-  };
+  }, []);
 
-  const handleEdit = (process) => {
+  const handleEdit = useCallback((process) => {
     setEditingProcess(process);
     setShowForm(true);
-  };
+  }, []);
+
+  const handleNewProcess = useCallback(() => {
+    setEditingProcess(null);
+    setShowForm(true);
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    setShowForm(false);
+    setEditingProcess(null);
+  }, []);
 
   if (!tenantId) {
     return (
@@ -44,7 +54,7 @@ export default function LegalProcesses() {
               <p className="text-slate-600 mt-1">Gerenciar processos e casos legais</p>
             </div>
             <Button 
-              onClick={() => { setEditingProcess(null); setShowForm(true); }}
+              onClick={handleNewProcess}
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-5 h-5 mr-2" />
@@ -57,7 +67,7 @@ export default function LegalProcesses() {
               process={editingProcess}
               tenantId={tenantId}
               onSave={handleSave}
-              onCancel={() => { setShowForm(false); setEditingProcess(null); }}
+              onCancel={handleCancel}
             />
           )}
 

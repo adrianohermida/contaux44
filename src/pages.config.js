@@ -82,6 +82,7 @@ import Settings from './pages/Settings';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import index from './pages/index';
+import processor from './pages/processor';
 import App from './pages/App';
 import Index from './pages/Index';
 import Processor from './pages/Processor';
@@ -124,6 +125,7 @@ export const PAGES = {
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "index": index,
+    "processor": processor,
     "App": App,
     "Index": Index,
     "Processor": Processor,

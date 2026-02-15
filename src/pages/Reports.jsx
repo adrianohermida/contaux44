@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
@@ -11,22 +11,25 @@ export default function Reports() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (!tenantId) return;
+  const loadData = useCallback(async () => {
+    if (!tenantId) return;
+    
+    try {
+      const [invData, payData] = await Promise.all([
+        base44.entities.Invoice.filter({ tenant_id: tenantId }),
+        base44.entities.Payment.filter({ tenant_id: tenantId })
+      ]);
       
-      try {
-        const invData = await base44.entities.Invoice.filter({ tenant_id: tenantId });
-        const payData = await base44.entities.Payment.filter({ tenant_id: tenantId });
-        
-        setInvoices(invData);
-        setPayments(payData);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
+      setInvoices(invData);
+      setPayments(payData);
+    } finally {
+      setLoading(false);
+    }
   }, [tenantId]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const totalRevenue = useMemo(() => invoices.reduce((sum, inv) => sum + inv.total_amount, 0), [invoices]);
   const totalPaid = useMemo(() => invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.total_amount, 0), [invoices]);

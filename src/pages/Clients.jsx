@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
@@ -13,16 +13,26 @@ export default function Clients() {
   const [editingClient, setEditingClient] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     setShowForm(false);
     setEditingClient(null);
     setRefreshKey(prev => prev + 1);
-  };
+  }, []);
 
-  const handleEdit = (client) => {
+  const handleEdit = useCallback((client) => {
     setEditingClient(client);
     setShowForm(true);
-  };
+  }, []);
+
+  const handleNewClient = useCallback(() => {
+    setEditingClient(null);
+    setShowForm(true);
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    setShowForm(false);
+    setEditingClient(null);
+  }, []);
 
   if (!tenantId) {
     return (
@@ -44,7 +54,7 @@ export default function Clients() {
               <p className="text-slate-600 mt-1">Gerenciar clientes e contatos</p>
             </div>
             <Button 
-              onClick={() => { setEditingClient(null); setShowForm(true); }}
+              onClick={handleNewClient}
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-5 h-5 mr-2" />
@@ -57,7 +67,7 @@ export default function Clients() {
               client={editingClient}
               tenantId={tenantId}
               onSave={handleSave}
-              onCancel={() => { setShowForm(false); setEditingClient(null); }}
+              onCancel={handleCancel}
             />
           )}
 
