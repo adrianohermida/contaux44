@@ -59,15 +59,30 @@ export default function Header() {
                   <span className="text-sm">{user.full_name || user.email}</span>
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg">
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Sair
-                    </button>
-                  </div>
+                   <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg z-10">
+                     <Link
+                       to={createPageUrl('Dashboard')}
+                       className="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2"
+                     >
+                       <User className="w-4 h-4" />
+                       Dashboard
+                     </Link>
+                     <Link
+                       to={createPageUrl('Settings')}
+                       className="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2"
+                     >
+                       <User className="w-4 h-4" />
+                       Meu Perfil
+                     </Link>
+                     <hr className="my-2" />
+                     <button
+                       onClick={handleLogout}
+                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                     >
+                       <LogOut className="w-4 h-4" />
+                       Sair
+                     </button>
+                   </div>
                 )}
               </div>
             ) : (
