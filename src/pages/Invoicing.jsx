@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
@@ -13,16 +13,16 @@ export default function Invoicing() {
   const [editingInvoice, setEditingInvoice] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     setShowForm(false);
     setEditingInvoice(null);
     setRefreshKey(prev => prev + 1);
-  };
+  }, []);
 
-  const handleEdit = (invoice) => {
+  const handleEdit = useCallback((invoice) => {
     setEditingInvoice(invoice);
     setShowForm(true);
-  };
+  }, []);
 
   if (!tenantId) {
     return (

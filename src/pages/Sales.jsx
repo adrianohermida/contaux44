@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
@@ -10,22 +10,32 @@ export default function Sales() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const loadData = useCallback(async () => {
     if (!tenantId) return;
     
-    const loadData = async () => {
-      try {
-        const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
-        setInvoices(data);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
+    try {
+      const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
+      setInvoices(data);
+    } finally {
+      setLoading(false);
+    }
   }, [tenantId]);
 
-  const totalRevenue = invoices.reduce((sum, inv) => sum + inv.total_amount, 0);
-  const paidInvoices = invoices.filter(inv => inv.status === 'paid').length;
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const { totalRevenue, paidInvoices, conversionRate } = useMemo(() => {
+    const total = invoices.reduce((sum, inv) => sum + inv.total_amount, 0);
+    const paid = invoices.filter(inv => inv.status === 'paid').length;
+    const rate = invoices.length > 0 ? Math.round((paid / invoices.length) * 100) : 0;
+    return { totalRevenue: total, paidInvoices: paid, conversionRate: rate };
+  }, [invoices]);
+
+  const sortedInvoices = useMemo(() => 
+    invoices.sort((a, b) => new Date(b.issue_date) - new Date(a.issue_date)).slice(0, 10),
+    [invoices]
+  );
 
   if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
@@ -56,7 +66,7 @@ export default function Sales() {
 
             <div className="bg-white rounded-lg shadow p-6">
               <p className="text-slate-600 text-sm mb-1">Taxa de Conversão</p>
-              <p className="text-3xl font-bold">{invoices.length > 0 ? Math.round((paidInvoices / invoices.length) * 100) : 0}%</p>
+              <p className="text-3xl font-bold">{conversionRate}%</p>
               <p className="text-slate-500 text-sm mt-2">Faturas concluídas</p>
             </div>
           </div>
@@ -77,7 +87,7 @@ export default function Sales() {
                     </tr>
                   </thead>
                   <tbody>
-                    {invoices.sort((a, b) => new Date(b.issue_date) - new Date(a.issue_date)).slice(0, 10).map(inv => (
+                    {sortedInvoices.map(inv => (
                       <tr key={inv.id} className="border-b hover:bg-slate-50">
                         <td className="py-2">{inv.invoice_number}</td>
                         <td className="py-2">{new Date(inv.issue_date).toLocaleDateString('pt-BR')}</td>

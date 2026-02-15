@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
@@ -10,22 +10,30 @@ export default function CashFlow() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const loadData = useCallback(async () => {
     if (!tenantId) return;
     
-    const loadData = async () => {
-      try {
-        const data = await base44.entities.Payment.filter({ tenant_id: tenantId });
-        setPayments(data);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
+    try {
+      const data = await base44.entities.Payment.filter({ tenant_id: tenantId });
+      setPayments(data);
+    } finally {
+      setLoading(false);
+    }
   }, [tenantId]);
 
-  const inflow = payments.filter(p => p.status === 'confirmed').reduce((sum, p) => sum + p.amount, 0);
-  const outflow = payments.filter(p => p.payment_method === 'check').reduce((sum, p) => sum + p.amount, 0);
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const { inflow, outflow } = useMemo(() => ({
+    inflow: payments.filter(p => p.status === 'confirmed').reduce((sum, p) => sum + p.amount, 0),
+    outflow: payments.filter(p => p.payment_method === 'check').reduce((sum, p) => sum + p.amount, 0)
+  }), [payments]);
+
+  const sortedPayments = useMemo(() => 
+    payments.sort((a, b) => new Date(b.payment_date) - new Date(a.payment_date)).slice(0, 10),
+    [payments]
+  );
 
   if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
@@ -77,7 +85,7 @@ export default function CashFlow() {
                     </tr>
                   </thead>
                   <tbody>
-                    {payments.sort((a, b) => new Date(b.payment_date) - new Date(a.payment_date)).slice(0, 10).map(p => (
+                    {sortedPayments.map(p => (
                       <tr key={p.id} className="border-b hover:bg-slate-50">
                         <td className="py-2">{new Date(p.payment_date).toLocaleDateString('pt-BR')}</td>
                         <td className="py-2">{p.payment_number}</td>
