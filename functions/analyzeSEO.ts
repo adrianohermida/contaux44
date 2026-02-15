@@ -9,58 +9,47 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { title, content, seoTitle, seoDescription, focusKeyword = '', keywords = [] } = await req.json();
+    const { title, content, focus_keyword, seo_description } = await req.json();
 
-    const prompt = `Analise este conteúdo do blog em termos de SEO e retorne um relatório detalhado:
+    if (!title || !content) {
+      return Response.json({ error: 'Title and content are required' }, { status: 400 });
+    }
 
-ARTIGO:
-- Título: ${title}
-- Meta Title: ${seoTitle || 'não definido'}
-- Meta Description: ${seoDescription || 'não definida'}
-- Palavra-chave principal: ${focusKeyword || 'não definida'}
-- Palavras-chave secundárias: ${keywords.join(', ') || 'nenhuma'}
-
-CONTEÚDO (primeiras 500 caracteres):
-${content?.substring(0, 500) || 'vazio'}
-
-ANÁLISE REQUERIDA:
-1. SEO Score (0-100): Avalie baseado em title, meta, keywords
-2. Readability Score (0-100): Avalie complexidade e compreensão
-3. Comprimento do conteúdo adequado?
-4. Uso de palavras-chave naturais?
-5. Estrutura com headings adequada?
-6. Meta description otimizada? (50-160 caracteres)
-7. Title tag otimizado? (50-60 caracteres)
-8. Sugestões específicas para melhoria
-
-Retorne em JSON estruturado com scores e lista de melhorias.`;
-
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt,
+    const response = await base44.integrations.Core.InvokeLLM({
+      prompt: `Analyze the SEO optimization of this blog post and return a detailed report:
+      
+      Title: ${title}
+      Content: ${content.substring(0, 2000)}
+      Focus Keyword: ${focus_keyword || 'not set'}
+      Meta Description: ${seo_description || 'not set'}
+      
+      Analyze and return JSON with:
+      - seo_score (0-100)
+      - readability_score (0-100)
+      - strengths (array of 3-4 items)
+      - improvements (array of 3-5 specific recommendations)
+      - meta_suggestions (object with title_recommendation and description_recommendation)
+      
+      Consider: keyword usage, readability, headings, content length, meta tags.`,
       response_json_schema: {
         type: 'object',
         properties: {
-          seoScore: { type: 'number' },
-          readabilityScore: { type: 'number' },
-          analysis: {
+          seo_score: { type: 'number' },
+          readability_score: { type: 'number' },
+          strengths: { type: 'array', items: { type: 'string' } },
+          improvements: { type: 'array', items: { type: 'string' } },
+          meta_suggestions: {
             type: 'object',
             properties: {
-              titleOptimized: { type: 'boolean' },
-              metaDescriptionOptimized: { type: 'boolean' },
-              keywordUsage: { type: 'string' },
-              structure: { type: 'string' },
-              contentLength: { type: 'string' }
+              title_recommendation: { type: 'string' },
+              description_recommendation: { type: 'string' }
             }
-          },
-          suggestions: {
-            type: 'array',
-            items: { type: 'string' }
           }
         }
       }
     });
 
-    return Response.json(result);
+    return Response.json(response);
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
