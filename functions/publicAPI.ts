@@ -1,10 +1,43 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 /**
+ * Rate Limiter simples
+ */
+const requestCounts = new Map();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000;
+const MAX_REQUESTS = 100;
+
+function checkRateLimit(key) {
+  const now = Date.now();
+  const data = requestCounts.get(key) || { count: 0, firstRequestTime: now };
+  
+  if (now - data.firstRequestTime > RATE_LIMIT_WINDOW) {
+    requestCounts.set(key, { count: 1, firstRequestTime: now });
+    return false;
+  }
+  
+  data.count++;
+  requestCounts.set(key, data);
+  return data.count > MAX_REQUESTS;
+}
+
+/**
  * API Pública para leitura de dados
  * Requer API key válida
+ * Com Rate Limiting e CORS
  */
 Deno.serve(async (req) => {
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
+    });
+  }
   try {
     let apiKey, entity, tenantId;
 
@@ -21,6 +54,15 @@ Deno.serve(async (req) => {
       apiKey = body.api_key;
       entity = body.entity;
       tenantId = body.tenant_id;
+    }
+
+    // Rate limiting
+    const ipKey = req.headers.get('x-forwarded-for') || 'unknown';
+    if (checkRateLimit(apiKey || ipKey)) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded', retryAfter: 900 }),
+        { status: 429, headers: { 'Retry-After': '900' } }
+      );
     }
 
     const base44 = createClientFromRequest(req);
@@ -72,8 +114,18 @@ Deno.serve(async (req) => {
        const { tenant_id, created_by, ...safe } = d;
        return safe;
      })
+    }, {
+     headers: {
+       'Access-Control-Allow-Origin': '*',
+       'Access-Control-Allow-Methods': 'GET, POST',
+       'Content-Type': 'application/json'
+     }
     });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 }, {
+     headers: {
+       'Access-Control-Allow-Origin': '*'
+     }
+    });
   }
-});
+  });
