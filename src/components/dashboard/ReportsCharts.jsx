@@ -49,4 +49,6 @@ const ReportsCharts = memo(function ReportsCharts({ invoices = [], payments = []
   );
 });
 
+export default ReportsCharts;);
+
 export default ReportsCharts;

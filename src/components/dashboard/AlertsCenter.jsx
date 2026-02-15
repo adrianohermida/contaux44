@@ -92,4 +92,6 @@ const AlertsCenter = memo(function AlertsCenter({ tenantId }) {
   );
 });
 
+export default AlertsCenter;);
+
 export default AlertsCenter;

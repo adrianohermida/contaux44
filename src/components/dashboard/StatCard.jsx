@@ -28,4 +28,6 @@ const StatCard = memo(function StatCard({ icon: Icon, title, value, subtitle, tr
   );
 });
 
+export default StatCard;);
+
 export default StatCard;
