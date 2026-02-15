@@ -9,49 +9,36 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { topic, keywords, tone = 'professional' } = await req.json();
+    const { topic, keywords } = await req.json();
 
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Você é um especialista em content marketing para contabilidade e direito. 
+    if (!topic) {
+      return Response.json({ error: 'Topic is required' }, { status: 400 });
+    }
+
+    const response = await base44.integrations.Core.InvokeLLM({
+      prompt: `Generate 5 creative and SEO-optimized blog post ideas about "${topic}". 
+      Keywords to include: ${keywords || 'general'}
       
-Gere 5 ideias de blogs altamente otimizados para SEO baseado no seguinte:
-- Tema: ${topic}
-- Palavras-chave alvo: ${keywords?.join(', ') || 'não especificadas'}
-- Tom: ${tone}
-
-Para cada ideia, forneça:
-1. Título (otimizado para SEO)
-2. Slug (URL-friendly)
-3. Resumo (2-3 linhas)
-4. Palavras-chave principais
-5. Tone/estilo sugerido
-
-Retorne em JSON.`,
+      Return a JSON array with exactly 5 ideas, each containing:
+      - title (compelling blog title)
+      - description (1-2 sentence summary)
+      - focus_keyword (main SEO keyword)
+      
+      Format: [{"title": "...", "description": "...", "focus_keyword": "..."}]`,
       response_json_schema: {
-        type: 'object',
-        properties: {
-          ideas: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                title: { type: 'string' },
-                slug: { type: 'string' },
-                excerpt: { type: 'string' },
-                keywords: {
-                  type: 'array',
-                  items: { type: 'string' }
-                },
-                focusKeyword: { type: 'string' },
-                tone: { type: 'string' }
-              }
-            }
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            description: { type: 'string' },
+            focus_keyword: { type: 'string' }
           }
         }
       }
     });
 
-    return Response.json(result);
+    return Response.json({ ideas: response });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
