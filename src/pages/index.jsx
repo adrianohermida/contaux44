@@ -1,27 +1,12 @@
+import React from 'react';
 
-let currentCall; // call object (instance of class Call) with methods
-let transferCall; // call object storing instance of transfer call
-const logger = new Logger(document.getElementById('logarea')); // create instance of Logger with method write
-
-const sdk = VoxImplant.getInstance();
-
-// login
-document.getElementById('login-btn').onclick = async () => {
-  await login(); // initialize, connect, login to Voximplant Cloud (./js/login.js)
-  await setHardwareSettings(); // get available cameras, microphones and output devices and create a dropdown for selection (./js/hardware-settings.js)
-  accessFunctionality(); // add event listeners to interactive elements ('./js/actions.js')
-  manageConnectingView(); // changes connection window interactive elements, depending on chosen option (./js/action.js)
-};
-
-// handle incoming call
-sdk.on(VoxImplant.Events.IncomingCall, (e) => {
-  handleIncomingCall(e);
-});
-
-enableDropdownSelect();
-
-document.addEventListener('click', (event) => {
-  closeDropdown(event);
-});
-
-export default {};
+export default function IndexPage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-slate-900">Contaux</h1>
+        <p className="text-lg text-slate-600 mt-2">Gestão Financeira & Jurídica Integrada</p>
+      </div>
+    </div>
+  );
+}
