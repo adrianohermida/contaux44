@@ -1,12 +1,22 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useFormState } from '@/components/modals/useFormState';
+import { useFormValidation } from '@/components/hooks/useFormValidation';
+import { useFormSubmit } from '@/components/modals/useFormSubmit';
+import ModalWrapper from '@/components/modals/ModalWrapper';
+import FormField from '@/components/modals/FormField';
+import FormActions from '@/components/modals/FormActions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { X, Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 
-export default function InvoiceForm({ invoice, onSave, onCancel, tenantId }) {
-  const initialFormData = useMemo(() => invoice || {
+const VALIDATION_RULES = {
+  invoice_number: { label: 'Nº Fatura', required: true },
+  due_date: { label: 'Data de Vencimento', required: true }
+};
+
+export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpen = true }) {
+  const initialData = useMemo(() => invoice || {
     tenant_id: tenantId,
     client_id: '',
     invoice_number: '',
@@ -21,112 +31,79 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId }) {
     notes: ''
   }, [invoice, tenantId]);
 
-  const [formData, setFormData] = useState(initialFormData);
-  const [loading, setLoading] = useState(false);
+  const { formData, handleChange, setFieldValue, isDirty, reset } = useFormState(initialData);
+  const { errors, validateForm, clearErrors } = useFormValidation();
+  const { loading, submit } = useFormSubmit();
 
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  }, []);
+  const statusOptions = [
+    { value: 'draft', label: 'Rascunho' },
+    { value: 'sent', label: 'Enviada' },
+    { value: 'paid', label: 'Paga' },
+    { value: 'overdue', label: 'Vencida' }
+  ];
 
-  const handleSelectChange = useCallback((name, value) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-  }, []);
+  const handleItemChange = (index, field, value) => {
+    const newItems = [...formData.items];
+    newItems[index] = {
+      ...newItems[index],
+      [field]: field === 'quantity' || field === 'unit_price' || field === 'tax_rate' ? parseFloat(value) || 0 : value
+    };
+    setFieldValue('items', newItems);
+  };
 
-  const handleItemChange = useCallback((index, field, value) => {
-    setFormData(prev => {
-      const newItems = [...prev.items];
-      newItems[index] = { 
-        ...newItems[index], 
-        [field]: field === 'quantity' || field === 'unit_price' || field === 'tax_rate' ? parseFloat(value) || 0 : value 
-      };
-      return { ...prev, items: newItems };
-    });
-  }, []);
-
-  const addItem = useCallback(() => {
-    setFormData(prev => ({
-      ...prev,
-      items: [...prev.items, { description: '', quantity: 1, unit_price: 0, tax_rate: 0 }]
-    }));
-  }, []);
-
-  const removeItem = useCallback((index) => {
-    setFormData(prev => ({
-      ...prev,
-      items: prev.items.filter((_, i) => i !== index)
-    }));
-  }, []);
-
-  const handleSubmit = useCallback(async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      if (invoice?.id) {
-        await base44.entities.Invoice.update(invoice.id, formData);
-      } else {
-        await base44.entities.Invoice.create(formData);
+    clearErrors();
+
+    if (!validateForm(formData, VALIDATION_RULES)) return;
+
+    await submit(
+      async () => {
+        if (invoice?.id) {
+          await base44.entities.Invoice.update(invoice.id, formData);
+        } else {
+          await base44.entities.Invoice.create(formData);
+        }
+      },
+      {
+        onSuccess: () => { reset(); onSave(); },
+        successMessage: invoice ? 'Fatura atualizada!' : 'Fatura criada!',
+        errorMessage: 'Erro ao salvar fatura.'
       }
-      onSave();
-    } finally {
-      setLoading(false);
-    }
-  }, [invoice, formData, onSave]);
+    );
+  };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 my-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">{invoice ? 'Editar Fatura' : 'Nova Fatura'}</h2>
-          <button onClick={onCancel} className="p-1 hover:bg-slate-100 rounded">
-            <X className="w-5 h-5" />
-          </button>
+    <ModalWrapper isOpen={isOpen} onClose={onCancel} title={invoice ? 'Editar Fatura' : 'Nova Fatura'} size="lg">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-3 gap-4">
+          <FormField label="Nº Fatura" name="invoice_number" value={formData.invoice_number} onChange={handleChange} error={errors.invoice_number} required />
+          <FormField label="Data Emissão" type="date" name="issue_date" value={formData.issue_date} onChange={handleChange} required />
+          <FormField label="Data Vencimento" type="date" name="due_date" value={formData.due_date} onChange={handleChange} error={errors.due_date} required />
+          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-3 gap-4">
-            <Input label="Nº Fatura" name="invoice_number" value={formData.invoice_number} onChange={handleChange} required />
-            <Input label="Data de Emissão" type="date" name="issue_date" value={formData.issue_date} onChange={handleChange} required />
-            <Input label="Data de Vencimento" type="date" name="due_date" value={formData.due_date} onChange={handleChange} required />
-            <Select value={formData.status} onValueChange={(v) => handleSelectChange('status', v)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">Rascunho</SelectItem>
-                <SelectItem value="sent">Enviada</SelectItem>
-                <SelectItem value="paid">Paga</SelectItem>
-                <SelectItem value="overdue">Vencida</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="border rounded-lg p-4 space-y-2">
+          <h3 className="font-semibold">Itens da Fatura</h3>
+          {formData.items.map((item, idx) => (
+            <div key={idx} className="grid grid-cols-5 gap-2">
+              <Input placeholder="Descrição" value={item.description} onChange={(e) => handleItemChange(idx, 'description', e.target.value)} />
+              <Input placeholder="Qtd" type="number" value={item.quantity} onChange={(e) => handleItemChange(idx, 'quantity', e.target.value)} />
+              <Input placeholder="Preço" type="number" step="0.01" value={item.unit_price} onChange={(e) => handleItemChange(idx, 'unit_price', e.target.value)} />
+              <Input placeholder="Imposto %" type="number" step="0.01" value={item.tax_rate} onChange={(e) => handleItemChange(idx, 'tax_rate', e.target.value)} />
+              <Button variant="ghost" size="icon" onClick={() => setFieldValue('items', formData.items.filter((_, i) => i !== idx))}>
+                <Trash2 className="w-4 h-4 text-red-500" />
+              </Button>
+            </div>
+          ))}
+          <Button type="button" variant="outline" onClick={() => setFieldValue('items', [...formData.items, { description: '', quantity: 1, unit_price: 0, tax_rate: 0 }])} className="mt-2">
+            <Plus className="w-4 h-4 mr-2" /> Adicionar Item
+          </Button>
+        </div>
 
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold mb-4">Itens da Fatura</h3>
-            {formData.items.map((item, idx) => (
-              <div key={idx} className="grid grid-cols-5 gap-2 mb-2">
-                <Input placeholder="Descrição" value={item.description} onChange={(e) => handleItemChange(idx, 'description', e.target.value)} />
-                <Input placeholder="Qtd" type="number" value={item.quantity} onChange={(e) => handleItemChange(idx, 'quantity', e.target.value)} />
-                <Input placeholder="Preço" type="number" step="0.01" value={item.unit_price} onChange={(e) => handleItemChange(idx, 'unit_price', e.target.value)} />
-                <Input placeholder="Imposto %" type="number" step="0.01" value={item.tax_rate} onChange={(e) => handleItemChange(idx, 'tax_rate', e.target.value)} />
-                <Button variant="ghost" size="icon" onClick={() => removeItem(idx)}>
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                </Button>
-              </div>
-            ))}
-            <Button type="button" variant="outline" onClick={addItem} className="mt-2">
-              <Plus className="w-4 h-4 mr-2" /> Adicionar Item
-            </Button>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-4">
-            <Button variant="outline" onClick={onCancel}>Cancelar</Button>
-            <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700">
-              {loading ? 'Salvando...' : 'Salvar'}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <FormField label="Notas" type="textarea" name="notes" value={formData.notes} onChange={handleChange} rows={2} />
+        <FormActions onCancel={onCancel} onSubmit={handleSubmit} loading={loading} submitLabel={invoice ? 'Atualizar' : 'Criar'} isDirty={isDirty} />
+      </form>
+    </ModalWrapper>
   );
 }
