@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
-import { Bell, Search, User, LogOut } from 'lucide-react';
+import { Bell, Search, User, LogOut, Settings } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import {
   DropdownMenu,
@@ -9,11 +9,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useUserAndTenant } from '../hooks/useUserAndTenant';
 import { useDebounce } from '../hooks/useDebounce';
+import UserPreferences from './UserPreferences';
 
 const DashboardHeader = memo(function DashboardHeader() {
   const { user, tenantId } = useUserAndTenant();
   const [notifications, setNotifications] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
   const debouncedSearch = useDebounce(searchQuery, 300);
 
   const loadNotifications = useCallback(async () => {
@@ -116,6 +118,10 @@ const DashboardHeader = memo(function DashboardHeader() {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setPreferencesOpen(true)}>
+                <Settings className="w-4 h-4 mr-2" />
+                Preferências
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                 <LogOut className="w-4 h-4 mr-2" />
                 Sair
@@ -124,6 +130,13 @@ const DashboardHeader = memo(function DashboardHeader() {
           </DropdownMenu>
         </div>
       </div>
+
+      <UserPreferences 
+        user={user} 
+        tenantId={tenantId} 
+        isOpen={preferencesOpen} 
+        onClose={() => setPreferencesOpen(false)} 
+      />
     </header>
   );
 });

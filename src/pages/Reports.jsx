@@ -1,67 +1,98 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
-import ReportsCharts from '../components/dashboard/ReportsCharts';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useUserAndTenant } from '@/components/hooks/useUserAndTenant';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import ProtectedRoute from '@/components/dashboard/ProtectedRoute';
+import ExportReportButton from '@/components/dashboard/ExportReportButton';
+import { FileText, Download, Trash2, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Reports() {
   const { tenantId } = useUserAndTenant();
-  const [invoices, setInvoices] = useState([]);
-  const [payments, setPayments] = useState([]);
+  const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const loadData = useCallback(async () => {
-    if (!tenantId) return;
-    
-    try {
-      const [invData, payData] = await Promise.all([
-        base44.entities.Invoice.filter({ tenant_id: tenantId }),
-        base44.entities.Payment.filter({ tenant_id: tenantId })
-      ]);
-      
-      setInvoices(invData);
-      setPayments(payData);
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    const loadReports = async () => {
+      if (!tenantId) return;
+      try {
+        const data = await base44.entities.Report.filter({ tenant_id: tenantId });
+        setReports(data || []);
+      } catch (error) {
+        console.error('Erro:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadReports();
   }, [tenantId]);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const totalRevenue = useMemo(() => invoices.reduce((sum, inv) => sum + inv.total_amount, 0), [invoices]);
-  const totalPaid = useMemo(() => invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.total_amount, 0), [invoices]);
-  const totalPending = useMemo(() => totalRevenue - totalPaid, [totalRevenue, totalPaid]);
-
-  if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+  const handleDelete = async (id) => {
+    if (confirm('Deletar este relatório?')) {
+      await base44.entities.Report.delete(id);
+      setReports(reports.filter(r => r.id !== id));
+    }
+  };
 
   return (
     <ProtectedRoute>
       <DashboardLayout>
         <div className="space-y-6">
-          <div>
+          <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold text-slate-900">Relatórios</h1>
-            <p className="text-slate-600 mt-1">Análise e visualização de dados</p>
+            <ExportReportButton tenantId={tenantId} />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-blue-50 rounded-lg shadow p-6 border-l-4 border-blue-500">
-              <p className="text-slate-600 text-sm mb-1">Receita Total</p>
-              <p className="text-2xl font-bold text-blue-600">{totalRevenue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
+          {loading ? (
+            <div className="text-center py-8">Carregando...</div>
+          ) : reports.length === 0 ? (
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-8 text-center">
+              <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+              <p className="text-slate-600">Nenhum relatório disponível</p>
             </div>
-            <div className="bg-green-50 rounded-lg shadow p-6 border-l-4 border-green-500">
-              <p className="text-slate-600 text-sm mb-1">Valor Recebido</p>
-              <p className="text-2xl font-bold text-green-600">{totalPaid.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
+          ) : (
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-slate-50 border-b">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Nome</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Tipo</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Período</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold">Ações</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {reports.map((report) => (
+                    <tr key={report.id} className="hover:bg-slate-50">
+                      <td className="px-6 py-4 font-medium">{report.report_name}</td>
+                      <td className="px-6 py-4 text-sm capitalize">{report.report_type}</td>
+                      <td className="px-6 py-4 text-sm">
+                        {new Date(report.period_start).toLocaleDateString('pt-BR')} - {new Date(report.period_end).toLocaleDateString('pt-BR')}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          report.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {report.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right space-x-2">
+                        {report.file_url && (
+                          <Button variant="ghost" size="sm" onClick={() => window.open(report.file_url)}>
+                            <Download className="w-4 h-4" />
+                          </Button>
+                        )}
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(report.id)}>
+                          <Trash2 className="w-4 h-4 text-red-500" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="bg-red-50 rounded-lg shadow p-6 border-l-4 border-red-500">
-              <p className="text-slate-600 text-sm mb-1">Pendência</p>
-              <p className="text-2xl font-bold text-red-600">{totalPending.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
-            </div>
-          </div>
-
-          <ReportsCharts invoices={invoices} payments={payments} />
+          )}
         </div>
       </DashboardLayout>
     </ProtectedRoute>
