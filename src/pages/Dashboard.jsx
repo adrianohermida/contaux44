@@ -9,50 +9,7 @@ import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 
 export default function Dashboard() {
   const { tenantId } = useUserAndTenant();
-  const [stats, setStats] = useState([
-    {
-      icon: Users,
-      title: 'Clientes Ativos',
-      value: '0',
-      subtitle: 'Total de clientes',
-      color: 'blue'
-    },
-    {
-      icon: FileText,
-      title: 'Processos em Andamento',
-      value: '0',
-      subtitle: 'Processos ativos',
-      color: 'green'
-    },
-    {
-      icon: Ticket,
-      title: 'Tickets Abertos',
-      value: '0',
-      subtitle: 'Aguardando atendimento',
-      color: 'yellow'
-    },
-    {
-      icon: DollarSign,
-      title: 'Receita do Mês',
-      value: 'R$ 0,00',
-      subtitle: 'Faturamento atual',
-      color: 'purple'
-    },
-    {
-      icon: AlertCircle,
-      title: 'Prazos Críticos',
-      value: '0',
-      subtitle: 'Próximos 7 dias',
-      color: 'red'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Orçamentos Pendentes',
-      value: '0',
-      subtitle: 'Aguardando aprovação',
-      color: 'blue'
-    }
-  ]);
+  const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -78,50 +35,14 @@ export default function Dashboard() {
           return daysUntil <= 7 && daysUntil > 0;
         }).length;
 
-        setStats([
-          {
-            icon: Users,
-            title: 'Clientes Ativos',
-            value: clients.length.toString(),
-            subtitle: 'Total de clientes',
-            color: 'blue'
-          },
-          {
-            icon: FileText,
-            title: 'Processos em Andamento',
-            value: processes.length.toString(),
-            subtitle: 'Processos ativos',
-            color: 'green'
-          },
-          {
-            icon: Ticket,
-            title: 'Tickets Abertos',
-            value: tickets.length.toString(),
-            subtitle: 'Aguardando atendimento',
-            color: 'yellow'
-          },
-          {
-            icon: DollarSign,
-            title: 'Receita do Mês',
-            value: `R$ ${monthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-            subtitle: 'Faturamento atual',
-            color: 'purple'
-          },
-          {
-            icon: AlertCircle,
-            title: 'Prazos Críticos',
-            value: upcomingDeadlines.toString(),
-            subtitle: 'Próximos 7 dias',
-            color: 'red'
-          },
-          {
-            icon: TrendingUp,
-            title: 'Orçamentos Pendentes',
-            value: quotes.length.toString(),
-            subtitle: 'Aguardando aprovação',
-            color: 'blue'
-          }
-        ]);
+        setDashboardData({
+          clientsCount: clients.length,
+          processesCount: processes.length,
+          ticketsCount: tickets.length,
+          monthlyRevenue,
+          upcomingDeadlines,
+          quotesCount: quotes.length
+        });
       } catch (error) {
         console.error('Erro ao carregar dados do dashboard:', error);
       }
@@ -129,6 +50,28 @@ export default function Dashboard() {
 
     loadDashboardData();
   }, [tenantId]);
+
+  const stats = useMemo(() => {
+    if (!dashboardData) {
+      return [
+        { icon: Users, title: 'Clientes Ativos', value: '0', subtitle: 'Total de clientes', color: 'blue' },
+        { icon: FileText, title: 'Processos em Andamento', value: '0', subtitle: 'Processos ativos', color: 'green' },
+        { icon: Ticket, title: 'Tickets Abertos', value: '0', subtitle: 'Aguardando atendimento', color: 'yellow' },
+        { icon: DollarSign, title: 'Receita do Mês', value: 'R$ 0,00', subtitle: 'Faturamento atual', color: 'purple' },
+        { icon: AlertCircle, title: 'Prazos Críticos', value: '0', subtitle: 'Próximos 7 dias', color: 'red' },
+        { icon: TrendingUp, title: 'Orçamentos Pendentes', value: '0', subtitle: 'Aguardando aprovação', color: 'blue' }
+      ];
+    }
+
+    return [
+      { icon: Users, title: 'Clientes Ativos', value: dashboardData.clientsCount.toString(), subtitle: 'Total de clientes', color: 'blue' },
+      { icon: FileText, title: 'Processos em Andamento', value: dashboardData.processesCount.toString(), subtitle: 'Processos ativos', color: 'green' },
+      { icon: Ticket, title: 'Tickets Abertos', value: dashboardData.ticketsCount.toString(), subtitle: 'Aguardando atendimento', color: 'yellow' },
+      { icon: DollarSign, title: 'Receita do Mês', value: `R$ ${dashboardData.monthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: 'Faturamento atual', color: 'purple' },
+      { icon: AlertCircle, title: 'Prazos Críticos', value: dashboardData.upcomingDeadlines.toString(), subtitle: 'Próximos 7 dias', color: 'red' },
+      { icon: TrendingUp, title: 'Orçamentos Pendentes', value: dashboardData.quotesCount.toString(), subtitle: 'Aguardando aprovação', color: 'blue' }
+    ];
+  }, [dashboardData]);
 
   return (
     <ProtectedRoute>
