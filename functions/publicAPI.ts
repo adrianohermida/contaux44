@@ -26,7 +26,6 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
 
     // Validação de API key contra BD
-    const base44 = createClientFromRequest(req);
     if (!apiKey || apiKey.length < 32) {
      return Response.json({ error: 'Invalid API key' }, { status: 401 });
     }
