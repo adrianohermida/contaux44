@@ -1,26 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import TaxInvoicesTable from '../components/dashboard/TaxInvoicesTable';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 
 export default function TaxInvoices() {
-  const [tenantId, setTenantId] = useState(null);
+  const { tenantId } = useUserAndTenant();
   const [refreshKey, setRefreshKey] = useState(0);
-
-  useEffect(() => {
-    const getCurrentTenant = async () => {
-      try {
-        const user = await base44.auth.me();
-        setTenantId(user.email.split('@')[0]);
-      } catch (error) {
-        console.error('Erro ao obter tenant:', error);
-      }
-    };
-    getCurrentTenant();
-  }, []);
 
   if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
