@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { X, Plus, Trash2 } from 'lucide-react';
 
 export default function QuoteForm({ quote, onSave, onCancel, tenantId }) {
-  const [formData, setFormData] = useState(quote || {
+  const initialFormData = useMemo(() => quote || {
     tenant_id: tenantId,
     client_id: '',
     quote_number: '',
@@ -19,39 +19,46 @@ export default function QuoteForm({ quote, onSave, onCancel, tenantId }) {
     items: [{ description: '', quantity: 1, unit_price: 0, tax_rate: 0 }],
     notes: '',
     converted_invoice_id: ''
-  });
+  }, [quote, tenantId]);
+
+  const [formData, setFormData] = useState(initialFormData);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleSelectChange = (name, value) => {
+  const handleSelectChange = useCallback((name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleItemChange = (index, field, value) => {
-    const newItems = [...formData.items];
-    newItems[index] = { ...newItems[index], [field]: field === 'quantity' || field === 'unit_price' || field === 'tax_rate' ? parseFloat(value) : value };
-    setFormData(prev => ({ ...prev, items: newItems }));
-  };
+  const handleItemChange = useCallback((index, field, value) => {
+    setFormData(prev => {
+      const newItems = [...prev.items];
+      newItems[index] = { 
+        ...newItems[index], 
+        [field]: field === 'quantity' || field === 'unit_price' || field === 'tax_rate' ? parseFloat(value) || 0 : value 
+      };
+      return { ...prev, items: newItems };
+    });
+  }, []);
 
-  const addItem = () => {
+  const addItem = useCallback(() => {
     setFormData(prev => ({
       ...prev,
       items: [...prev.items, { description: '', quantity: 1, unit_price: 0, tax_rate: 0 }]
     }));
-  };
+  }, []);
 
-  const removeItem = (index) => {
+  const removeItem = useCallback((index) => {
     setFormData(prev => ({
       ...prev,
       items: prev.items.filter((_, i) => i !== index)
     }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -64,7 +71,7 @@ export default function QuoteForm({ quote, onSave, onCancel, tenantId }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [quote, formData, onSave]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">

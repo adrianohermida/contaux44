@@ -1,29 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function ServicesForm({ service, tenantId, onSave, onCancel }) {
-  const [formData, setFormData] = useState(service || {
+  const initialFormData = useMemo(() => service || {
     service_name: '',
     description: '',
     hourly_rate: 0,
     category: 'consulting',
     status: 'active'
-  });
+  }, [service]);
+
+  const [formData, setFormData] = useState(initialFormData);
   const [saving, setSaving] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleSelectChange = (name, value) => {
+  const handleSelectChange = useCallback((name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
@@ -36,7 +38,7 @@ export default function ServicesForm({ service, tenantId, onSave, onCancel }) {
     } finally {
       setSaving(false);
     }
-  };
+  }, [service, formData, tenantId, onSave]);
 
   return (
     <div className="bg-white rounded-lg shadow p-6 mb-6">

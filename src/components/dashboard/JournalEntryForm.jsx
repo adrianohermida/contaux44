@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { X, Plus, Trash2 } from 'lucide-react';
 
 export default function JournalEntryForm({ entry, onSave, onCancel, tenantId }) {
-  const [formData, setFormData] = useState(entry || {
+  const initialFormData = useMemo(() => entry || {
     tenant_id: tenantId,
     client_id: '',
     entry_date: new Date().toISOString().split('T')[0],
@@ -15,49 +15,56 @@ export default function JournalEntryForm({ entry, onSave, onCancel, tenantId }) 
     line_items: [{ account_id: '', account_name: '', debit_amount: 0, credit_amount: 0 }],
     memo: '',
     is_posted: false
-  });
+  }, [entry, tenantId]);
+
+  const [formData, setFormData] = useState(initialFormData);
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadAccounts();
-  }, [tenantId]);
-
-  const loadAccounts = async () => {
+  const loadAccounts = useCallback(async () => {
     try {
       const data = await base44.entities.Account.filter({ tenant_id: tenantId });
       setAccounts(data);
     } catch (error) {
       console.error('Erro ao carregar contas:', error);
     }
-  };
+  }, [tenantId]);
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    loadAccounts();
+  }, [loadAccounts]);
+
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleLineChange = (index, field, value) => {
-    const newItems = [...formData.line_items];
-    newItems[index] = { ...newItems[index], [field]: field.includes('amount') ? parseFloat(value) : value };
-    setFormData(prev => ({ ...prev, line_items: newItems }));
-  };
+  const handleLineChange = useCallback((index, field, value) => {
+    setFormData(prev => {
+      const newItems = [...prev.line_items];
+      newItems[index] = { 
+        ...newItems[index], 
+        [field]: field.includes('amount') ? parseFloat(value) || 0 : value 
+      };
+      return { ...prev, line_items: newItems };
+    });
+  }, []);
 
-  const addLineItem = () => {
+  const addLineItem = useCallback(() => {
     setFormData(prev => ({
       ...prev,
       line_items: [...prev.line_items, { account_id: '', account_name: '', debit_amount: 0, credit_amount: 0 }]
     }));
-  };
+  }, []);
 
-  const removeLine = (index) => {
+  const removeLine = useCallback((index) => {
     setFormData(prev => ({
       ...prev,
       line_items: prev.line_items.filter((_, i) => i !== index)
     }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -70,7 +77,7 @@ export default function JournalEntryForm({ entry, onSave, onCancel, tenantId }) 
     } finally {
       setLoading(false);
     }
-  };
+  }, [entry, formData, onSave]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">

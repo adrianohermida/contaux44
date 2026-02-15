@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { X } from 'lucide-react';
 
 export default function PaymentForm({ payment, onSave, onCancel, tenantId }) {
-  const [formData, setFormData] = useState(payment || {
+  const initialFormData = useMemo(() => payment || {
     tenant_id: tenantId,
     client_id: '',
     invoice_id: '',
@@ -17,33 +17,35 @@ export default function PaymentForm({ payment, onSave, onCancel, tenantId }) {
     status: 'pending',
     transaction_id: '',
     notes: ''
-  });
+  }, [payment, tenantId]);
+
+  const [formData, setFormData] = useState(initialFormData);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadInvoices();
-  }, [tenantId]);
-
-  const loadInvoices = async () => {
+  const loadInvoices = useCallback(async () => {
     try {
       const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
       setInvoices(data);
     } catch (error) {
       console.error('Erro ao carregar faturas:', error);
     }
-  };
+  }, [tenantId]);
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    loadInvoices();
+  }, [loadInvoices]);
+
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: name === 'amount' ? parseFloat(value) : value }));
-  };
+    setFormData(prev => ({ ...prev, [name]: name === 'amount' ? parseFloat(value) || 0 : value }));
+  }, []);
 
-  const handleSelectChange = (name, value) => {
+  const handleSelectChange = useCallback((name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -56,7 +58,7 @@ export default function PaymentForm({ payment, onSave, onCancel, tenantId }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [payment, formData, onSave]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
