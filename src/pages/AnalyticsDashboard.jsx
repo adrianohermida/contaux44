@@ -6,6 +6,7 @@ import ProtectedRoute from '@/components/dashboard/ProtectedRoute';
 import RevenueChart from '@/components/dashboard/RevenueChart';
 import PaymentStatusChart from '@/components/dashboard/PaymentStatusChart';
 import TicketAnalyticsChart from '@/components/dashboard/TicketAnalyticsChart';
+import ComparisonCard from '@/components/dashboard/ComparisonCard';
 import ExportReportButton from '@/components/dashboard/ExportReportButton';
 import { TrendingUp, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
@@ -128,7 +129,10 @@ export default function AnalyticsDashboard() {
             <TicketAnalyticsChart tickets={data.tickets} />
           </div>
 
-          {/* Comparison */}
+          {/* Comparison Card */}
+          <ComparisonCard tenantId={tenantId} />
+
+          {/* Additional Metrics */}
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-white rounded-lg shadow p-6">
               <h4 className="font-semibold text-slate-900 mb-4">Evolução de Clientes</h4>
