@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
-export default function KPICard({ icon: Icon, label, value, trend, color = 'blue' }) {
+const KPICard = memo(function KPICard({ icon: Icon, label, value, trend, color = 'blue' }) {
   const colors = {
     blue: 'bg-blue-50 border-blue-200',
     green: 'bg-green-50 border-green-200',
@@ -38,4 +38,6 @@ export default function KPICard({ icon: Icon, label, value, trend, color = 'blue
       </div>
     </div>
   );
-}
+});
+
+export default KPICard;
