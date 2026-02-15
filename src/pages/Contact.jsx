@@ -75,11 +75,11 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumbs */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">Fale Conosco</h1>
-          <p className="text-blue-100 mb-6">Dúvidas, sugestões ou reclamações? Deixe seu feedback ou envie sua mensagem.</p>
-          <div className="flex gap-2 text-sm">
+          <h1 className="text-2xl md:text-4xl font-bold mb-4">Fale Conosco</h1>
+          <p className="text-blue-100 text-sm md:text-base mb-6">Dúvidas, sugestões ou reclamações? Deixe seu feedback ou envie sua mensagem.</p>
+          <div className="flex gap-2 text-xs md:text-sm flex-wrap">
             <a href="/" className="hover:underline">Início</a>
             <span>/</span>
             <span>Fale Conosco</span>
@@ -88,16 +88,16 @@ export default function Contact() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-20">
+      <section className="py-12 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-5 gap-12">
+          <div className="grid md:grid-cols-5 gap-6 md:gap-12">
             {/* Left - Contact Info */}
-            <div className="lg:col-span-2">
-              <div className="space-y-8">
+            <div className="md:col-span-2">
+              <div className="space-y-6 md:space-y-8">
                 {/* Header */}
                 <div>
-                  <h4 className="text-2xl font-bold mb-2">Informações de Contato</h4>
-                  <p className="text-gray-600">
+                  <h4 className="text-xl md:text-2xl font-bold mb-2">Informações de Contato</h4>
+                  <p className="text-gray-600 text-sm md:text-base">
                     Contaux Contabilidade<br />
                     CNPJ: 07.772.334/0001-22
                   </p>
@@ -105,19 +105,19 @@ export default function Contact() {
 
                 {/* Phone */}
                 <div className="flex gap-4">
-                  <Phone className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                  <Phone className="w-5 h-5 md:w-6 md:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h5 className="font-bold mb-1">Telefone</h5>
-                    <p className="text-gray-600">+55 51 2391-1854</p>
+                    <h5 className="font-bold text-sm md:text-base mb-1">Telefone</h5>
+                    <p className="text-gray-600 text-sm">+55 51 2391-1854</p>
                   </div>
                 </div>
 
                 {/* Email */}
                 <div className="flex gap-4">
-                  <Mail className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                  <Mail className="w-5 h-5 md:w-6 md:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h5 className="font-bold mb-1">Email</h5>
-                    <a href="mailto:contato@contaux.com.br" className="text-blue-600 hover:underline">
+                    <h5 className="font-bold text-sm md:text-base mb-1">Email</h5>
+                    <a href="mailto:contato@contaux.com.br" className="text-blue-600 hover:underline text-sm">
                       contato@contaux.com.br
                     </a>
                   </div>
@@ -125,10 +125,10 @@ export default function Contact() {
 
                 {/* Address */}
                 <div className="flex gap-4">
-                  <MapPin className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                  <MapPin className="w-5 h-5 md:w-6 md:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h5 className="font-bold mb-1">Endereço</h5>
-                    <p className="text-gray-600">
+                    <h5 className="font-bold text-sm md:text-base mb-1">Endereço</h5>
+                    <p className="text-gray-600 text-sm">
                       Av. Dolores Alcaraz Caldas, 90, 8º Andar<br />
                       Praia de Belas, CEP 90110-180<br />
                       Porto Alegre / RS
@@ -162,8 +162,8 @@ export default function Contact() {
             </div>
 
             {/* Right - Contact Form */}
-            <div className="lg:col-span-3">
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="md:col-span-3">
+              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                 {submitted && (
                   <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
                     ✓ Mensagem enviada com sucesso!
@@ -250,19 +250,19 @@ export default function Contact() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 md:py-20 bg-gray-50">
        <div className="max-w-6xl mx-auto px-4">
-         <div className="grid lg:grid-cols-2 gap-12">
+         <div className="grid md:grid-cols-2 gap-6 md:gap-12">
            <div>
-             <h3 className="text-2xl font-bold mb-4">Boletim Informativo</h3>
-             <p className="text-gray-600 mb-6">Inscreva-se e receba conteúdo exclusivo sobre contabilidade especializada</p>
+             <h3 className="text-xl md:text-2xl font-bold mb-4">Boletim Informativo</h3>
+             <p className="text-gray-600 text-sm md:text-base mb-6">Inscreva-se e receba conteúdo exclusivo sobre contabilidade especializada</p>
              <NewsletterForm source="contact" />
            </div>
 
-            <div className="bg-white p-8 rounded-lg border border-gray-200">
-              <h4 className="text-2xl font-bold mb-3">Quer abrir sua PJ gratuitamente?</h4>
-              <p className="text-gray-600 mb-6">Disponível em qualquer plano anual.</p>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <div className="bg-white p-4 md:p-8 rounded-lg border border-gray-200">
+              <h4 className="text-xl md:text-2xl font-bold mb-3">Quer abrir sua PJ gratuitamente?</h4>
+              <p className="text-gray-600 text-sm md:text-base mb-6">Disponível em qualquer plano anual.</p>
+              <button className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
                 Fale com um especialista
               </button>
             </div>
