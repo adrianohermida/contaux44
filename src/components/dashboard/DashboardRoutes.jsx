@@ -29,6 +29,8 @@ import {
 const LazyAnalytics = lazy(() => import('../../pages/Analytics'));
 const LazyAuditLogs = lazy(() => import('../../pages/AuditLogs'));
 const LazySecurityCenter = lazy(() => import('../../pages/SecurityCenter'));
+const LazyTransactions = lazy(() => import('../../pages/Transactions'));
+const LazyCashFlowForecast = lazy(() => import('../../pages/CashFlowForecast'));
 
 export default function DashboardRoutes() {
   return (
@@ -184,6 +186,18 @@ export default function DashboardRoutes() {
       <Route path="/securitycenter" element={
         <LazyPageWrapper>
           <LazySecurityCenter />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/transactions" element={
+        <LazyPageWrapper>
+          <LazyTransactions />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/cashflowforecast" element={
+        <LazyPageWrapper>
+          <LazyCashFlowForecast />
         </LazyPageWrapper>
       } />
       
