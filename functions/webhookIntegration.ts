@@ -20,11 +20,19 @@ Deno.serve(async (req) => {
 
     // Busca dados da entidade
     const base44 = createClientFromRequest(req);
-    const entity = await base44.asServiceRole.entities[entity_type].filter({ tenant_id: tenant_id });
-    const foundEntity = entity.find(e => e.id === entity_id);
+    
+    // Tenta buscar a entidade diretamente
+    let foundEntity;
+    try {
+      const entities = await base44.asServiceRole.entities[entity_type].filter({ tenant_id: tenant_id, id: entity_id });
+      foundEntity = entities[0];
+    } catch (e) {
+      // Se falhar no filter, entidade pode não existir
+      foundEntity = null;
+    }
 
     if (!foundEntity) {
-      return Response.json({ error: 'Entity not found' }, { status: 404 });
+      return Response.json({ error: 'Entity not found or invalid type', details: `Cannot find ${entity_type} with id ${entity_id}` }, { status: 404 });
     }
 
     // Envia webhook

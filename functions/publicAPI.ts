@@ -6,11 +6,24 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
  */
 Deno.serve(async (req) => {
   try {
+    let apiKey, entity, tenantId;
+
+    // GET query params
+    if (req.method === 'GET') {
+      const { searchParams } = new URL(req.url);
+      apiKey = searchParams.get('api_key');
+      entity = searchParams.get('entity');
+      tenantId = searchParams.get('tenant_id');
+    } 
+    // POST body
+    else if (req.method === 'POST') {
+      const body = await req.json();
+      apiKey = body.api_key;
+      entity = body.entity;
+      tenantId = body.tenant_id;
+    }
+
     const base44 = createClientFromRequest(req);
-    const { searchParams } = new URL(req.url);
-    const apiKey = searchParams.get('api_key');
-    const entity = searchParams.get('entity');
-    const tenantId = searchParams.get('tenant_id');
 
     // Validação de API key contra BD
     const base44 = createClientFromRequest(req);
