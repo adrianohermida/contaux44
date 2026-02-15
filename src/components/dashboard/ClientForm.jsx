@@ -23,7 +23,7 @@ const VALIDATION_RULES = {
 
 export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen = true }) {
   const initialData = useMemo(() => client || {
-    tenant_id: tenantId,
+    workspace_id: tenantId,
     company_name: '',
     email: '',
     phone: '',
