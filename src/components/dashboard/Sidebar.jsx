@@ -14,6 +14,7 @@ import {
   Phone,
   UserCircle,
   Settings,
+  AlertCircle,
   ChevronDown,
   ChevronRight
 } from 'lucide-react';
@@ -53,7 +54,9 @@ const menuItems = [
   { icon: BarChart3, label: 'Análises', path: '/analytics' },
   { icon: Phone, label: 'Comunicação', path: '/communication' },
   { icon: UserCircle, label: 'Meu Painel', path: '/clientportal' },
-  { icon: Settings, label: 'Configurações', path: '/settings' }
+  { icon: Settings, label: 'Configurações', path: '/settings' },
+  { icon: FileText, label: 'Logs de Auditoria', path: '/auditlogs' },
+  { icon: AlertCircle, label: 'Centro de Segurança', path: '/securitycenter' }
 ];
 
 const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
