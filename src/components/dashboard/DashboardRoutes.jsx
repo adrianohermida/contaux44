@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LazyPageWrapper from './LazyPageWrapper';
 import {
@@ -25,6 +25,8 @@ import {
   LazyClientPortal,
   LazySettings
 } from './LazyPages';
+
+const LazyAnalytics = lazy(() => import('../../pages/Analytics'));
 
 export default function DashboardRoutes() {
   return (
@@ -144,6 +146,12 @@ export default function DashboardRoutes() {
       <Route path="/reports" element={
         <LazyPageWrapper>
           <LazyReports />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/analytics" element={
+        <LazyPageWrapper>
+          <LazyAnalytics />
         </LazyPageWrapper>
       } />
       
