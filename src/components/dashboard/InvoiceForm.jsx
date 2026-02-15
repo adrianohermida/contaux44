@@ -68,7 +68,10 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpe
       {
         onSuccess: () => { reset(); onSave(); },
         successMessage: invoice ? 'Fatura atualizada!' : 'Fatura criada!',
-        errorMessage: 'Erro ao salvar fatura.'
+        errorMessage: 'Erro ao salvar fatura.',
+        tenantId,
+        entityType: 'Invoice',
+        action: invoice ? 'update' : 'create'
       }
     );
   };

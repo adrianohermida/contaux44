@@ -72,7 +72,10 @@ export default function TicketForm({ ticket, onSave, onCancel, tenantId, isOpen 
       {
         onSuccess: () => { reset(); onSave(); },
         successMessage: ticket ? 'Ticket atualizado!' : 'Ticket criado!',
-        errorMessage: 'Erro ao salvar ticket.'
+        errorMessage: 'Erro ao salvar ticket.',
+        tenantId,
+        entityType: 'Ticket',
+        action: ticket ? 'update' : 'create'
       }
     );
   };

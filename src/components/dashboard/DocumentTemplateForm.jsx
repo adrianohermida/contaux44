@@ -61,7 +61,10 @@ export default function DocumentTemplateForm({ tenantId, userId, onSuccess, onCl
       {
         onSuccess: () => { reset(); onSuccess(); },
         successMessage: editingTemplate ? 'Modelo atualizado!' : 'Modelo criado!',
-        errorMessage: 'Erro ao salvar modelo.'
+        errorMessage: 'Erro ao salvar modelo.',
+        tenantId,
+        entityType: 'DocumentTemplate',
+        action: editingTemplate ? 'update' : 'create'
       }
     );
   };

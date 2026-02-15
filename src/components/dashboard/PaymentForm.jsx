@@ -77,7 +77,10 @@ export default function PaymentForm({ payment, onSave, onCancel, tenantId, isOpe
       {
         onSuccess: () => { reset(); onSave(); },
         successMessage: payment ? 'Pagamento atualizado!' : 'Pagamento criado!',
-        errorMessage: 'Erro ao salvar pagamento.'
+        errorMessage: 'Erro ao salvar pagamento.',
+        tenantId,
+        entityType: 'Payment',
+        action: payment ? 'update' : 'create'
       }
     );
   };

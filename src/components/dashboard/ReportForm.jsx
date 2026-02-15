@@ -59,7 +59,10 @@ export default function ReportForm({ tenantId, userId, onSuccess, onClose, isOpe
       {
         onSuccess: () => { reset(); onSuccess(); },
         successMessage: 'Relatório criado com sucesso!',
-        errorMessage: 'Erro ao criar relatório.'
+        errorMessage: 'Erro ao criar relatório.',
+        tenantId,
+        entityType: 'Report',
+        action: 'create'
       }
     );
   };

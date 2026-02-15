@@ -70,7 +70,10 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
           onSave();
         },
         successMessage: client ? 'Cliente atualizado com sucesso!' : 'Cliente criado com sucesso!',
-        errorMessage: 'Erro ao salvar cliente. Tente novamente.'
+        errorMessage: 'Erro ao salvar cliente. Tente novamente.',
+        tenantId,
+        entityType: 'Client',
+        action: client ? 'update' : 'create'
       }
     );
   };

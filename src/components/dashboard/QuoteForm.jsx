@@ -69,7 +69,10 @@ export default function QuoteForm({ quote, onSave, onCancel, tenantId, isOpen = 
       {
         onSuccess: () => { reset(); onSave(); },
         successMessage: quote ? 'Orçamento atualizado!' : 'Orçamento criado!',
-        errorMessage: 'Erro ao salvar orçamento.'
+        errorMessage: 'Erro ao salvar orçamento.',
+        tenantId,
+        entityType: 'Quote',
+        action: quote ? 'update' : 'create'
       }
     );
   };

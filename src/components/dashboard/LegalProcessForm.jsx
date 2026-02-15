@@ -73,7 +73,10 @@ export default function LegalProcessForm({ process, onSave, onCancel, tenantId, 
       {
         onSuccess: () => { reset(); onSave(); },
         successMessage: process ? 'Processo atualizado!' : 'Processo criado!',
-        errorMessage: 'Erro ao salvar processo.'
+        errorMessage: 'Erro ao salvar processo.',
+        tenantId,
+        entityType: 'LegalProcess',
+        action: process ? 'update' : 'create'
       }
     );
   };
