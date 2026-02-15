@@ -31,6 +31,8 @@ const LazyAuditLogs = lazy(() => import('../../pages/AuditLogs'));
 const LazySecurityCenter = lazy(() => import('../../pages/SecurityCenter'));
 const LazyTransactions = lazy(() => import('../../pages/Transactions'));
 const LazyCashFlowForecast = lazy(() => import('../../pages/CashFlowForecast'));
+const LazyAdvancedReports = lazy(() => import('../../pages/AdvancedReports'));
+const LazyDocumentManagement = lazy(() => import('../../pages/DocumentManagement'));
 
 export default function DashboardRoutes() {
   return (
@@ -198,6 +200,18 @@ export default function DashboardRoutes() {
       <Route path="/cashflowforecast" element={
         <LazyPageWrapper>
           <LazyCashFlowForecast />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/advancedreports" element={
+        <LazyPageWrapper>
+          <LazyAdvancedReports />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/documentmanagement" element={
+        <LazyPageWrapper>
+          <LazyDocumentManagement />
         </LazyPageWrapper>
       } />
       
