@@ -5,50 +5,50 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
  * Usado no login após password
  */
 
-function verifyTOTP(secret, token, window = 1) {
-  if (token.length !== 6 || !/^\d+$/.test(token)) {
-    return false;
-  }
-  
-  const now = Math.floor(Date.now() / 1000);
-  const timeStep = 30;
-  
-  for (let i = -window; i <= window; i++) {
-    const counter = Math.floor((now + i * timeStep) / timeStep);
-    const expectedToken = generateTOTPToken(secret, counter);
-    
-    if (expectedToken === token) {
-      return true;
-    }
-  }
-  
-  return false;
+async function verifyTOTP(secret, token, window = 1) {
+   if (token.length !== 6 || !/^\d+$/.test(token)) {
+     return false;
+   }
+
+   const now = Math.floor(Date.now() / 1000);
+   const timeStep = 30;
+
+   for (let i = -window; i <= window; i++) {
+     const counter = Math.floor((now + i * timeStep) / timeStep);
+     const expectedToken = await generateTOTPToken(secret, counter);
+
+     if (expectedToken === token) {
+       return true;
+     }
+   }
+
+   return false;
 }
 
-function generateTOTPToken(secret, counter) {
-  const key = base32Decode(secret);
-  const buffer = new ArrayBuffer(8);
-  const view = new DataView(buffer);
-  
-  let remaining = counter;
-  for (let i = 7; i >= 0; --i) {
-    view.setUint8(i, remaining & 0xff);
-    remaining >>= 8;
-  }
-  
-  const hmacKey = { name: 'HMAC', hash: 'SHA-1' };
-  const signature = crypto.subtle.sign(hmacKey, key, buffer);
-  const hmac = new Uint8Array(signature);
-  
-  const offset = hmac[hmac.length - 1] & 0xf;
-  const code = (
-    ((hmac[offset] & 0x7f) << 24) |
-    ((hmac[offset + 1] & 0xff) << 16) |
-    ((hmac[offset + 2] & 0xff) << 8) |
-    (hmac[offset + 3] & 0xff)
-  );
-  
-  return (code % 1000000).toString().padStart(6, '0');
+async function generateTOTPToken(secret, counter) {
+   const key = base32Decode(secret);
+   const buffer = new ArrayBuffer(8);
+   const view = new DataView(buffer);
+
+   let remaining = counter;
+   for (let i = 7; i >= 0; --i) {
+     view.setUint8(i, remaining & 0xff);
+     remaining >>= 8;
+   }
+
+   const hmacKey = { name: 'HMAC', hash: 'SHA-1' };
+   const signatureBuffer = await crypto.subtle.sign('HMAC', await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']), buffer);
+   const hmac = new Uint8Array(signatureBuffer);
+
+   const offset = hmac[hmac.length - 1] & 0xf;
+   const code = (
+     ((hmac[offset] & 0x7f) << 24) |
+     ((hmac[offset + 1] & 0xff) << 16) |
+     ((hmac[offset + 2] & 0xff) << 8) |
+     (hmac[offset + 3] & 0xff)
+   );
+
+   return (code % 1000000).toString().padStart(6, '0');
 }
 
 function base32Decode(encoded) {
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
     }
 
     // Verifica token
-    const isValid = verifyTOTP(user.mfa_secret, token);
+    const isValid = await verifyTOTP(user.mfa_secret, token);
 
     if (!isValid) {
       // Log de tentativa falha
