@@ -85,12 +85,12 @@ import Reports from './pages/Reports';
 import Sales from './pages/Sales';
 import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
-import Settings from './pages/Settings';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import index from './pages/index';
 import processor from './pages/processor';
+import SettingsPage from './pages/SettingsPage';
 import __Layout from './Layout.jsx';
 
 
@@ -133,12 +133,12 @@ export const PAGES = {
     "Sales": Sales,
     "SecurityCenter": SecurityCenter,
     "Services": Services,
-    "Settings": Settings,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
     "index": index,
     "processor": processor,
+    "SettingsPage": SettingsPage,
 }
 
 export const pagesConfig = {
