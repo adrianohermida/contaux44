@@ -1,70 +1,75 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { base44 } from '@/api/base44Client';
-import { AlertCircle, TrendingDown, Clock, DollarSign } from 'lucide-react';
+import { AlertCircle, Clock, DollarSign } from 'lucide-react';
 
 const AlertsCenter = memo(function AlertsCenter({ tenantId }) {
-  const [alerts, setAlerts] = useState([]);
+  const [invoices, setInvoices] = useState([]);
+
+  const loadInvoices = useCallback(async () => {
+    if (!tenantId) return;
+    try {
+      const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
+      setInvoices(data);
+    } catch (error) {
+      console.error('Erro ao verificar alertas:', error);
+    }
+  }, [tenantId]);
 
   useEffect(() => {
-    const checkAlerts = async () => {
-      try {
-        const invoices = await base44.entities.Invoice.filter({ tenant_id: tenantId });
-        const alerts = [];
-
-        // Alerta: Faturas atrasadas
-        const overdue = invoices.filter(i => i.status === 'overdue');
-        if (overdue.length > 0) {
-          alerts.push({
-            id: 'overdue',
-            type: 'error',
-            title: 'Faturas Atrasadas',
-            message: `${overdue.length} fatura(s) com pagamento atrasado`,
-            icon: AlertCircle
-          });
-        }
-
-        // Alerta: Faturas vencendo em breve
-        const upcoming = invoices.filter(i => {
-          const dueDate = new Date(i.due_date);
-          const today = new Date();
-          const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
-          return daysUntilDue <= 7 && daysUntilDue > 0;
-        });
-        if (upcoming.length > 0) {
-          alerts.push({
-            id: 'upcoming',
-            type: 'warning',
-            title: 'Faturas Vencendo',
-            message: `${upcoming.length} fatura(s) vencendo nos próximos 7 dias`,
-            icon: Clock
-          });
-        }
-
-        // Alerta: Baixo recebimento
-        const paidAmount = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + (i.paid_amount || 0), 0);
-        const totalAmount = invoices.reduce((sum, i) => sum + (i.total_amount || 0), 0);
-        const receivedRate = totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
-        
-        if (receivedRate < 50) {
-          alerts.push({
-            id: 'low-received',
-            type: 'warning',
-            title: 'Taxa de Recebimento Baixa',
-            message: `Apenas ${receivedRate.toFixed(0)}% das faturas foram recebidas`,
-            icon: DollarSign
-          });
-        }
-
-        setAlerts(alerts);
-      } catch (error) {
-        console.error('Erro ao verificar alertas:', error);
-      }
-    };
-
-    checkAlerts();
-    const interval = setInterval(checkAlerts, 300000);
+    loadInvoices();
+    const interval = setInterval(loadInvoices, 300000);
     return () => clearInterval(interval);
-  }, [tenantId]);
+  }, [loadInvoices]);
+
+  const alerts = useMemo(() => {
+    const alertList = [];
+
+    // Alerta: Faturas atrasadas
+    const overdue = invoices.filter(i => i.status === 'overdue');
+    if (overdue.length > 0) {
+      alertList.push({
+        id: 'overdue',
+        type: 'error',
+        title: 'Faturas Atrasadas',
+        message: `${overdue.length} fatura(s) com pagamento atrasado`,
+        icon: AlertCircle
+      });
+    }
+
+    // Alerta: Faturas vencendo em breve
+    const today = new Date();
+    const upcoming = invoices.filter(i => {
+      const dueDate = new Date(i.due_date);
+      const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+      return daysUntilDue <= 7 && daysUntilDue > 0;
+    });
+    if (upcoming.length > 0) {
+      alertList.push({
+        id: 'upcoming',
+        type: 'warning',
+        title: 'Faturas Vencendo',
+        message: `${upcoming.length} fatura(s) vencendo nos próximos 7 dias`,
+        icon: Clock
+      });
+    }
+
+    // Alerta: Baixo recebimento
+    const paidAmount = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + (i.paid_amount || 0), 0);
+    const totalAmount = invoices.reduce((sum, i) => sum + (i.total_amount || 0), 0);
+    const receivedRate = totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
+    
+    if (receivedRate < 50) {
+      alertList.push({
+        id: 'low-received',
+        type: 'warning',
+        title: 'Taxa de Recebimento Baixa',
+        message: `Apenas ${receivedRate.toFixed(0)}% das faturas foram recebidas`,
+        icon: DollarSign
+      });
+    }
+
+    return alertList;
+  }, [invoices]);
 
   if (alerts.length === 0) return null;
 
