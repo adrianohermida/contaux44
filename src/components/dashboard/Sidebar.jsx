@@ -16,7 +16,9 @@ import {
   Settings,
   AlertCircle,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  TrendingUp,
+  Landmark
 } from 'lucide-react';
 
 const menuItems = [
@@ -32,7 +34,9 @@ const menuItems = [
       { label: 'Pagamentos', path: '/payments' },
       { label: 'Orçamentos', path: '/quotes' },
       { label: 'Vendas', path: '/sales' },
-      { label: 'Fluxo de Caixa', path: '/cashflow' }
+      { label: 'Fluxo de Caixa', path: '/cashflow' },
+      { label: 'Transações Bancárias', path: '/transactions' },
+      { label: 'Previsão de Caixa', path: '/cashflowforecast' }
     ]
   },
   { icon: Calculator, label: 'Prestação de Serviços', path: '/services' },
