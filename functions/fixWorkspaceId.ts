@@ -82,10 +82,10 @@ Deno.serve(async (req) => {
       }
 
       try {
-        const records = await base44.entities[entity_name].filter({
-          workspace_id: workspaceId
-        });
+        // Buscar TODOS os registros (não filtrar por workspace_id)
+        const records = await base44.entities[entity_name].list();
 
+        // Filtrar apenas órfãos (sem workspace_id)
         const orphaned = records.filter(r => !r.workspace_id);
 
         if (orphaned.length === 0) {
