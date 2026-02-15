@@ -20,25 +20,25 @@ Deno.serve(async (req) => {
 
     // Busca dados da entidade
     const base44 = createClientFromRequest(req);
-    const entities = await base44.asServiceRole.entities[entity_type].list();
-    const entity = entities.find(e => e.id === entity_id && e.tenant_id === tenant_id);
+    const entity = await base44.asServiceRole.entities[entity_type].filter({ tenant_id: tenant_id });
+    const foundEntity = entity.find(e => e.id === entity_id);
 
-    if (!entity) {
+    if (!foundEntity) {
       return Response.json({ error: 'Entity not found' }, { status: 404 });
     }
 
     // Envia webhook
     const webhookResponse = await fetch(webhook_url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event,
-        entity_type,
-        entity_id,
-        tenant_id,
-        data: entity,
-        timestamp: new Date().toISOString()
-      })
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({
+       event,
+       entity_type,
+       entity_id,
+       tenant_id,
+       data: foundEntity,
+       timestamp: new Date().toISOString()
+     })
     });
 
     // Log do webhook

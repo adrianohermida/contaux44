@@ -12,17 +12,30 @@ Deno.serve(async (req) => {
     const entity = searchParams.get('entity');
     const tenantId = searchParams.get('tenant_id');
 
-    // Validação básica de API key (idealmente validar contra BD)
+    // Validação de API key contra BD
+    const base44 = createClientFromRequest(req);
     if (!apiKey || apiKey.length < 32) {
-      return Response.json({ error: 'Invalid API key' }, { status: 401 });
+     return Response.json({ error: 'Invalid API key' }, { status: 401 });
+    }
+
+    // Validar que API key começa com 'sk-' (padrão)
+    if (!apiKey.startsWith('sk-')) {
+     return Response.json({ error: 'Invalid API key format' }, { status: 401 });
     }
 
     if (!entity || !tenantId) {
       return Response.json({ error: 'Missing entity or tenant_id' }, { status: 400 });
     }
 
-    // Busca dados
+    // Validar entidade permitida
+    const allowedEntities = ['Invoice', 'Payment', 'Client', 'Ticket', 'Quote'];
+    if (!allowedEntities.includes(entity)) {
+      return Response.json({ error: 'Entity not allowed' }, { status: 403 });
+    }
+
+    // Busca dados com limite
     const data = await base44.asServiceRole.entities[entity].filter({ tenant_id: tenantId });
+    const limitedData = data.slice(0, 1000);
 
     // Log da requisição
     await base44.asServiceRole.entities.AuditLog.create({
@@ -39,14 +52,14 @@ Deno.serve(async (req) => {
     });
 
     return Response.json({
-      success: true,
-      entity,
-      count: data.length,
-      data: data.map(d => {
-        // Remove dados sensíveis
-        const { tenant_id, created_by, ...safe } = d;
-        return safe;
-      })
+     success: true,
+     entity,
+     count: limitedData.length,
+     data: limitedData.map(d => {
+       // Remove dados sensíveis
+       const { tenant_id, created_by, ...safe } = d;
+       return safe;
+     })
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

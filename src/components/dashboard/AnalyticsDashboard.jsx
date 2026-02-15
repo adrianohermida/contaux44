@@ -25,6 +25,7 @@ export default function AnalyticsDashboard({ tenantId }) {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState('month');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   const loadData = useCallback(async () => {
     if (!tenantId) return;
@@ -49,11 +50,12 @@ export default function AnalyticsDashboard({ tenantId }) {
   }, [loadData]);
 
   const stats = useMemo(() => {
-    const totalRevenue = invoices.reduce((sum, inv) => sum + inv.total_amount, 0);
-    const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+    const filtered = statusFilter === 'all' ? invoices : invoices.filter(i => i.status === statusFilter);
+    const totalRevenue = filtered.reduce((sum, inv) => sum + (inv.total_amount || 0), 0);
+    const totalPaid = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
     const totalClients = clients.length;
     const activeClients = clients.filter(c => c.status === 'active').length;
-    const pendingInvoices = invoices.filter(i => i.status === 'pending' || i.status === 'sent').length;
+    const pendingInvoices = filtered.filter(i => i.status === 'pending' || i.status === 'sent').length;
     
     return {
       totalRevenue,
@@ -62,9 +64,9 @@ export default function AnalyticsDashboard({ tenantId }) {
       totalClients,
       activeClients,
       pendingInvoices,
-      conversionRate: ((totalPaid / totalRevenue) * 100).toFixed(1)
+      conversionRate: totalRevenue > 0 ? ((totalPaid / totalRevenue) * 100).toFixed(1) : 0
     };
-  }, [invoices, payments, clients]);
+  }, [invoices, payments, clients, statusFilter]);
 
   const monthlyData = useMemo(() => {
     const data = {};
@@ -95,6 +97,13 @@ export default function AnalyticsDashboard({ tenantId }) {
 
   return (
     <div className="space-y-6">
+      {/* Filtros */}
+      <div className="flex gap-2">
+        <button onClick={() => setStatusFilter('all')} className={`px-4 py-2 rounded ${statusFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-slate-200'}`}>Todas</button>
+        <button onClick={() => setStatusFilter('paid')} className={`px-4 py-2 rounded ${statusFilter === 'paid' ? 'bg-green-600 text-white' : 'bg-slate-200'}`}>Pagas</button>
+        <button onClick={() => setStatusFilter('pending')} className={`px-4 py-2 rounded ${statusFilter === 'pending' ? 'bg-yellow-600 text-white' : 'bg-slate-200'}`}>Pendentes</button>
+      </div>
+
       {/* Estatísticas Principais */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatBox icon={DollarSign} label="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`} color="#3b82f6" />
