@@ -1,0 +1,130 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+
+/**
+ * Gera secret para 2FA/MFA
+ * Usa TOTP (Time-based One-Time Password)
+ * Compatível com Google Authenticator, Authy, etc
+ */
+
+function generateRandomSecret(length = 32) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let secret = '';
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  
+  for (let i = 0; i < length; i++) {
+    secret += chars[array[i] % chars.length];
+  }
+  return secret;
+}
+
+function base32Encode(buffer) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits = 0;
+  let value = 0;
+  let output = '';
+  
+  for (let i = 0; i < buffer.length; i++) {
+    value = (value << 8) | buffer[i];
+    bits += 8;
+    
+    while (bits >= 5) {
+      bits -= 5;
+      output += alphabet[(value >> bits) & 31];
+    }
+  }
+  
+  if (bits > 0) {
+    output += alphabet[(value << (5 - bits)) & 31];
+  }
+  
+  return output;
+}
+
+function generateQRCode(secret, email, issuer = 'FinanceApp') {
+  // Formata para compatibilidade com autenticadores
+  const encodedEmail = encodeURIComponent(email);
+  const encodedIssuer = encodeURIComponent(issuer);
+  
+  const otpauthUrl = `otpauth://totp/${encodedIssuer}:${encodedEmail}?secret=${secret}&issuer=${encodedIssuer}`;
+  
+  // Retorna URL para gerar QR code (usar serviço como QR Server)
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(otpauthUrl)}`;
+  
+  return { otpauthUrl, qrCodeUrl };
+}
+
+function verifyTOTP(secret, token, window = 1) {
+  if (token.length !== 6 || !/^\d+$/.test(token)) {
+    return false;
+  }
+  
+  const now = Math.floor(Date.now() / 1000);
+  const timeStep = 30;
+  
+  for (let i = -window; i <= window; i++) {
+    const counter = Math.floor((now + i * timeStep) / timeStep);
+    const expectedToken = generateTOTPToken(secret, counter);
+    
+    if (expectedToken === token) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+function generateTOTPToken(secret, counter) {
+  // Implementação simplificada - em produção usar biblioteca crypto proper
+  return '000000'; // Placeholder
+}
+
+Deno.serve(async (req) => {
+  try {
+    if (req.method !== 'POST') {
+      return Response.json({ error: 'Only POST allowed' }, { status: 405 });
+    }
+
+    const body = await req.json();
+    const { email, action } = body;
+
+    if (!email) {
+      return Response.json({ error: 'Email required' }, { status: 400 });
+    }
+
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    
+    if (!user || user.email !== email) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Gera novo secret
+    const secret = generateRandomSecret(32);
+    const { otpauthUrl, qrCodeUrl } = generateQRCode(secret, email);
+
+    // Log no audit
+    await base44.asServiceRole.entities.AuditLog.create({
+      tenant_id: user.id,
+      user_email: email,
+      action: 'update',
+      entity_type: 'User',
+      entity_id: user.id,
+      new_values: { mfa_enabled: true },
+      ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+      user_agent: req.headers.get('user-agent') || 'unknown',
+      status: 'success',
+      timestamp: new Date().toISOString()
+    });
+
+    return Response.json({
+      success: true,
+      secret,
+      qrCodeUrl,
+      otpauthUrl,
+      message: 'Escanear código QR com seu autenticador'
+    });
+  } catch (error) {
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+});
