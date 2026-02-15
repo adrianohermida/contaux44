@@ -40,8 +40,8 @@ export default function Header() {
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center gap-8">
-            <li><a href="#home" className="text-slate-700 hover:text-blue-600">Início</a></li>
-            <li><a href="#sobre" className="text-slate-700 hover:text-blue-600">Sobre</a></li>
+            <li><Link to={createPageUrl('Home')} className="text-slate-700 hover:text-blue-600">Início</Link></li>
+            <li><Link to={createPageUrl('About')} className="text-slate-700 hover:text-blue-600">Sobre</Link></li>
             <li><a href="#servicos" className="text-slate-700 hover:text-blue-600">Serviços</a></li>
             <li><Link to={createPageUrl('Blog')} className="text-slate-700 hover:text-blue-600">Blog</Link></li>
             <li><Link to={createPageUrl('Contact')} className="text-slate-700 hover:text-blue-600">Contato</Link></li>
@@ -89,8 +89,8 @@ export default function Header() {
         {/* Mobile Menu */}
         {menuOpen && (
           <ul className="md:hidden pb-4 space-y-2">
-            <li><a href="#home" className="block py-2 text-slate-700">Início</a></li>
-            <li><a href="#sobre" className="block py-2 text-slate-700">Sobre</a></li>
+            <li><Link to={createPageUrl('Home')} className="block py-2 text-slate-700">Início</Link></li>
+            <li><Link to={createPageUrl('About')} className="block py-2 text-slate-700">Sobre</Link></li>
             <li><a href="#servicos" className="block py-2 text-slate-700">Serviços</a></li>
             <li><Link to={createPageUrl('Blog')} className="block py-2 text-slate-700">Blog</Link></li>
             <li><Link to={createPageUrl('Contact')} className="block py-2 text-slate-700">Contato</Link></li>
