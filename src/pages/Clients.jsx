@@ -1,29 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import ClientForm from '../components/dashboard/ClientForm';
 import ClientList from '../components/dashboard/ClientList';
 import { Button } from '@/components/ui/button';
+import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 
 export default function Clients() {
+  const { tenantId } = useUserAndTenant();
   const [showForm, setShowForm] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
-  const [tenantId, setTenantId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  useEffect(() => {
-    const getCurrentTenant = async () => {
-      try {
-        const user = await base44.auth.me();
-        setTenantId(user.email.split('@')[0]); // Usar email como tenant
-      } catch (error) {
-        console.error('Erro ao obter tenant:', error);
-      }
-    };
-    getCurrentTenant();
-  }, []);
 
   const handleSave = () => {
     setShowForm(false);
