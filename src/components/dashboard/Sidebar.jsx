@@ -56,6 +56,8 @@ const menuItems = [
   { icon: Zap, label: 'Automações', path: '/automations' },
   { icon: BarChart3, label: 'Relatórios', path: '/reports' },
   { icon: BarChart3, label: 'Análises', path: '/analytics' },
+  { icon: FileText, label: 'Relatórios Avançados', path: '/advancedreports' },
+  { icon: FileText, label: 'Gerenciamento de Docs', path: '/documentmanagement' },
   { icon: Phone, label: 'Comunicação', path: '/communication' },
   { icon: UserCircle, label: 'Meu Painel', path: '/clientportal' },
   { icon: Settings, label: 'Configurações', path: '/settings' },
