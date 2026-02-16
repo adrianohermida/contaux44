@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import IntegrationsManager from '../components/dashboard/IntegrationsManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -50,11 +49,10 @@ export default function SettingsPage() {
     }
   };
 
-  if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+  if (loading) return <ProtectedInternalRoute><div className="text-center py-8">Carregando...</div></ProtectedInternalRoute>;
 
   return (
-    <ProtectedRoute requireAdmin={true}>
-      <DashboardLayout>
+    <ProtectedInternalRoute>
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Configurações</h1>
@@ -97,7 +95,5 @@ export default function SettingsPage() {
             </TabsContent>
           </Tabs>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
   );
 }

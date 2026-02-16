@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useUserAndTenant } from '@/components/hooks/useUserAndTenant';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import ProtectedRoute from '@/components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '@/components/auth/ProtectedInternalRoute';
 import ExportReportButton from '@/components/dashboard/ExportReportButton';
 import { FileText, Download, Trash2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -35,8 +34,7 @@ export default function Reports() {
   };
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
+    <ProtectedInternalRoute>
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold text-slate-900">Relatórios</h1>
@@ -94,7 +92,5 @@ export default function Reports() {
             </div>
           )}
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
   );
 }
