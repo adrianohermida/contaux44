@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import InvoiceForm from '../components/dashboard/InvoiceForm';
 import InvoiceList from '../components/dashboard/InvoiceList';
@@ -26,8 +25,7 @@ export default function Invoicing() {
 
   return (
     <ProtectedInternalRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+      <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Faturamento</h1>
@@ -57,7 +55,6 @@ export default function Invoicing() {
             onRefresh={refreshKey}
           />
         </div>
-      </DashboardLayout>
-    </ProtectedInternalRoute>
-  );
-}
+        </ProtectedInternalRoute>
+        );
+        }
