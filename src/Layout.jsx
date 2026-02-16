@@ -26,7 +26,7 @@ export default function Layout({ children, currentPageName }) {
       'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 
       'AccountingCalendar', 'Automations', 'Reports', 'Communication', 
       'ClientPortal', 'SettingsPage', 'AuditLogs', 'Analytics', 
-      'AdvancedReports', 'DocumentManagement', 'SecurityCenter', 
+      'AdvancedReportsPage', 'DocumentManagement', 'SecurityCenter', 
       'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger',
       'AnalyticsDashboard'
     ];
