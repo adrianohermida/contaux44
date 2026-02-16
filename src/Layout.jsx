@@ -2,6 +2,7 @@ import React from 'react';
 import { ThemeProvider } from './components/hooks/useTheme';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import DashboardLayout from './components/dashboard/DashboardLayout';
 
 export default function Layout({ children, currentPageName }) {
     React.useEffect(() => {
@@ -13,13 +14,15 @@ export default function Layout({ children, currentPageName }) {
       }
     }, []);
 
-    // Dashboard pages should not use the main layout
-    const dashboardPages = ['Dashboard', 'Clients', 'Tickets', 'LegalProcesses', 'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 'AccountingCalendar', 'Automations', 'Reports', 'Communication', 'ClientPortal', 'Settings'];
+    // Dashboard pages should use DashboardLayout with consistent sidebar + header
+    const dashboardPages = ['Dashboard', 'Clients', 'Tickets', 'LegalProcesses', 'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 'AccountingCalendar', 'Automations', 'Reports', 'Communication', 'ClientPortal', 'Settings', 'AuditLogs', 'Analytics', 'AdvancedReports', 'DocumentManagement', 'SecurityCenter', 'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger'];
     
     if (dashboardPages.includes(currentPageName)) {
       return (
         <ThemeProvider>
-          {children}
+          <DashboardLayout>
+            {children}
+          </DashboardLayout>
         </ThemeProvider>
       );
     }
