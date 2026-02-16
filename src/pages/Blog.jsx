@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Calendar, MessageCircle, Eye } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '../utils';
+import { createPageUrl } from '@/utils';
 
 export default function Blog() {
   const [blogPosts, setBlogPosts] = useState([]);
