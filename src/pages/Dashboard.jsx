@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import StatCard from '../components/dashboard/StatCard';
 import AlertsCenter from '../components/dashboard/AlertsCenter';
@@ -75,8 +74,7 @@ export default function Dashboard() {
 
   return (
     <ProtectedInternalRoute>
-      <DashboardLayout>
-        <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6">
            {/* Welcome */}
            <div>
              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Dashboard</h1>
@@ -158,7 +156,6 @@ export default function Dashboard() {
             </a>
           </div>
         </div>
-      </DashboardLayout>
     </ProtectedInternalRoute>
   );
 }

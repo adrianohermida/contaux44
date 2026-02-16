@@ -94,6 +94,6 @@ export default function SettingsPage() {
               <IntegrationsManager />
             </TabsContent>
           </Tabs>
-        </div>
-  );
+          </div>
+          </ProtectedInternalRoute>
 }

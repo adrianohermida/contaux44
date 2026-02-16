@@ -91,6 +91,6 @@ export default function Reports() {
               </table>
             </div>
           )}
-        </div>
-  );
+          </div>
+          </ProtectedInternalRoute>
 }
