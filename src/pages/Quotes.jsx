@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import QuoteForm from '../components/dashboard/QuoteForm';
 import QuoteList from '../components/dashboard/QuoteList';
 import { Button } from '@/components/ui/button';

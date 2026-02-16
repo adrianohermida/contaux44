@@ -77,6 +77,7 @@ import ImportCSV from './pages/ImportCSV';
 import Invoicing from './pages/Invoicing';
 import LegalProcesses from './pages/LegalProcesses';
 import ManualPosting from './pages/ManualPosting';
+import MyBookmarks from './pages/MyBookmarks';
 import OnboardClient from './pages/OnboardClient';
 import Payments from './pages/Payments';
 import Portfolio from './pages/Portfolio';
@@ -94,7 +95,6 @@ import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import Welcome from './pages/Welcome';
-import MyBookmarks from './pages/MyBookmarks';
 import __Layout from './Layout.jsx';
 
 
@@ -129,6 +129,7 @@ export const PAGES = {
     "Invoicing": Invoicing,
     "LegalProcesses": LegalProcesses,
     "ManualPosting": ManualPosting,
+    "MyBookmarks": MyBookmarks,
     "OnboardClient": OnboardClient,
     "Payments": Payments,
     "Portfolio": Portfolio,
@@ -146,7 +147,6 @@ export const PAGES = {
     "Tickets": Tickets,
     "Transactions": Transactions,
     "Welcome": Welcome,
-    "MyBookmarks": MyBookmarks,
 }
 
 export const pagesConfig = {

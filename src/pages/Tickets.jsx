@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import TicketForm from '../components/dashboard/TicketForm';
 import TicketList from '../components/dashboard/TicketList';
 import { Button } from '@/components/ui/button';
