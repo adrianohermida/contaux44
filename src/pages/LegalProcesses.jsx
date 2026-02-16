@@ -3,10 +3,10 @@ import { Plus } from 'lucide-react';
 import LegalProcessForm from '../components/dashboard/LegalProcessForm';
 import LegalProcessList from '../components/dashboard/LegalProcessList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function LegalProcesses() {
-  const { workspaceId } = useMultitenantAuth('internal');
+  const { workspaceId } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingProcess, setEditingProcess] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useUserAndTenantOptimized } from '../components/hooks/useUserAndTenantOptimized';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +11,7 @@ import { ptBR } from 'date-fns/locale';
 import ReportForm from '../components/dashboard/ReportForm';
 
 export default function AdvancedReports() {
-  const { tenantId, user } = useUserAndTenant();
+  const { tenantId, user } = useUserAndTenantOptimized();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState('all');
@@ -82,7 +81,7 @@ export default function AdvancedReports() {
   };
 
   return (
-    <ProtectedInternalRoute>
+    <>
       {showForm && (
         <ReportForm
           tenantId={tenantId}
@@ -219,6 +218,6 @@ export default function AdvancedReports() {
             </CardContent>
           </Card>
           </div>
-          </ProtectedInternalRoute>
+          </>
           );
           }

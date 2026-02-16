@@ -3,10 +3,10 @@ import { Plus } from 'lucide-react';
 import QuoteForm from '../components/dashboard/QuoteForm';
 import QuoteList from '../components/dashboard/QuoteList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Quotes() {
-  const { workspaceId } = useMultitenantAuth('internal');
+  const { workspaceId } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingQuote, setEditingQuote] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
