@@ -3,6 +3,7 @@ import { ThemeProvider } from './components/hooks/useTheme';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import DashboardLayout from './components/dashboard/DashboardLayout';
+import ProtectedInternalRoute from './components/auth/ProtectedInternalRoute';
 
 export default function Layout({ children, currentPageName }) {
     React.useEffect(() => {
