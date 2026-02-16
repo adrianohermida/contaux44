@@ -10,6 +10,8 @@ export default function Blog() {
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedTag, setSelectedTag] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState('');
@@ -61,10 +63,16 @@ export default function Blog() {
     }
   };
 
-  const filteredPosts = blogPosts.filter(post => 
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.excerpt?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPosts = blogPosts.filter(post => {
+    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.excerpt?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = !selectedCategory || post.category_id === selectedCategory;
+    
+    const matchesTag = !selectedTag || (post.tags || []).includes(selectedTag);
+    
+    return matchesSearch && matchesCategory && matchesTag;
+  });
 
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const startIdx = (currentPage - 1) * postsPerPage;
@@ -107,9 +115,31 @@ export default function Blog() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
             {/* Posts */}
             <div className="sm:col-span-2 lg:col-span-2">
+              {/* Results count */}
+              <div className="mb-6 text-sm text-slate-600">
+                {filteredPosts.length === 0 ? (
+                  <p>Nenhum resultado encontrado</p>
+                ) : (
+                  <p>
+                    Mostrando {startIdx + 1}-{Math.min(startIdx + postsPerPage, filteredPosts.length)} de {filteredPosts.length} artigos
+                  </p>
+                )}
+              </div>
+
               {paginatedPosts.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-slate-600">Nenhum post encontrado.</p>
+                <div className="text-center py-12 bg-slate-50 rounded-lg">
+                  <p className="text-slate-600 mb-4">Nenhum post encontrado com os filtros aplicados.</p>
+                  <button 
+                    onClick={() => {
+                      setSearchTerm('');
+                      setSelectedCategory(null);
+                      setSelectedTag(null);
+                      setCurrentPage(1);
+                    }}
+                    className="text-blue-600 hover:text-blue-700 underline"
+                  >
+                    Limpar filtros
+                  </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
@@ -170,9 +200,55 @@ export default function Blog() {
               <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
                 <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Buscar Artigos</h5>
                 <div className="flex gap-2">
-                  <input type="text" placeholder="Buscar..." value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value); setCurrentPage(1);}} className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs sm:text-sm" />
-                  <button className="px-2 sm:px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"><Search className="w-4 h-4" /></button>
+                  <input 
+                    type="text" 
+                    placeholder="Buscar..." 
+                    value={searchTerm} 
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value); 
+                      setCurrentPage(1);
+                    }} 
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs sm:text-sm" 
+                  />
+                  <button className="px-2 sm:px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    <Search className="w-4 h-4" />
+                  </button>
                 </div>
+                
+                {/* Active filters */}
+                {(selectedCategory || selectedTag || searchTerm) && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {searchTerm && (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                        Busca: "{searchTerm}"
+                        <button onClick={() => {setSearchTerm(''); setCurrentPage(1);}} className="hover:text-blue-900">×</button>
+                      </span>
+                    )}
+                    {selectedCategory && (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                        Categoria
+                        <button onClick={() => {setSelectedCategory(null); setCurrentPage(1);}} className="hover:text-blue-900">×</button>
+                      </span>
+                    )}
+                    {selectedTag && (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                        Tag: {selectedTag}
+                        <button onClick={() => {setSelectedTag(null); setCurrentPage(1);}} className="hover:text-blue-900">×</button>
+                      </span>
+                    )}
+                    <button 
+                      onClick={() => {
+                        setSearchTerm('');
+                        setSelectedCategory(null);
+                        setSelectedTag(null);
+                        setCurrentPage(1);
+                      }}
+                      className="text-xs text-slate-600 hover:text-slate-900 underline"
+                    >
+                      Limpar filtros
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Popular Posts */}
@@ -206,14 +282,27 @@ export default function Blog() {
                   {categories.length === 0 ? (
                     <li className="text-xs text-slate-500">Nenhuma categoria</li>
                   ) : (
-                    categories.map((cat) => (
-                      <li key={cat.id}>
-                        <a href="#" className="text-blue-600 hover:underline text-xs sm:text-sm flex justify-between items-center">
-                          <span>{cat.name}</span>
-                          {cat.icon && <span className="text-lg">{cat.icon}</span>}
-                        </a>
-                      </li>
-                    ))
+                    categories.map((cat) => {
+                      const count = blogPosts.filter(p => p.category_id === cat.id).length;
+                      const isActive = selectedCategory === cat.id;
+                      return (
+                        <li key={cat.id}>
+                          <button 
+                            onClick={() => {
+                              setSelectedCategory(isActive ? null : cat.id);
+                              setCurrentPage(1);
+                            }}
+                            className={`w-full text-left text-xs sm:text-sm flex justify-between items-center hover:text-blue-700 ${isActive ? 'text-blue-600 font-semibold' : 'text-slate-700'}`}
+                          >
+                            <span className="flex items-center gap-2">
+                              {cat.icon && <span className="text-base">{cat.icon}</span>}
+                              {cat.name}
+                            </span>
+                            <span className="text-xs text-slate-500">({count})</span>
+                          </button>
+                        </li>
+                      );
+                    })
                   )}
                 </ul>
               </div>
@@ -225,15 +314,25 @@ export default function Blog() {
                   {tags.length === 0 ? (
                     <p className="text-xs text-slate-500">Nenhuma tag ainda</p>
                   ) : (
-                    tags.map((tag, idx) => (
-                      <a 
-                        key={idx} 
-                        href="#" 
-                        className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded hover:bg-blue-600 hover:text-white transition-colors"
-                      >
-                        {tag}
-                      </a>
-                    ))
+                    tags.map((tag, idx) => {
+                      const isActive = selectedTag === tag;
+                      return (
+                        <button 
+                          key={idx} 
+                          onClick={() => {
+                            setSelectedTag(isActive ? null : tag);
+                            setCurrentPage(1);
+                          }}
+                          className={`px-2 sm:px-3 py-1 text-xs rounded transition-colors ${
+                            isActive 
+                              ? 'bg-blue-600 text-white' 
+                              : 'bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white'
+                          }`}
+                        >
+                          {tag}
+                        </button>
+                      );
+                    })
                   )}
                 </div>
               </div>
