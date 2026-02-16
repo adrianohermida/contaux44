@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { useMultitenantAuth } from '../auth/useMultitenantAuth';
+import { useMultitenantAuthOptimized } from '../auth/useMultitenantAuthOptimized';
 import { Loader2 } from 'lucide-react';
 
 /**
@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react';
  * Valida autenticação e tipo de usuário
  */
 export default function LazyPageWrapper({ children }) {
-  const { loading, error } = useMultitenantAuth('internal');
+  const { loading, error } = useMultitenantAuthOptimized('internal');
 
   if (loading) {
     return (

@@ -1,6 +1,8 @@
 import React, { useState, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
+import { usePreloadOnHover } from '../hooks/usePreloadOnHover';
+import * as LazyPages from './LazyPages';
 import {
   LayoutDashboard,
   Users,
@@ -68,9 +70,36 @@ const menuItems = [
   { icon: AlertCircle, label: 'Centro de Segurança', page: 'SecurityCenter' }
 ];
 
+const pageToLazyMap = {
+  'Dashboard': LazyPages.LazyDashboard,
+  'Clients': LazyPages.LazyClients,
+  'Tickets': LazyPages.LazyTickets,
+  'LegalProcesses': LazyPages.LazyLegalProcesses,
+  'Invoicing': LazyPages.LazyInvoicing,
+  'Payments': LazyPages.LazyPayments,
+  'Quotes': LazyPages.LazyQuotes,
+  'Sales': LazyPages.LazySales,
+  'CashFlow': LazyPages.LazyCashFlow,
+  'Services': LazyPages.LazyServices,
+  'Entries': LazyPages.LazyEntries,
+  'ImportCSV': LazyPages.LazyImportCSV,
+  'BankReconciliation': LazyPages.LazyBankReconciliation,
+  'ManualPosting': LazyPages.LazyManualPosting,
+  'ChartOfAccounts': LazyPages.LazyChartOfAccounts,
+  'TaxInvoices': LazyPages.LazyTaxInvoices,
+  'AccountingCalendar': LazyPages.LazyAccountingCalendar,
+  'Automations': LazyPages.LazyAutomations,
+  'Reports': LazyPages.LazyReports,
+  'Communication': LazyPages.LazyCommunication,
+  'ClientPortal': LazyPages.LazyClientPortal,
+  'SettingsPage': LazyPages.LazySettings,
+  'BlogManager': LazyPages.LazyBlogManager
+};
+
 const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   const location = useLocation();
   const [openMenus, setOpenMenus] = useState({});
+  const preloadOnHover = usePreloadOnHover();
 
   const toggleSubmenu = useCallback((label) => {
     setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
@@ -80,6 +109,13 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
     const currentPage = new URLSearchParams(location.search).get('page');
     return currentPage === page;
   }, [location.search]);
+
+  const handleMenuItemHover = useCallback((page) => {
+    const lazyComponent = pageToLazyMap[page];
+    if (lazyComponent) {
+      preloadOnHover(lazyComponent);
+    }
+  }, [preloadOnHover]);
 
   return (
     <aside className={`bg-slate-900 text-white min-h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col`}>
@@ -123,6 +159,7 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
                       <a
                         key={subIndex}
                         href={createPageUrl(sub.page)}
+                        onMouseEnter={() => handleMenuItemHover(sub.page)}
                         className={`block px-12 py-2 text-sm hover:bg-slate-800 transition-colors ${
                           isActive(sub.page) ? 'bg-slate-800 text-blue-400' : ''
                         }`}
@@ -134,17 +171,18 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
                 )}
               </>
             ) : (
-              <a
-                href={createPageUrl(item.page)}
-                className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
-                  isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
-                }`}
-                title={collapsed ? item.label : ''}
-              >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
-                {!collapsed && <span className="text-sm">{item.label}</span>}
-              </a>
-            )}
+               <a
+                 href={createPageUrl(item.page)}
+                 onMouseEnter={() => handleMenuItemHover(item.page)}
+                 className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
+                   isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
+                 }`}
+                 title={collapsed ? item.label : ''}
+               >
+                 <item.icon className="w-5 h-5 flex-shrink-0" />
+                 {!collapsed && <span className="text-sm">{item.label}</span>}
+               </a>
+             )}
           </div>
         ))}
       </nav>
