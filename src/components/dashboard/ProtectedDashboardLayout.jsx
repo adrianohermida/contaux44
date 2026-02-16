@@ -54,22 +54,6 @@ export default function ProtectedDashboardLayout({ children, requiredType = 'int
     );
   }
 
-  // User tem acesso válido
-  return (
-    <div className="relative">
-      {/* Banner de workspace para contexto visual */}
-      <div className="bg-blue-50 border-b border-blue-200 px-4 py-2">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
-          <span className="text-blue-900">
-            Workspace: <strong>{user?.workspace_id}</strong> • 
-            Tipo: <strong>{user?.user_type === 'internal' ? 'Staff' : 'Cliente'}</strong>
-          </span>
-          <span className="text-blue-700">✓ Acesso confirmado</span>
-        </div>
-      </div>
-      
-      {/* Conteúdo protegido */}
-      {children}
-    </div>
-  );
+  // User tem acesso válido - renderiza apenas o conteúdo (DashboardLayout é responsabilidade do Layout.js)
+  return children;
 }

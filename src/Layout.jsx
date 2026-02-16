@@ -14,8 +14,19 @@ export default function Layout({ children, currentPageName }) {
       }
     }, []);
 
-    // Dashboard pages should use DashboardLayout with consistent sidebar + header
-    const dashboardPages = ['Dashboard', 'Clients', 'Tickets', 'LegalProcesses', 'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 'AccountingCalendar', 'Automations', 'Reports', 'Communication', 'ClientPortal', 'Settings', 'AuditLogs', 'Analytics', 'AdvancedReports', 'DocumentManagement', 'SecurityCenter', 'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger'];
+    // Dashboard pages - SEMPRE usam DashboardLayout com sidebar + header consistentes
+    // Lista completa de páginas do módulo admin/dashboard
+    const dashboardPages = [
+      'Dashboard', 'Clients', 'Tickets', 'LegalProcesses', 
+      'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 
+      'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 
+      'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 
+      'AccountingCalendar', 'Automations', 'Reports', 'Communication', 
+      'ClientPortal', 'Settings', 'AuditLogs', 'Analytics', 
+      'AdvancedReports', 'DocumentManagement', 'SecurityCenter', 
+      'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger',
+      'AnalyticsDashboard'
+    ];
     
     if (dashboardPages.includes(currentPageName)) {
       return (
