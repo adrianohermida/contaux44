@@ -19,7 +19,31 @@ export default function BlogSingle() {
 
   useEffect(() => {
     loadBlogPost();
+    addSchemaOrg();
   }, []);
+
+  const addSchemaOrg = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const blogId = urlParams.get('id');
+    if (!blogId) return;
+
+    try {
+      const response = await base44.functions.invoke('generateSchemaOrg', { blog_post_id: blogId });
+      if (response.data.script_tag) {
+        // Remove schema anterior se existir
+        const oldSchema = document.querySelector('script[type="application/ld+json"]');
+        if (oldSchema) oldSchema.remove();
+
+        // Adiciona novo schema
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(response.data.schema, null, 2);
+        document.head.appendChild(script);
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar Schema.org:', error);
+    }
+  };
 
   const loadBlogPost = async () => {
     try {

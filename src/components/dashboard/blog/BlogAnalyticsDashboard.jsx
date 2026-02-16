@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Eye, TrendingUp, Clock, MousePointer, Share2 } from 'lucide-react';
+import KeywordTracker from './KeywordTracker';
 
 export default function BlogAnalyticsDashboard({ blogPostId }) {
   const [analytics, setAnalytics] = useState([]);
@@ -203,6 +204,9 @@ export default function BlogAnalyticsDashboard({ blogPostId }) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Keyword Tracker */}
+      <KeywordTracker blogPostId={blogPostId} />
     </div>
   );
 }
