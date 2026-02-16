@@ -63,20 +63,17 @@ export default function Admin() {
   const filteredClients = clients.filter(c => c.company_name.toLowerCase().includes(searchTerm.toLowerCase()) || c.email.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
-          <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
-            <LogOut className="w-4 h-4" /> Sair
-          </button>
-        </div>
-      </header>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+        <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
+          <LogOut className="w-4 h-4" /> Sair
+        </button>
+      </div>
 
       {/* Navigation */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 flex gap-8">
+      <div className="bg-white border border-gray-200 rounded-lg">
+        <div className="flex gap-8 px-4">
           <button onClick={() => setCurrentTab('clients')} className={`py-4 px-1 border-b-2 font-medium text-sm ${currentTab === 'clients' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-gray-900'} flex items-center gap-2`}>
             <Users className="w-4 h-4" /> Clientes
           </button>
@@ -90,7 +87,6 @@ export default function Admin() {
       </div>
 
       {/* Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
         {currentTab === 'clients' && (
           <div>
             {/* Search & Add */}
@@ -210,7 +206,6 @@ export default function Admin() {
             </div>
           </div>
         )}
-      </main>
-    </div>
-  );
-}
+        </div>
+        );
+        }
