@@ -62,6 +62,6 @@ export default function Tickets() {
             onEdit={handleEdit}
             onRefresh={refreshKey}
           />
-        </div>
-        );
-        }
+          </div>
+          );
+          }

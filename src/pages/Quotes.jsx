@@ -52,6 +52,6 @@ export default function Quotes() {
             onEdit={handleEdit}
             onRefresh={refreshKey}
           />
-        </div>
-        );
-        }
+          </div>
+          );
+          }

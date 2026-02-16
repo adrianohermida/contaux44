@@ -62,6 +62,6 @@ export default function LegalProcesses() {
             onEdit={handleEdit}
             onRefresh={refreshKey}
           />
-        </div>
-        );
-        }
+          </div>
+          );
+          }
