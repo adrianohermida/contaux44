@@ -4,6 +4,8 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import BlogScheduler from './BlogScheduler';
+import ImageGenerator from './ImageGenerator';
 
 export default function BlogEditor({ blog, onSave, categories = [] }) {
   const [formData, setFormData] = useState(blog || {
@@ -17,7 +19,9 @@ export default function BlogEditor({ blog, onSave, categories = [] }) {
     seo_description: '',
     focus_keyword: '',
     seo_keywords: [],
-    status: 'draft'
+    status: 'draft',
+    scheduled_date: '',
+    publish_date: ''
   });
 
   const [loading, setLoading] = useState(false);
@@ -57,7 +61,7 @@ export default function BlogEditor({ blog, onSave, categories = [] }) {
     <div className="space-y-6">
       {/* Tabs */}
       <div className="flex gap-4 border-b border-slate-200">
-        {['content', 'seo', 'image'].map(tab => (
+        {['content', 'seo', 'image', 'publish'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -67,7 +71,7 @@ export default function BlogEditor({ blog, onSave, categories = [] }) {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            {tab === 'image' ? '📸 Imagem' : tab === 'seo' ? '🔍 SEO' : '✍️ Conteúdo'}
+            {tab === 'publish' ? '📅 Publicar' : tab === 'image' ? '📸 Imagem' : tab === 'seo' ? '🔍 SEO' : '✍️ Conteúdo'}
           </button>
         ))}
       </div>
@@ -216,15 +220,22 @@ export default function BlogEditor({ blog, onSave, categories = [] }) {
             <p className="text-xs text-slate-500 mt-2">Cole a URL da imagem ou use o gerador de IA</p>
           </div>
 
-          <Button
-            onClick={() => alert('Gerador de imagem em desenvolvimento')}
-            className="w-full gap-2"
-            variant="outline"
-          >
-            <Wand2 className="w-4 h-4" />
-            Gerar imagem com IA
-          </Button>
+          <ImageGenerator
+            blogTitle={formData.title}
+            keywords={formData.seo_keywords}
+            onImageGenerated={(url) => handleFieldChange('featured_image', url)}
+          />
         </div>
+      )}
+
+      {/* Publish Tab */}
+      {activeTab === 'publish' && (
+        <BlogScheduler
+          blogData={formData}
+          onSchedule={(scheduleData) => {
+            setFormData(prev => ({ ...prev, ...scheduleData }));
+          }}
+        />
       )}
 
       {/* Actions */}
