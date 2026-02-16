@@ -338,6 +338,7 @@ export default function BlogSingle() {
                 </Button>
               </form>
             </div>
+            </div>
 
             {/* Sidebar - Table of Contents */}
             <div className="lg:col-span-1">
