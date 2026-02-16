@@ -18,7 +18,8 @@ import {
   ChevronDown,
   ChevronRight,
   TrendingUp,
-  Landmark
+  Landmark,
+  PenTool
 } from 'lucide-react';
 
 const menuItems = [
@@ -58,6 +59,7 @@ const menuItems = [
   { icon: BarChart3, label: 'Análises', path: '/analytics' },
   { icon: FileText, label: 'Relatórios Avançados', path: '/advancedreports' },
   { icon: FileText, label: 'Gerenciamento de Docs', path: '/documentmanagement' },
+  { icon: PenTool, label: 'Gerenciador de Blogs', path: '/blogmanager' },
   { icon: Phone, label: 'Comunicação', path: '/communication' },
   { icon: UserCircle, label: 'Meu Painel', path: '/clientportal' },
   { icon: Settings, label: 'Configurações', path: '/settings' },
