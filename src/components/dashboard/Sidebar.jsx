@@ -1,6 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { createPageUrl } from '../../utils';
 import {
   LayoutDashboard,
   Users,
@@ -57,6 +56,7 @@ const menuItems = [
   { icon: Calendar, label: 'Calendário Contábil', page: 'AccountingCalendar' },
   { icon: Zap, label: 'Automações', page: 'Automations' },
   { icon: BarChart3, label: 'Relatórios', page: 'Reports' },
+  { icon: BarChart3, label: 'Análises', page: 'Analytics' },
   { icon: BarChart3, label: 'Análises Avançadas', page: 'AnalyticsDashboard' },
   { icon: BarChart3, label: 'Relatórios Avançados', page: 'AdvancedReportsPage' },
   { icon: FileText, label: 'Gerenciamento de Docs', page: 'DocumentManagement' },
