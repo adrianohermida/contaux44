@@ -25,13 +25,21 @@ export const LazyCommunication = lazy(() => import('../../pages/Communication'))
 export const LazyClientPortal = lazy(() => import('../../pages/ClientPortal'));
 export const LazySettings = lazy(() => import('../../pages/SettingsPage'));
 export const LazyBlogManager = lazy(() => import('../../pages/BlogManager'));
+export const LazyAuditLogs = lazy(() => import('../../pages/AuditLogs'));
+export const LazyAnalytics = lazy(() => import('../../pages/Analytics'));
+export const LazySecurityCenter = lazy(() => import('../../pages/SecurityCenter'));
+export const LazyTransactions = lazy(() => import('../../pages/Transactions'));
+export const LazyCashFlowForecast = lazy(() => import('../../pages/CashFlowForecast'));
+export const LazyAdvancedReports = lazy(() => import('../../pages/AdvancedReportsPage'));
+export const LazyDocumentManagement = lazy(() => import('../../pages/DocumentManagement'));
+export const LazyAnalyticsDashboard = lazy(() => import('../../pages/AnalyticsDashboard'));
+export const LazyRLSDebugger = lazy(() => import('../../pages/RLSDebugger'));
 
 // Lazy load de componentes pesados
 export const LazyBlogEditor = lazy(() => import('./blog/BlogEditor'));
 export const LazyReportForm = lazy(() => import('./ReportForm'));
 export const LazyDocumentTemplateForm = lazy(() => import('./DocumentTemplateForm'));
 export const LazyAIAssistant = lazy(() => import('./blog/AIAssistant'));
-export const LazyAnalyticsDashboard = lazy(() => import('./AnalyticsDashboard'));
 export const LazyReportsCharts = lazy(() => import('./ReportsCharts'));
 
 const LoadingFallback = () => (
