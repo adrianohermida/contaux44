@@ -24,8 +24,7 @@ export default function Payments() {
   };
 
   return (
-    <ProtectedInternalRoute>
-      <div className="space-y-6">
+    <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Pagamentos</h1>
@@ -55,6 +54,5 @@ export default function Payments() {
             onRefresh={refreshKey}
           />
         </div>
-        </ProtectedInternalRoute>
         );
         }

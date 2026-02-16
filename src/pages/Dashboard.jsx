@@ -73,8 +73,7 @@ export default function Dashboard() {
   }, [dashboardData]);
 
   return (
-    <ProtectedInternalRoute>
-      <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6">
            {/* Welcome */}
            <div>
              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Dashboard</h1>
@@ -156,6 +155,5 @@ export default function Dashboard() {
             </a>
           </div>
         </div>
-    </ProtectedInternalRoute>
-  );
-}
+        );
+        }

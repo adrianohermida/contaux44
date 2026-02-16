@@ -22,7 +22,7 @@ export default function Layout({ children, currentPageName }) {
       'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 
       'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 
       'AccountingCalendar', 'Automations', 'Reports', 'Communication', 
-      'ClientPortal', 'Settings', 'AuditLogs', 'Analytics', 
+      'ClientPortal', 'SettingsPage', 'AuditLogs', 'Analytics', 
       'AdvancedReports', 'DocumentManagement', 'SecurityCenter', 
       'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger',
       'AnalyticsDashboard'
@@ -32,7 +32,9 @@ export default function Layout({ children, currentPageName }) {
       return (
         <ThemeProvider>
           <DashboardLayout>
-            {children}
+            <ProtectedInternalRoute>
+              {children}
+            </ProtectedInternalRoute>
           </DashboardLayout>
         </ThemeProvider>
       );
@@ -48,5 +50,5 @@ export default function Layout({ children, currentPageName }) {
           <Footer />
         </div>
       </ThemeProvider>
-  );
+    );
 }
