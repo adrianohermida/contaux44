@@ -7,6 +7,9 @@ import { createPageUrl } from '../utils';
 import RelatedPosts from '../components/blog/RelatedPosts';
 import TableOfContents from '../components/blog/TableOfContents';
 import ReadingTime from '../components/blog/ReadingTime';
+import BlogReactions from '../components/blog/BlogReactions';
+import BookmarkButton from '../components/blog/BookmarkButton';
+import ShareButtons from '../components/blog/ShareButtons';
 
 export default function BlogSingle() {
   const [blog, setBlog] = useState(null);
@@ -216,6 +219,14 @@ export default function BlogSingle() {
               dangerouslySetInnerHTML={{ __html: blog.content }}
             />
 
+            {/* Actions Bar */}
+            <div className="flex flex-wrap gap-3 py-6 border-t border-gray-200">
+              <BookmarkButton blogPostId={blog.id} />
+              <Button variant="outline" onClick={() => window.print()}>
+                🖨️ Imprimir
+              </Button>
+            </div>
+
             {/* Tags & Share */}
             <div className="grid sm:grid-cols-2 gap-8 py-8 border-t border-b border-gray-200">
               <div>
@@ -229,29 +240,12 @@ export default function BlogSingle() {
                 </div>
               </div>
               <div>
-                <h5 className="font-bold mb-3 text-slate-900">Compartilhar</h5>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => handleShare('twitter')}
-                    className="w-10 h-10 rounded-full bg-blue-400 text-white flex items-center justify-center hover:bg-blue-500 transition-colors"
-                  >
-                    <Twitter className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => handleShare('facebook')}
-                    className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors"
-                  >
-                    <Facebook className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => handleShare('linkedin')}
-                    className="w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center hover:bg-blue-800 transition-colors"
-                  >
-                    <Linkedin className="w-5 h-5" />
-                  </button>
-                </div>
+                <ShareButtons title={blog.title} url={window.location.href} />
               </div>
             </div>
+
+            {/* Reactions */}
+            <BlogReactions blogPostId={blog.id} />
 
             {/* Comments */}
             <div>
