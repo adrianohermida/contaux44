@@ -63,7 +63,7 @@ const menuItems = [
   { icon: PenTool, label: 'Gerenciador de Blogs', page: 'BlogManager' },
   { icon: Phone, label: 'Comunicação', page: 'Communication' },
   { icon: UserCircle, label: 'Meu Painel', page: 'ClientPortal' },
-  { icon: Settings, label: 'Configurações', page: 'Settings' },
+  { icon: Settings, label: 'Configurações', page: 'SettingsPage' },
   { icon: FileText, label: 'Logs de Auditoria', page: 'AuditLogs' },
   { icon: AlertCircle, label: 'Centro de Segurança', page: 'SecurityCenter' }
 ];
