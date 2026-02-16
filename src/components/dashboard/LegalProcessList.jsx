@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2 } from 'lucide-react';
+import { useCacheStrategy } from '../hooks/useCacheStrategy';
+import { useRealtimeSync } from '../hooks/useRealtimeSync';
 
 const ProcessRow = React.memo(({ process, onEdit, onDelete, getPriorityColor }) => (
   <tr className="hover:bg-slate-50">
@@ -29,28 +32,36 @@ const ProcessRow = React.memo(({ process, onEdit, onDelete, getPriorityColor }) 
 ProcessRow.displayName = 'ProcessRow';
 
 export default function LegalProcessList({ tenantId, onEdit, onRefresh }) {
-  const [processes, setProcesses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { invalidateRelated } = useCacheStrategy();
+  const { isConnected } = useRealtimeSync('LegalProcess', tenantId);
 
-  const loadProcesses = useCallback(async () => {
-    try {
-      const data = await base44.entities.LegalProcess.filter({ tenant_id: tenantId });
-      setProcesses(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
+  const { data: processes = [], isLoading: loading, refetch } = useQuery({
+    queryKey: ['LegalProcess-list', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      return base44.entities.LegalProcess.filter({ 
+        workspace_id: tenantId 
+      });
+    },
+    enabled: !!tenantId,
+    staleTime: 2 * 60 * 1000,
+  });
 
   useEffect(() => {
-    loadProcesses();
-  }, [loadProcesses, onRefresh]);
+    if (onRefresh) refetch();
+  }, [onRefresh, refetch]);
 
   const handleDelete = useCallback(async (id) => {
     if (confirm('Tem certeza?')) {
-      await base44.entities.LegalProcess.delete(id);
-      loadProcesses();
+      try {
+        await base44.entities.LegalProcess.delete(id);
+        invalidateRelated('LegalProcess', id);
+        refetch();
+      } catch (error) {
+        console.error('Erro ao deletar:', error);
+      }
     }
-  }, [loadProcesses]);
+  }, [invalidateRelated, refetch]);
 
   const getPriorityColor = useCallback((priority) => {
     const colors = { low: 'bg-blue-100 text-blue-800', medium: 'bg-yellow-100 text-yellow-800', high: 'bg-orange-100 text-orange-800', urgent: 'bg-red-100 text-red-800' };

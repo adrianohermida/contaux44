@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useCacheStrategy } from '../hooks/useCacheStrategy';
+import { useRealtimeSync } from '../hooks/useRealtimeSync';
 
 const TicketRow = React.memo(({ ticket, onEdit, onDelete, getStatusColor }) => (
   <tr className="hover:bg-slate-50">
@@ -30,45 +33,37 @@ const TicketRow = React.memo(({ ticket, onEdit, onDelete, getStatusColor }) => (
 TicketRow.displayName = 'TicketRow';
 
 export default function TicketList({ tenantId, onEdit, onRefresh }) {
-  const [tickets, setTickets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { invalidateRelated } = useCacheStrategy();
+  const { isConnected } = useRealtimeSync('Ticket', tenantId);
 
-  const loadTickets = useCallback(async () => {
-    try {
-      const user = await base44.auth.me();
-      const userTenantId = user.tenant_id || user.email.split('@')[0];
-      
-      if (tenantId !== userTenantId) {
-        toast.error('Acesso negado: tenant inválido');
-        setTickets([]);
-        return;
-      }
-
-      const data = await base44.entities.Ticket.filter({ tenant_id: tenantId });
-      setTickets(data || []);
-    } catch (error) {
-      console.error('Erro ao carregar tickets:', error);
-      toast.error('Erro ao carregar tickets');
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
+  const { data: tickets = [], isLoading: loading, refetch } = useQuery({
+    queryKey: ['Ticket-list', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      return base44.entities.Ticket.filter({ 
+        workspace_id: tenantId 
+      });
+    },
+    enabled: !!tenantId,
+    staleTime: 2 * 60 * 1000,
+  });
 
   useEffect(() => {
-    loadTickets();
-  }, [loadTickets, onRefresh]);
+    if (onRefresh) refetch();
+  }, [onRefresh, refetch]);
 
   const handleDelete = useCallback(async (id) => {
     if (confirm('Tem certeza?')) {
       try {
         await base44.entities.Ticket.delete(id);
         toast.success('Ticket deletado');
-        loadTickets();
+        invalidateRelated('Ticket', id);
+        refetch();
       } catch (error) {
         toast.error('Erro ao deletar ticket');
       }
     }
-  }, [loadTickets]);
+  }, [invalidateRelated, refetch]);
 
   const getStatusColor = useCallback((status) => {
     const colors = {
