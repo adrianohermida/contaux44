@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
-import { Bell, Search, User, LogOut, Settings } from 'lucide-react';
+import { Bell, Search, User, LogOut, Settings, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,36 +14,25 @@ import UserPreferences from './UserPreferences';
 
 const DashboardHeader = memo(function DashboardHeader() {
   const { user, tenantId } = useUserAndTenantOptimized();
-  const [notifications, setNotifications] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [preferencesOpen, setPreferencesOpen] = useState(false);
-  const [notificationsLoaded, setNotificationsLoaded] = useState(false);
   const debouncedSearch = useDebounce(searchQuery, 300);
 
-  const loadNotifications = useCallback(async () => {
-    if (!tenantId || !user || notificationsLoaded) return;
-    
-    try {
+  // Lazy-load notifications with React Query
+  const { data: notifications = [], isLoading: notificationsLoading } = useQuery({
+    queryKey: ['notifications', tenantId, user?.email],
+    queryFn: async () => {
+      if (!tenantId || !user?.email) return [];
       const notifs = await base44.entities.Notification.filter({
         tenant_id: tenantId,
         user_email: user.email
       });
-      
-      const sorted = notifs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-      setNotifications(sorted.slice(0, 5));
-      setNotificationsLoaded(true);
-    } catch (error) {
-      console.error('Erro ao carregar notificações:', error);
-    }
-  }, [tenantId, user, notificationsLoaded]);
-
-  useEffect(() => {
-    loadNotifications();
-    const interval = setInterval(() => {
-      setNotificationsLoaded(false); // Reset a cada minuto para refetch
-    }, 60000);
-    return () => clearInterval(interval);
-  }, [loadNotifications]);
+      return notifs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date)).slice(0, 5);
+    },
+    enabled: !!tenantId && !!user?.email,
+    staleTime: 2 * 60 * 1000, // 2 minutos
+    gcTime: 5 * 60 * 1000,
+  });
 
   const unreadCount = useMemo(() => 
     notifications.filter(n => !n.is_read).length,
@@ -76,16 +66,26 @@ const DashboardHeader = memo(function DashboardHeader() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="relative p-2 hover:bg-slate-100 rounded-lg transition-colors">
-                <Bell className="w-5 h-5 text-slate-600" />
-                {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{unreadCount}</span>
+                {notificationsLoading ? (
+                  <Loader2 className="w-5 h-5 text-slate-600 animate-spin" />
+                ) : (
+                  <>
+                    <Bell className="w-5 h-5 text-slate-600" />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{unreadCount}</span>
+                    )}
+                  </>
                 )}
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-96">
               <div className="p-4">
                 <h3 className="font-semibold mb-3">Notificações</h3>
-                {notifications.length === 0 ? (
+                {notificationsLoading ? (
+                  <div className="flex justify-center py-4">
+                    <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+                  </div>
+                ) : notifications.length === 0 ? (
                   <p className="text-sm text-slate-500 text-center py-4">Nenhuma notificação</p>
                 ) : (
                   <div className="space-y-2 max-h-80 overflow-y-auto">

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import StatCard from '../components/dashboard/StatCard';
 import AlertsCenter from '../components/dashboard/AlertsCenter';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
