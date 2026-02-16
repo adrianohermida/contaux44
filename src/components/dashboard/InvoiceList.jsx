@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2 } from 'lucide-react';
+import { useCacheStrategy } from '../hooks/useCacheStrategy';
+import { useRealtimeSync } from '../hooks/useRealtimeSync';
 
 const InvoiceRow = React.memo(({ invoice, onEdit, onDelete, getStatusColor }) => (
   <tr className="hover:bg-slate-50">
@@ -29,28 +32,36 @@ const InvoiceRow = React.memo(({ invoice, onEdit, onDelete, getStatusColor }) =>
 InvoiceRow.displayName = 'InvoiceRow';
 
 export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
-  const [invoices, setInvoices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { invalidateRelated } = useCacheStrategy();
+  const { isConnected } = useRealtimeSync('Invoice', tenantId);
 
-  const loadInvoices = useCallback(async () => {
-    try {
-      const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
-      setInvoices(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
+  const { data: invoices = [], isLoading: loading, refetch } = useQuery({
+    queryKey: ['Invoice-list', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      return base44.entities.Invoice.filter({ 
+        workspace_id: tenantId 
+      });
+    },
+    enabled: !!tenantId,
+    staleTime: 2 * 60 * 1000,
+  });
 
   useEffect(() => {
-    loadInvoices();
-  }, [loadInvoices, onRefresh]);
+    if (onRefresh) refetch();
+  }, [onRefresh, refetch]);
 
   const handleDelete = useCallback(async (id) => {
     if (confirm('Tem certeza?')) {
-      await base44.entities.Invoice.delete(id);
-      loadInvoices();
+      try {
+        await base44.entities.Invoice.delete(id);
+        invalidateRelated('Invoice', id);
+        refetch();
+      } catch (error) {
+        console.error('Erro ao deletar:', error);
+      }
     }
-  }, [loadInvoices]);
+  }, [invalidateRelated, refetch]);
 
   const getStatusColor = useCallback((status) => {
     const colors = { draft: 'bg-slate-100 text-slate-800', sent: 'bg-blue-100 text-blue-800', paid: 'bg-green-100 text-green-800', overdue: 'bg-red-100 text-red-800' };
