@@ -109,6 +109,16 @@ export default function BlogManager() {
             >
               🤖 Assistente IA
             </button>
+            <button
+              onClick={() => setView('comments')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                view === 'comments'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              💬 Comentários
+            </button>
           </div>
 
           {/* Content */}
