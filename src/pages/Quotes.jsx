@@ -24,8 +24,7 @@ export default function Quotes() {
   };
 
   return (
-    <ProtectedInternalRoute>
-      <div className="space-y-6">
+    <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Orçamentos</h1>
@@ -55,6 +54,5 @@ export default function Quotes() {
             onRefresh={refreshKey}
           />
         </div>
-        </ProtectedInternalRoute>
         );
         }
