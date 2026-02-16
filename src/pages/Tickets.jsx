@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import TicketForm from '../components/dashboard/TicketForm';
 import TicketList from '../components/dashboard/TicketList';
@@ -36,8 +35,7 @@ export default function Tickets() {
 
   return (
     <ProtectedInternalRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+      <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Helpdesk - Tickets</h1>
@@ -67,7 +65,6 @@ export default function Tickets() {
             onRefresh={refreshKey}
           />
         </div>
-      </DashboardLayout>
-    </ProtectedInternalRoute>
-  );
-}
+        </ProtectedInternalRoute>
+        );
+        }

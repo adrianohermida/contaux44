@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import QuoteForm from '../components/dashboard/QuoteForm';
 import QuoteList from '../components/dashboard/QuoteList';
@@ -26,8 +25,7 @@ export default function Quotes() {
 
   return (
     <ProtectedInternalRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+      <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Orçamentos</h1>
@@ -57,7 +55,6 @@ export default function Quotes() {
             onRefresh={refreshKey}
           />
         </div>
-      </DashboardLayout>
-    </ProtectedInternalRoute>
-  );
-}
+        </ProtectedInternalRoute>
+        );
+        }
