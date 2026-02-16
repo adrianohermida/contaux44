@@ -15,6 +15,7 @@ export default function Analytics() {
           </div>
           
           {tenantId && <AnalyticsDashboard tenantId={tenantId} />}
-        </div>
-  );
-}
+          </div>
+          </ProtectedInternalRoute>
+          );
+          }

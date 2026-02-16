@@ -218,6 +218,7 @@ export default function AdvancedReports() {
               )}
             </CardContent>
           </Card>
-        </div>
-  );
-}
+          </div>
+          </ProtectedInternalRoute>
+          );
+          }

@@ -208,6 +208,7 @@ export default function DocumentManagement() {
               )}
             </CardContent>
           </Card>
-        </div>
-  );
-}
+          </div>
+          </ProtectedInternalRoute>
+          );
+          }
