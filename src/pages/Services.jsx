@@ -50,12 +50,10 @@ export default function Services() {
           )}
 
           <ServicesList
-            tenantId={tenantId}
-            onEdit={handleEdit}
-            onRefresh={refreshKey}
-          />
-        </div>
-      </DashboardLayout>
-    </ProtectedRoute>
-  );
-}
+             tenantId={tenantId}
+             onEdit={handleEdit}
+             onRefresh={refreshKey}
+           />
+          </div>
+          );
+          }
