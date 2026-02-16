@@ -24,18 +24,17 @@ import {
   LazyCommunication,
   LazyClientPortal,
   LazySettings,
-  LazyBlogManager
+  LazyBlogManager,
+  LazyAuditLogs,
+  LazyAnalytics,
+  LazySecurityCenter,
+  LazyTransactions,
+  LazyCashFlowForecast,
+  LazyAdvancedReports,
+  LazyDocumentManagement,
+  LazyAnalyticsDashboard,
+  LazyRLSDebugger
 } from './LazyPages';
-
-const LazyAnalytics = lazy(() => import('../../pages/Analytics'));
-const LazyAuditLogs = lazy(() => import('../../pages/AuditLogs'));
-const LazySecurityCenter = lazy(() => import('../../pages/SecurityCenter'));
-const LazyTransactions = lazy(() => import('../../pages/Transactions'));
-const LazyCashFlowForecast = lazy(() => import('../../pages/CashFlowForecast'));
-const LazyAdvancedReports = lazy(() => import('../../pages/AdvancedReportsPage'));
-const LazyDocumentManagement = lazy(() => import('../../pages/DocumentManagement'));
-const LazyAnalyticsDashboard = lazy(() => import('../../pages/AnalyticsDashboard'));
-const LazyRLSDebugger = lazy(() => import('../../pages/RLSDebugger'));
 
 export default function DashboardRoutes() {
   return (
