@@ -1,38 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Calendar, MessageCircle, Eye } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-
-const blogPosts = [
-  { id: 1, title: 'Make your team a Design driven company', author: 'Tim Norton', date: '05th Nov 2023', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
-  { id: 2, title: 'The newest web framework that changed the world', author: 'Tim Norton', date: '24th March 2023', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
-  { id: 3, title: '5 ways to improve user retention for your startup', author: 'Tim Norton', date: '30th Jan 2023', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
-  { id: 4, title: 'Make your team a Design driven company', author: 'Tim Norton', date: '15th Dec 2022', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
-  { id: 5, title: 'The newest web framework that changed the world', author: 'Tim Norton', date: '10th Nov 2022', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
-  { id: 6, title: '5 ways to improve user retention for your startup', author: 'Tim Norton', date: '05th Oct 2022', desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard.' },
-];
-
-const popularPosts = [
-  { id: 1, title: '8 simple ways to utilize a blog to improve SEO results', date: '05th Nov 2023' },
-  { id: 2, title: '7 most important SEO focus areas for colleges and universities', date: '24th March 2023' },
-  { id: 3, title: 'How to drive conversions with on-brand SEO copywriting', date: '30th Jan 2023' },
-];
-
-const categories = [
-  { name: 'Business', count: 26 },
-  { name: 'Consultant', count: 30 },
-  { name: 'Creative', count: 71 },
-  { name: 'UI/UX', count: 56 },
-  { name: 'Technology', count: 60 },
-];
-
-const tags = ['Popular Template', 'Design', 'UX', 'Icon', 'Usability', 'Tech', 'Mouse', 'Kit', 'Consult', 'Business', 'Keyboard', 'Develop'];
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../utils';
 
 export default function Blog() {
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState('');
   const postsPerPage = 6;
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      // Carregar posts publicados
+      const posts = await base44.entities.BlogPost.filter(
+        { status: 'published' },
+        '-publish_date',
+        50
+      );
+      setBlogPosts(posts);
+
+      // Carregar categorias
+      const cats = await base44.entities.BlogCategory.list();
+      setCategories(cats);
+
+      // Extrair tags únicas de todos os posts
+      const allTags = posts.flatMap(p => p.tags || []);
+      const uniqueTags = [...new Set(allTags)];
+      setTags(uniqueTags.slice(0, 12));
+
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
@@ -51,12 +62,29 @@ export default function Blog() {
   };
 
   const filteredPosts = blogPosts.filter(post => 
-    post.title.toLowerCase().includes(searchTerm.toLowerCase())
+    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.excerpt?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const startIdx = (currentPage - 1) * postsPerPage;
   const paginatedPosts = filteredPosts.slice(startIdx, startIdx + postsPerPage);
+
+  // Posts mais populares (ordenados por visualizações)
+  const popularPosts = [...blogPosts]
+    .sort((a, b) => (b.views || 0) - (a.views || 0))
+    .slice(0, 3);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Carregando blog...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -79,21 +107,50 @@ export default function Blog() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
             {/* Posts */}
             <div className="sm:col-span-2 lg:col-span-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
-                {paginatedPosts.map(post => (
-                  <div key={post.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
-                    <img src={post.id === 1 || post.id === 4 ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/533400192_blog-1.jpg' : post.id === 2 || post.id === 5 ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/173396dc9_blog-2.jpg' : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8bbde3a94_blog-3.jpg'} alt={post.title} className="w-full h-40 sm:h-48 object-cover" loading="lazy" />
-                    <div className="p-4 sm:p-6">
-                      <h4 className="font-bold text-base sm:text-lg mb-2 hover:text-blue-600 cursor-pointer line-clamp-2"><a href="#">{post.title}</a></h4>
-                      <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{post.desc}</p>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <img src={`https://i.pravatar.cc/30?img=${post.id}`} alt={post.author} className="w-5 h-5 rounded-full" />
-                        <span>BY {post.author}</span>
+              {paginatedPosts.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-slate-600">Nenhum post encontrado.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
+                  {paginatedPosts.map(post => (
+                    <Link key={post.id} to={`${createPageUrl('BlogSingle')}?id=${post.id}`}>
+                      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 h-full">
+                        {post.featured_image && (
+                          <img 
+                            src={post.featured_image} 
+                            alt={post.title} 
+                            className="w-full h-40 sm:h-48 object-cover" 
+                            loading="lazy" 
+                          />
+                        )}
+                        <div className="p-4 sm:p-6">
+                          <h4 className="font-bold text-base sm:text-lg mb-2 hover:text-blue-600 line-clamp-2">
+                            {post.title}
+                          </h4>
+                          <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">
+                            {post.excerpt}
+                          </p>
+                          <div className="flex items-center justify-between text-xs text-gray-500">
+                            <div className="flex items-center gap-2">
+                              <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span className="text-[10px] font-bold text-blue-600">
+                                  {post.author?.charAt(0)?.toUpperCase()}
+                                </span>
+                              </div>
+                              <span>BY {post.author}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Eye className="w-3 h-3" />
+                              <span>{post.views || 0}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
 
               {/* Pagination */}
               <div className="flex justify-center gap-1 sm:gap-2 mb-8 flex-wrap">
@@ -122,12 +179,23 @@ export default function Blog() {
               <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
                 <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Posts Populares</h5>
                 <div className="space-y-3 sm:space-y-4">
-                  {popularPosts.map(post => (
-                    <div key={post.id} className="pb-3 sm:pb-4 border-b border-gray-200 last:border-0">
-                      <h6 className="font-semibold text-xs sm:text-sm hover:text-blue-600 cursor-pointer mb-1 line-clamp-2"><a href="#">{post.title}</a></h6>
-                      <span className="text-xs text-gray-500 flex items-center gap-1"><Calendar className="w-3 h-3" /> {post.date}</span>
-                    </div>
-                  ))}
+                  {popularPosts.length === 0 ? (
+                    <p className="text-xs text-slate-500">Nenhum post ainda</p>
+                  ) : (
+                    popularPosts.map(post => (
+                      <Link key={post.id} to={`${createPageUrl('BlogSingle')}?id=${post.id}`}>
+                        <div className="pb-3 sm:pb-4 border-b border-gray-200 last:border-0">
+                          <h6 className="font-semibold text-xs sm:text-sm hover:text-blue-600 mb-1 line-clamp-2">
+                            {post.title}
+                          </h6>
+                          <span className="text-xs text-gray-500 flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {new Date(post.publish_date || post.created_date).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                      </Link>
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -135,9 +203,18 @@ export default function Blog() {
               <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
                 <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Categorias</h5>
                 <ul className="space-y-2">
-                  {categories.map((cat, idx) => (
-                    <li key={idx}><a href="#" className="text-blue-600 hover:underline text-xs sm:text-sm flex justify-between"><span>{cat.name}</span></a></li>
-                  ))}
+                  {categories.length === 0 ? (
+                    <li className="text-xs text-slate-500">Nenhuma categoria</li>
+                  ) : (
+                    categories.map((cat) => (
+                      <li key={cat.id}>
+                        <a href="#" className="text-blue-600 hover:underline text-xs sm:text-sm flex justify-between items-center">
+                          <span>{cat.name}</span>
+                          {cat.icon && <span className="text-lg">{cat.icon}</span>}
+                        </a>
+                      </li>
+                    ))
+                  )}
                 </ul>
               </div>
 
@@ -145,9 +222,19 @@ export default function Blog() {
               <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
                 <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Tags Populares</h5>
                 <div className="flex flex-wrap gap-1 sm:gap-2">
-                  {tags.map((tag, idx) => (
-                    <a key={idx} href="#" className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded hover:bg-blue-600 hover:text-white transition-colors">{tag}</a>
-                  ))}
+                  {tags.length === 0 ? (
+                    <p className="text-xs text-slate-500">Nenhuma tag ainda</p>
+                  ) : (
+                    tags.map((tag, idx) => (
+                      <a 
+                        key={idx} 
+                        href="#" 
+                        className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded hover:bg-blue-600 hover:text-white transition-colors"
+                      >
+                        {tag}
+                      </a>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
