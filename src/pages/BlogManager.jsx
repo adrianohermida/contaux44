@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Plus, ChevronDown } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import BlogEditor from '../components/dashboard/blog/BlogEditor';
 import BlogList from '../components/dashboard/blog/BlogList';
 import AIAssistant from '../components/dashboard/blog/AIAssistant';
@@ -60,9 +58,7 @@ export default function BlogManager() {
   };
 
   return (
-    <ProtectedInternalRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+    <div className="space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
@@ -191,7 +187,5 @@ export default function BlogManager() {
             <BlogComments />
           )}
         </div>
-      </DashboardLayout>
-    </ProtectedInternalRoute>
-  );
-}
+        );
+        }

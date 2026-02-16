@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -65,9 +63,7 @@ export default function AuditLogs() {
   }, [filteredLogs]);
 
   return (
-    <ProtectedInternalRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+    <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Logs de Auditoria</h1>
             <p className="text-slate-600 mt-1">Histórico de ações e alterações no sistema</p>
@@ -160,7 +156,5 @@ export default function AuditLogs() {
             </CardContent>
           </Card>
         </div>
-      </DashboardLayout>
-    </ProtectedInternalRoute>
-  );
-}
+        );
+        }

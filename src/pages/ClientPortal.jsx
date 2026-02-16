@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedClientRoute from '../components/auth/ProtectedClientRoute';
 import { FileText, DollarSign, AlertCircle } from 'lucide-react';
 import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
 
@@ -22,12 +20,10 @@ export default function ClientPortal() {
     loadInvoices();
   }, [workspaceId]);
 
-  if (loading) return <ProtectedClientRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedClientRoute>;
+  if (loading) return <div className="text-center py-8">Carregando...</div>;
 
   return (
-    <ProtectedClientRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+    <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Meu Painel</h1>
             <p className="text-slate-600 mt-1">Bem-vindo, {user?.full_name || 'Cliente'}</p>
@@ -98,8 +94,6 @@ export default function ClientPortal() {
               </div>
             )}
           </div>
-        </div>
-      </DashboardLayout>
-    </ProtectedClientRoute>
-  );
-}
+          </div>
+          );
+          }
