@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Edit2, Trash2, Eye, Search, Plus, Filter } from 'lucide-react';
+import { Edit2, Trash2, Eye, Search, Plus, Filter, BarChart } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
+import BlogAnalyticsDashboard from './BlogAnalyticsDashboard';
 
 export default function BlogList({ onEdit, onRefresh, categories = [] }) {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedBlogForAnalytics, setSelectedBlogForAnalytics] = useState(null);
 
   useEffect(() => {
     loadBlogs();
@@ -61,6 +63,20 @@ export default function BlogList({ onEdit, onRefresh, categories = [] }) {
 
   if (loading) {
     return <div className="text-center py-8 text-slate-500">Carregando blogs...</div>;
+  }
+
+  if (selectedBlogForAnalytics) {
+    return (
+      <div className="space-y-4">
+        <Button
+          variant="outline"
+          onClick={() => setSelectedBlogForAnalytics(null)}
+        >
+          ← Voltar para Lista
+        </Button>
+        <BlogAnalyticsDashboard blogPostId={selectedBlogForAnalytics} />
+      </div>
+    );
   }
 
   return (
@@ -134,6 +150,13 @@ export default function BlogList({ onEdit, onRefresh, categories = [] }) {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => setSelectedBlogForAnalytics(blog.id)}
+                        className="p-2 hover:bg-purple-50 rounded-lg text-purple-600 transition-colors"
+                        title="Ver Analytics"
+                      >
+                        <BarChart className="w-4 h-4" />
+                      </button>
                       <button
                         onClick={() => onEdit(blog)}
                         className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors"

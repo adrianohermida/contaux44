@@ -8,6 +8,7 @@ import BlogEditor from '../components/dashboard/blog/BlogEditor';
 import BlogList from '../components/dashboard/blog/BlogList';
 import AIAssistant from '../components/dashboard/blog/AIAssistant';
 import SEOAnalyzer from '../components/dashboard/blog/SEOAnalyzer';
+import BlogComments from '../components/dashboard/blog/BlogComments';
 
 export default function BlogManager() {
   const [view, setView] = useState('list');
@@ -174,6 +175,10 @@ export default function BlogManager() {
                 </ul>
               </div>
             </div>
+          )}
+
+          {view === 'comments' && (
+            <BlogComments />
           )}
         </div>
       </DashboardLayout>
