@@ -259,6 +259,25 @@ export default function BlogEditor({ blog, onSave, categories = [] }) {
           <option value="scheduled">Agendado</option>
           <option value="published">Publicado</option>
         </select>
+
+        {formData.status === 'published' && formData.id && (
+          <Button
+            onClick={async () => {
+              try {
+                await base44.functions.invoke('sendNewsletterPost', {
+                  blog_post_id: formData.id
+                });
+                alert('Newsletter enviada com sucesso!');
+              } catch (error) {
+                alert('Erro ao enviar newsletter: ' + error.message);
+              }
+            }}
+            variant="outline"
+            className="gap-2"
+          >
+            📧 Enviar Newsletter
+          </Button>
+        )}
       </div>
     </div>
   );

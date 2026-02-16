@@ -34,7 +34,16 @@ Deno.serve(async (req) => {
           status: 'published'
         });
 
-        // TODO: Implementar compartilhamento social automático aqui
+        // Enviar newsletter automática se configurado
+        try {
+          await base44.asServiceRole.functions.invoke('sendNewsletterPost', {
+            blog_post_id: blog.id
+          });
+        } catch (newsletterError) {
+          console.log('Newsletter error:', newsletterError.message);
+        }
+
+        // TODO: Implementar compartilhamento social automático nas redes sociais
         // if (blog.auto_share) { ... }
 
       } catch (error) {

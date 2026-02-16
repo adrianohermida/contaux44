@@ -4,6 +4,9 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
+import RelatedPosts from '../components/blog/RelatedPosts';
+import TableOfContents from '../components/blog/TableOfContents';
+import ReadingTime from '../components/blog/ReadingTime';
 
 export default function BlogSingle() {
   const [blog, setBlog] = useState(null);
@@ -175,9 +178,10 @@ export default function BlogSingle() {
 
       {/* Blog Content */}
       <section className="py-12 sm:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          {/* Post Details */}
-          <div className="space-y-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-4 gap-8">
+            {/* Main Content */}
+            <div className="lg:col-span-3 space-y-8">
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
@@ -194,6 +198,7 @@ export default function BlogSingle() {
                     year: 'numeric'
                   })}
                 </div>
+                <ReadingTime content={blog.content} />
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4" />
                   {comments.length} Comentários
@@ -333,9 +338,21 @@ export default function BlogSingle() {
                 </Button>
               </form>
             </div>
+
+            {/* Sidebar - Table of Contents */}
+            <div className="lg:col-span-1">
+              <TableOfContents content={blog.content} />
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Related Posts */}
+      <RelatedPosts 
+        currentPostId={blog.id} 
+        categoryId={blog.category_id}
+        tags={blog.tags || []}
+      />
 
       {/* CTA Section */}
       <section className="py-12 sm:py-20 bg-gray-50">
