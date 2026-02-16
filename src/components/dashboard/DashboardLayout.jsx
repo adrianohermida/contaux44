@@ -1,6 +1,7 @@
 import React, { useState, useCallback, memo } from 'react';
 import Sidebar from './Sidebar';
 import DashboardHeader from './DashboardHeader';
+import PerformanceMonitor from './PerformanceMonitor';
 
 /**
  * Layout padrão do dashboard - garante consistência do sidebar + header
@@ -26,6 +27,9 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
           {children}
         </main>
       </div>
+
+      {/* Performance Monitor - only in dev/staging */}
+      {process.env.NODE_ENV !== 'production' && <PerformanceMonitor />}
     </div>
   );
 });
