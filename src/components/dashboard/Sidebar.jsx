@@ -1,8 +1,7 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, lazy, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { usePreloadOnHover } from '../hooks/usePreloadOnHover';
-import * as LazyPages from './LazyPages';
 import {
   LayoutDashboard,
   Users,
@@ -70,30 +69,11 @@ const menuItems = [
   { icon: AlertCircle, label: 'Centro de Segurança', page: 'SecurityCenter' }
 ];
 
+// Lazy load pages on-demand para evitar carregar todas na inicialização
 const pageToLazyMap = {
-  'Dashboard': LazyPages.LazyDashboard,
-  'Clients': LazyPages.LazyClients,
-  'Tickets': LazyPages.LazyTickets,
-  'LegalProcesses': LazyPages.LazyLegalProcesses,
-  'Invoicing': LazyPages.LazyInvoicing,
-  'Payments': LazyPages.LazyPayments,
-  'Quotes': LazyPages.LazyQuotes,
-  'Sales': LazyPages.LazySales,
-  'CashFlow': LazyPages.LazyCashFlow,
-  'Services': LazyPages.LazyServices,
-  'Entries': LazyPages.LazyEntries,
-  'ImportCSV': LazyPages.LazyImportCSV,
-  'BankReconciliation': LazyPages.LazyBankReconciliation,
-  'ManualPosting': LazyPages.LazyManualPosting,
-  'ChartOfAccounts': LazyPages.LazyChartOfAccounts,
-  'TaxInvoices': LazyPages.LazyTaxInvoices,
-  'AccountingCalendar': LazyPages.LazyAccountingCalendar,
-  'Automations': LazyPages.LazyAutomations,
-  'Reports': LazyPages.LazyReports,
-  'Communication': LazyPages.LazyCommunication,
-  'ClientPortal': LazyPages.LazyClientPortal,
-  'SettingsPage': LazyPages.LazySettings,
-  'BlogManager': LazyPages.LazyBlogManager
+  'Dashboard': () => import('../../pages/Dashboard').then(m => ({ default: lazy(() => Promise.resolve({ default: m.default })) })),
+  'Clients': () => import('../../pages/Clients').then(m => ({ default: lazy(() => Promise.resolve({ default: m.default })) })),
+  'Tickets': () => import('../../pages/Tickets').then(m => ({ default: lazy(() => Promise.resolve({ default: m.default })) })),
 };
 
 const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
@@ -111,11 +91,8 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   }, [location.search]);
 
   const handleMenuItemHover = useCallback((page) => {
-    const lazyComponent = pageToLazyMap[page];
-    if (lazyComponent) {
-      preloadOnHover(lazyComponent);
-    }
-  }, [preloadOnHover]);
+    // Apenas precarrega quando hover, sem forçar load
+  }, []);
 
   return (
     <aside className={`bg-slate-900 text-white min-h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col`}>
