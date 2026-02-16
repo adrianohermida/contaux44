@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export default function AuditLogs() {
-  const { workspaceId } = useMultitenantAuth('internal');
+  const { workspaceId } = useMultitenantAuthOptimized('internal');
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
