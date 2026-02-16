@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import ServicesForm from '../components/dashboard/ServicesForm';
 import ServicesList from '../components/dashboard/ServicesList';
 import { Plus } from 'lucide-react';
@@ -24,12 +22,10 @@ export default function Services() {
     setShowForm(true);
   };
 
-  if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+  if (!tenantId) return <div className="text-center py-8">Carregando...</div>;
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+    <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Prestação de Serviços</h1>
