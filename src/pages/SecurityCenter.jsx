@@ -173,6 +173,7 @@ export default function SecurityCenter() {
               )}
             </CardContent>
           </Card>
-        </div>
-  );
-}
+          </div>
+          </ProtectedInternalRoute>
+          );
+          }

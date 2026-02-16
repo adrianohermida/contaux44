@@ -214,6 +214,7 @@ export default function Transactions() {
               )}
             </CardContent>
           </Card>
-        </div>
-  );
-}
+          </div>
+          </ProtectedInternalRoute>
+          );
+          }

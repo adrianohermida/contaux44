@@ -151,6 +151,7 @@ export default function CashFlowForecast() {
               ) : null}
             </CardContent>
           </Card>
-        </div>
-  );
-}
+          </div>
+          </ProtectedInternalRoute>
+          );
+          }
