@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -61,19 +60,8 @@ export default function SecurityCenter() {
   const unresolvedIssues = securityLogs.filter(log => !log.resolved);
   const criticalCount = unresolvedIssues.filter(log => log.severity === 'critical').length;
 
-  if (!tenantId) {
-    return (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <div className="text-center py-8">Carregando...</div>
-        </DashboardLayout>
-      </ProtectedRoute>
-    );
-  }
-
   return (
-    <ProtectedRoute requireAdmin>
-      <DashboardLayout>
+    <ProtectedInternalRoute>
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Centro de Segurança</h1>
@@ -186,7 +174,5 @@ export default function SecurityCenter() {
             </CardContent>
           </Card>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
   );
 }

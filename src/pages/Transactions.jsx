@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -59,11 +58,8 @@ export default function Transactions() {
     reconciled: filteredTransactions.filter(t => t.status === 'reconciled').length
   };
 
-  if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
-
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
+    <ProtectedInternalRoute>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -219,7 +215,5 @@ export default function Transactions() {
             </CardContent>
           </Card>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
   );
 }

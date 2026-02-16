@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,11 +51,8 @@ export default function CashFlowForecast() {
     criticalDays: projections.filter(p => p.closing_balance < 0).length
   };
 
-  if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
-
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
+    <ProtectedInternalRoute>
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Previsão de Fluxo de Caixa</h1>
@@ -156,7 +152,5 @@ export default function CashFlowForecast() {
             </CardContent>
           </Card>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
   );
 }
