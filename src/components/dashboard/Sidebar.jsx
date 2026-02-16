@@ -1,7 +1,6 @@
-import React, { useState, useCallback, memo, lazy, Suspense } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { usePreloadOnHover } from '../hooks/usePreloadOnHover';
 import {
   LayoutDashboard,
   Users,
@@ -69,30 +68,20 @@ const menuItems = [
   { icon: AlertCircle, label: 'Centro de Segurança', page: 'SecurityCenter' }
 ];
 
-// Lazy load pages on-demand para evitar carregar todas na inicialização
-const pageToLazyMap = {
-  'Dashboard': () => import('../../pages/Dashboard').then(m => ({ default: lazy(() => Promise.resolve({ default: m.default })) })),
-  'Clients': () => import('../../pages/Clients').then(m => ({ default: lazy(() => Promise.resolve({ default: m.default })) })),
-  'Tickets': () => import('../../pages/Tickets').then(m => ({ default: lazy(() => Promise.resolve({ default: m.default })) })),
-};
+
 
 const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   const location = useLocation();
   const [openMenus, setOpenMenus] = useState({});
-  const preloadOnHover = usePreloadOnHover();
 
   const toggleSubmenu = useCallback((label) => {
     setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
   }, []);
 
   const isActive = useCallback((page) => {
-    const currentPage = new URLSearchParams(location.search).get('page');
-    return currentPage === page;
-  }, [location.search]);
-
-  const handleMenuItemHover = useCallback((page) => {
-    // Apenas precarrega quando hover, sem forçar load
-  }, []);
+    const currentPath = location.pathname;
+    return currentPath === `/${page.toLowerCase()}`;
+  }, [location.pathname]);
 
   return (
     <aside className={`bg-slate-900 text-white min-h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col`}>
@@ -133,29 +122,27 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
                 {!collapsed && openMenus[item.label] && (
                   <div className="bg-slate-950">
                     {item.submenu.map((sub, subIndex) => (
-                      <a
-                        key={subIndex}
-                        href={createPageUrl(sub.page)}
-                        onMouseEnter={() => handleMenuItemHover(sub.page)}
-                        className={`block px-12 py-2 text-sm hover:bg-slate-800 transition-colors ${
-                          isActive(sub.page) ? 'bg-slate-800 text-blue-400' : ''
-                        }`}
-                      >
-                        {sub.label}
-                      </a>
-                    ))}
+                       <a
+                         key={subIndex}
+                         href={`/${sub.page.toLowerCase()}`}
+                         className={`block px-12 py-2 text-sm hover:bg-slate-800 transition-colors ${
+                           isActive(sub.page) ? 'bg-slate-800 text-blue-400' : ''
+                         }`}
+                       >
+                         {sub.label}
+                       </a>
+                     ))}
                   </div>
                 )}
               </>
             ) : (
                <a
-                 href={createPageUrl(item.page)}
-                 onMouseEnter={() => handleMenuItemHover(item.page)}
-                 className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
-                   isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
-                 }`}
-                 title={collapsed ? item.label : ''}
-               >
+                  href={`/${item.page.toLowerCase()}`}
+                  className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
+                    isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
+                  }`}
+                  title={collapsed ? item.label : ''}
+                >
                  <item.icon className="w-5 h-5 flex-shrink-0" />
                  {!collapsed && <span className="text-sm">{item.label}</span>}
                </a>
