@@ -1,5 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from './components/hooks/useTheme';
+import { AuthProvider } from './components/auth/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import DashboardLayout from './components/dashboard/DashboardLayout';
@@ -31,25 +32,29 @@ export default function Layout({ children, currentPageName }) {
     
     if (dashboardPages.includes(currentPageName)) {
       return (
-        <ThemeProvider>
-          <DashboardLayout>
-            <ProtectedInternalRoute>
-              {children}
-            </ProtectedInternalRoute>
-          </DashboardLayout>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <DashboardLayout>
+              <ProtectedInternalRoute>
+                {children}
+              </ProtectedInternalRoute>
+            </DashboardLayout>
+          </ThemeProvider>
+        </AuthProvider>
       );
     }
 
     return (
-      <ThemeProvider>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </div>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </ThemeProvider>
+      </AuthProvider>
     );
 }

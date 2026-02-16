@@ -7,19 +7,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useUserAndTenant } from '../hooks/useUserAndTenant';
+import { useUserAndTenantOptimized } from '../hooks/useUserAndTenantOptimized';
 import { useDebounce } from '../hooks/useDebounce';
 import UserPreferences from './UserPreferences';
 
 const DashboardHeader = memo(function DashboardHeader() {
-  const { user, tenantId } = useUserAndTenant();
+  const { user, tenantId } = useUserAndTenantOptimized();
   const [notifications, setNotifications] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const [notificationsLoaded, setNotificationsLoaded] = useState(false);
   const debouncedSearch = useDebounce(searchQuery, 300);
 
   const loadNotifications = useCallback(async () => {
-    if (!tenantId || !user) return;
+    if (!tenantId || !user || notificationsLoaded) return;
     
     try {
       const notifs = await base44.entities.Notification.filter({
@@ -29,14 +30,17 @@ const DashboardHeader = memo(function DashboardHeader() {
       
       const sorted = notifs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
       setNotifications(sorted.slice(0, 5));
+      setNotificationsLoaded(true);
     } catch (error) {
       console.error('Erro ao carregar notificações:', error);
     }
-  }, [tenantId, user]);
+  }, [tenantId, user, notificationsLoaded]);
 
   useEffect(() => {
     loadNotifications();
-    const interval = setInterval(loadNotifications, 60000);
+    const interval = setInterval(() => {
+      setNotificationsLoaded(false); // Reset a cada minuto para refetch
+    }, 60000);
     return () => clearInterval(interval);
   }, [loadNotifications]);
 
