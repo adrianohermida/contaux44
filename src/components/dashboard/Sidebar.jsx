@@ -1,5 +1,6 @@
 import React, { useState, useCallback, memo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
 import {
   LayoutDashboard,
   Users,
@@ -23,48 +24,48 @@ import {
 } from 'lucide-react';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: Users, label: 'CRM - Clientes', path: '/clients' },
-  { icon: Ticket, label: 'Helpdesk - Tickets', path: '/tickets' },
-  { icon: FileText, label: 'Processos Judiciais', path: '/legalprocesses' },
+  { icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
+  { icon: Users, label: 'CRM - Clientes', page: 'Clients' },
+  { icon: Ticket, label: 'Helpdesk - Tickets', page: 'Tickets' },
+  { icon: FileText, label: 'Processos Judiciais', page: 'LegalProcesses' },
   {
     icon: DollarSign,
     label: 'Financeiro',
     submenu: [
-      { label: 'Faturamento', path: '/invoicing' },
-      { label: 'Pagamentos', path: '/payments' },
-      { label: 'Orçamentos', path: '/quotes' },
-      { label: 'Vendas', path: '/sales' },
-      { label: 'Fluxo de Caixa', path: '/cashflow' },
-      { label: 'Transações Bancárias', path: '/transactions' },
-      { label: 'Previsão de Caixa', path: '/cashflowforecast' }
+      { label: 'Faturamento', page: 'Invoicing' },
+      { label: 'Pagamentos', page: 'Payments' },
+      { label: 'Orçamentos', page: 'Quotes' },
+      { label: 'Vendas', page: 'Sales' },
+      { label: 'Fluxo de Caixa', page: 'CashFlow' },
+      { label: 'Transações Bancárias', page: 'Transactions' },
+      { label: 'Previsão de Caixa', page: 'CashFlowForecast' }
     ]
   },
-  { icon: Calculator, label: 'Prestação de Serviços', path: '/services' },
+  { icon: Calculator, label: 'Prestação de Serviços', page: 'Services' },
   {
     icon: FileSpreadsheet,
     label: 'Contabilidade',
     submenu: [
-      { label: 'Lançamentos', path: '/entries' },
-      { label: 'Importação CSV', path: '/importcsv' },
-      { label: 'Conciliação Bancária', path: '/bankreconciliation' },
-      { label: 'Baixa Manual', path: '/manualposting' },
-      { label: 'Plano de Contas', path: '/chartofaccounts' }
+      { label: 'Lançamentos', page: 'Entries' },
+      { label: 'Importação CSV', page: 'ImportCSV' },
+      { label: 'Conciliação Bancária', page: 'BankReconciliation' },
+      { label: 'Baixa Manual', page: 'ManualPosting' },
+      { label: 'Plano de Contas', page: 'ChartOfAccounts' }
     ]
   },
-  { icon: FileText, label: 'Notas Fiscais', path: '/taxinvoices' },
-  { icon: Calendar, label: 'Calendário Contábil', path: '/accountingcalendar' },
-  { icon: Zap, label: 'Automações', path: '/automations' },
-  { icon: BarChart3, label: 'Relatórios', path: '/reports' },
-  { icon: BarChart3, label: 'Análises', path: '/analytics' },
-  { icon: FileText, label: 'Relatórios Avançados', path: '/advancedreports' },
-  { icon: FileText, label: 'Gerenciamento de Docs', path: '/documentmanagement' },
-  { icon: PenTool, label: 'Gerenciador de Blogs', path: '/blogmanager' },
-  { icon: Phone, label: 'Comunicação', path: '/communication' },
-  { icon: UserCircle, label: 'Meu Painel', path: '/clientportal' },
-  { icon: Settings, label: 'Configurações', path: '/settings' },
-  { icon: FileText, label: 'Logs de Auditoria', path: '/auditlogs' },
-  { icon: AlertCircle, label: 'Centro de Segurança', path: '/securitycenter' }
+  { icon: FileText, label: 'Notas Fiscais', page: 'TaxInvoices' },
+  { icon: Calendar, label: 'Calendário Contábil', page: 'AccountingCalendar' },
+  { icon: Zap, label: 'Automações', page: 'Automations' },
+  { icon: BarChart3, label: 'Relatórios', page: 'Reports' },
+  { icon: BarChart3, label: 'Análises', page: 'Analytics' },
+  { icon: FileText, label: 'Relatórios Avançados', page: 'AdvancedReports' },
+  { icon: FileText, label: 'Gerenciamento de Docs', page: 'DocumentManagement' },
+  { icon: PenTool, label: 'Gerenciador de Blogs', page: 'BlogManager' },
+  { icon: Phone, label: 'Comunicação', page: 'Communication' },
+  { icon: UserCircle, label: 'Meu Painel', page: 'ClientPortal' },
+  { icon: Settings, label: 'Configurações', page: 'Settings' },
+  { icon: FileText, label: 'Logs de Auditoria', page: 'AuditLogs' },
+  { icon: AlertCircle, label: 'Centro de Segurança', page: 'SecurityCenter' }
 ];
 
 const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
@@ -75,9 +76,10 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
     setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
   }, []);
 
-  const isActive = useCallback((path) => {
-    return location.pathname === path;
-  }, [location.pathname]);
+  const isActive = useCallback((page) => {
+    const currentPage = new URLSearchParams(location.search).get('page');
+    return currentPage === page;
+  }, [location.search]);
 
   return (
     <aside className={`bg-slate-900 text-white min-h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col`}>
@@ -118,30 +120,30 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
                 {!collapsed && openMenus[item.label] && (
                   <div className="bg-slate-950">
                     {item.submenu.map((sub, subIndex) => (
-                      <Link
+                      <a
                         key={subIndex}
-                        to={sub.path}
+                        href={createPageUrl(sub.page)}
                         className={`block px-12 py-2 text-sm hover:bg-slate-800 transition-colors ${
-                          isActive(sub.path) ? 'bg-slate-800 text-blue-400' : ''
+                          isActive(sub.page) ? 'bg-slate-800 text-blue-400' : ''
                         }`}
                       >
                         {sub.label}
-                      </Link>
+                      </a>
                     ))}
                   </div>
                 )}
               </>
             ) : (
-              <Link
-                to={item.path}
+              <a
+                href={createPageUrl(item.page)}
                 className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
-                  isActive(item.path) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
+                  isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
                 }`}
                 title={collapsed ? item.label : ''}
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />
                 {!collapsed && <span className="text-sm">{item.label}</span>}
-              </Link>
+              </a>
             )}
           </div>
         ))}
