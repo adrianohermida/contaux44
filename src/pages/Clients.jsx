@@ -4,10 +4,10 @@ import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import ClientForm from '../components/dashboard/ClientForm';
 import ClientList from '../components/dashboard/ClientList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Clients() {
-  const { workspaceId, loading } = useMultitenantAuth('internal');
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useUserAndTenant } from '@/components/hooks/useUserAndTenant';
-import ProtectedInternalRoute from '@/components/auth/ProtectedInternalRoute';
+import { useUserAndTenantOptimized } from '@/components/hooks/useUserAndTenantOptimized';
 import ExportReportButton from '@/components/dashboard/ExportReportButton';
 import { FileText, Download, Trash2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
-  const { tenantId } = useUserAndTenant();
+  const { tenantId } = useUserAndTenantOptimized();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,8 +33,7 @@ export default function Reports() {
   };
 
   return (
-    <ProtectedInternalRoute>
-        <div className="space-y-6">
+    <div className="space-y-6">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold text-slate-900">Relatórios</h1>
             <ExportReportButton tenantId={tenantId} />
@@ -92,6 +90,5 @@ export default function Reports() {
             </div>
           )}
           </div>
-          </ProtectedInternalRoute>
           );
           }

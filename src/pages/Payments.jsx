@@ -4,10 +4,10 @@ import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import PaymentForm from '../components/dashboard/PaymentForm';
 import PaymentList from '../components/dashboard/PaymentList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Payments() {
-  const { workspaceId } = useMultitenantAuth('internal');
+  const { workspaceId } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingPayment, setEditingPayment] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);

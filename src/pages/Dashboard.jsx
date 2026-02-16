@@ -4,10 +4,10 @@ import { base44 } from '@/api/base44Client';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import StatCard from '../components/dashboard/StatCard';
 import AlertsCenter from '../components/dashboard/AlertsCenter';
-import { useMultitenantAuth } from '../components/auth/useMultitenantAuth';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Dashboard() {
-  const { workspaceId, loading } = useMultitenantAuth('internal');
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
