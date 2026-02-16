@@ -59,6 +59,7 @@ import AuditLogs from './pages/AuditLogs';
 import Automations from './pages/Automations';
 import BankReconciliation from './pages/BankReconciliation';
 import Blog from './pages/Blog';
+import BlogManager from './pages/BlogManager';
 import BlogSingle from './pages/BlogSingle';
 import CashFlow from './pages/CashFlow';
 import CashFlowForecast from './pages/CashFlowForecast';
@@ -93,7 +94,6 @@ import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import Welcome from './pages/Welcome';
-import BlogManager from './pages/BlogManager';
 import __Layout from './Layout.jsx';
 
 
@@ -110,6 +110,7 @@ export const PAGES = {
     "Automations": Automations,
     "BankReconciliation": BankReconciliation,
     "Blog": Blog,
+    "BlogManager": BlogManager,
     "BlogSingle": BlogSingle,
     "CashFlow": CashFlow,
     "CashFlowForecast": CashFlowForecast,
@@ -144,7 +145,6 @@ export const PAGES = {
     "Tickets": Tickets,
     "Transactions": Transactions,
     "Welcome": Welcome,
-    "BlogManager": BlogManager,
 }
 
 export const pagesConfig = {

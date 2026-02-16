@@ -63,14 +63,12 @@ export default function Blog() {
       {/* Breadcrumbs */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 sm:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4">Blog Grid Sidebar</h1>
-          <p className="text-blue-100 mb-4 sm:mb-6 text-sm sm:text-base">Business plan draws on a wide range of knowledge from different business disciplines.</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4">Blog Contaux</h1>
+          <p className="text-blue-100 mb-4 sm:mb-6 text-sm sm:text-base">Conteúdo especializado em contabilidade, jurídico e gestão empresarial</p>
           <div className="flex gap-2 text-xs sm:text-sm flex-wrap">
             <a href="/" className="hover:underline">Home</a>
             <span>/</span>
             <span>Blog</span>
-            <span>/</span>
-            <span>Blog List</span>
           </div>
         </div>
       </section>
@@ -99,13 +97,13 @@ export default function Blog() {
 
               {/* Pagination */}
               <div className="flex justify-center gap-1 sm:gap-2 mb-8 flex-wrap">
-                <button onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded hover:bg-gray-50 text-xs sm:text-sm">← Prev</button>
+                <button onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded hover:bg-gray-50 text-xs sm:text-sm">← Anterior</button>
                 {Array.from({ length: totalPages }, (_, i) => (
                   <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-2 sm:px-3 py-1 sm:py-2 rounded text-xs sm:text-sm ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-50'}`}>
                     {i + 1}
                   </button>
                 ))}
-                <button onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded hover:bg-gray-50 text-xs sm:text-sm">Next →</button>
+                <button onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded hover:bg-gray-50 text-xs sm:text-sm">Próxima →</button>
               </div>
             </div>
 
@@ -113,16 +111,16 @@ export default function Blog() {
             <div className="space-y-4 sm:space-y-8">
               {/* Search */}
               <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
-                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Search Objects</h5>
+                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Buscar Artigos</h5>
                 <div className="flex gap-2">
-                  <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value); setCurrentPage(1);}} className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs sm:text-sm" />
+                  <input type="text" placeholder="Buscar..." value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value); setCurrentPage(1);}} className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs sm:text-sm" />
                   <button className="px-2 sm:px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"><Search className="w-4 h-4" /></button>
                 </div>
               </div>
 
               {/* Popular Posts */}
               <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
-                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Popular Feeds</h5>
+                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Posts Populares</h5>
                 <div className="space-y-3 sm:space-y-4">
                   {popularPosts.map(post => (
                     <div key={post.id} className="pb-3 sm:pb-4 border-b border-gray-200 last:border-0">
@@ -135,17 +133,17 @@ export default function Blog() {
 
               {/* Categories */}
               <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
-                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Categories</h5>
+                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Categorias</h5>
                 <ul className="space-y-2">
                   {categories.map((cat, idx) => (
-                    <li key={idx}><a href="#" className="text-blue-600 hover:underline text-xs sm:text-sm flex justify-between"><span>{cat.name}</span> <span className="text-gray-400 text-xs">{cat.count}</span></a></li>
+                    <li key={idx}><a href="#" className="text-blue-600 hover:underline text-xs sm:text-sm flex justify-between"><span>{cat.name}</span></a></li>
                   ))}
                 </ul>
               </div>
 
               {/* Tags */}
               <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
-                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Popular Tags</h5>
+                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Tags Populares</h5>
                 <div className="flex flex-wrap gap-1 sm:gap-2">
                   {tags.map((tag, idx) => (
                     <a key={idx} href="#" className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded hover:bg-blue-600 hover:text-white transition-colors">{tag}</a>
