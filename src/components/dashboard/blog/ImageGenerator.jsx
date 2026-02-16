@@ -68,7 +68,13 @@ export default function ImageGenerator({ blogTitle, keywords, onImageGenerated }
         )}
       </Button>
 
-      <p className="text-xs text-slate-500 text-center">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
+        <p className="text-xs text-blue-800">
+          💡 <strong>Dica:</strong> Descreva cenários visuais específicos para melhores resultados (ex: "escritório moderno com gráficos", "pessoa trabalhando em laptop")
+        </p>
+      </div>
+
+      <p className="text-xs text-slate-500 text-center mt-2">
         A imagem será gerada automaticamente com base no título e palavras-chave do seu blog
       </p>
     </div>
