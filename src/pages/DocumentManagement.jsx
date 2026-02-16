@@ -81,7 +81,7 @@ export default function DocumentManagement() {
   };
 
   return (
-    <ProtectedInternalRoute>
+    <>
       {showForm && (
         <DocumentTemplateForm
           tenantId={tenantId}
@@ -98,7 +98,7 @@ export default function DocumentManagement() {
           }}
         />
       )}
-        <div className="space-y-6">
+      <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Gerenciamento de Documentos</h1>
@@ -209,6 +209,6 @@ export default function DocumentManagement() {
             </CardContent>
           </Card>
           </div>
-          </ProtectedInternalRoute>
+          </>
           );
           }

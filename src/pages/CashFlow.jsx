@@ -38,9 +38,7 @@ export default function CashFlow() {
   if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+    <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Fluxo de Caixa</h1>
             <p className="text-slate-600 mt-1">Entradas e saídas de caixa</p>
@@ -106,9 +104,7 @@ export default function CashFlow() {
                 </table>
               </div>
             )}
-          </div>
-        </div>
-      </DashboardLayout>
-    </ProtectedRoute>
-  );
-}
+            </div>
+            </div>
+            );
+            }

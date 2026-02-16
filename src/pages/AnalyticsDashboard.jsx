@@ -60,9 +60,7 @@ export default function AnalyticsDashboard() {
   if (!data) return <div className="flex items-center justify-center h-screen">Erro ao carregar dados</div>;
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
+    <div className="space-y-6">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold text-slate-900">Analytics</h1>
             <ExportReportButton tenantId={tenantId} />
@@ -133,27 +131,25 @@ export default function AnalyticsDashboard() {
           <ComparisonCard tenantId={tenantId} />
 
           {/* Additional Metrics */}
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h4 className="font-semibold text-slate-900 mb-4">Evolução de Clientes</h4>
-              <p className="text-3xl font-bold text-blue-600">{data.clients.filter(c => c.status === 'active').length}</p>
-              <p className="text-sm text-slate-600 mt-2">Clientes ativos</p>
-            </div>
+           <div className="grid md:grid-cols-3 gap-6">
+             <div className="bg-white rounded-lg shadow p-6">
+               <h4 className="font-semibold text-slate-900 mb-4">Evolução de Clientes</h4>
+               <p className="text-3xl font-bold text-blue-600">{data.clients.filter(c => c.status === 'active').length}</p>
+               <p className="text-sm text-slate-600 mt-2">Clientes ativos</p>
+             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <h4 className="font-semibold text-slate-900 mb-4">Tickets Abertos</h4>
-              <p className="text-3xl font-bold text-yellow-600">{data.tickets.filter(t => t.status === 'open').length}</p>
-              <p className="text-sm text-slate-600 mt-2">Aguardando atendimento</p>
-            </div>
+             <div className="bg-white rounded-lg shadow p-6">
+               <h4 className="font-semibold text-slate-900 mb-4">Tickets Abertos</h4>
+               <p className="text-3xl font-bold text-yellow-600">{data.tickets.filter(t => t.status === 'open').length}</p>
+               <p className="text-sm text-slate-600 mt-2">Aguardando atendimento</p>
+             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <h4 className="font-semibold text-slate-900 mb-4">Taxa de Resolução</h4>
-              <p className="text-3xl font-bold text-green-600">{data.metrics.avgTicketResolution}%</p>
-              <p className="text-sm text-slate-600 mt-2">Tickets resolvidos</p>
-            </div>
+             <div className="bg-white rounded-lg shadow p-6">
+               <h4 className="font-semibold text-slate-900 mb-4">Taxa de Resolução</h4>
+               <p className="text-3xl font-bold text-green-600">{data.metrics.avgTicketResolution}%</p>
+               <p className="text-sm text-slate-600 mt-2">Tickets resolvidos</p>
+             </div>
+           </div>
           </div>
-        </div>
-      </DashboardLayout>
-    </ProtectedRoute>
-  );
-}
+          );
+          }

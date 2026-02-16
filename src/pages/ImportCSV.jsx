@@ -23,20 +23,16 @@ export default function ImportCSV() {
   if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6 max-w-2xl">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Importação CSV</h1>
-            <p className="text-slate-600 mt-1">Importar dados contábeis</p>
-          </div>
+    <div className="space-y-6 max-w-2xl">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">Importação CSV</h1>
+        <p className="text-slate-600 mt-1">Importar dados contábeis</p>
+      </div>
 
-          <CSVUploadForm
-            tenantId={tenantId}
-            onSuccess={() => setRefreshKey(prev => prev + 1)}
-          />
-        </div>
-      </DashboardLayout>
-    </ProtectedRoute>
+      <CSVUploadForm
+        tenantId={tenantId}
+        onSuccess={() => setRefreshKey(prev => prev + 1)}
+      />
+    </div>
   );
 }
