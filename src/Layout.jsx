@@ -12,7 +12,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // ✅ Constante FORA do componente - criada uma única vez
 const DASHBOARD_PAGES = [
-  'Dashboard', 'VirtualCounter', 'Clients', 'Tickets', 'LegalProcesses', 
+  'Dashboard', 'VirtualCounter', 'Clients', 'Contact', 'ContactDetails', 'Tickets', 'LegalProcesses', 
   'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 
   'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 
   'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 
