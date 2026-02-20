@@ -47,10 +47,10 @@ const VirtualCounterWidget = memo(function VirtualCounterWidget() {
   }, [workspaceId]);
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg shadow p-6 border border-purple-100">
+    <div className="bg-gradient-to-br from-blue-50 to-emerald-50 rounded-lg shadow p-6 border border-blue-100">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="bg-purple-600 p-3 rounded-lg">
+          <div className="bg-blue-600 p-3 rounded-lg">
             <MessageCircle className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -59,7 +59,7 @@ const VirtualCounterWidget = memo(function VirtualCounterWidget() {
           </div>
         </div>
         {stats.unread > 0 && (
-          <span className="bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+          <span className="bg-amber-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
             {stats.unread}
           </span>
         )}
@@ -68,11 +68,11 @@ const VirtualCounterWidget = memo(function VirtualCounterWidget() {
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div className="bg-white rounded p-3">
           <p className="text-xs text-slate-600">Conversas Ativas</p>
-          <p className="text-xl font-bold text-purple-600 mt-1">{stats.active}</p>
+          <p className="text-xl font-bold text-blue-600 mt-1">{stats.active}</p>
         </div>
         <div className="bg-white rounded p-3">
           <p className="text-xs text-slate-600">Mensagens</p>
-          <p className="text-xl font-bold text-blue-600 mt-1">{stats.unread}</p>
+          <p className="text-xl font-bold text-emerald-600 mt-1">{stats.unread}</p>
         </div>
       </div>
 
@@ -80,7 +80,7 @@ const VirtualCounterWidget = memo(function VirtualCounterWidget() {
         <Button
           onClick={handleNewConversation}
           size="sm"
-          className="flex-1 bg-purple-600 hover:bg-purple-700"
+          className="flex-1 bg-blue-600 hover:bg-blue-700"
         >
           <Plus className="w-4 h-4 mr-1" />
           Nova
