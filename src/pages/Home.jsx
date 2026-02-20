@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ArrowRight } from 'lucide-react';
-import FloatingChatWidget from '../components/chat/FloatingChatWidget.jsx';
+import FloatingChatWidget from '../components/chat/FloatingChatWidget';
 
 export default function Home() {
   return (
