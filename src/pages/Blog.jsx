@@ -119,6 +119,64 @@ export default function Blog() {
         </div>
       </section>
 
+      {/* Search & Filters */}
+      <section className="bg-slate-50 py-8 sm:py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            {/* Search */}
+            <div className="sm:col-span-2">
+              <input
+                type="text"
+                placeholder="Buscar artigos..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              />
+            </div>
+            {/* Category Filter */}
+            <select
+              value={selectedCategory || ''}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value || null);
+                setCurrentPage(1);
+              }}
+              className="px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            >
+              <option value="">Todas categorias</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Tags Filter */}
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm text-slate-600">Tags:</span>
+              {tags.map(tag => (
+                <button
+                  key={tag}
+                  onClick={() => {
+                    setSelectedTag(selectedTag === tag ? null : tag);
+                    setCurrentPage(1);
+                  }}
+                  className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                    selectedTag === tag
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Blog Section */}
       <section className="py-12 sm:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
