@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ArrowRight } from 'lucide-react';
-import VirtualCounterWidget from '../components/dashboard/widgets/VirtualCounterWidget';
+import FloatingChatWidget from '../components/chat/FloatingChatWidget';
 
 export default function Home() {
   return (
@@ -137,6 +137,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Floating Chat Widget */}
+      <FloatingChatWidget />
     </div>
   );
 }
