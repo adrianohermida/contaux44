@@ -91,8 +91,9 @@ import SettingsPage from './pages/SettingsPage';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
-import Welcome from './pages/Welcome';
 import VirtualCounter from './pages/VirtualCounter';
+import Welcome from './pages/Welcome';
+import AnalyticsAdvanced from './pages/AnalyticsAdvanced';
 import __Layout from './Layout.jsx';
 
 
@@ -141,8 +142,9 @@ export const PAGES = {
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
-    "Welcome": Welcome,
     "VirtualCounter": VirtualCounter,
+    "Welcome": Welcome,
+    "AnalyticsAdvanced": AnalyticsAdvanced,
 }
 
 export const pagesConfig = {
