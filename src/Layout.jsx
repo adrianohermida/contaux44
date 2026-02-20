@@ -95,6 +95,7 @@ export default function Layout({ children, currentPageName }) {
                 {children}
               </ProtectedInternalRoute>
             </DashboardLayout>
+            <BottomNav />
             <ReactQueryDevtools initialIsOpen={false} />
           </ThemeProvider>
         </CacheProvider>
