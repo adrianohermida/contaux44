@@ -69,16 +69,19 @@ export default function ClientDetail() {
     );
   }
 
-  if (!client) {
+  if (error || !client) {
     return (
       <div className="text-center py-12">
-        <p className="text-slate-600 mb-4">Cliente não encontrado</p>
-        <Button onClick={() => navigate('/Clients')}>Voltar para Clientes</Button>
+        <p className="text-slate-600 mb-4">
+          {error ? 'Erro ao carregar cliente' : 'Cliente não encontrado'}
+        </p>
+        <Button onClick={() => navigate('/clients')}>Voltar para Clientes</Button>
       </div>
     );
   }
 
   return (
+    <ProtectedInternalRoute>
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
