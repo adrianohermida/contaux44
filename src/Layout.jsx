@@ -126,7 +126,9 @@ export default function Layout({ children, currentPageName }) {
           <ThemeProvider>
             <DashboardLayout>
               <ProtectedInternalRoute>
-                {children}
+                <RouteTransition>
+                  {children}
+                </RouteTransition>
               </ProtectedInternalRoute>
             </DashboardLayout>
             <BottomNav />
@@ -144,7 +146,9 @@ export default function Layout({ children, currentPageName }) {
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow">
-              {children}
+              <RouteTransition>
+                {children}
+              </RouteTransition>
             </main>
             <Footer />
           </div>
