@@ -3,11 +3,14 @@ import { base44 } from '@/api/base44Client';
 import { useFormState } from '@/components/modals/useFormState';
 import { useFormValidation } from '@/components/hooks/useFormValidation';
 import { useFormSubmit } from '@/components/modals/useFormSubmit';
+import { useTheme } from '@/components/hooks/useTheme';
 import ModalWrapper from '@/components/modals/ModalWrapper';
 import FormField from '@/components/modals/FormField';
 import FormActions from '@/components/modals/FormActions';
 
 export default function UserPreferences({ user, tenantId, isOpen = true, onClose, onSave }) {
+  const { theme, toggleTheme, language, setLanguage } = useTheme();
+
   const initialData = useMemo(() => ({
     notify_invoice_overdue: user?.notify_invoice_overdue ?? true,
     notify_invoice_due_soon: user?.notify_invoice_due_soon ?? true,
@@ -39,8 +42,42 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Preferências de Notificações" size="md">
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Preferências" size="md">
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Tema */}
+        <div className="space-y-3 border-b pb-4">
+          <h3 className="font-semibold text-slate-900">Aparência</h3>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-700">Tema Escuro</span>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                theme === 'dark' ? 'bg-blue-600' : 'bg-slate-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  theme === 'dark' ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Idioma */}
+        <div className="space-y-3 border-b pb-4">
+          <h3 className="font-semibold text-slate-900">Idioma</h3>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+          >
+            <option value="pt-BR">Português (Brasil)</option>
+            <option value="en-US">English (US)</option>
+            <option value="es-ES">Español</option>
+          </select>
+        </div>
         <div className="space-y-3 border-b pb-4">
           <h3 className="font-semibold text-slate-900">Tipos de Notificação</h3>
           <label className="flex items-center gap-3 cursor-pointer">

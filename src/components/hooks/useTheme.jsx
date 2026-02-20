@@ -1,56 +1,56 @@
-import { useContext, createContext, useState, useEffect } from 'react';
-import theme from '../theme';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Criar contexto de tema
 const ThemeContext = createContext();
 
-/**
- * Provider de tema - colocar em Layout.js
- */
 export function ThemeProvider({ children }) {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    // Checar preferência do usuário no localStorage
-    const saved = localStorage.getItem('contaux-theme');
-    if (saved) {
-      setIsDark(saved === 'dark');
-    } else {
-      // Checar preferência do sistema
-      setIsDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('theme') || 'light';
+    } catch {
+      return 'light';
     }
-  }, []);
+  });
+
+  const [language, setLanguage] = useState(() => {
+    try {
+      return localStorage.getItem('language') || 'pt-BR';
+    } catch {
+      return 'pt-BR';
+    }
+  });
+
+  // Aplicar tema ao DOM
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  // Aplicar idioma
+  useEffect(() => {
+    localStorage.setItem('language', language);
+    document.documentElement.lang = language.split('-')[0];
+  }, [language]);
 
   const toggleTheme = () => {
-    setIsDark(prev => {
-      const newValue = !prev;
-      localStorage.setItem('contaux-theme', newValue ? 'dark' : 'light');
-      return newValue;
-    });
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme, theme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, language, setLanguage }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-/**
- * Hook para usar tema globalmente
- * @returns {Object} { isDark, toggleTheme, theme }
- */
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {
-    console.warn('useTheme deve ser usado dentro de ThemeProvider');
-    return {
-      isDark: false,
-      toggleTheme: () => {},
-      theme,
-    };
+    throw new Error('useTheme must be used within ThemeProvider');
   }
   return context;
 }
-
-export default useTheme;
