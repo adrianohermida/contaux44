@@ -4,6 +4,7 @@ import { useUserAndTenantOptimized } from '@/components/hooks/useUserAndTenantOp
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ExportReportButton from '@/components/dashboard/ExportReportButton';
 import ReportBuilder from '@/components/dashboard/reports/ReportBuilder';
+import AdvancedReportBuilder from '@/components/dashboard/AdvancedReportBuilder';
 import RevenueChart from '@/components/dashboard/RevenueChart';
 import PaymentStatusChart from '@/components/dashboard/PaymentStatusChart';
 import TicketAnalyticsChart from '@/components/dashboard/TicketAnalyticsChart';
