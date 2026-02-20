@@ -28,7 +28,7 @@ export default function Contact() {
   });
 
   const handleNewContact = useCallback(() => {
-    navigate('/ContactDetails/new');
+    navigate('/contact/new');
   }, [navigate]);
 
   const handleViewContact = useCallback((contactId) => {
