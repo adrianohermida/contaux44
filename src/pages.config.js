@@ -125,6 +125,8 @@ import Internationalization from './pages/Internationalization';
 import PWASetupPage from './pages/PWASetupPage';
 import PrivacyDashboard from './pages/PrivacyDashboard';
 import SessionManagement from './pages/SessionManagement';
+import ComplianceReports from './pages/ComplianceReports';
+import Sprint9Tracker from './pages/Sprint9Tracker';
 import __Layout from './Layout.jsx';
 
 
@@ -207,6 +209,8 @@ export const PAGES = {
     "PWASetupPage": PWASetupPage,
     "PrivacyDashboard": PrivacyDashboard,
     "SessionManagement": SessionManagement,
+    "ComplianceReports": ComplianceReports,
+    "Sprint9Tracker": Sprint9Tracker,
 }
 
 export const pagesConfig = {
