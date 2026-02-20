@@ -1,212 +1,190 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { TrendingUp, Eye, MessageCircle, Share2, Clock, Users } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Eye, TrendingUp, Clock, MousePointer, Share2 } from 'lucide-react';
-import KeywordTracker from './KeywordTracker';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-export default function BlogAnalyticsDashboard({ blogPostId }) {
-  const [analytics, setAnalytics] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [blogPost, setBlogPost] = useState(null);
+export default function BlogAnalyticsDashboard({ blogPostId, days = 30 }) {
+  const { data: analytics = [] } = useQuery({
+    queryKey: ['blog-analytics', blogPostId, days],
+    queryFn: async () => {
+      if (!blogPostId) return [];
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - days);
+      
+      const data = await base44.entities.BlogAnalytics.filter(
+        { blog_post_id: blogPostId },
+        '-date',
+        1000
+      );
+      
+      return data.filter(a => new Date(a.date) >= cutoffDate);
+    },
+    enabled: !!blogPostId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    loadData();
-  }, [blogPostId]);
-
-  const loadData = async () => {
-    try {
-      const [analyticsData, postData] = await Promise.all([
-        base44.entities.BlogAnalytics.filter({ blog_post_id: blogPostId }, '-date', 90),
-        base44.entities.BlogPost.filter({ id: blogPostId })
-      ]);
-      setAnalytics(analyticsData);
-      setBlogPost(postData[0]);
-    } catch (error) {
-      console.error('Erro ao carregar analytics:', error);
-    } finally {
-      setLoading(false);
+  const metrics = useMemo(() => {
+    if (analytics.length === 0) {
+      return {
+        totalViews: 0,
+        uniqueVisitors: 0,
+        avgTimeOnPage: 0,
+        bounceRate: 0,
+        scrollDepth: 0,
+        shares: 0,
+        clicks: 0,
+      };
     }
-  };
 
-  if (loading) {
-    return <div className="text-center py-8">Carregando analytics...</div>;
-  }
+    return {
+      totalViews: analytics.reduce((sum, a) => sum + (a.views || 0), 0),
+      uniqueVisitors: analytics.reduce((sum, a) => sum + (a.unique_visitors || 0), 0),
+      avgTimeOnPage: Math.round(analytics.reduce((sum, a) => sum + (a.average_time_on_page || 0), 0) / analytics.length),
+      bounceRate: Math.round(analytics.reduce((sum, a) => sum + (a.bounce_rate || 0), 0) / analytics.length),
+      scrollDepth: Math.round(analytics.reduce((sum, a) => sum + (a.scroll_depth || 0), 0) / analytics.length),
+      shares: analytics.reduce((sum, a) => sum + (a.shares || 0), 0),
+      clicks: analytics.reduce((sum, a) => sum + (a.clicks || 0), 0),
+    };
+  }, [analytics]);
 
-  const totalViews = analytics.reduce((sum, a) => sum + a.views, 0);
-  const totalClicks = analytics.reduce((sum, a) => sum + a.clicks, 0);
-  const avgTimeOnPage = analytics.length > 0 ? 
-    analytics.reduce((sum, a) => sum + a.average_time_on_page, 0) / analytics.length : 0;
-  const avgBounceRate = analytics.length > 0 ? 
-    analytics.reduce((sum, a) => sum + a.bounce_rate, 0) / analytics.length : 0;
+  const chartData = useMemo(() => {
+    return analytics.reverse().map(a => ({
+      date: new Date(a.date).toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' }),
+      views: a.views || 0,
+      unique: a.unique_visitors || 0,
+      engagement: ((a.scroll_depth || 0) + (100 - (a.bounce_rate || 0))) / 2,
+    }));
+  }, [analytics]);
 
-  const chartData = analytics.slice(-30).map(a => ({
-    date: new Date(a.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-    views: a.views,
-    clicks: a.clicks,
-    uniqueVisitors: a.unique_visitors
-  }));
-
-  const sourceData = [
-    { name: 'Orgânico', value: analytics.filter(a => a.source === 'organic').length },
-    { name: 'Direto', value: analytics.filter(a => a.source === 'direct').length },
-    { name: 'Referência', value: analytics.filter(a => a.source === 'referral').length },
-    { name: 'Social', value: analytics.filter(a => a.source === 'social').length },
-    { name: 'Email', value: analytics.filter(a => a.source === 'email').length }
-  ].filter(d => d.value > 0);
-
-  const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6'];
+  const sourceData = useMemo(() => {
+    const sources = {};
+    analytics.forEach(a => {
+      const source = a.source || 'direct';
+      sources[source] = (sources[source] || 0) + (a.views || 0);
+    });
+    
+    return Object.entries(sources).map(([source, views]) => ({
+      source: source.charAt(0).toUpperCase() + source.slice(1),
+      views,
+    }));
+  }, [analytics]);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Analytics - {blogPost?.title}</h2>
-      </div>
-
-      {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600">Visualizações</p>
-                <p className="text-2xl font-bold text-blue-600">{totalViews}</p>
-              </div>
-              <Eye className="w-8 h-8 text-blue-500" />
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Visualizações</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{metrics.totalViews.toLocaleString('pt-BR')}</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600">Visitantes Únicos</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {analytics.reduce((sum, a) => sum + a.unique_visitors, 0)}
-                </p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600">Tempo Médio</p>
-                <p className="text-2xl font-bold text-purple-600">{Math.round(avgTimeOnPage)}s</p>
-              </div>
-              <Clock className="w-8 h-8 text-purple-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600">Taxa de Rejeição</p>
-                <p className="text-2xl font-bold text-orange-600">{avgBounceRate.toFixed(1)}%</p>
-              </div>
-              <MousePointer className="w-8 h-8 text-orange-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600">Compartilhamentos</p>
-                <p className="text-2xl font-bold text-pink-600">
-                  {analytics.reduce((sum, a) => sum + a.shares, 0)}
-                </p>
-              </div>
-              <Share2 className="w-8 h-8 text-pink-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Gráficos */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Visualizações nos Últimos 30 Dias</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="views" stroke="#3b82f6" name="Visualizações" />
-                <Line type="monotone" dataKey="uniqueVisitors" stroke="#10b981" name="Visitantes Únicos" />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Fontes de Tráfego</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={sourceData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {sourceData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tabela de Dispositivos */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Por Dispositivo</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {['desktop', 'mobile', 'tablet'].map(device => {
-              const deviceData = analytics.filter(a => a.device === device);
-              const deviceViews = deviceData.reduce((sum, a) => sum + a.views, 0);
-              const percentage = totalViews > 0 ? ((deviceViews / totalViews) * 100).toFixed(1) : 0;
-              
-              return (
-                <div key={device} className="flex items-center justify-between p-3 bg-slate-50 rounded">
-                  <span className="font-medium capitalize">{device}</span>
-                  <div className="flex items-center gap-4">
-                    <span className="text-slate-600">{deviceViews} views</span>
-                    <span className="text-sm text-slate-500">{percentage}%</span>
-                  </div>
-                </div>
-              );
-            })}
+            <Eye className="w-10 h-10 text-blue-500 opacity-50" />
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Keyword Tracker */}
-      <KeywordTracker blogPostId={blogPostId} />
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Visitantes Únicos</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{metrics.uniqueVisitors.toLocaleString('pt-BR')}</p>
+            </div>
+            <Users className="w-10 h-10 text-green-500 opacity-50" />
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Tempo Médio</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{metrics.avgTimeOnPage}s</p>
+            </div>
+            <Clock className="w-10 h-10 text-orange-500 opacity-50" />
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Taxa Rejeição</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{metrics.bounceRate}%</p>
+            </div>
+            <TrendingUp className="w-10 h-10 text-red-500 opacity-50" />
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Views Over Time */}
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Visualizações por Dia</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(100,116,139,0.1)" />
+              <XAxis dataKey="date" stroke="rgba(100,116,139,0.5)" />
+              <YAxis stroke="rgba(100,116,139,0.5)" />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'rgba(15,23,42,0.9)', border: 'none', borderRadius: '8px', color: '#fff' }}
+              />
+              <Legend />
+              <Line type="monotone" dataKey="views" stroke="#3b82f6" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="unique" stroke="#10b981" strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Traffic Sources */}
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Fontes de Tráfego</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={sourceData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(100,116,139,0.1)" />
+              <XAxis dataKey="source" stroke="rgba(100,116,139,0.5)" />
+              <YAxis stroke="rgba(100,116,139,0.5)" />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'rgba(15,23,42,0.9)', border: 'none', borderRadius: '8px', color: '#fff' }}
+              />
+              <Bar dataKey="views" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Additional Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <div className="flex items-center gap-3">
+            <Share2 className="w-8 h-8 text-purple-500 opacity-50" />
+            <div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Compartilhamentos</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">{metrics.shares}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <div className="flex items-center gap-3">
+            <MessageCircle className="w-8 h-8 text-pink-500 opacity-50" />
+            <div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Cliques em Links</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">{metrics.clicks}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <div className="flex items-center gap-3">
+            <TrendingUp className="w-8 h-8 text-cyan-500 opacity-50" />
+            <div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Profundidade Scroll</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">{metrics.scrollDepth}%</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

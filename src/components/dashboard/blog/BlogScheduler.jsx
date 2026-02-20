@@ -1,139 +1,114 @@
 import React, { useState } from 'react';
+import { Calendar, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, Send } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
-export default function BlogScheduler({ blogData, onSchedule }) {
+export default function BlogScheduler({ blogPostId, currentStatus, onSchedule }) {
+  const [showScheduler, setShowScheduler] = useState(false);
   const [scheduledDate, setScheduledDate] = useState('');
   const [scheduledTime, setScheduledTime] = useState('09:00');
-  const [autoShare, setAutoShare] = useState({
-    twitter: false,
-    facebook: false,
-    linkedin: false
-  });
+  const [isScheduling, setIsScheduling] = useState(false);
 
-  const handleSchedule = () => {
+  const handleSchedulePost = async () => {
     if (!scheduledDate) {
-      alert('Selecione uma data para agendamento');
+      alert('Selecione uma data');
       return;
     }
 
-    const scheduled = new Date(`${scheduledDate}T${scheduledTime}`);
-    
-    onSchedule({
-      scheduled_date: scheduled.toISOString(),
-      status: 'scheduled',
-      auto_share: autoShare
-    });
+    setIsScheduling(true);
+    try {
+      const scheduledDateTime = new Date(`${scheduledDate}T${scheduledTime}`).toISOString();
+      
+      await base44.entities.BlogPost.update(blogPostId, {
+        status: 'scheduled',
+        scheduled_date: scheduledDateTime
+      });
+
+      setShowScheduler(false);
+      setScheduledDate('');
+      setScheduledTime('09:00');
+      
+      if (onSchedule) onSchedule();
+      alert('Post agendado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao agendar post:', error);
+      alert('Erro ao agendar post');
+    } finally {
+      setIsScheduling(false);
+    }
   };
 
-  const handlePublishNow = () => {
-    onSchedule({
-      publish_date: new Date().toISOString(),
-      status: 'published',
-      auto_share: autoShare
-    });
-  };
+  const minDate = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="space-y-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
-      <h3 className="font-semibold text-slate-900">Publicação e Agendamento</h3>
+    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow space-y-4">
+      <div className="flex items-center gap-3">
+        <Calendar className="w-6 h-6 text-blue-500" />
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Agendar Publicação</h3>
+      </div>
 
-      {/* Data e Hora */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-sm font-medium mb-2">Data de Publicação</label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+      {currentStatus === 'scheduled' && (
+        <div className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-blue-900 dark:text-blue-200">Post agendado</p>
+            <p className="text-xs text-blue-700 dark:text-blue-300">Será publicado automaticamente na data e hora agendadas</p>
+          </div>
+        </div>
+      )}
+
+      {!showScheduler ? (
+        <Button 
+          onClick={() => setShowScheduler(true)}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          + Agendar Publicação
+        </Button>
+      ) : (
+        <div className="space-y-4 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+          <div>
+            <label className="block text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
+              Data de Publicação
+            </label>
             <input
               type="date"
               value={scheduledDate}
               onChange={(e) => setScheduledDate(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-              className="w-full pl-10 px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              min={minDate}
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-        </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Horário</label>
-          <div className="relative">
-            <Clock className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+          <div>
+            <label className="block text-sm font-medium text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              Horário
+            </label>
             <input
               type="time"
               value={scheduledTime}
               onChange={(e) => setScheduledTime(e.target.value)}
-              className="w-full pl-10 px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+          <div className="flex gap-2">
+            <Button
+              onClick={handleSchedulePost}
+              disabled={isScheduling || !scheduledDate}
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {isScheduling ? 'Agendando...' : 'Confirmar Agendamento'}
+            </Button>
+            <Button
+              onClick={() => setShowScheduler(false)}
+              variant="outline"
+              className="flex-1"
+            >
+              Cancelar
+            </Button>
+          </div>
         </div>
-      </div>
-
-      {/* Compartilhamento Automático */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Compartilhar Automaticamente</label>
-        <div className="space-y-2">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={autoShare.twitter}
-              onChange={(e) => setAutoShare({ ...autoShare, twitter: e.target.checked })}
-              className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
-            />
-            <span className="text-sm">Twitter/X</span>
-          </label>
-
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={autoShare.facebook}
-              onChange={(e) => setAutoShare({ ...autoShare, facebook: e.target.checked })}
-              className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
-            />
-            <span className="text-sm">Facebook</span>
-          </label>
-
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={autoShare.linkedin}
-              onChange={(e) => setAutoShare({ ...autoShare, linkedin: e.target.checked })}
-              className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
-            />
-            <span className="text-sm">LinkedIn</span>
-          </label>
-        </div>
-      </div>
-
-      {/* Ações */}
-      <div className="flex gap-2 pt-2 border-t border-slate-200">
-        <Button
-          onClick={handlePublishNow}
-          className="flex-1 bg-green-600 hover:bg-green-700 gap-2"
-        >
-          <Send className="w-4 h-4" />
-          Publicar Agora
-        </Button>
-
-        <Button
-          onClick={handleSchedule}
-          variant="outline"
-          className="flex-1 gap-2"
-        >
-          <Clock className="w-4 h-4" />
-          Agendar Publicação
-        </Button>
-      </div>
-
-      {scheduledDate && (
-        <p className="text-xs text-slate-600 text-center">
-          Será publicado em {new Date(`${scheduledDate}T${scheduledTime}`).toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          })}
-        </p>
       )}
     </div>
   );
