@@ -95,7 +95,7 @@ export default function ClientList({ refresh, onEdit }) {
             );
           })}
         </tbody>
-      </table>
+        </table>
       </div>
     </div>
   );
