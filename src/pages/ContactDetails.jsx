@@ -56,7 +56,7 @@ export default function ContactDetails() {
         tenant_id: workspaceId,
       });
     }
-  }, [contact, contactId, workspaceId, formData]);
+  }, [contact, contactId, workspaceId]);
 
   // Save mutation
   const saveMutation = useMutation({
