@@ -121,9 +121,9 @@ export default function Blog() {
       </section>
 
       {/* Search & Filters */}
-      <section className="bg-slate-50 py-8 sm:py-12">
+      <section className="bg-slate-50 dark:bg-slate-800 py-6 sm:py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
             {/* Search */}
             <div className="sm:col-span-2">
               <input
@@ -134,7 +134,7 @@ export default function Blog() {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             {/* Category Filter */}
@@ -144,7 +144,7 @@ export default function Blog() {
                 setSelectedCategory(e.target.value || null);
                 setCurrentPage(1);
               }}
-              className="px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             >
               <option value="">Todas categorias</option>
               {categories.map(cat => (
