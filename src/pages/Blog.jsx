@@ -106,9 +106,9 @@ export default function Blog() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Breadcrumbs */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 sm:py-16">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 text-white py-8 sm:py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4">Blog Contaux</h1>
           <p className="text-blue-100 mb-4 sm:mb-6 text-sm sm:text-base">Conteúdo especializado em contabilidade, jurídico e gestão empresarial</p>
