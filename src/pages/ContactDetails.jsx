@@ -11,6 +11,7 @@ import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import ContactFormField from '../components/dashboard/ContactFormField';
 import ContactDeleteButton from '../components/dashboard/ContactDeleteButton';
 import ContactMetadata from '../components/dashboard/ContactMetadata';
+import ContactCEPLookup from '../components/dashboard/ContactCEPLookup';
 import {
   validateContactForm,
   formatCPF,
@@ -298,21 +299,35 @@ export default function ContactDetails() {
               <div className="space-y-3">
                 <h3 className="font-semibold text-slate-900 dark:text-slate-100">Endereço</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <ContactFormField
-                    label="CEP"
-                    name="cep"
-                    value={formData.cep}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    error={errors.cep}
-                    formatFn={formatCEP}
-                  />
+                  <div>
+                    <ContactFormField
+                      label="CEP"
+                      name="cep"
+                      value={formData.cep}
+                      onChange={handleInputChange}
+                      disabled={!isEditing}
+                      error={errors.cep}
+                      formatFn={formatCEP}
+                    />
+                    {isEditing && formData.cep && (
+                      <div className="mt-2">
+                        <ContactCEPLookup 
+                          cep={formData.cep}
+                          disabled={!isEditing}
+                          onAddressFound={(address) => {
+                            setFormData(prev => ({ ...prev, ...address }));
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
                   <ContactFormField
                     label="Rua"
                     name="endereco"
                     value={formData.endereco}
                     onChange={handleInputChange}
                     disabled={!isEditing}
+                    placeholder="Preenchido automaticamente ao buscar CEP"
                   />
                   <ContactFormField
                     label="Número"
@@ -334,6 +349,7 @@ export default function ContactDetails() {
                     value={formData.bairro}
                     onChange={handleInputChange}
                     disabled={!isEditing}
+                    placeholder="Preenchido automaticamente ao buscar CEP"
                   />
                   <ContactFormField
                     label="Cidade"
@@ -341,6 +357,7 @@ export default function ContactDetails() {
                     value={formData.cidade}
                     onChange={handleInputChange}
                     disabled={!isEditing}
+                    placeholder="Preenchido automaticamente ao buscar CEP"
                   />
                   <ContactFormField
                     label="UF"
@@ -349,6 +366,7 @@ export default function ContactDetails() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     maxLength="2"
+                    placeholder="Preenchido automaticamente ao buscar CEP"
                   />
                 </div>
               </div>
