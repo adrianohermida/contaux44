@@ -168,6 +168,9 @@ import Sprint11Completion from './pages/Sprint11Completion';
 import Sprint12Tracker from './pages/Sprint12Tracker';
 import Sprint11FullReview from './pages/Sprint11FullReview';
 import Sprint12Planning from './pages/Sprint12Planning';
+import Sprint12Completion from './pages/Sprint12Completion';
+import Sprint13Planning from './pages/Sprint13Planning';
+import OverallProjectStatus from './pages/OverallProjectStatus';
 import __Layout from './Layout.jsx';
 
 
@@ -293,6 +296,9 @@ export const PAGES = {
     "Sprint12Tracker": Sprint12Tracker,
     "Sprint11FullReview": Sprint11FullReview,
     "Sprint12Planning": Sprint12Planning,
+    "Sprint12Completion": Sprint12Completion,
+    "Sprint13Planning": Sprint13Planning,
+    "OverallProjectStatus": OverallProjectStatus,
 }
 
 export const pagesConfig = {
