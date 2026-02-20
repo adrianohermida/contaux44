@@ -187,10 +187,32 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
 
     try {
       setSaving(true);
+      
+      // Preparar dados apenas com campos necessários
+      const clientData = {
+        tenant_id: formData.tenant_id,
+        client_type: formData.client_type,
+        company_name: formData.company_name,
+        email: formData.email,
+        phone: formData.phone,
+        cpf: formData.cpf || undefined,
+        cnpj: formData.cnpj || undefined,
+        cep: formData.cep,
+        endereco: formData.endereco,
+        numero: formData.numero,
+        complemento: formData.complemento,
+        bairro: formData.bairro,
+        cidade: formData.cidade,
+        uf: formData.uf,
+        fiscal_year_start: formData.fiscal_year_start,
+        currency: formData.currency,
+        status: formData.status
+      };
+
       if (client?.id) {
-        await base44.entities.Client.update(client.id, formData);
+        await base44.entities.Client.update(client.id, clientData);
       } else {
-        await base44.entities.Client.create(formData);
+        await base44.entities.Client.create(clientData);
       }
       
       const successMsg = client ? 'Cliente atualizado com sucesso!' : 'Cliente criado com sucesso!';
@@ -198,8 +220,8 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
       reset();
       
       setTimeout(() => {
-        onSave?.();
         onCancel?.();
+        onSave?.();
       }, 600);
     } catch (err) {
       console.error('Erro ao salvar cliente:', err);
