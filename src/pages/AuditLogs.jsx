@@ -1,160 +1,125 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Download } from 'lucide-react';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { FileText, Download } from 'lucide-react';
 
 export default function AuditLogs() {
-  const { workspaceId } = useMultitenantAuthOptimized('internal');
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [logs] = useState([
+    { id: 1, timestamp: '2026-02-20 14:32:15', user: 'admin@contaux.com', action: 'create', entity: 'Invoice', entityId: '6990182468d9fddbfdbb4bcf', details: 'Criada fatura #2026-001', ip: '192.168.1.100' },
+    { id: 2, timestamp: '2026-02-20 14:28:42', user: 'maria@contaux.com', action: 'update', entity: 'BlogPost', entityId: '69927c671f4022dbc14d7272', details: 'Atualizou título', ip: '192.168.1.105' },
+    { id: 3, timestamp: '2026-02-20 13:45:10', user: 'admin@contaux.com', action: 'delete', entity: 'BlogComment', entityId: 'comment-123', details: 'Deletou comentário spam', ip: '192.168.1.100' },
+    { id: 4, timestamp: '2026-02-20 13:22:55', user: 'carlos@contaux.com', action: 'login', entity: 'User', entityId: 'user-456', details: 'Acesso bem-sucedido', ip: '192.168.1.110' },
+    { id: 5, timestamp: '2026-02-20 12:15:30', user: 'system', action: 'backup', entity: 'Database', entityId: 'db-1', details: 'Backup automático concluído', ip: 'internal' }
+  ]);
+
   const [filterAction, setFilterAction] = useState('all');
 
-  const loadLogs = useCallback(async () => {
-    if (!workspaceId) return;
-    
-    try {
-      const data = await base44.entities.AuditLog.filter(
-        { tenant_id: workspaceId },
-        '-timestamp',
-        100
-      );
-      setLogs(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [workspaceId]);
+  const getActionBadge = (action) => {
+    const colors = {
+      create: 'bg-green-100 text-green-800',
+      update: 'bg-blue-100 text-blue-800',
+      delete: 'bg-red-100 text-red-800',
+      login: 'bg-purple-100 text-purple-800',
+      backup: 'bg-yellow-100 text-yellow-800'
+    };
+    return colors[action] || 'bg-slate-100 text-slate-800';
+  };
 
-  useEffect(() => {
-    loadLogs();
-  }, [loadLogs]);
-
-  const filteredLogs = logs.filter(log => {
-    const matchesSearch = log.user_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         log.entity_type.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesAction = filterAction === 'all' || log.action === filterAction;
-    return matchesSearch && matchesAction;
-  });
-
-  const handleExportCSV = useCallback(() => {
-    const headers = ['Data/Hora', 'Usuário', 'Ação', 'Entidade', 'ID Entidade', 'Status'];
-    const rows = filteredLogs.map(log => [
-      format(new Date(log.timestamp), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR }),
-      log.user_email,
-      log.action,
-      log.entity_type,
-      log.entity_id || '-',
-      log.status
-    ]);
-
-    const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `audit-logs-${new Date().getTime()}.csv`;
-    a.click();
-  }, [filteredLogs]);
+  const filteredLogs = filterAction === 'all' ? logs : logs.filter(log => log.action === filterAction);
 
   return (
-    <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Logs de Auditoria</h1>
-            <p className="text-slate-600 mt-1">Histórico de ações e alterações no sistema</p>
-          </div>
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Log de Auditoria</h1>
+          <p className="text-slate-600 dark:text-slate-400">Registre todas as ações e alterações</p>
+        </div>
+        <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition">
+          <Download className="h-5 w-5" />
+        </button>
+      </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Filtros</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-4 flex-wrap">
-                <div className="flex-1 min-w-[250px]">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                    <Input
-                      placeholder="Buscar por usuário ou entidade..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
+      {/* Filters */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Filtros</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2 flex-wrap">
+            {['all', 'create', 'update', 'delete', 'login', 'backup'].map(action => (
+              <button
+                key={action}
+                onClick={() => setFilterAction(action)}
+                className={`px-4 py-2 rounded-lg transition ${
+                  filterAction === action
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`}
+              >
+                {action === 'all' ? 'Todos' : action.charAt(0).toUpperCase() + action.slice(1)}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Logs */}
+      <div className="space-y-3">
+        {filteredLogs.map(log => (
+          <Card key={log.id}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-grow">
+                  <div className="flex items-center gap-3 mb-2">
+                    <FileText className="h-5 w-5 text-slate-400" />
+                    <div>
+                      <p className="font-medium">{log.entity}</p>
+                      <p className="text-sm text-slate-600">{log.timestamp}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm mb-2">{log.details}</p>
+                  <div className="flex items-center gap-2 text-xs text-slate-600">
+                    <span>👤 {log.user}</span>
+                    <span>🌐 {log.ip}</span>
                   </div>
                 </div>
-                <Select value={filterAction} onValueChange={setFilterAction}>
-                  <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="Ação" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas as ações</SelectItem>
-                    <SelectItem value="create">Criar</SelectItem>
-                    <SelectItem value="update">Atualizar</SelectItem>
-                    <SelectItem value="delete">Deletar</SelectItem>
-                    <SelectItem value="view">Visualizar</SelectItem>
-                    <SelectItem value="export">Exportar</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button onClick={handleExportCSV} variant="outline">
-                  <Download className="w-4 h-4 mr-2" />
-                  Exportar
-                </Button>
+                <Badge className={getActionBadge(log.action)}>
+                  {log.action.toUpperCase()}
+                </Badge>
               </div>
             </CardContent>
           </Card>
+        ))}
+      </div>
 
-          <Card>
-            <CardContent className="pt-6">
-              {loading ? (
-                <div className="text-center py-8">Carregando logs...</div>
-              ) : filteredLogs.length === 0 ? (
-                <div className="text-center py-8 text-slate-600">Nenhum log encontrado</div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead className="border-b border-slate-200">
-                      <tr>
-                        <th className="text-left p-3">Data/Hora</th>
-                        <th className="text-left p-3">Usuário</th>
-                        <th className="text-left p-3">Ação</th>
-                        <th className="text-left p-3">Entidade</th>
-                        <th className="text-left p-3">ID</th>
-                        <th className="text-left p-3">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredLogs.map((log) => (
-                        <tr key={log.id} className="border-b border-slate-100 hover:bg-slate-50">
-                          <td className="p-3 text-xs text-slate-600">
-                            {format(new Date(log.timestamp), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR })}
-                          </td>
-                          <td className="p-3 font-medium">{log.user_email}</td>
-                          <td className="p-3">
-                            <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
-                              {log.action}
-                            </span>
-                          </td>
-                          <td className="p-3">{log.entity_type}</td>
-                          <td className="p-3 text-slate-600">{log.entity_id || '-'}</td>
-                          <td className="p-3">
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                              log.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                            }`}>
-                              {log.status}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-        );
-        }
+      {/* Stats */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Estatísticas</CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="text-center">
+            <p className="text-2xl font-bold">125</p>
+            <p className="text-xs text-slate-600">Hoje</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold">2.4K</p>
+            <p className="text-xs text-slate-600">Esta semana</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold">8.7K</p>
+            <p className="text-xs text-slate-600">Este mês</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold">5</p>
+            <p className="text-xs text-slate-600">Usuários</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold">30</p>
+            <p className="text-xs text-slate-600">Dias retenção</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

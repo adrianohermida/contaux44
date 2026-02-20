@@ -119,6 +119,12 @@ import TwoFactorAuth from './pages/TwoFactorAuth';
 import DataBackup from './pages/DataBackup';
 import GDPRCompliance from './pages/GDPRCompliance';
 import DarkMode from './pages/DarkMode';
+import OAuth2Setup from './pages/OAuth2Setup';
+import BulkImportExport from './pages/BulkImportExport';
+import Internationalization from './pages/Internationalization';
+import PWASetupPage from './pages/PWASetupPage';
+import PrivacyDashboard from './pages/PrivacyDashboard';
+import SessionManagement from './pages/SessionManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -195,6 +201,12 @@ export const PAGES = {
     "DataBackup": DataBackup,
     "GDPRCompliance": GDPRCompliance,
     "DarkMode": DarkMode,
+    "OAuth2Setup": OAuth2Setup,
+    "BulkImportExport": BulkImportExport,
+    "Internationalization": Internationalization,
+    "PWASetupPage": PWASetupPage,
+    "PrivacyDashboard": PrivacyDashboard,
+    "SessionManagement": SessionManagement,
 }
 
 export const pagesConfig = {
