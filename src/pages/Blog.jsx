@@ -379,9 +379,9 @@ export default function Blog() {
               {/* Tags */}
               <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-3 sm:p-4 rounded-lg">
                 <h5 className="font-bold mb-2 text-sm dark:text-white">Tags Populares</h5>
-                <div className="flex flex-wrap gap-1 sm:gap-2">
+                <div className="flex flex-wrap gap-1">
                   {tags.length === 0 ? (
-                    <p className="text-xs text-slate-500">Nenhuma tag ainda</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Nenhuma tag ainda</p>
                   ) : (
                     tags.map((tag, idx) => {
                       const isActive = selectedTag === tag;
@@ -392,10 +392,10 @@ export default function Blog() {
                             setSelectedTag(isActive ? null : tag);
                             setCurrentPage(1);
                           }}
-                          className={`px-2 sm:px-3 py-1 text-xs rounded transition-colors ${
+                          className={`px-2 py-0.5 text-xs rounded transition-colors ${
                             isActive 
                               ? 'bg-blue-600 text-white' 
-                              : 'bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white'
+                              : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 hover:bg-blue-600 hover:text-white'
                           }`}
                         >
                           {tag}
