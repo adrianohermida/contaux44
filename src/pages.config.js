@@ -205,6 +205,22 @@ import RiskAssessment from './pages/RiskAssessment';
 import SustainabilityTracking from './pages/SustainabilityTracking';
 import Sprint14Completion from './pages/Sprint14Completion';
 import Sprint15Planning from './pages/Sprint15Planning';
+import Sprint14Review from './pages/Sprint14Review';
+import InfluencerCollaboration from './pages/InfluencerCollaboration';
+import VideoContentManagement from './pages/VideoContentManagement';
+import LiveStreaming from './pages/LiveStreaming';
+import ReferralProgram from './pages/ReferralProgram';
+import LoyaltyRewards from './pages/LoyaltyRewards';
+import GamificationEngine from './pages/GamificationEngine';
+import RecommendationEngine from './pages/RecommendationEngine';
+import AICharbot from './pages/AICharbot';
+import VoiceCommerce from './pages/VoiceCommerce';
+import MobileAppIntegration from './pages/MobileAppIntegration';
+import ProgressiveWebApp from './pages/ProgressiveWebApp';
+import OfflineSync from './pages/OfflineSync';
+import PushNotificationsPro from './pages/PushNotificationsPro';
+import Sprint15Completion from './pages/Sprint15Completion';
+import Sprint16Planning from './pages/Sprint16Planning';
 import __Layout from './Layout.jsx';
 
 
@@ -367,6 +383,22 @@ export const PAGES = {
     "SustainabilityTracking": SustainabilityTracking,
     "Sprint14Completion": Sprint14Completion,
     "Sprint15Planning": Sprint15Planning,
+    "Sprint14Review": Sprint14Review,
+    "InfluencerCollaboration": InfluencerCollaboration,
+    "VideoContentManagement": VideoContentManagement,
+    "LiveStreaming": LiveStreaming,
+    "ReferralProgram": ReferralProgram,
+    "LoyaltyRewards": LoyaltyRewards,
+    "GamificationEngine": GamificationEngine,
+    "RecommendationEngine": RecommendationEngine,
+    "AICharbot": AICharbot,
+    "VoiceCommerce": VoiceCommerce,
+    "MobileAppIntegration": MobileAppIntegration,
+    "ProgressiveWebApp": ProgressiveWebApp,
+    "OfflineSync": OfflineSync,
+    "PushNotificationsPro": PushNotificationsPro,
+    "Sprint15Completion": Sprint15Completion,
+    "Sprint16Planning": Sprint16Planning,
 }
 
 export const pagesConfig = {
