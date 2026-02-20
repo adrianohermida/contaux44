@@ -105,53 +105,55 @@ export default function CacheManager() {
     : 0;
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Card className="p-3 bg-blue-50">
-          <p className="text-xs text-blue-600">Hits</p>
-          <p className="text-2xl font-bold text-blue-900">{stats.hits}</p>
+    <div className="space-y-3 md:space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-3">
+        <Card className="p-2 md:p-3 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <p className="text-xs text-blue-600 font-semibold">Hits</p>
+          <p className="text-xl md:text-2xl font-bold text-blue-900">{stats.hits}</p>
         </Card>
-        <Card className="p-3 bg-red-50">
-          <p className="text-xs text-red-600">Misses</p>
-          <p className="text-2xl font-bold text-red-900">{stats.misses}</p>
+        <Card className="p-2 md:p-3 bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
+          <p className="text-xs text-amber-600 font-semibold">Misses</p>
+          <p className="text-xl md:text-2xl font-bold text-amber-900">{stats.misses}</p>
         </Card>
-        <Card className="p-3 bg-green-50">
-          <p className="text-xs text-green-600">Hit Rate</p>
-          <p className="text-2xl font-bold text-green-900">{hitRate}%</p>
+        <Card className="p-2 md:p-3 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
+          <p className="text-xs text-emerald-600 font-semibold">Hit Rate</p>
+          <p className="text-xl md:text-2xl font-bold text-emerald-900">{hitRate}%</p>
         </Card>
-        <Card className="p-3 bg-purple-50">
-          <p className="text-xs text-purple-600">Tamanho</p>
-          <p className="text-2xl font-bold text-purple-900">{stats.size}KB</p>
+        <Card className="p-2 md:p-3 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <p className="text-xs text-blue-600 font-semibold">Tamanho</p>
+          <p className="text-xl md:text-2xl font-bold text-blue-900">{stats.size}KB</p>
         </Card>
       </div>
 
-      <div className="flex gap-2">
-        <Button onClick={clearExpired} variant="outline" size="sm">
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Limpar Expirados
+      <div className="flex gap-2 flex-wrap">
+        <Button onClick={clearExpired} variant="outline" size="sm" className="text-xs">
+          <RefreshCw className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+          <span className="hidden sm:inline">Limpar Expirados</span>
+          <span className="sm:hidden">Expirados</span>
         </Button>
-        <Button onClick={clearAll} variant="destructive" size="sm">
-          <Trash2 className="w-4 h-4 mr-2" />
-          Limpar Tudo
+        <Button onClick={clearAll} variant="outline" size="sm" className="text-xs text-amber-700 border-amber-300 hover:bg-amber-50">
+          <Trash2 className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+          <span className="hidden sm:inline">Limpar Tudo</span>
+          <span className="sm:hidden">Tudo</span>
         </Button>
       </div>
 
-      <Card className="p-4">
-        <h3 className="font-semibold mb-3">Items em Cache ({Object.keys(cache).length})</h3>
-        <div className="space-y-2 max-h-96 overflow-y-auto">
+      <Card className="p-3 md:p-4 border-blue-200">
+        <h3 className="font-semibold text-sm md:text-base text-blue-900 mb-2 md:mb-3">Items em Cache ({Object.keys(cache).length})</h3>
+        <div className="space-y-1 md:space-y-2 max-h-96 overflow-y-auto">
           {Object.entries(cache).length === 0 ? (
-            <p className="text-center text-gray-500 py-4">Cache vazio</p>
+            <p className="text-center text-slate-500 py-3 md:py-4 text-sm">Cache vazio</p>
           ) : (
             Object.entries(cache).map(([key, val]) => (
-              <div key={key} className="p-2 bg-gray-50 rounded text-sm">
-                <div className="flex justify-between items-start">
-                  <p className="font-mono font-bold text-xs break-all">{key}</p>
-                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                    {val.accessCount} acessos
+              <div key={key} className="p-2 md:p-3 bg-blue-50 rounded text-xs md:text-sm border border-blue-100">
+                <div className="flex justify-between items-start gap-2 mb-1">
+                  <p className="font-mono font-bold text-xs break-all text-slate-900">{key}</p>
+                  <span className="text-xs bg-blue-200 text-blue-900 px-2 py-0.5 rounded flex-shrink-0">
+                    {val.accessCount}x
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 mt-1">
-                  Expira em: {new Date(val.expires).toLocaleTimeString()}
+                <p className="text-xs text-slate-600">
+                  Exp: {new Date(val.expires).toLocaleTimeString()}
                 </p>
               </div>
             ))

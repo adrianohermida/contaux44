@@ -35,50 +35,50 @@ export default function CachingDashboard() {
   ];
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+    <div className="space-y-3 md:space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
+        <Card className="p-3 md:p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-md transition-shadow">
           <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-gray-700">Hit Rate Target</p>
-              <p className="text-3xl font-bold text-blue-900 mt-1">> 85%</p>
+            <div className="flex-1">
+              <p className="text-xs md:text-sm text-blue-600 font-semibold">Hit Rate Target</p>
+              <p className="text-2xl md:text-3xl font-bold text-blue-900 mt-1">> 85%</p>
             </div>
-            <TrendingUp className="w-8 h-8 text-blue-400" />
+            <TrendingUp className="w-6 md:w-8 h-6 md:h-8 text-blue-600 flex-shrink-0" />
           </div>
         </Card>
 
-        <Card className="p-4 bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+        <Card className="p-3 md:p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200 hover:shadow-md transition-shadow">
           <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-gray-700">Max Cache Size</p>
-              <p className="text-3xl font-bold text-green-900 mt-1">50 items</p>
+            <div className="flex-1">
+              <p className="text-xs md:text-sm text-emerald-600 font-semibold">Max Cache Size</p>
+              <p className="text-2xl md:text-3xl font-bold text-emerald-900 mt-1">50 items</p>
             </div>
-            <BarChart3 className="w-8 h-8 text-green-400" />
+            <BarChart3 className="w-6 md:w-8 h-6 md:h-8 text-emerald-600 flex-shrink-0" />
           </div>
         </Card>
 
-        <Card className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+        <Card className="p-3 md:p-4 bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200 hover:shadow-md transition-shadow">
           <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-gray-700">Avg Latency</p>
-              <p className="text-3xl font-bold text-purple-900 mt-1">8ms</p>
+            <div className="flex-1">
+              <p className="text-xs md:text-sm text-amber-600 font-semibold">Avg Latency</p>
+              <p className="text-2xl md:text-3xl font-bold text-amber-900 mt-1">8ms</p>
             </div>
-            <Zap className="w-8 h-8 text-purple-400" />
+            <Zap className="w-6 md:w-8 h-6 md:h-8 text-amber-600 flex-shrink-0" />
           </div>
         </Card>
       </div>
 
-      <Card className="p-4">
-        <h3 className="font-semibold mb-4">Estratégias Ativas</h3>
-        <div className="space-y-3">
+      <Card className="p-3 md:p-4 border-blue-200">
+        <h3 className="font-semibold text-sm md:text-base text-blue-900 mb-3">Estratégias Ativas</h3>
+        <div className="space-y-2 md:space-y-3">
           {strategies.map((strategy, idx) => (
-            <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded">
-              <span className="text-xl">{strategy.icon}</span>
-              <div className="flex-1">
-                <p className="font-medium text-sm">{strategy.name}</p>
-                <p className="text-xs text-gray-600">{strategy.description}</p>
+            <div key={idx} className="flex items-start gap-2 md:gap-3 p-2 md:p-3 bg-blue-50 rounded">
+              <span className="text-lg md:text-xl flex-shrink-0">{strategy.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-xs md:text-sm text-slate-900">{strategy.name}</p>
+                <p className="text-xs text-slate-600">{strategy.description}</p>
               </div>
-              <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded">
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded flex-shrink-0">
                 {strategy.status}
               </span>
             </div>
@@ -86,13 +86,13 @@ export default function CachingDashboard() {
         </div>
       </Card>
 
-      <Card className="p-4">
-        <h3 className="font-semibold mb-4">Recomendações</h3>
-        <ul className="space-y-2">
+      <Card className="p-3 md:p-4 border-blue-200">
+        <h3 className="font-semibold text-sm md:text-base text-blue-900 mb-3">Recomendações</h3>
+        <ul className="space-y-1 md:space-y-2">
           {recommendations.map((rec, idx) => (
-            <li key={idx} className="flex items-start gap-2 text-sm">
-              <span className="text-blue-600 mt-1">→</span>
-              <span className="text-gray-700">{rec}</span>
+            <li key={idx} className="flex items-start gap-2 text-xs md:text-sm">
+              <span className="text-blue-600 mt-0.5 flex-shrink-0">→</span>
+              <span className="text-slate-700">{rec}</span>
             </li>
           ))}
         </ul>
