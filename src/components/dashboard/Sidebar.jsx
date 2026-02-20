@@ -136,7 +136,7 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
       </div>
 
       {/* Menu Items */}
-      <nav className="flex-1 overflow-y-auto py-4">
+      <nav className="flex-1 overflow-y-auto py-4 space-y-1">
         {menuItems.map((item, index) => (
           <div key={index}>
             {item.submenu ? (
@@ -205,6 +205,13 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
           </div>
         ))}
       </nav>
+
+      {/* Footer - Info & Version */}
+      {!collapsed && (
+        <div className="p-4 border-t border-slate-800 text-xs text-slate-500 text-center">
+          <p>Contaux v1.0.0</p>
+        </div>
+      )}
     </aside>
   );
 });
