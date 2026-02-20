@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react>
+import React, { useState, useEffect } from 'react';
 import { Activity, AlertCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
