@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Search, Calendar, MessageCircle, Eye } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 export default function Blog() {
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
@@ -18,8 +15,6 @@ export default function Blog() {
   const postsPerPage = 6;
 
   useEffect(() => {
-    loadData();
-    
     // SEO Meta Tags
     document.title = 'Blog Contaux - Conteúdo em Contabilidade e Gestão';
     const metaDescription = document.querySelector('meta[name="description"]');
@@ -33,31 +28,34 @@ export default function Blog() {
     }
   }, []);
 
-  const loadData = async () => {
-    try {
-      // Carregar posts publicados
-      const posts = await base44.entities.BlogPost.filter(
-        { status: 'published' },
-        '-publish_date',
-        50
-      );
-      setBlogPosts(posts);
+  // Query para posts publicados
+  const { data: blogPosts = [], isLoading } = useQuery({
+    queryKey: ['blog-posts-published'],
+    queryFn: () => base44.entities.BlogPost.filter(
+      { status: 'published' },
+      '-publish_date',
+      50
+    ),
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
 
-      // Carregar categorias
-      const cats = await base44.entities.BlogCategory.list();
-      setCategories(cats);
+  // Query para categorias
+  const { data: categories = [] } = useQuery({
+    queryKey: ['blog-categories'],
+    queryFn: () => base44.entities.BlogCategory.list(),
+    staleTime: 60 * 60 * 1000,
+    gcTime: 24 * 60 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
 
-      // Extrair tags únicas de todos os posts
-      const allTags = posts.flatMap(p => p.tags || []);
-      const uniqueTags = [...new Set(allTags)];
-      setTags(uniqueTags.slice(0, 12));
-
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Extrair tags únicas
+  const tags = useMemo(() => {
+    const allTags = blogPosts.flatMap(p => p.tags || []);
+    const uniqueTags = [...new Set(allTags)];
+    return uniqueTags.slice(0, 12);
+  }, [blogPosts]);
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
@@ -95,7 +93,7 @@ export default function Blog() {
     .sort((a, b) => (b.views || 0) - (a.views || 0))
     .slice(0, 3);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
