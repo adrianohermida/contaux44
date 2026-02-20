@@ -184,33 +184,28 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId,
       }
     }
 
-    await submit(
-      async () => {
-        if (client?.id) {
-          await base44.entities.Client.update(client.id, formData);
-        } else {
-          await base44.entities.Client.create(formData);
-        }
-      },
-      {
-        onSuccess: () => {
-          const successMsg = client ? 'Cliente atualizado com sucesso!' : 'Cliente criado com sucesso!';
-          toast.success(successMsg);
-          reset();
-          setTimeout(() => {
-            onSave();
-            if (modalCloseRef.current) {
-              modalCloseRef.current();
-            }
-          }, 800);
-        },
-        successMessage: null,
-        errorMessage: 'Erro ao salvar cliente. Tente novamente.',
-        tenantId,
-        entityType: 'Client',
-        action: client ? 'update' : 'create'
+    try {
+      setSaving(true);
+      if (client?.id) {
+        await base44.entities.Client.update(client.id, formData);
+      } else {
+        await base44.entities.Client.create(formData);
       }
-    );
+      
+      const successMsg = client ? 'Cliente atualizado com sucesso!' : 'Cliente criado com sucesso!';
+      toast.success(successMsg);
+      reset();
+      
+      setTimeout(() => {
+        onSave?.();
+        onCancel?.();
+      }, 600);
+    } catch (err) {
+      console.error('Erro ao salvar cliente:', err);
+      toast.error(err.message || 'Erro ao salvar cliente. Tente novamente.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
