@@ -77,7 +77,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline">Dashboard</span>
@@ -85,6 +85,10 @@ export default function Reports() {
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             <span className="hidden sm:inline">Construtor</span>
+          </TabsTrigger>
+          <TabsTrigger value="advanced" className="flex items-center gap-2">
+            <BarChart3 className="w-4 h-4" />
+            <span className="hidden sm:inline">Avançado</span>
           </TabsTrigger>
           <TabsTrigger value="saved" className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
@@ -178,6 +182,11 @@ export default function Reports() {
         {/* Report Builder */}
         <TabsContent value="builder" className="mt-6">
           {tenantId && <ReportBuilder tenantId={tenantId} />}
+        </TabsContent>
+
+        {/* Advanced Report Builder */}
+        <TabsContent value="advanced" className="mt-6">
+          {tenantId && <AdvancedReportBuilder tenantId={tenantId} />}
         </TabsContent>
 
         {/* Saved Reports */}
