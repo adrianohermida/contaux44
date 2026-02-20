@@ -95,6 +95,7 @@ import CompetitiveIntelligence from './pages/CompetitiveIntelligence';
 import ComplianceReporting from './pages/ComplianceReporting';
 import ComplianceReports from './pages/ComplianceReports';
 import Contact from './pages/Contact';
+import ContactDetails from './pages/ContactDetails';
 import ContractManagement from './pages/ContractManagement';
 import ConversionRateOptimizer from './pages/ConversionRateOptimizer';
 import ConversionTracking from './pages/ConversionTracking';
@@ -159,11 +160,11 @@ import MultiLanguageSupport from './pages/MultiLanguageSupport';
 import MyBookmarks from './pages/MyBookmarks';
 import Notifications from './pages/Notifications';
 import NotificationsCenter from './pages/NotificationsCenter';
-import PWASetup from './pages/PWASetup';
 import OAuth2Setup from './pages/OAuth2Setup';
 import OfflineSync from './pages/OfflineSync';
 import OnboardClient from './pages/OnboardClient';
 import OverallProjectStatus from './pages/OverallProjectStatus';
+import PWASetup from './pages/PWASetup';
 import PWASetupPage from './pages/PWASetupPage';
 import Payments from './pages/Payments';
 import PerformanceBenchmark from './pages/PerformanceBenchmark';
@@ -253,7 +254,6 @@ import VoiceCommerce from './pages/VoiceCommerce';
 import WebhookManagement from './pages/WebhookManagement';
 import Welcome from './pages/Welcome';
 import WhiteLabel from './pages/WhiteLabel';
-import ContactDetails from './pages/ContactDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -306,6 +306,7 @@ export const PAGES = {
     "ComplianceReporting": ComplianceReporting,
     "ComplianceReports": ComplianceReports,
     "Contact": Contact,
+    "ContactDetails": ContactDetails,
     "ContractManagement": ContractManagement,
     "ConversionRateOptimizer": ConversionRateOptimizer,
     "ConversionTracking": ConversionTracking,
@@ -370,11 +371,11 @@ export const PAGES = {
     "MyBookmarks": MyBookmarks,
     "Notifications": Notifications,
     "NotificationsCenter": NotificationsCenter,
-    "PWASetup": PWASetup,
     "OAuth2Setup": OAuth2Setup,
     "OfflineSync": OfflineSync,
     "OnboardClient": OnboardClient,
     "OverallProjectStatus": OverallProjectStatus,
+    "PWASetup": PWASetup,
     "PWASetupPage": PWASetupPage,
     "Payments": Payments,
     "PerformanceBenchmark": PerformanceBenchmark,
@@ -464,7 +465,6 @@ export const PAGES = {
     "WebhookManagement": WebhookManagement,
     "Welcome": Welcome,
     "WhiteLabel": WhiteLabel,
-    "ContactDetails": ContactDetails,
 }
 
 export const pagesConfig = {

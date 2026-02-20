@@ -32,7 +32,7 @@ export default function Contact() {
   }, [navigate]);
 
   const handleViewContact = useCallback((contactId) => {
-    navigate(`/ContactDetails/${contactId}`);
+    navigate(`/contact/${contactId}`);
   }, [navigate]);
 
   return (
