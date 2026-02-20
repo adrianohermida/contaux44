@@ -18,7 +18,7 @@ export default function MobileOptimized() {
 
           <Card className="hidden md:block p-6 bg-blue-50 border-blue-200">
             <p className="text-center text-blue-800">
-              👉 Visualize em mobile (< 768px) para ver a UI otimizada
+              👉 Visualize em mobile (viewport &lt; 768px) para ver a UI otimizada
             </p>
           </Card>
 
