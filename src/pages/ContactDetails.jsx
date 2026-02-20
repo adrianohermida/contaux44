@@ -132,7 +132,7 @@ export default function ContactDetails() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/Contact')}
+            onClick={() => navigate('/contact')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar
