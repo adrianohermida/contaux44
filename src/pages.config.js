@@ -80,11 +80,13 @@ import Blog from './pages/Blog';
 import BlogManager from './pages/BlogManager';
 import BlogSingle from './pages/BlogSingle';
 import BulkImportExport from './pages/BulkImportExport';
+import CRMEnhancementPlan from './pages/CRMEnhancementPlan';
 import CacheManagement from './pages/CacheManagement';
 import CachingStrategy from './pages/CachingStrategy';
 import CashFlow from './pages/CashFlow';
 import CashFlowForecast from './pages/CashFlowForecast';
 import ChartOfAccounts from './pages/ChartOfAccounts';
+import ClientDetail from './pages/ClientDetail';
 import ClientPanel from './pages/ClientPanel';
 import ClientPortal from './pages/ClientPortal';
 import Clients from './pages/Clients';
@@ -159,11 +161,11 @@ import MultiLanguageSupport from './pages/MultiLanguageSupport';
 import MyBookmarks from './pages/MyBookmarks';
 import Notifications from './pages/Notifications';
 import NotificationsCenter from './pages/NotificationsCenter';
+import PWASetup from './pages/PWASetup';
 import OAuth2Setup from './pages/OAuth2Setup';
 import OfflineSync from './pages/OfflineSync';
 import OnboardClient from './pages/OnboardClient';
 import OverallProjectStatus from './pages/OverallProjectStatus';
-import PWASetup from './pages/PWASetup';
 import PWASetupPage from './pages/PWASetupPage';
 import Payments from './pages/Payments';
 import PerformanceBenchmark from './pages/PerformanceBenchmark';
@@ -230,6 +232,7 @@ import Sprint16FinalReview from './pages/Sprint16FinalReview';
 import Sprint16Planning from './pages/Sprint16Planning';
 import Sprint17Completion from './pages/Sprint17Completion';
 import Sprint17Planning from './pages/Sprint17Planning';
+import Sprint18Planning from './pages/Sprint18Planning';
 import Sprint7Tracker from './pages/Sprint7Tracker';
 import Sprint8Tracker from './pages/Sprint8Tracker';
 import Sprint9Completion from './pages/Sprint9Completion';
@@ -252,9 +255,6 @@ import VoiceCommerce from './pages/VoiceCommerce';
 import WebhookManagement from './pages/WebhookManagement';
 import Welcome from './pages/Welcome';
 import WhiteLabel from './pages/WhiteLabel';
-import CRMEnhancementPlan from './pages/CRMEnhancementPlan';
-import Sprint18Planning from './pages/Sprint18Planning';
-import ClientDetail from './pages/ClientDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -292,11 +292,13 @@ export const PAGES = {
     "BlogManager": BlogManager,
     "BlogSingle": BlogSingle,
     "BulkImportExport": BulkImportExport,
+    "CRMEnhancementPlan": CRMEnhancementPlan,
     "CacheManagement": CacheManagement,
     "CachingStrategy": CachingStrategy,
     "CashFlow": CashFlow,
     "CashFlowForecast": CashFlowForecast,
     "ChartOfAccounts": ChartOfAccounts,
+    "ClientDetail": ClientDetail,
     "ClientPanel": ClientPanel,
     "ClientPortal": ClientPortal,
     "Clients": Clients,
@@ -371,11 +373,11 @@ export const PAGES = {
     "MyBookmarks": MyBookmarks,
     "Notifications": Notifications,
     "NotificationsCenter": NotificationsCenter,
+    "PWASetup": PWASetup,
     "OAuth2Setup": OAuth2Setup,
     "OfflineSync": OfflineSync,
     "OnboardClient": OnboardClient,
     "OverallProjectStatus": OverallProjectStatus,
-    "PWASetup": PWASetup,
     "PWASetupPage": PWASetupPage,
     "Payments": Payments,
     "PerformanceBenchmark": PerformanceBenchmark,
@@ -442,6 +444,7 @@ export const PAGES = {
     "Sprint16Planning": Sprint16Planning,
     "Sprint17Completion": Sprint17Completion,
     "Sprint17Planning": Sprint17Planning,
+    "Sprint18Planning": Sprint18Planning,
     "Sprint7Tracker": Sprint7Tracker,
     "Sprint8Tracker": Sprint8Tracker,
     "Sprint9Completion": Sprint9Completion,
@@ -464,9 +467,6 @@ export const PAGES = {
     "WebhookManagement": WebhookManagement,
     "Welcome": Welcome,
     "WhiteLabel": WhiteLabel,
-    "CRMEnhancementPlan": CRMEnhancementPlan,
-    "Sprint18Planning": Sprint18Planning,
-    "ClientDetail": ClientDetail,
 }
 
 export const pagesConfig = {
