@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
+import VirtualCounterWidget from '../components/dashboard/widgets/VirtualCounterWidget';
 
 const services = [
   {
@@ -270,6 +271,9 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      {/* Virtual Counter Widget */}
+      <VirtualCounterWidget />
 
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 md:py-20">
