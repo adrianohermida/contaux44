@@ -28,7 +28,7 @@ import {
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
   { icon: MessageCircle, label: 'Balcão Virtual', page: 'VirtualCounter', badge: 'unread' },
-  { icon: Users, label: 'CRM - Clientes', page: 'Clients' },
+  { icon: Users, label: 'CRM - Clientes', page: 'Contact' },
   { icon: Ticket, label: 'Helpdesk - Tickets', page: 'Tickets' },
   { icon: FileText, label: 'Processos Judiciais', page: 'LegalProcesses' },
   {
