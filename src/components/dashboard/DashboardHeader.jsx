@@ -14,6 +14,7 @@ import { useTheme } from '../hooks/useTheme';
 import UserPreferences from './UserPreferences';
 import Breadcrumbs from './Breadcrumbs';
 import SearchBox from './SearchBox';
+import MobileBackButton from '../MobileBackButton';
 
 const DashboardHeader = memo(function DashboardHeader() {
   const { user, tenantId } = useUserAndTenantOptimized();
