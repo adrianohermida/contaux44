@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AddressManagementTab from '../components/dashboard/AddressManagementTab';
 import ContactManagementTab from '../components/dashboard/ContactManagementTab';
 import ShareholderManagementTab from '../components/dashboard/ShareholderManagementTab';
+import FiscalDataPanel from '../components/dashboard/FiscalDataPanel';
+import DigitalCertificateTab from '../components/dashboard/DigitalCertificateTab';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function ClientDetail() {
@@ -114,10 +116,12 @@ export default function ClientDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="addresses" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="addresses">Endereços</TabsTrigger>
-          <TabsTrigger value="contacts">Contatos</TabsTrigger>
-          <TabsTrigger value="shareholders">Sócios</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-5">
+          <TabsTrigger value="addresses" className="text-xs sm:text-sm">Endereços</TabsTrigger>
+          <TabsTrigger value="contacts" className="text-xs sm:text-sm">Contatos</TabsTrigger>
+          <TabsTrigger value="shareholders" className="text-xs sm:text-sm">Sócios</TabsTrigger>
+          <TabsTrigger value="fiscal" className="text-xs sm:text-sm">Fiscal</TabsTrigger>
+          <TabsTrigger value="certificates" className="text-xs sm:text-sm">Certs</TabsTrigger>
         </TabsList>
 
         <TabsContent value="addresses" className="bg-white rounded-lg shadow p-6">
@@ -130,6 +134,14 @@ export default function ClientDetail() {
 
         <TabsContent value="shareholders" className="bg-white rounded-lg shadow p-6">
           <ShareholderManagementTab clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
+
+        <TabsContent value="fiscal" className="bg-white rounded-lg shadow p-6">
+          <FiscalDataPanel clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
+
+        <TabsContent value="certificates" className="bg-white rounded-lg shadow p-6">
+          <DigitalCertificateTab clientId={client.id} tenantId={workspaceId} />
         </TabsContent>
       </Tabs>
     </div>
