@@ -1,118 +1,199 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import { jsPDF } from 'npm:jspdf@4.0.0';
 
-/**
- * Gera relatório PDF com dados de fatura
- */
 Deno.serve(async (req) => {
   try {
     if (req.method !== 'POST') {
-      return Response.json({ error: 'Only POST allowed' }, { status: 405 });
-    }
-
-    const body = await req.json();
-    const { tenant_id, invoice_id } = body;
-
-    if (!tenant_id || !invoice_id) {
-      return Response.json({ error: 'Missing tenant_id or invoice_id' }, { status: 400 });
+      return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
     }
 
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
 
-    // Busca fatura e cliente
-    const invoices = await base44.asServiceRole.entities.Invoice.filter({ tenant_id, id: invoice_id });
-    if (!invoices || invoices.length === 0) {
-      return Response.json({ error: 'Invoice not found' }, { status: 404 });
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 
-    const invoice = invoices[0];
-    
-    const clients = await base44.asServiceRole.entities.Client.filter({ tenant_id, id: invoice.client_id });
-    const client = clients?.[0];
+    const { data, title = 'Relatório Contaux' } = await req.json();
 
-    // Cria PDF
     const doc = new jsPDF();
-    
+    let y = 20;
+    const pageHeight = doc.internal.pageSize.height;
+    const margin = 20;
+    const maxWidth = doc.internal.pageSize.width - 2 * margin;
+
     // Cabeçalho
-    doc.setFontSize(20);
-    doc.text('FATURA', 20, 20);
-    
-    doc.setFontSize(10);
-    doc.text(`Número: ${invoice.invoice_number}`, 20, 35);
-    doc.text(`Data: ${new Date(invoice.issue_date).toLocaleDateString('pt-BR')}`, 20, 42);
-    doc.text(`Vencimento: ${new Date(invoice.due_date).toLocaleDateString('pt-BR')}`, 20, 49);
+    doc.setFontSize(16);
+    doc.text(title, margin, y);
+    y += 10;
 
-    // Cliente
-    doc.setFontSize(12);
-    doc.text('CLIENTE', 20, 65);
     doc.setFontSize(10);
-    doc.text(`${client?.company_name || 'N/A'}`, 20, 75);
-    doc.text(`Email: ${client?.email || 'N/A'}`, 20, 82);
-    doc.text(`Telefone: ${client?.phone || 'N/A'}`, 20, 89);
+    doc.setTextColor(100);
+    doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`, margin, y);
+    y += 15;
 
-    // Itens
-    doc.setFontSize(12);
-    doc.text('ITENS', 20, 110);
-    
-    let yPos = 120;
-    doc.setFontSize(10);
-    doc.text('Descrição', 20, yPos);
-    doc.text('Qtd', 100, yPos);
-    doc.text('Valor Unit.', 130, yPos);
-    doc.text('Total', 170, yPos);
-    
-    yPos += 10;
-    
-    if (invoice.items && Array.isArray(invoice.items)) {
-      invoice.items.forEach(item => {
-        const lineTotal = (item.quantity || 0) * (item.unit_price || 0);
-        doc.text(item.description?.substring(0, 30) || '', 20, yPos);
-        doc.text(String(item.quantity || 0), 100, yPos);
-        doc.text(`R$ ${(item.unit_price || 0).toFixed(2)}`, 130, yPos);
-        doc.text(`R$ ${lineTotal.toFixed(2)}`, 170, yPos);
-        yPos += 7;
+    // Funções auxiliares
+    const checkPageBreak = (space = 10) => {
+      if (y + space > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+    };
+
+    const addSectionTitle = (title) => {
+      checkPageBreak(10);
+      doc.setFontSize(12);
+      doc.setTextColor(0);
+      doc.text(title, margin, y);
+      y += 8;
+      doc.setDrawColor(200);
+      doc.line(margin, y, margin + maxWidth, y);
+      y += 5;
+    };
+
+    // Faturas
+    if (data.invoices && data.invoices.length > 0) {
+      addSectionTitle('Faturas');
+      
+      const invoiceHeaders = ['Número', 'Valor', 'Data', 'Status'];
+      const invoiceData = data.invoices.map(inv => [
+        inv.invoice_number,
+        `R$ ${(inv.total_amount || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+        new Date(inv.issue_date).toLocaleDateString('pt-BR'),
+        inv.status
+      ]);
+
+      doc.setFontSize(9);
+      let tableY = y;
+      
+      // Cabeçalho da tabela
+      doc.setFillColor(240, 240, 240);
+      const colWidths = [30, 35, 30, 30];
+      let currentX = margin;
+      invoiceHeaders.forEach((header, idx) => {
+        doc.text(header, currentX, tableY);
+        currentX += colWidths[idx];
       });
+      
+      tableY += 7;
+      
+      // Dados da tabela
+      invoiceData.forEach(row => {
+        checkPageBreak(8);
+        currentX = margin;
+        row.forEach((cell, idx) => {
+          doc.text(String(cell), currentX, tableY);
+          currentX += colWidths[idx];
+        });
+        tableY += 7;
+      });
+
+      y = tableY + 5;
     }
 
-    // Totais
-    yPos += 10;
-    doc.setFontSize(11);
-    doc.text(`Subtotal: R$ ${((invoice.total_amount - invoice.tax_amount) || 0).toFixed(2)}`, 120, yPos);
-    yPos += 8;
-    doc.text(`Impostos: R$ ${(invoice.tax_amount || 0).toFixed(2)}`, 120, yPos);
-    yPos += 8;
-    doc.setFontSize(12);
-    doc.text(`TOTAL: R$ ${(invoice.total_amount || 0).toFixed(2)}`, 120, yPos);
+    // Pagamentos
+    if (data.payments && data.payments.length > 0) {
+      addSectionTitle('Pagamentos');
+      
+      const paymentHeaders = ['Valor', 'Data', 'Método', 'Status'];
+      const paymentData = data.payments.map(pmt => [
+        `R$ ${(pmt.amount || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+        new Date(pmt.created_date).toLocaleDateString('pt-BR'),
+        pmt.payment_method || '-',
+        pmt.status
+      ]);
 
-    // Status
-    yPos += 15;
-    doc.setFontSize(10);
-    doc.text(`Status: ${invoice.status.toUpperCase()}`, 20, yPos);
+      doc.setFontSize(9);
+      let tableY = y;
+      
+      const colWidths = [35, 35, 35, 30];
+      let currentX = margin;
+      paymentHeaders.forEach((header, idx) => {
+        doc.text(header, currentX, tableY);
+        currentX += colWidths[idx];
+      });
+      
+      tableY += 7;
+      
+      paymentData.forEach(row => {
+        checkPageBreak(8);
+        currentX = margin;
+        row.forEach((cell, idx) => {
+          doc.text(String(cell), currentX, tableY);
+          currentX += colWidths[idx];
+        });
+        tableY += 7;
+      });
 
-    // Log no audit
-    await base44.asServiceRole.entities.AuditLog.create({
-      tenant_id,
-      user_email: 'pdf@export',
-      action: 'export',
-      entity_type: 'Invoice',
-      entity_id: invoice_id,
-      new_values: { format: 'PDF' },
-      ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-      user_agent: 'pdf-generator',
-      status: 'success',
-      timestamp: new Date().toISOString()
+      y = tableY + 5;
+    }
+
+    // Clientes
+    if (data.clients && data.clients.length > 0) {
+      addSectionTitle('Clientes');
+      
+      const clientHeaders = ['Nome', 'Email', 'Tipo', 'Status'];
+      const clientData = data.clients.map(cli => [
+        cli.company_name.substring(0, 20),
+        cli.email.substring(0, 25),
+        cli.client_type === 'pf' ? 'PF' : 'PJ',
+        cli.status
+      ]);
+
+      doc.setFontSize(9);
+      let tableY = y;
+      
+      const colWidths = [30, 40, 20, 20];
+      let currentX = margin;
+      clientHeaders.forEach((header, idx) => {
+        doc.text(header, currentX, tableY);
+        currentX += colWidths[idx];
+      });
+      
+      tableY += 7;
+      
+      clientData.forEach(row => {
+        checkPageBreak(8);
+        currentX = margin;
+        row.forEach((cell, idx) => {
+          doc.text(String(cell), currentX, tableY);
+          currentX += colWidths[idx];
+        });
+        tableY += 7;
+      });
+
+      y = tableY + 5;
+    }
+
+    // Rodapé
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text('Contaux - Plataforma de Gestão', margin, pageHeight - 10);
+
+    // Gerar PDF
+    const pdfBytes = doc.output('arraybuffer');
+    
+    // Upload para storage
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const fileName = `relatorio-${timestamp}.pdf`;
+    
+    const uploadedFile = await base44.integrations.Core.UploadFile({
+      file: new Blob([pdfBytes], { type: 'application/pdf' })
     });
 
-    const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
-
-    return new Response(pdfBuffer, {
+    return new Response(JSON.stringify({ 
+      success: true,
+      file_url: uploadedFile.file_url 
+    }), {
       status: 200,
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="invoice_${invoice.invoice_number}.pdf"`
-      }
+      headers: { 'Content-Type': 'application/json' }
     });
+
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Erro ao gerar PDF:', error);
+    return new Response(JSON.stringify({ 
+      error: 'Erro ao gerar relatório PDF',
+      details: error.message 
+    }), { status: 500 });
   }
 });
