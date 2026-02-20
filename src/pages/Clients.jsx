@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import ClientFormEnhanced from '../components/dashboard/ClientFormEnhanced';
@@ -7,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Clients() {
+  const navigate = useNavigate();
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
@@ -18,16 +20,13 @@ export default function Clients() {
     setRefreshKey(prev => prev + 1);
     // If a new client was created, navigate to its details
     if (createdClientId) {
-      setTimeout(() => {
-        window.location.href = `/clientdetail/${createdClientId}`;
-      }, 300);
+      navigate(`/ClientDetail/${createdClientId}`);
     }
-  }, []);
+  }, [navigate]);
 
   const handleEdit = useCallback((client) => {
-    setEditingClient(client);
-    setShowForm(true);
-  }, []);
+    navigate(`/ClientDetail/${client.id}`);
+  }, [navigate]);
 
   const handleNewClient = useCallback(() => {
     setEditingClient(null);
