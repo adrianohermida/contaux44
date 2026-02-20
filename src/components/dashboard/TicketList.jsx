@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, AlertCircle } from 'lucide-react';
@@ -35,6 +36,7 @@ TicketRow.displayName = 'TicketRow';
 export default function TicketList({ tenantId, onEdit, onRefresh }) {
   const { invalidateRelated } = useCacheStrategy();
   const { isConnected } = useRealtimeSync('Ticket', tenantId);
+  const parentRef = useRef(null);
 
   const { data: tickets = [], isLoading: loading, refetch } = useQuery({
     queryKey: ['Ticket-list', tenantId],
@@ -45,7 +47,15 @@ export default function TicketList({ tenantId, onEdit, onRefresh }) {
       });
     },
     enabled: !!tenantId,
-    staleTime: 2 * 60 * 1000,
+    staleTime: 3 * 60 * 1000, // ✅ 3 min - dados dinâmicos mas não críticos
+  });
+
+  // Virtualização
+  const virtualizer = useVirtualizer({
+    count: tickets.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 72,
+    overscan: 5,
   });
 
   useEffect(() => {

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2 } from 'lucide-react';
@@ -34,6 +35,7 @@ InvoiceRow.displayName = 'InvoiceRow';
 export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
   const { invalidateRelated } = useCacheStrategy();
   const { isConnected } = useRealtimeSync('Invoice', tenantId);
+  const parentRef = useRef(null);
 
   const { data: invoices = [], isLoading: loading, refetch } = useQuery({
     queryKey: ['Invoice-list', tenantId],
@@ -44,7 +46,15 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
       });
     },
     enabled: !!tenantId,
-    staleTime: 2 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // ✅ 5 min - dados financeiros mudam moderadamente
+  });
+
+  // Virtualização
+  const virtualizer = useVirtualizer({
+    count: invoices.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 68,
+    overscan: 5,
   });
 
   useEffect(() => {

@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { base44 } from '@/api/base44Client';
 import { Trash2, Edit2, Eye } from 'lucide-react';
 import { useMultitenantAuthOptimized } from '../auth/useMultitenantAuthOptimized';
@@ -8,6 +9,7 @@ import { useCacheStrategy } from '../hooks/useCacheStrategy';
 export default function ClientList({ refresh, onEdit }) {
   const { workspaceId } = useMultitenantAuthOptimized('internal');
   const { invalidateRelated } = useCacheStrategy();
+  const parentRef = useRef(null);
 
   const { data: clients = [], isLoading, refetch } = useQuery({
     queryKey: ['clients', workspaceId],
@@ -19,7 +21,15 @@ export default function ClientList({ refresh, onEdit }) {
       });
     },
     enabled: !!workspaceId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, // ✅ 10 min - dados mudam pouco
+  });
+
+  // Virtualização - renderiza apenas itens visíveis
+  const virtualizer = useVirtualizer({
+    count: clients.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 60, // altura estimada de cada linha
+    overscan: 5, // renderizar 5 itens extras acima/abaixo
   });
 
   React.useEffect(() => {
@@ -44,10 +54,11 @@ export default function ClientList({ refresh, onEdit }) {
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
-      <table className="w-full">
-        <thead className="bg-slate-50 border-b">
-          <tr>
-            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Empresa</th>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-slate-50 border-b sticky top-0 z-10">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Empresa</th>
             <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Email</th>
             <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Telefone</th>
             <th className="px-6 py-3 text-right text-sm font-medium text-slate-900">Ações</th>
