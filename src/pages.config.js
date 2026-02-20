@@ -86,10 +86,8 @@ import CachingStrategy from './pages/CachingStrategy';
 import CashFlow from './pages/CashFlow';
 import CashFlowForecast from './pages/CashFlowForecast';
 import ChartOfAccounts from './pages/ChartOfAccounts';
-import ClientDetail from './pages/ClientDetail';
 import ClientPanel from './pages/ClientPanel';
 import ClientPortal from './pages/ClientPortal';
-import Clients from './pages/Clients';
 import CohortAnalysisTool from './pages/CohortAnalysisTool';
 import CommentThreading from './pages/CommentThreading';
 import Communication from './pages/Communication';
@@ -299,10 +297,8 @@ export const PAGES = {
     "CashFlow": CashFlow,
     "CashFlowForecast": CashFlowForecast,
     "ChartOfAccounts": ChartOfAccounts,
-    "ClientDetail": ClientDetail,
     "ClientPanel": ClientPanel,
     "ClientPortal": ClientPortal,
-    "Clients": Clients,
     "CohortAnalysisTool": CohortAnalysisTool,
     "CommentThreading": CommentThreading,
     "Communication": Communication,
