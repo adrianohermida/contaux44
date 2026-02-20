@@ -105,6 +105,7 @@ import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
+import ServicesPage from './pages/ServicesPage';
 import __Layout from './Layout.jsx';
 
 
@@ -167,6 +168,7 @@ export const PAGES = {
     "Transactions": Transactions,
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
+    "ServicesPage": ServicesPage,
 }
 
 export const pagesConfig = {
