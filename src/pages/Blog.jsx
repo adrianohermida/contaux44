@@ -264,10 +264,10 @@ export default function Blog() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-4 sm:space-y-8">
+            <div className="space-y-4 sm:space-y-6">
               {/* Search */}
-              <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
-                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Buscar Artigos</h5>
+              <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-3 sm:p-4 rounded-lg">
+                <h5 className="font-bold mb-3 text-sm dark:text-white">Filtros</h5>
                 <div className="flex gap-2">
                   <input 
                     type="text" 
@@ -277,32 +277,32 @@ export default function Blog() {
                       setSearchTerm(e.target.value); 
                       setCurrentPage(1);
                     }} 
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs sm:text-sm" 
+                    className="flex-1 px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs" 
                   />
-                  <button className="px-2 sm:px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    <Search className="w-4 h-4" />
+                  <button className="px-2 py-1 sm:py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs sm:text-sm">
+                    <Search className="w-3 h-3 sm:w-4 sm:h-4" />
                   </button>
                 </div>
                 
                 {/* Active filters */}
                 {(selectedCategory || selectedTag || searchTerm) && (
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-2 flex flex-wrap gap-1">
                     {searchTerm && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-xs rounded">
                         Busca: "{searchTerm}"
-                        <button onClick={() => {setSearchTerm(''); setCurrentPage(1);}} className="hover:text-blue-900">×</button>
+                        <button onClick={() => {setSearchTerm(''); setCurrentPage(1);}} className="hover:font-bold">×</button>
                       </span>
                     )}
                     {selectedCategory && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-xs rounded">
                         Categoria
-                        <button onClick={() => {setSelectedCategory(null); setCurrentPage(1);}} className="hover:text-blue-900">×</button>
+                        <button onClick={() => {setSelectedCategory(null); setCurrentPage(1);}} className="hover:font-bold">×</button>
                       </span>
                     )}
                     {selectedTag && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
-                        Tag: {selectedTag}
-                        <button onClick={() => {setSelectedTag(null); setCurrentPage(1);}} className="hover:text-blue-900">×</button>
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-xs rounded">
+                        {selectedTag}
+                        <button onClick={() => {setSelectedTag(null); setCurrentPage(1);}} className="hover:font-bold">×</button>
                       </span>
                     )}
                     <button 
@@ -312,16 +312,16 @@ export default function Blog() {
                         setSelectedTag(null);
                         setCurrentPage(1);
                       }}
-                      className="text-xs text-slate-600 hover:text-slate-900 underline"
+                      className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 underline"
                     >
-                      Limpar filtros
+                      Limpar
                     </button>
                   </div>
                 )}
               </div>
 
               {/* Popular Posts */}
-              <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
+              <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-3 sm:p-4 rounded-lg">
                 <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Posts Populares</h5>
                 <div className="space-y-3 sm:space-y-4">
                   {popularPosts.length === 0 ? (
