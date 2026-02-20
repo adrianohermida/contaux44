@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 const teamMembers = [
-  { name: 'Dr. Ricardo Silva', role: 'Diretor de Produtos' },
-  { name: 'Fernanda Santos', role: 'Gerente de Clientes' },
-  { name: 'João Pereira', role: 'Desenvolvedor Sênior' },
-  { name: 'Marina Costa', role: 'Especialista em Contabilidade' },
+  { name: 'Dr. Ricardo Silva', role: 'Contador Responsável' },
+  { name: 'Fernanda Santos', role: 'Especialista em Contabilidade Judicial' },
+  { name: 'João Pereira', role: 'Contador Sênior' },
+  { name: 'Marina Costa', role: 'Especialista em Custas Judiciais' },
 ];
 
 const services = [
-  { icon: '👥', title: 'Gestão de Clientes', desc: 'CRM completo para gerenciar PF e PJ com documentos e histórico' },
-  { icon: '📊', title: 'Dashboard Financeiro', desc: 'Relatórios em tempo real sobre receitas, despesas e fluxo de caixa' },
-  { icon: '📋', title: 'Gestão de Processos Jurídicos', desc: 'Organização completa de casos com prazos e acompanhamento automático' },
-  { icon: '💰', title: 'Faturamento Inteligente', desc: 'Emissão de invoices com integração contábil e rastreamento de pagamentos' },
+  { icon: '⚖️', title: 'Contabilidade Judicial', desc: 'Cálculos complexos de custas, honorários e planos de pagamento para processos judiciais' },
+  { icon: '📋', title: 'Pareceres Técnicos', desc: 'Emissão de pareceres contábeis e técnicos para assessoria jurídica' },
+  { icon: '💼', title: 'Cálculos Especializados', desc: 'Revisão bancária, cálculos trabalhistas, pensão alimentícia e superendividamento' },
+  { icon: '📄', title: 'Guias de Recolhimento', desc: 'Geração automatizada de guias de recolhimento e documentação fiscal' },
 ];
 
 export default function About() {
