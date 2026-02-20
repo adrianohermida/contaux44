@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { wsService } from '../services/WebSocketService';
+import wsService from '../services/WebSocketService';
 
 /**
  * Hook para detectar e resolver conflitos de edição multi-usuário
