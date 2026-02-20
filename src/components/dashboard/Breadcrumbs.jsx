@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ChevronRight, LayoutDashboard } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { useTheme } from '../hooks/useTheme';
 
 const breadcrumbMap = {
   '/dashboard': { label: 'Dashboard', icon: LayoutDashboard },
@@ -38,6 +38,7 @@ const breadcrumbMap = {
 
 export default function Breadcrumbs() {
   const location = useLocation();
+  const { theme } = useTheme();
   
   const breadcrumbs = useMemo(() => {
     const path = location.pathname;
@@ -61,13 +62,21 @@ export default function Breadcrumbs() {
   if (breadcrumbs.length <= 1) return null;
 
   return (
-    <nav className="flex items-center gap-2 text-sm text-slate-600 px-6 py-2 bg-slate-50 border-b border-slate-200" aria-label="Breadcrumb">
+    <nav className={`flex items-center gap-2 text-sm px-6 py-2 transition-colors ${
+      theme === 'dark'
+        ? 'bg-slate-800 border-b border-slate-700 text-slate-400'
+        : 'bg-slate-50 border-b border-slate-200 text-slate-600'
+    }`} aria-label="Breadcrumb">
       {breadcrumbs.map((crumb, idx) => (
         <React.Fragment key={crumb.path}>
-          {idx > 0 && <ChevronRight className="w-4 h-4 text-slate-400" />}
+          {idx > 0 && <ChevronRight className={`w-4 h-4 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`} />}
           <a
             href={crumb.path}
-            className="hover:text-slate-900 hover:underline transition-colors"
+            className={`hover:underline transition-colors ${
+              theme === 'dark'
+                ? 'hover:text-slate-200'
+                : 'hover:text-slate-900'
+            }`}
           >
             {crumb.label}
           </a>

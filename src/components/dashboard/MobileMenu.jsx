@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
 import {
   LayoutDashboard,
   Users,
@@ -57,6 +58,7 @@ const menuItems = [
 
 export default function MobileMenu() {
   const location = useLocation();
+  const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
 
@@ -71,9 +73,13 @@ export default function MobileMenu() {
   return (
     <>
       {/* Hamburger Button - visible only on mobile */}
-      <button
+       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="hidden max-md:block fixed top-4 left-4 z-50 p-2 bg-slate-900 text-white rounded-lg"
+        className={`hidden max-md:block fixed top-4 left-4 z-50 p-2 rounded-lg transition-colors ${
+          theme === 'dark'
+            ? 'bg-slate-700 text-slate-200'
+            : 'bg-slate-900 text-white'
+        }`}
       >
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
@@ -82,14 +88,18 @@ export default function MobileMenu() {
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/50 z-40 max-md:block hidden"
-            onClick={() => setIsOpen(false)}
-          />
+           <div
+             className="fixed inset-0 bg-black/50 z-40 max-md:block hidden"
+             onClick={() => setIsOpen(false)}
+           />
 
-          {/* Drawer */}
-          <div className="fixed left-0 top-0 h-full w-64 bg-slate-900 text-white z-40 overflow-y-auto max-md:block hidden flex flex-col">
-            <div className="p-4 border-b border-slate-800 flex-shrink-0">
+           {/* Drawer */}
+           <div className={`fixed left-0 top-0 h-full w-64 z-40 max-md:block hidden flex flex-col transition-colors ${
+             theme === 'dark'
+               ? 'bg-slate-800 text-slate-200'
+               : 'bg-slate-900 text-white'
+           }`}>
+            <div className={`p-4 flex-shrink-0 border-b ${theme === 'dark' ? 'border-slate-700' : 'border-slate-800'}`}>
               <h2 className="text-xl font-bold">Contaux</h2>
             </div>
 
@@ -100,7 +110,11 @@ export default function MobileMenu() {
                     <>
                       <button
                         onClick={() => toggleSubmenu(item.label)}
-                        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors text-left"
+                        className={`w-full px-4 py-3 flex items-center gap-3 transition-colors text-left ${
+                          theme === 'dark'
+                            ? 'hover:bg-slate-700'
+                            : 'hover:bg-slate-800'
+                        }`}
                       >
                         <item.icon className="w-5 h-5 flex-shrink-0" />
                         <span className="text-sm flex-1">{item.label}</span>
@@ -112,13 +126,19 @@ export default function MobileMenu() {
                       </button>
 
                       {openMenus[item.label] && (
-                        <div className="bg-slate-950 space-y-1">
+                        <div className={`space-y-1 ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-950'}`}>
                           {item.submenu.map((sub, subIndex) => (
                             <a
                               key={subIndex}
                               href={`/${sub.page.toLowerCase()}`}
-                              className={`block px-12 py-2 text-sm hover:bg-slate-800 transition-colors ${
-                                isActive(sub.page) ? 'bg-slate-800 text-blue-400' : ''
+                              className={`block px-12 py-2 text-sm transition-colors ${
+                                isActive(sub.page)
+                                  ? theme === 'dark'
+                                    ? 'bg-slate-600 text-blue-300'
+                                    : 'bg-slate-800 text-blue-400'
+                                  : theme === 'dark'
+                                  ? 'hover:bg-slate-600'
+                                  : 'hover:bg-slate-800'
                               }`}
                               onClick={() => setIsOpen(false)}
                             >
@@ -130,10 +150,16 @@ export default function MobileMenu() {
                     </>
                   ) : (
                     <a
-                      href={`/${item.page.toLowerCase()}`}
-                      className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
-                        isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
-                      }`}
+                       href={`/${item.page.toLowerCase()}`}
+                       className={`block px-4 py-3 flex items-center gap-3 transition-colors ${
+                         isActive(item.page)
+                           ? theme === 'dark'
+                             ? 'bg-slate-600 border-l-4 border-blue-400'
+                             : 'bg-slate-800 border-l-4 border-blue-500'
+                           : theme === 'dark'
+                           ? 'hover:bg-slate-700'
+                           : 'hover:bg-slate-800'
+                       }`}
                       onClick={() => setIsOpen(false)}
                     >
                       <item.icon className="w-5 h-5 flex-shrink-0" />
