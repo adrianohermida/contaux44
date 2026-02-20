@@ -26,6 +26,18 @@ export default function Blog() {
       meta.content = 'Artigos especializados em contabilidade, jurídico e gestão empresarial. Fique por dentro das novidades do setor.';
       document.head.appendChild(meta);
     }
+
+    // Add schema.org for Blog listing
+    const schemaScript = document.createElement('script');
+    schemaScript.type = 'application/ld+json';
+    schemaScript.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Blog',
+      'name': 'Blog Contaux',
+      'description': 'Artigos especializados em contabilidade, jurídico e gestão empresarial',
+      'url': 'https://hermidamaia.adv.br/blog'
+    });
+    document.head.appendChild(schemaScript);
   }, []);
 
   // Query para posts publicados
