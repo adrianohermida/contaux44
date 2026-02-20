@@ -88,12 +88,12 @@ export default function MobileMenu() {
           />
 
           {/* Drawer */}
-          <div className="fixed left-0 top-0 h-full w-64 bg-slate-900 text-white z-40 overflow-y-auto max-md:block hidden">
-            <div className="p-4 border-b border-slate-800">
+          <div className="fixed left-0 top-0 h-full w-64 bg-slate-900 text-white z-40 overflow-y-auto max-md:block hidden flex flex-col">
+            <div className="p-4 border-b border-slate-800 flex-shrink-0">
               <h2 className="text-xl font-bold">Contaux</h2>
             </div>
 
-            <nav className="py-4 space-y-1">
+            <nav className="py-4 space-y-1 overflow-y-auto flex-1">
               {menuItems.map((item, index) => (
                 <div key={index}>
                   {item.submenu ? (

@@ -61,18 +61,18 @@ export default function Breadcrumbs() {
   if (breadcrumbs.length <= 1) return null;
 
   return (
-    <div className="flex items-center gap-2 text-sm text-slate-600 px-6 py-2 bg-slate-50 border-b border-slate-200">
+    <nav className="flex items-center gap-2 text-sm text-slate-600 px-6 py-2 bg-slate-50 border-b border-slate-200" aria-label="Breadcrumb">
       {breadcrumbs.map((crumb, idx) => (
         <React.Fragment key={crumb.path}>
-          {idx > 0 && <ChevronRight className="w-4 h-4" />}
+          {idx > 0 && <ChevronRight className="w-4 h-4 text-slate-400" />}
           <a
             href={crumb.path}
-            className="hover:text-slate-900 transition-colors"
+            className="hover:text-slate-900 hover:underline transition-colors"
           >
             {crumb.label}
           </a>
         </React.Fragment>
       ))}
-    </div>
+    </nav>
   );
 }

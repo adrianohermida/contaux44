@@ -1,5 +1,6 @@
 import React, { useState, useCallback, memo } from 'react';
 import { useLocation } from 'react-router-dom';
+import SidebarShortcuts from './SidebarShortcuts';
 import {
   LayoutDashboard,
   Users,
@@ -205,6 +206,9 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
           </div>
         ))}
       </nav>
+
+      {/* Shortcuts */}
+      {!collapsed && <SidebarShortcuts />}
 
       {/* Footer - Info & Version */}
       {!collapsed && (
