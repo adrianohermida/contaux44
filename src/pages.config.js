@@ -253,6 +253,7 @@ import WebhookManagement from './pages/WebhookManagement';
 import Welcome from './pages/Welcome';
 import WhiteLabel from './pages/WhiteLabel';
 import CRMEnhancementPlan from './pages/CRMEnhancementPlan';
+import Sprint18Planning from './pages/Sprint18Planning';
 import __Layout from './Layout.jsx';
 
 
@@ -463,6 +464,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "WhiteLabel": WhiteLabel,
     "CRMEnhancementPlan": CRMEnhancementPlan,
+    "Sprint18Planning": Sprint18Planning,
 }
 
 export const pagesConfig = {
