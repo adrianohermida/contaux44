@@ -73,7 +73,7 @@ export default function ContactDetails() {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
       setIsEditing(false);
       if (contactId === 'new') {
-        navigate(`/ContactDetails/${result.id}`);
+        navigate(`/contact/${result.id}`);
       }
     },
   });
