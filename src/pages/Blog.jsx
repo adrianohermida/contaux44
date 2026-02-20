@@ -4,6 +4,7 @@ import { Search, Calendar, MessageCircle, Eye } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import VirtualCounterWidget from '../components/dashboard/widgets/VirtualCounterWidget';
 
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
