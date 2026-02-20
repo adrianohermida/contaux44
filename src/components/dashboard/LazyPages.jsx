@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react';
 
 // Lazy load de páginas do dashboard
 export const LazyDashboard = lazy(() => import('../../pages/Dashboard'));
+export const LazyVirtualCounter = lazy(() => import('../../pages/VirtualCounter'));
 export const LazyClients = lazy(() => import('../../pages/Clients'));
 export const LazyTickets = lazy(() => import('../../pages/Tickets'));
 export const LazyLegalProcesses = lazy(() => import('../../pages/LegalProcesses'));
