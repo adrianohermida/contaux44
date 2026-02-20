@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from './components/auth/ProtectedInternalRoute';
+import BottomNav from './components/BottomNav';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // ✅ Constante FORA do componente - criada uma única vez
@@ -23,9 +24,11 @@ const DASHBOARD_PAGES = [
 export default function Layout({ children, currentPageName }) {
   const setupTheme = () => {
     try {
-      const saved = localStorage.getItem('theme') || 'light';
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = saved ? saved === 'dark' : prefersDark;
       const root = document.documentElement;
-      if (saved === 'dark') {
+      if (isDark) {
         root.classList.add('dark');
       } else {
         root.classList.remove('dark');
