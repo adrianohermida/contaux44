@@ -51,9 +51,6 @@ import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
 import AdvancedReports from './pages/AdvancedReports';
-import AdvancedReportsPage from './pages/AdvancedReportsPage';
-import Analytics from './pages/Analytics';
-import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import App from './pages/App';
 import AuditLogs from './pages/AuditLogs';
 import Automations from './pages/Automations';
@@ -104,9 +101,6 @@ export const PAGES = {
     "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
     "AdvancedReports": AdvancedReports,
-    "AdvancedReportsPage": AdvancedReportsPage,
-    "Analytics": Analytics,
-    "AnalyticsDashboard": AnalyticsDashboard,
     "App": App,
     "AuditLogs": AuditLogs,
     "Automations": Automations,
