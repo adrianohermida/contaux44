@@ -3,10 +3,11 @@ import { base44 } from '@/api/base44Client';
 import { useFormState } from '@/components/modals/useFormState';
 import { useFormValidation } from '@/components/hooks/useFormValidation';
 import { useFormSubmit } from '@/components/modals/useFormSubmit';
+import { useViaCEP, formatCEP, validateCEP } from '@/components/hooks/useViaCEP';
 import ModalWrapper from '@/components/modals/ModalWrapper';
 import FormField from '@/components/modals/FormField';
 import FormActions from '@/components/modals/FormActions';
-import { AlertCircle, CheckCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, MapPin, Loader } from 'lucide-react';
 
 const VALIDATION_RULES = {
   company_name: {
