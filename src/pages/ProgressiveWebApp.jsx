@@ -25,7 +25,7 @@ export default function ProgressiveWebApp() {
           <CardContent><div className="text-2xl font-bold text-green-600">100%</div></CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Tamanho App</CardTitle></CardContent>
+          <CardHeader className="pb-2"><CardTitle className="text-sm">Tamanho App</CardTitle></CardHeader>
           <CardContent><div className="text-2xl font-bold">3.2 MB</div></CardContent>
         </Card>
       </div>
