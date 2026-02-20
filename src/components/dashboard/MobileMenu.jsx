@@ -75,6 +75,8 @@ export default function MobileMenu() {
       {/* Hamburger Button - visible only on mobile */}
        <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}
+        aria-expanded={isOpen}
         className={`hidden max-md:block fixed top-4 left-4 z-50 p-2 rounded-lg transition-colors ${
           theme === 'dark'
             ? 'bg-slate-700 text-slate-200'

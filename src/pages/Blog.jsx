@@ -19,6 +19,18 @@ export default function Blog() {
 
   useEffect(() => {
     loadData();
+    
+    // SEO Meta Tags
+    document.title = 'Blog Contaux - Conteúdo em Contabilidade e Gestão';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.content = 'Artigos especializados em contabilidade, jurídico e gestão empresarial. Fique por dentro das novidades do setor.';
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Artigos especializados em contabilidade, jurídico e gestão empresarial. Fique por dentro das novidades do setor.';
+      document.head.appendChild(meta);
+    }
   }, []);
 
   const loadData = async () => {
