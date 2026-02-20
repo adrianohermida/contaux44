@@ -116,7 +116,7 @@ export default function ContactDetails() {
       <ProtectedInternalRoute>
         <div className="text-center py-12">
           <p className="text-slate-600 dark:text-slate-400 mb-4">Erro ao carregar contato</p>
-          <Button onClick={() => navigate('/Contact')}>Voltar para Contatos</Button>
+          <Button onClick={() => navigate('/contact')}>Voltar para Contatos</Button>
         </div>
       </ProtectedInternalRoute>
     );
