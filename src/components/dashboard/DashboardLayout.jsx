@@ -23,7 +23,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
+    <div className="flex min-h-screen bg-white dark:bg-slate-950 transition-colors">
       {/* Mobile Menu - sempre no topo em mobile */}
       <MobileMenu />
 
@@ -40,7 +40,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
         {/* Header - sempre visível e consistente */}
         <DashboardHeader />
         
-        <main className="flex-1 p-3 sm:p-4 md:p-6 bg-white md:bg-slate-50 dark:bg-slate-900 pb-24 md:pb-6">
+        <main className="flex-1 p-4 sm:p-6 md:p-8 bg-white dark:bg-slate-950 pb-24 md:pb-8 overflow-y-auto">
           {children}
         </main>
       </div>
