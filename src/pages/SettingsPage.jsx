@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import IntegrationsManager from '../components/dashboard/IntegrationsManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Save, LogOut, Settings } from 'lucide-react';
+import { Save, LogOut, Settings, Trash2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function SettingsPage() {
