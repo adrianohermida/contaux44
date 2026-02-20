@@ -7,7 +7,7 @@ import { useViaCEP, formatCEP, validateCEP } from '@/components/hooks/useViaCEP'
 import ModalWrapper from '@/components/modals/ModalWrapper';
 import FormField from '@/components/modals/FormField';
 import FormActions from '@/components/modals/FormActions';
-import { AlertCircle, CheckCircle, MapPin, Loader } from 'lucide-react';
+import { AlertCircle, CheckCircle, MapPin, Loader, Wifi, WifiOff } from 'lucide-react';
 import { toast } from 'sonner';
 
 const VALIDATION_RULES = {
