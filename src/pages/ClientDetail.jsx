@@ -197,32 +197,8 @@ export default function ClientDetail() {
           <BankReconciliationPanel clientId={client.id} tenantId={workspaceId} />
         </TabsContent>
 
-        <TabsContent value="taxes" className="bg-white rounded-lg shadow p-6">
-          <TaxCalculationPanel clientId={client.id} tenantId={workspaceId} />
-        </TabsContent>
-
-        <TabsContent value="nfe" className="bg-white rounded-lg shadow p-6">
-          <NFeIntegrationPanel clientId={client.id} tenantId={workspaceId} />
-        </TabsContent>
-
-        <TabsContent value="compliance" className="bg-white rounded-lg shadow p-6">
-          <ComplianceDashboardPanel clientId={client.id} tenantId={workspaceId} />
-        </TabsContent>
-
-        <TabsContent value="workflows" className="bg-white rounded-lg shadow p-6">
-          <AutomatedWorkflowPanel clientId={client.id} tenantId={workspaceId} />
-        </TabsContent>
-
-        <TabsContent value="notifications" className="bg-white rounded-lg shadow p-6">
-          <NotificationCenterPanel clientId={client.id} tenantId={workspaceId} />
-        </TabsContent>
-
-        <TabsContent value="advanced-analytics" className="bg-white rounded-lg shadow p-6">
-          <AdvancedAnalyticsDashboard clientId={client.id} tenantId={workspaceId} />
-        </TabsContent>
-
-        <TabsContent value="custom-reports" className="bg-white rounded-lg shadow p-6">
-          <CustomReportBuilder clientId={client.id} tenantId={workspaceId} />
+        <TabsContent value="reconciliation" className="bg-white rounded-lg shadow p-6">
+          <BankReconciliationPanel clientId={client.id} tenantId={workspaceId} />
         </TabsContent>
       </Tabs>
       </div>
