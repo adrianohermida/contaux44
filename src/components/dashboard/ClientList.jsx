@@ -16,7 +16,7 @@ export default function ClientList({ refresh, onEdit }) {
     queryFn: async () => {
       if (!workspaceId) return [];
       return base44.entities.Client.filter({ 
-        workspace_id: workspaceId,
+        tenant_id: workspaceId,
         status: 'active'
       });
     },
@@ -58,7 +58,8 @@ export default function ClientList({ refresh, onEdit }) {
         <table className="w-full">
           <thead className="bg-slate-50 border-b sticky top-0 z-10">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Empresa</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Tipo</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Empresa/Nome</th>
             <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Email</th>
             <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Telefone</th>
             <th className="px-6 py-3 text-right text-sm font-medium text-slate-900">Ações</th>
@@ -80,6 +81,15 @@ export default function ClientList({ refresh, onEdit }) {
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
               >
+                <td className="px-6 py-4 text-sm">
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    client.client_type === 'pf' 
+                      ? 'bg-blue-100 text-blue-800' 
+                      : 'bg-green-100 text-green-800'
+                  }`}>
+                    {client.client_type === 'pf' ? 'PF' : 'PJ'}
+                  </span>
+                </td>
                 <td className="px-6 py-4 text-sm text-slate-900">{client.company_name}</td>
                 <td className="px-6 py-4 text-sm text-slate-600">{client.email}</td>
                 <td className="px-6 py-4 text-sm text-slate-600">{client.phone}</td>
