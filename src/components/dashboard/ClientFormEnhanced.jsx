@@ -251,10 +251,12 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
         status: formData.status
       };
 
+      let createdClientId;
       if (client?.id) {
         await base44.entities.Client.update(client.id, clientData);
       } else {
-        await base44.entities.Client.create(clientData);
+        const newClient = await base44.entities.Client.create(clientData);
+        createdClientId = newClient.id;
       }
       
       const successMsg = client ? 'Cliente atualizado com sucesso!' : 'Cliente criado com sucesso!';
@@ -263,7 +265,7 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
       
       setTimeout(() => {
         onCancel?.();
-        onSave?.();
+        onSave?.(createdClientId);
       }, 600);
     } catch (err) {
       console.error('Erro ao salvar cliente:', err);
