@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useFormState } from '@/components/modals/useFormState';
 import { useFormValidation } from '@/components/hooks/useFormValidation';
@@ -80,6 +80,7 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId,
   const { fetchAddress, loading: cepLoading, error: cepError, clearError: clearCepError } = useViaCEP();
   const [documentValidation, setDocumentValidation] = useState({});
   const [addressReadOnly, setAddressReadOnly] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const currencyOptions = [
     { value: 'BRL', label: 'Real (BRL)' },
