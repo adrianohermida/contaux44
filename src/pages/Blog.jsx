@@ -211,35 +211,35 @@ export default function Blog() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 mb-6 sm:mb-12">
                   {paginatedPosts.map(post => (
                     <Link key={post.id} to={`${createPageUrl('BlogSingle')}?id=${post.id}`}>
-                      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 h-full">
+                      <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 flex gap-4">
                         {post.featured_image && (
                           <img 
                             src={post.featured_image} 
                             alt={post.title} 
-                            className="w-full h-40 sm:h-48 object-cover" 
+                            className="w-24 h-24 sm:w-32 sm:h-32 object-cover flex-shrink-0 rounded-lg" 
                             loading="lazy" 
                           />
                         )}
-                        <div className="p-4 sm:p-6">
-                          <h4 className="font-bold text-base sm:text-lg mb-2 hover:text-blue-600 line-clamp-2">
+                        <div className="p-3 sm:p-4 flex-1 min-w-0">
+                          <h4 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white mb-1 hover:text-blue-600 dark:hover:text-blue-400 line-clamp-2">
                             {post.title}
                           </h4>
-                          <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">
+                          <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mb-2 line-clamp-2">
                             {post.excerpt}
                           </p>
-                          <div className="flex items-center justify-between text-xs text-gray-500">
-                            <div className="flex items-center gap-2">
-                              <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center">
-                                <span className="text-[10px] font-bold text-blue-600">
+                          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <div className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0">
+                                <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400">
                                   {post.author?.charAt(0)?.toUpperCase()}
                                 </span>
                               </div>
-                              <span>BY {post.author}</span>
+                              <span className="truncate">{post.author}</span>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 flex-shrink-0">
                               <Eye className="w-3 h-3" />
                               <span>{post.views || 0}</span>
                             </div>
