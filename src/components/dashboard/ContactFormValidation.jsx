@@ -92,35 +92,39 @@ export const formatCEP = (value) => {
 };
 
 export const validateContactForm = (data) => {
-  const errors = {};
+   const errors = {};
 
-  if (!data.company_name?.trim()) {
-    errors.company_name = 'Nome da empresa é obrigatório';
-  }
+   if (!data.company_name?.trim()) {
+     errors.company_name = 'Nome da empresa é obrigatório';
+   }
 
-  if (!data.email?.trim()) {
-    errors.email = 'Email é obrigatório';
-  } else if (!validateEmail(data.email)) {
-    errors.email = 'Email inválido';
-  }
+   if (!data.email?.trim()) {
+     errors.email = 'Email é obrigatório';
+   } else if (!validateEmail(data.email)) {
+     errors.email = 'Email inválido';
+   }
 
-  if (data.client_type === 'pf') {
-    if (data.cpf && !validateCPF(data.cpf)) {
-      errors.cpf = 'CPF inválido';
-    }
-  } else {
-    if (data.cnpj && !validateCNPJ(data.cnpj)) {
-      errors.cnpj = 'CNPJ inválido';
-    }
-  }
+   if (data.client_type === 'pf') {
+     if (!data.cpf?.trim()) {
+       errors.cpf = 'CPF é obrigatório';
+     } else if (!validateCPF(data.cpf)) {
+       errors.cpf = 'CPF inválido';
+     }
+   } else {
+     if (!data.cnpj?.trim()) {
+       errors.cnpj = 'CNPJ é obrigatório';
+     } else if (!validateCNPJ(data.cnpj)) {
+       errors.cnpj = 'CNPJ inválido';
+     }
+   }
 
-  if (data.phone && !validatePhone(data.phone)) {
-    errors.phone = 'Telefone inválido';
-  }
+   if (data.phone && !validatePhone(data.phone)) {
+     errors.phone = 'Telefone inválido';
+   }
 
-  if (data.cep && !validateCEP(data.cep)) {
-    errors.cep = 'CEP inválido';
-  }
+   if (data.cep && !validateCEP(data.cep)) {
+     errors.cep = 'CEP inválido';
+   }
 
-  return errors;
-};
+   return errors;
+ };

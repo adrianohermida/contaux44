@@ -10,6 +10,7 @@ import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAu
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import ContactFormField from '../components/dashboard/ContactFormField';
 import ContactDeleteButton from '../components/dashboard/ContactDeleteButton';
+import ContactMetadata from '../components/dashboard/ContactMetadata';
 import {
   validateContactForm,
   formatCPF,
@@ -69,6 +70,12 @@ export default function ContactDetails() {
     }
   }, [contact, contactId, workspaceId]);
 
+  // Warn before leaving with unsaved changes
+  React.useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isEditing, formData]);
+
   // Save mutation
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -121,8 +128,24 @@ export default function ContactDetails() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    // Limpar erros do campo e campos relacionados
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: null }));
+      setErrors(prev => {
+        const newErrors = { ...prev, [name]: null };
+        // Limpar erros de CPF/CNPJ ao mudar tipo
+        if (name === 'client_type') {
+          newErrors.cpf = null;
+          newErrors.cnpj = null;
+        }
+        return newErrors;
+      });
+    }
+  };
+
+  const handleBeforeUnload = (e) => {
+    if (isEditing && formData) {
+      e.preventDefault();
+      e.returnValue = '';
     }
   };
 
@@ -225,7 +248,7 @@ export default function ContactDetails() {
                     value={formData.client_type}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
                   >
                     <option value="pf">Pessoa Física</option>
                     <option value="pj">Pessoa Jurídica</option>
@@ -263,7 +286,7 @@ export default function ContactDetails() {
                     value={formData.status}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
                   >
                     <option value="active">Ativo</option>
                     <option value="inactive">Inativo</option>
@@ -355,10 +378,15 @@ export default function ContactDetails() {
                   />
                 )}
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </ProtectedInternalRoute>
-  );
-}
+
+              {/* Metadata */}
+              {!isEditing && contactId !== 'new' && (
+                <ContactMetadata contact={contact} />
+              )}
+              </div>
+              </CardContent>
+              </Card>
+              </div>
+              </ProtectedInternalRoute>
+              );
+              }
