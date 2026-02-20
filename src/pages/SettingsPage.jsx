@@ -89,14 +89,20 @@ export default function SettingsPage() {
                 <Input label="Nome Completo" name="full_name" value={formData.full_name || ''} onChange={handleChange} />
                 <Input label="Função" value={formData.role || ''} disabled />
                 
-                <div className="flex gap-3 pt-4">
-                  <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700">
-                    <Save className="w-4 h-4 mr-2" />
-                    {saving ? 'Salvando...' : 'Salvar Alterações'}
-                  </Button>
-                  <Button onClick={handleLogout} variant="outline" className="text-red-600 hover:text-red-700">
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Logout
+                <div className="flex flex-col gap-3 pt-4">
+                  <div className="flex gap-3">
+                    <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700">
+                      <Save className="w-4 h-4 mr-2" />
+                      {saving ? 'Salvando...' : 'Salvar Alterações'}
+                    </Button>
+                    <Button onClick={handleLogout} variant="outline" className="text-red-600 hover:text-red-700">
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  </div>
+                  <Button onClick={handleDeleteAccount} variant="destructive" className="w-full bg-red-600 hover:bg-red-700">
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Deletar Conta
                   </Button>
                 </div>
               </div>
