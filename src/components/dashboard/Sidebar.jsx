@@ -48,14 +48,14 @@ const menuItems = [
     label: 'Contabilidade',
     submenu: [
       { label: 'Lançamentos', page: 'Entries' },
-      { label: 'Importação CSV', page: 'ImportCSV' },
+      { label: 'Plano de Contas', page: 'ChartOfAccounts' },
       { label: 'Conciliação Bancária', page: 'BankReconciliation' },
       { label: 'Baixa Manual', page: 'ManualPosting' },
-      { label: 'Plano de Contas', page: 'ChartOfAccounts' }
+      { label: 'Notas Fiscais', page: 'TaxInvoices' },
+      { label: 'Calendário Contábil', page: 'AccountingCalendar' },
+      { label: 'Importação CSV', page: 'ImportCSV' }
     ]
   },
-  { icon: FileText, label: 'Notas Fiscais', page: 'TaxInvoices' },
-  { icon: Calendar, label: 'Calendário Contábil', page: 'AccountingCalendar' },
   { icon: Zap, label: 'Automações', page: 'Automations' },
   { icon: BarChart3, label: 'Relatórios & Análises', page: 'Reports' },
   { icon: FileText, label: 'Gerenciamento de Docs', page: 'DocumentManagement' },
