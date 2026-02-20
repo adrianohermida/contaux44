@@ -6,38 +6,50 @@ import { CheckCircle2, ArrowRight } from 'lucide-react';
 const services = [
   {
     icon: '⚖️',
-    title: 'Gestão de Processos Judiciais',
-    desc: 'Organize e acompanhe todos os processos com prazos automáticos, documentação centralizada e atualizações de status em tempo real.',
-    details: ['Acompanhamento de audiências', 'Controle de prazos processuais', 'Arquivo digital de documentos', 'Alertas automáticos de vencimentos']
-  },
-  {
-    icon: '📊',
-    title: 'Gestão Financeira Integrada',
-    desc: 'Dashboard completo com fluxo de caixa, receitas, despesas e análise de rentabilidade por cliente e projeto.',
-    details: ['Faturamento automatizado', 'Relatórios financeiros', 'Análise de lucratividade', 'Previsão de caixa']
-  },
-  {
-    icon: '👥',
-    title: 'CRM para Clientes',
-    desc: 'Banco de dados centralizado de clientes (PF e PJ) com histórico completo de interações, documentos e contratos.',
-    details: ['Cadastro PF e PJ', 'Histórico de comunicações', 'Armazenamento de documentos', 'Portal do cliente']
+    title: 'Contabilidade Judicial',
+    desc: 'Cálculos especializados de custas processuais, honorários e gestão de planos de pagamento para processos judiciais.',
+    details: ['Cálculo de custas judiciais', 'Planos de pagamento', 'Compensação de custas', 'Análise de honorários']
   },
   {
     icon: '📋',
-    title: 'Faturamento e Cobranças',
-    desc: 'Emita invoices automáticas, acompanhe pagamentos e gere relatórios de contas a receber com facilidade.',
-    details: ['Geração de faturas', 'Rastreamento de pagamentos', 'Lembretes automáticos', 'Relatórios detalhados']
+    title: 'Pareceres Técnicos',
+    desc: 'Emissão de pareceres contábeis e técnicos para subsidiar decisões jurídicas e assessoria de escritórios.',
+    details: ['Parecer contábil', 'Parecer técnico', 'Laudo financeiro', 'Avaliação patrimonial']
   },
   {
-    icon: '📈',
-    title: 'Relatórios e Analytics',
-    desc: 'Analise performance do seu escritório com dashboards customizáveis e métricas de negócio em tempo real.',
-    details: ['Dashboards interativos', 'Relatórios customizáveis', 'Análise de tendências', 'Exportação de dados']
+    icon: '💼',
+    title: 'Cálculos Trabalhistas',
+    desc: 'Cálculos especializados de diferenças salariais, horas extras, indenizações e contribuições rescisórias.',
+    details: ['Cálculo de diferenças salariais', 'Horas extras e adicionais', 'Indenizações trabalhistas', 'FGTS e verbas rescisórias']
+  },
+  {
+    icon: '👨‍👩‍👧',
+    title: 'Pensão Alimentícia',
+    desc: 'Cálculos de pensão alimentícia, revisão de alimentos e análise de capacidade contributiva.',
+    details: ['Cálculo inicial de alimentos', 'Revisão de pensão', 'Capacidade contributiva', 'Planilhas de evolução']
+  },
+  {
+    icon: '🏦',
+    title: 'Revisão Bancária',
+    desc: 'Análise e revisão de operações bancárias, juros abusivos e cálculos de restituição.',
+    details: ['Análise de juros', 'Revisão de operações', 'Cálculo de restituição', 'Parecer técnico bancário']
+  },
+  {
+    icon: '💳',
+    title: 'Superendividamento',
+    desc: 'Análise de situação de endividamento, cálculos de renegociação e estudos de viabilidade financeira.',
+    details: ['Análise de endividamento', 'Plano de renegociação', 'Viabilidade financeira', 'Parecer sobre alívio de dívidas']
+  },
+  {
+    icon: '📄',
+    title: 'Guias de Recolhimento',
+    desc: 'Geração automatizada de guias de recolhimento (DARF, GPS, FGTS) e documentação fiscal.',
+    details: ['Geração DARF', 'GPS e contribuições', 'Recolhimento FGTS', 'Comprovantes de recolhimento']
   },
   {
     icon: '🔐',
     title: 'Segurança e Conformidade',
-    desc: 'Seus dados protegidos com criptografia, backup automático e conformidade com LGPD e segurança jurídica.',
+    desc: 'Seus dados protegidos com criptografia, backup automático e conformidade com LGPD e legislação jurídica.',
     details: ['Criptografia end-to-end', 'Backup automático', 'Conformidade LGPD', 'Auditoria de acessos']
   }
 ];
@@ -45,82 +57,82 @@ const services = [
 const howItWorks = [
   {
     number: '1',
-    title: 'Cadastre Seus Clientes',
-    desc: 'Organize clientes (PF e PJ) com documentos, contatos e histórico centralizado.'
+    title: 'Envie a Documentação',
+    desc: 'Forneça todos os documentos do processo: sentença, decisão, contrato ou acordo para análise.'
   },
   {
     number: '2',
-    title: 'Registre Processos e Serviços',
-    desc: 'Crie processos judiciais ou registre serviços com prazos e acompanhamento automático.'
+    title: 'Análise Especializada',
+    desc: 'Nossa equipe analisa a documentação e realiza cálculos conforme a legislação aplicável.'
   },
   {
     number: '3',
-    title: 'Fature e Monitore Pagamentos',
-    desc: 'Gere invoices automáticas e rastreie pagamentos com lembretes integrados.'
+    title: 'Emissão de Parecer',
+    desc: 'Receba parecer técnico, cálculos detalhados e guias de recolhimento prontos para uso.'
   },
   {
     number: '4',
-    title: 'Acompanhe com Relatórios',
-    desc: 'Visualize performance, rentabilidade e análises em dashboards dinâmicos.'
+    title: 'Suporte Continuado',
+    desc: 'Disponível para esclarecimentos e ajustes conforme necessário para seu caso.'
   }
 ];
 
 const pricingTiers = [
   {
-    name: 'Starter',
-    price: 'R$ 99',
-    period: '/mês',
-    description: 'Para pequenos escritórios',
+    name: 'Serviço Básico',
+    price: 'Sob Consulta',
+    period: 'por demanda',
+    description: 'Para cálculos pontuais',
     features: [
-      'Até 50 clientes',
-      'Até 100 processos',
-      'Dashboard básico',
-      'Suporte por email',
-      'Backup diário'
+      'Cálculos simples',
+      'Parecer técnico',
+      'Guia de recolhimento',
+      'Resposta em 48h',
+      'Email de contato'
     ],
-    cta: 'Começar Agora'
+    cta: 'Solicitar Orçamento'
   },
   {
-    name: 'Professional',
-    price: 'R$ 249',
+    name: 'Contrato Mensal',
+    price: 'Sob Consulta',
     period: '/mês',
-    description: 'Para médios escritórios',
+    description: 'Para demanda contínua',
     features: [
-      'Até 500 clientes',
-      'Até 1000 processos',
-      'Dashboards avançados',
-      'Suporte prioritário',
-      'Relatórios customizados',
-      'API acesso'
+      'Cálculos ilimitados',
+      'Pareceres técnicos',
+      'Atendimento prioritário',
+      'Consultoria jurídica-contábil',
+      'Relatórios mensais',
+      'Suporte por telefone'
     ],
-    cta: 'Começar Agora',
+    cta: 'Falar com Consultor',
     highlighted: true
   },
   {
-    name: 'Enterprise',
+    name: 'Parceria Estratégica',
     price: 'Custom',
     period: '',
-    description: 'Para grandes operações',
+    description: 'Para associações duradouras',
     features: [
-      'Clientes ilimitados',
-      'Processos ilimitados',
-      'Integrações personalizadas',
-      'Suporte dedicado 24/7',
-      'Treinamento incluído',
+      'Atendimento exclusivo',
+      'Integração com seu sistema',
+      'Parecerias especiais',
+      'Suporte 24/7 dedicado',
+      'Treinamento da equipe',
       'SLA garantido'
     ],
-    cta: 'Conversar com Vendas'
+    cta: 'Negociar Parceria'
   }
 ];
 
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Breadcrumbs */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      {/* Header */}
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">Nossos Serviços</h1>
-          <p className="text-blue-100 mb-6">Soluções completas para gerenciar sua prática jurídica e contábil com eficiência</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Nossos Serviços</h1>
+          <p className="text-blue-100 text-lg mb-6">Especialidades em contabilidade judicial para escritórios de advocacia e empresas</p>
           <div className="flex gap-2 text-sm">
             <Link to={createPageUrl('Home')} className="hover:underline">Início</Link>
             <span>/</span>
@@ -130,24 +142,23 @@ export default function ServicesPage() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-12 md:py-20">
+      <section className="py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-blue-600 font-semibold text-sm md:text-base">Funcionalidades Principais</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Tudo que você precisa para gerenciar seu escritório</h2>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Plataforma integrada com todas as ferramentas essenciais para advocacia, contabilidade e gestão financeira.</p>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Especialidades Contaux</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">Somos especializados em todos os aspectos da contabilidade judicial e cálculos complexos para processos judiciais.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, idx) => (
-              <div key={idx} className="group bg-white p-8 rounded-lg border border-gray-200 hover:shadow-lg hover:border-blue-300 transition-all">
+              <div key={idx} className="bg-white border border-gray-200 p-6 rounded-lg hover:shadow-lg transition-shadow">
                 <div className="text-4xl mb-4">{service.icon}</div>
-                <h3 className="font-bold text-lg mb-3">{service.title}</h3>
-                <p className="text-gray-600 text-sm md:text-base mb-4">{service.desc}</p>
+                <h3 className="font-bold text-lg mb-2">{service.title}</h3>
+                <p className="text-gray-600 text-sm mb-4">{service.desc}</p>
                 <ul className="space-y-2">
                   {service.details.map((detail, i) => (
-                    <li key={i} className="flex gap-2 items-start text-sm text-gray-600">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <li key={i} className="flex gap-2 text-sm text-gray-600">
+                      <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
                       <span>{detail}</span>
                     </li>
                   ))}
@@ -158,110 +169,118 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="bg-gray-50 py-12 md:py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-blue-600 font-semibold text-sm md:text-base">Começando</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">4 passos simples para começar</h2>
-          </div>
-
+      {/* Service Details Section */}
+      <section className="bg-gray-50 py-16 md:py-24">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Processo de Atendimento</h2>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {howItWorks.map((step, idx) => (
               <div key={idx} className="relative">
-                {idx < howItWorks.length - 1 && (
-                  <div className="hidden lg:block absolute top-20 left-full w-6 h-1 bg-gradient-to-r from-blue-300 to-transparent"></div>
-                )}
-                <div className="bg-white p-6 rounded-lg text-center border border-gray-200">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-white font-bold text-lg mb-4">
+                <div className="bg-white p-6 rounded-lg text-center">
+                  <div className="w-12 h-12 bg-blue-600 text-white rounded-full mx-auto mb-4 flex items-center justify-center font-bold text-lg">
                     {step.number}
                   </div>
                   <h3 className="font-bold text-lg mb-2">{step.title}</h3>
                   <p className="text-gray-600 text-sm">{step.desc}</p>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-12 md:py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-blue-600 font-semibold text-sm md:text-base">Planos e Preços</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Escolha o plano ideal para seu escritório</h2>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Sem contratos de longo prazo. Cancele a qualquer momento.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {pricingTiers.map((tier, idx) => (
-              <div key={idx} className={`rounded-lg border transition-all ${
-                tier.highlighted 
-                  ? 'border-blue-600 shadow-xl scale-105 md:scale-100 md:ring-2 md:ring-blue-300' 
-                  : 'border-gray-200 hover:border-gray-300'
-              } p-8 bg-white`}>
-                {tier.highlighted && (
-                  <div className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full inline-block mb-4">
-                    Mais Popular
+                {idx < howItWorks.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2">
+                    <ArrowRight className="w-6 h-6 text-gray-300" />
                   </div>
                 )}
-                <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
-                <p className="text-gray-600 text-sm mb-4">{tier.description}</p>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">{tier.price}</span>
-                  <span className="text-gray-600 text-sm">{tier.period}</span>
-                </div>
-                <button className={`w-full py-3 rounded-lg font-semibold transition-colors mb-6 ${
-                  tier.highlighted
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-100 text-slate-900 hover:bg-gray-200'
-                }`}>
-                  {tier.cta}
-                </button>
-                <ul className="space-y-3">
-                  {tier.features.map((feature, i) => (
-                    <li key={i} className="flex gap-2 items-start text-sm">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-600">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Integrations */}
-      <section className="bg-gray-50 py-12 md:py-20">
+      {/* Pricing Section */}
+      <section className="py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Integrações Disponíveis</h2>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Contaux se integra com as principais ferramentas que você já usa.</p>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Modelos de Contratação</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">Escolha o modelo que melhor se adequa às necessidades do seu escritório.</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-            {['Google Sheets', 'Google Drive', 'Gmail', 'Banco de Dados', 'Stripe', 'Zapier', 'WhatsApp', 'E-mail'].map((int, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-lg text-center border border-gray-200 hover:border-blue-300 transition-colors">
-                <p className="font-semibold text-gray-700">{int}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {pricingTiers.map((tier, idx) => (
+              <div 
+                key={idx}
+                className={`rounded-lg transition-all ${
+                  tier.highlighted 
+                    ? 'bg-blue-600 text-white shadow-xl scale-105' 
+                    : 'bg-white border border-gray-200'
+                }`}
+              >
+                <div className="p-8">
+                  <h3 className={`text-2xl font-bold mb-2 ${tier.highlighted ? 'text-white' : 'text-gray-900'}`}>
+                    {tier.name}
+                  </h3>
+                  <p className={`text-sm mb-4 ${tier.highlighted ? 'text-blue-100' : 'text-gray-600'}`}>
+                    {tier.description}
+                  </p>
+                  
+                  <div className="mb-6">
+                    <div className={`text-3xl font-bold ${tier.highlighted ? 'text-white' : 'text-gray-900'}`}>
+                      {tier.price}
+                    </div>
+                    {tier.period && (
+                      <div className={`text-sm ${tier.highlighted ? 'text-blue-100' : 'text-gray-600'}`}>
+                        {tier.period}
+                      </div>
+                    )}
+                  </div>
+
+                  <ul className="space-y-3 mb-8">
+                    {tier.features.map((feature, i) => (
+                      <li key={i} className="flex gap-2">
+                        <CheckCircle2 className={`w-5 h-5 flex-shrink-0 ${tier.highlighted ? 'text-blue-200' : 'text-green-500'}`} />
+                        <span className={`text-sm ${tier.highlighted ? 'text-blue-50' : 'text-gray-600'}`}>
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button 
+                    className={`w-full py-3 rounded-lg font-semibold transition-colors ${
+                      tier.highlighted
+                        ? 'bg-white text-blue-600 hover:bg-blue-50'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
+                  >
+                    {tier.cta}
+                  </button>
+                </div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-12 p-6 bg-blue-50 border border-blue-200 rounded-lg text-center">
+            <p className="text-gray-700 mb-4">
+              Todos os valores são indicativos. Solicite um orçamento personalizado conforme a complexidade do seu caso.
+            </p>
+            <Link 
+              to={createPageUrl('Contact')}
+              className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Solicitar Orçamento
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 md:py-20">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-4xl font-bold mb-4">Transforme a gestão do seu escritório hoje</h2>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto text-sm md:text-base">Junte-se a centenas de profissionais que já aumentaram sua produtividade com Contaux.</p>
+      {/* CTA Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 md:py-20">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Precisa de Assessoria Especializada?</h2>
+          <p className="text-blue-100 text-lg mb-8">Entre em contato conosco e conheça como podemos ajudar seu escritório.</p>
           <Link 
-            to={createPageUrl('Home')} 
-            className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+            to={createPageUrl('Contact')}
+            className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
           >
-            Comece Grátis
-            <ArrowRight className="w-4 h-4" />
+            Fale Conosco
           </Link>
         </div>
       </section>
