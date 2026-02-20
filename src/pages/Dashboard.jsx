@@ -84,92 +84,111 @@ const Dashboard = memo(function Dashboard() {
   });
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-           {/* Welcome */}
-           <div>
-             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">Dashboard</h1>
-             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-1">Bem-vindo ao sistema Contaux</p>
-           </div>
+    <div className="space-y-4 md:space-y-6 w-full">
+      {/* Welcome Section */}
+      <div className="mb-4 md:mb-6">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100">
+          Dashboard
+        </h1>
+        <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1">
+          Bem-vindo ao sistema Contaux
+        </p>
+      </div>
 
-           {/* Stats Grid */}
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-             {dashboardData ? stats.map((stat, index) => (
-               <StatCard key={index} {...stat} />
-             )) : [1,2,3,4,5,6].map(i => <StatCardSkeleton key={i} />)}
-           </div>
+      {/* Stats Grid - Mobile First */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+        {dashboardData ? stats.map((stat, index) => (
+          <StatCard key={index} {...stat} />
+        )) : [1,2,3,4,5,6].map(i => <StatCardSkeleton key={i} />)}
+      </div>
 
-           {/* Alerts Center */}
-            {workspaceId && (
-              <div>
-                <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-slate-900 dark:text-slate-100">Alertas</h2>
-                {alertsLoading ? <AlertsLoader /> : <AlertsCenter tenantId={workspaceId} />}
-              </div>
-            )}
+      {/* Alerts Center */}
+      {workspaceId && (
+        <div className="w-full">
+          <h2 className="text-base md:text-lg font-semibold mb-3 text-slate-900 dark:text-slate-100">
+            Alertas
+          </h2>
+          {alertsLoading ? <AlertsLoader /> : <AlertsCenter tenantId={workspaceId} />}
+        </div>
+      )}
 
-          {/* Balcão Virtual Widget */}
-           <VirtualCounterWidget />
+      {/* Balcão Virtual Widget */}
+      <VirtualCounterWidget />
 
-          {/* Quick Actions */}
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
-             <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-               <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Ações Rápidas</h3>
-              <div className="space-y-2">
-                <button className="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-150">
-                  + Novo Cliente
-                </button>
-                <button className="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-150">
-                  + Novo Processo
-                </button>
-                <button className="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-150">
-                  + Novo Ticket
-                </button>
-                <button className="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-150">
-                  + Nova Fatura
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Atividades Recentes</h3>
-              <div className="text-center text-slate-500 py-6 sm:py-8">
-                <p className="text-xs sm:text-sm">Nenhuma atividade recente</p>
-              </div>
-            </div>
+      {/* Quick Actions & Recent Activity - Responsive Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        {/* Quick Actions */}
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 md:p-6 transition-colors">
+          <h3 className="text-base md:text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">
+            Ações Rápidas
+          </h3>
+          <div className="space-y-2">
+            <button className="w-full text-left px-4 py-3 text-sm md:text-base bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 text-slate-900 dark:text-slate-100 rounded-lg transition-colors duration-150 font-medium">
+              + Novo Cliente
+            </button>
+            <button className="w-full text-left px-4 py-3 text-sm md:text-base bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 text-slate-900 dark:text-slate-100 rounded-lg transition-colors duration-150 font-medium">
+              + Novo Processo
+            </button>
+            <button className="w-full text-left px-4 py-3 text-sm md:text-base bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 text-slate-900 dark:text-slate-100 rounded-lg transition-colors duration-150 font-medium">
+              + Novo Ticket
+            </button>
+            <button className="w-full text-left px-4 py-3 text-sm md:text-base bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 text-slate-900 dark:text-slate-100 rounded-lg transition-colors duration-150 font-medium">
+              + Nova Fatura
+            </button>
           </div>
+        </div>
 
-          {/* Quick Stats - Período */}
-          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
-            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Comparativo Período</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
-              <div className="text-center p-2 sm:p-3 bg-blue-50 rounded">
-                <p className="text-xs sm:text-sm text-slate-600">Receita Atual</p>
-                <p className="text-lg sm:text-xl font-bold text-blue-600 mt-1">+12%</p>
-              </div>
-              <div className="text-center p-2 sm:p-3 bg-green-50 rounded">
-                <p className="text-xs sm:text-sm text-slate-600">Pagamentos</p>
-                <p className="text-lg sm:text-xl font-bold text-green-600 mt-1">+8%</p>
-              </div>
-              <div className="text-center p-2 sm:p-3 bg-yellow-50 rounded">
-                <p className="text-xs sm:text-sm text-slate-600">Tickets</p>
-                <p className="text-lg sm:text-xl font-bold text-yellow-600 mt-1">-5%</p>
-              </div>
-              <div className="text-center p-2 sm:p-3 bg-blue-50 rounded">
-                <p className="text-xs sm:text-sm text-slate-600">Clientes Novos</p>
-                <p className="text-lg sm:text-xl font-bold text-blue-600 mt-1">+3</p>
-              </div>
-            </div>
+        {/* Recent Activities */}
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 md:p-6 transition-colors">
+          <h3 className="text-base md:text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">
+            Atividades Recentes
+          </h3>
+          <div className="text-center text-slate-500 dark:text-slate-400 py-8">
+            <p className="text-sm">Nenhuma atividade recente</p>
           </div>
+        </div>
+      </div>
 
-          {/* Link to Reports */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow p-4 sm:p-6 text-white">
-            <h3 className="text-base sm:text-lg font-semibold mb-2">Análise Detalhada</h3>
-            <p className="text-xs sm:text-sm text-blue-100 mb-3 sm:mb-4">Veja relatórios completos, gráficos e métricas de evolução</p>
-            <a href="/reports" className="inline-block bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-lg font-medium text-sm sm:text-base hover:bg-blue-50 transition-colors">
-              Acessar Relatórios
-            </a>
+      {/* Comparativo Período - Mobile Optimized */}
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 md:p-6 transition-colors">
+        <h3 className="text-base md:text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">
+          Comparativo Período
+        </h3>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <div className="text-center p-3 md:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg transition-colors">
+            <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mb-1">Receita Atual</p>
+            <p className="text-xl md:text-2xl font-bold text-blue-600 dark:text-blue-400">+12%</p>
           </div>
+          <div className="text-center p-3 md:p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg transition-colors">
+            <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mb-1">Pagamentos</p>
+            <p className="text-xl md:text-2xl font-bold text-emerald-600 dark:text-emerald-400">+8%</p>
           </div>
-          );
-          });
+          <div className="text-center p-3 md:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg transition-colors">
+            <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mb-1">Tickets</p>
+            <p className="text-xl md:text-2xl font-bold text-yellow-600 dark:text-yellow-400">-5%</p>
+          </div>
+          <div className="text-center p-3 md:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg transition-colors">
+            <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mb-1">Clientes Novos</p>
+            <p className="text-xl md:text-2xl font-bold text-blue-600 dark:text-blue-400">+3</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Call to Action - Reports */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 rounded-lg shadow p-4 md:p-6 text-white transition-colors">
+        <h3 className="text-base md:text-lg font-semibold mb-2">Análise Detalhada</h3>
+        <p className="text-sm md:text-base text-blue-100 mb-4">
+          Veja relatórios completos, gráficos e métricas de evolução
+        </p>
+        <a 
+          href="/reports" 
+          className="inline-block bg-white text-blue-600 px-4 py-2 rounded-lg font-medium text-sm md:text-base hover:bg-blue-50 transition-colors shadow-sm"
+        >
+          Acessar Relatórios
+        </a>
+      </div>
+    </div>
+  );
+});
 
           export default Dashboard;
