@@ -171,6 +171,22 @@ import Sprint12Planning from './pages/Sprint12Planning';
 import Sprint12Completion from './pages/Sprint12Completion';
 import Sprint13Planning from './pages/Sprint13Planning';
 import OverallProjectStatus from './pages/OverallProjectStatus';
+import AICustomerService from './pages/AICustomerService';
+import DynamicPricingEngine from './pages/DynamicPricingEngine';
+import PredictiveAnalytics from './pages/PredictiveAnalytics';
+import ComplianceReporting from './pages/ComplianceReporting';
+import DataVisualization from './pages/DataVisualization';
+import Marketplace from './pages/Marketplace';
+import SubscriptionManagement from './pages/SubscriptionManagement';
+import WhiteLabel from './pages/WhiteLabel';
+import GraphQLSupport from './pages/GraphQLSupport';
+import ServerSentEvents from './pages/ServerSentEvents';
+import AdvancedWebhooks from './pages/AdvancedWebhooks';
+import DatabaseSharding from './pages/DatabaseSharding';
+import CacheManagement from './pages/CacheManagement';
+import AdvancedMonitoring from './pages/AdvancedMonitoring';
+import Sprint13Completion from './pages/Sprint13Completion';
+import FinalProjectSummary from './pages/FinalProjectSummary';
 import __Layout from './Layout.jsx';
 
 
@@ -299,6 +315,22 @@ export const PAGES = {
     "Sprint12Completion": Sprint12Completion,
     "Sprint13Planning": Sprint13Planning,
     "OverallProjectStatus": OverallProjectStatus,
+    "AICustomerService": AICustomerService,
+    "DynamicPricingEngine": DynamicPricingEngine,
+    "PredictiveAnalytics": PredictiveAnalytics,
+    "ComplianceReporting": ComplianceReporting,
+    "DataVisualization": DataVisualization,
+    "Marketplace": Marketplace,
+    "SubscriptionManagement": SubscriptionManagement,
+    "WhiteLabel": WhiteLabel,
+    "GraphQLSupport": GraphQLSupport,
+    "ServerSentEvents": ServerSentEvents,
+    "AdvancedWebhooks": AdvancedWebhooks,
+    "DatabaseSharding": DatabaseSharding,
+    "CacheManagement": CacheManagement,
+    "AdvancedMonitoring": AdvancedMonitoring,
+    "Sprint13Completion": Sprint13Completion,
+    "FinalProjectSummary": FinalProjectSummary,
 }
 
 export const pagesConfig = {
