@@ -9,7 +9,7 @@ import FormActions from '@/components/modals/FormActions';
 
 const VALIDATION_RULES = {
   company_name: {
-    label: 'Razão Social',
+    label: 'Razão Social / Nome Completo',
     required: true,
     minLength: 2
   },
@@ -18,13 +18,26 @@ const VALIDATION_RULES = {
     required: true,
     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     patternMessage: 'Email inválido'
+  },
+  cpf: {
+    label: 'CPF',
+    pattern: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+    patternMessage: 'CPF deve estar no formato: XXX.XXX.XXX-XX'
+  },
+  cnpj: {
+    label: 'CNPJ',
+    pattern: /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/,
+    patternMessage: 'CNPJ deve estar no formato: XX.XXX.XXX/XXXX-XX'
   }
 };
 
 export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen = true }) {
   const initialData = useMemo(() => client || {
-    workspace_id: tenantId,
+    tenant_id: tenantId,
+    client_type: 'pj',
     company_name: '',
+    cpf: '',
+    cnpj: '',
     email: '',
     phone: '',
     address: '',
@@ -46,6 +59,11 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
   const statusOptions = [
     { value: 'active', label: 'Ativo' },
     { value: 'inactive', label: 'Inativo' }
+  ];
+
+  const clientTypeOptions = [
+    { value: 'pf', label: 'Pessoa Física (PF)' },
+    { value: 'pj', label: 'Pessoa Jurídica (PJ)' }
   ];
 
   const handleSubmit = async (e) => {
@@ -88,13 +106,42 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <FormField
-            label="Razão Social"
+            label="Tipo de Cliente"
+            type="select"
+            name="client_type"
+            value={formData.client_type}
+            onChange={(value) => setFieldValue('client_type', value)}
+            options={clientTypeOptions}
+            required
+          />
+          <FormField
+            label={formData.client_type === 'pf' ? 'Nome Completo' : 'Razão Social'}
             name="company_name"
             value={formData.company_name}
             onChange={handleChange}
             error={errors.company_name}
             required
           />
+          {formData.client_type === 'pf' && (
+            <FormField
+              label="CPF"
+              name="cpf"
+              placeholder="XXX.XXX.XXX-XX"
+              value={formData.cpf}
+              onChange={handleChange}
+              error={errors.cpf}
+            />
+          )}
+          {formData.client_type === 'pj' && (
+            <FormField
+              label="CNPJ"
+              name="cnpj"
+              placeholder="XX.XXX.XXX/XXXX-XX"
+              value={formData.cnpj}
+              onChange={handleChange}
+              error={errors.cnpj}
+            />
+          )}
           <FormField
             label="Email"
             type="email"
