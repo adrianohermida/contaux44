@@ -112,6 +112,9 @@ import NotificationsCenter from './pages/NotificationsCenter';
 import Sprint7Tracker from './pages/Sprint7Tracker';
 import ConversionTracking from './pages/ConversionTracking';
 import CustomReports from './pages/CustomReports';
+import InfrastructureMonitoring from './pages/InfrastructureMonitoring';
+import ErrorTracking from './pages/ErrorTracking';
+import Sprint8Tracker from './pages/Sprint8Tracker';
 import __Layout from './Layout.jsx';
 
 
@@ -181,6 +184,9 @@ export const PAGES = {
     "Sprint7Tracker": Sprint7Tracker,
     "ConversionTracking": ConversionTracking,
     "CustomReports": CustomReports,
+    "InfrastructureMonitoring": InfrastructureMonitoring,
+    "ErrorTracking": ErrorTracking,
+    "Sprint8Tracker": Sprint8Tracker,
 }
 
 export const pagesConfig = {
