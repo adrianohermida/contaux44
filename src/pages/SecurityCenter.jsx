@@ -1,94 +1,202 @@
 import React, { useState } from 'react';
-import { useMultitenantAuthOptimized } from '@/components/auth/useMultitenantAuthOptimized';
-import MFASetup from '@/components/security/MFASetup';
-import AuditDashboard from '@/components/security/AuditDashboard';
-import EncryptionManager from '@/components/security/EncryptionManager';
-import { Shield, Lock, Activity, AlertCircle } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import { Shield, Lock, Zap, AlertCircle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import SecurityDashboard from '../components/security/SecurityDashboard';
+import InputValidator, { sanitizeInput, validateInput } from '../components/security/InputValidator';
+import { useCSRFToken } from '../components/security/CSRFProtection';
+import { useRateLimit } from '../components/security/RateLimiter';
 
 export default function SecurityCenter() {
-  const { workspaceId } = useMultitenantAuthOptimized('internal');
   const [activeTab, setActiveTab] = useState('overview');
+  const [testInput, setTestInput] = useState('');
+  const [inputType, setInputType] = useState('email');
+  const { token, refreshToken } = useCSRFToken();
+  const { remaining, isBlocked } = useRateLimit();
+
+  const handleRefreshToken = () => {
+    const newToken = refreshToken();
+    alert(`Token renovado: ${newToken}`);
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Shield className="w-6 h-6 text-blue-600" />
-          <h1 className="text-3xl font-bold">Centro de Segurança</h1>
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-4">
-        <Card className="p-4 border-l-4 border-blue-500">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Status de Segurança</p>
-              <p className="text-2xl font-bold mt-1">Bom</p>
-            </div>
-            <Shield className="w-8 h-8 text-blue-500 opacity-20" />
-          </div>
-        </Card>
-
-        <Card className="p-4 border-l-4 border-green-500">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Conformidade</p>
-              <p className="text-2xl font-bold mt-1">LGPD</p>
-            </div>
-            <Lock className="w-8 h-8 text-green-500 opacity-20" />
-          </div>
-        </Card>
-
-        <Card className="p-4 border-l-4 border-purple-500">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Últimas Atividades</p>
-              <p className="text-2xl font-bold mt-1">3</p>
-            </div>
-            <Activity className="w-8 h-8 text-purple-500 opacity-20" />
-          </div>
-        </Card>
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">Centro de Segurança</h1>
+        <p className="text-slate-600 mt-1">Gerenciar proteções e monitorar ameaças</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="mfa">2FA</TabsTrigger>
-          <TabsTrigger value="encryption">Criptografia</TabsTrigger>
-          <TabsTrigger value="audit">Auditoria</TabsTrigger>
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <Shield className="w-4 h-4" />
+            <span className="hidden sm:inline">Visão Geral</span>
+          </TabsTrigger>
+          <TabsTrigger value="csrf" className="flex items-center gap-2">
+            <Lock className="w-4 h-4" />
+            <span className="hidden sm:inline">CSRF</span>
+          </TabsTrigger>
+          <TabsTrigger value="validation" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            <span className="hidden sm:inline">Validação</span>
+          </TabsTrigger>
         </TabsList>
 
-        {/* MFA Tab */}
-        <TabsContent value="mfa" className="mt-6">
-          <MFASetup onMFAEnabled={() => console.log('MFA enabled')} />
+        {/* Overview */}
+        <TabsContent value="overview" className="mt-6">
+          <SecurityDashboard />
         </TabsContent>
 
-        {/* Encryption Tab */}
-        <TabsContent value="encryption" className="mt-6">
-          {workspaceId && <EncryptionManager workspaceId={workspaceId} />}
+        {/* CSRF Protection */}
+        <TabsContent value="csrf" className="mt-6 space-y-6">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Lock className="w-5 h-5 text-blue-600" />
+              Proteção CSRF
+            </h3>
+
+            <div className="space-y-4">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-slate-600 mb-2">Token CSRF Ativo</p>
+                <p className="font-mono text-xs bg-white p-3 rounded border border-blue-300 break-all">
+                  {token}
+                </p>
+              </div>
+
+              <button
+                onClick={handleRefreshToken}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                Renovar Token
+              </button>
+
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <h4 className="font-semibold text-sm mb-3">Como funciona?</h4>
+                <ul className="space-y-2 text-sm text-slate-700">
+                  <li>✓ Token único gerado para cada sessão</li>
+                  <li>✓ Token incluído automaticamente em requisições POST/PUT/DELETE</li>
+                  <li>✓ Validação no servidor protege contra ataques CSRF</li>
+                  <li>✓ Token renovável manualmente quando necessário</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4">Status de Proteção</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 bg-emerald-50 rounded-lg border-l-4 border-emerald-500">
+                <p className="text-sm text-slate-600">Requisições Permitidas</p>
+                <p className="text-2xl font-bold text-emerald-600 mt-1">{remaining}</p>
+              </div>
+              <div className={`p-4 rounded-lg border-l-4 ${isBlocked ? 'bg-amber-50 border-amber-500' : 'bg-slate-50 border-slate-500'}`}>
+                <p className="text-sm text-slate-600">Status</p>
+                <p className={`text-lg font-bold mt-1 ${isBlocked ? 'text-amber-600' : 'text-slate-600'}`}>
+                  {isBlocked ? 'Bloqueado' : 'Ativo'}
+                </p>
+              </div>
+              <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <p className="text-sm text-slate-600">Headers Injetados</p>
+                <p className="text-2xl font-bold text-blue-600 mt-1">X-CSRF-Token</p>
+              </div>
+            </div>
+          </div>
         </TabsContent>
 
-        {/* Audit Tab */}
-        <TabsContent value="audit" className="mt-6">
-          {workspaceId && <AuditDashboard workspaceId={workspaceId} />}
+        {/* Input Validation */}
+        <TabsContent value="validation" className="mt-6 space-y-6">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-600" />
+              Validador de Entrada
+            </h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Tipo de Validação
+                </label>
+                <select
+                  value={inputType}
+                  onChange={(e) => {
+                    setInputType(e.target.value);
+                    setTestInput('');
+                  }}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="email">Email</option>
+                  <option value="url">URL</option>
+                  <option value="number">Número</option>
+                  <option value="phone">Telefone</option>
+                  <option value="text">Texto</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Teste de Entrada
+                </label>
+                <input
+                  type="text"
+                  value={testInput}
+                  onChange={(e) => setTestInput(e.target.value)}
+                  placeholder={`Digite um ${inputType}...`}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <InputValidator 
+                  value={testInput} 
+                  type={inputType}
+                  showFeedback={true}
+                />
+              </div>
+
+              {testInput && (
+                <div className="p-4 bg-slate-50 rounded-lg space-y-3">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600 mb-1">Original</p>
+                    <p className="font-mono text-xs bg-white p-2 rounded border border-slate-300 break-all">
+                      {testInput}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-600 mb-1">Sanitizado</p>
+                    <p className="font-mono text-xs bg-white p-2 rounded border border-slate-300 break-all">
+                      {sanitizeInput(testInput, inputType)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-600 mb-1">Válido?</p>
+                    <p className={`text-sm font-medium ${validateInput(testInput, inputType) ? 'text-emerald-600' : 'text-amber-600'}`}>
+                      {validateInput(testInput, inputType) ? '✓ Válido' : '✗ Inválido'}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4">Proteções Ativas</h3>
+            <div className="space-y-3">
+              {[
+                { name: 'XSS Prevention', description: 'Remove scripts e eventos perigosos' },
+                { name: 'SQL Injection', description: 'Sanitização de caracteres especiais' },
+                { name: 'Input Length', description: 'Limita comprimento máximo' },
+                { name: 'Type Validation', description: 'Valida tipo de dado esperado' }
+              ].map((item, idx) => (
+                <div key={idx} className="p-3 bg-slate-50 rounded-lg flex items-center gap-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <span className="text-emerald-600 font-bold">✓</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-900">{item.name}</p>
+                    <p className="text-xs text-slate-600">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
-
-      <Card className="p-6 bg-yellow-50 border border-yellow-200">
-        <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <h3 className="font-medium text-yellow-900">Dicas de Segurança</h3>
-            <ul className="text-sm text-yellow-800 mt-2 space-y-1">
-              <li>✓ Ative 2FA em todos os usuários</li>
-              <li>✓ Revise logs de auditoria regularmente</li>
-              <li>✓ Mantenha senhas fortes e únicas</li>
-              <li>✓ Ative criptografia de dados sensíveis</li>
-            </ul>
-          </div>
-        </div>
-      </Card>
     </div>
   );
 }
