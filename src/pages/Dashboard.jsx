@@ -149,12 +149,12 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Link to Analytics */}
+          {/* Link to Reports */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow p-4 sm:p-6 text-white">
             <h3 className="text-base sm:text-lg font-semibold mb-2">Análise Detalhada</h3>
             <p className="text-xs sm:text-sm text-blue-100 mb-3 sm:mb-4">Veja relatórios completos, gráficos e métricas de evolução</p>
-            <a href="/AnalyticsDashboard" className="inline-block bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-lg font-medium text-sm sm:text-base hover:bg-blue-50 transition-colors">
-              Acessar Analytics
+            <a href="/reports" className="inline-block bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-lg font-medium text-sm sm:text-base hover:bg-blue-50 transition-colors">
+              Acessar Relatórios
             </a>
           </div>
         </div>
