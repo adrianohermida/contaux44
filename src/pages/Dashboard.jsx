@@ -58,7 +58,7 @@ const Dashboard = memo(function Dashboard() {
         { icon: FileText, title: 'Processos em Andamento', value: '0', subtitle: 'Processos ativos', color: 'green' },
         { icon: Ticket, title: 'Tickets Abertos', value: '0', subtitle: 'Aguardando atendimento', color: 'yellow' },
         { icon: DollarSign, title: 'Receita do Mês', value: 'R$ 0,00', subtitle: 'Faturamento atual', color: 'blue' },
-        { icon: AlertCircle, title: 'Prazos Críticos', value: '0', subtitle: 'Próximos 7 dias', color: 'red' },
+        { icon: AlertCircle, title: 'Prazos Críticos', value: '0', subtitle: 'Próximos 7 dias', color: 'yellow' },
         { icon: TrendingUp, title: 'Orçamentos Pendentes', value: '0', subtitle: 'Aguardando aprovação', color: 'blue' }
       ];
     }
@@ -68,7 +68,7 @@ const Dashboard = memo(function Dashboard() {
       { icon: FileText, title: 'Processos em Andamento', value: dashboardData.processesCount.toString(), subtitle: 'Processos ativos', color: 'green' },
       { icon: Ticket, title: 'Tickets Abertos', value: dashboardData.ticketsCount.toString(), subtitle: 'Aguardando atendimento', color: 'yellow' },
       { icon: DollarSign, title: 'Receita do Mês', value: `R$ ${dashboardData.monthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: 'Faturamento atual', color: 'blue' },
-      { icon: AlertCircle, title: 'Prazos Críticos', value: dashboardData.upcomingDeadlines.toString(), subtitle: 'Próximos 7 dias', color: 'red' },
+      { icon: AlertCircle, title: 'Prazos Críticos', value: dashboardData.upcomingDeadlines.toString(), subtitle: 'Próximos 7 dias', color: 'yellow' },
       { icon: TrendingUp, title: 'Orçamentos Pendentes', value: dashboardData.quotesCount.toString(), subtitle: 'Aguardando aprovação', color: 'blue' }
     ];
   }, [dashboardData]);

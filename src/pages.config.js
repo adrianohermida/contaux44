@@ -47,10 +47,13 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import APIDashboard from './pages/APIDashboard';
 import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
+import AdvancedML from './pages/AdvancedML';
 import AdvancedReports from './pages/AdvancedReports';
+import AnalyticsAdvanced from './pages/AnalyticsAdvanced';
 import App from './pages/App';
 import AuditLogs from './pages/AuditLogs';
 import Automations from './pages/Automations';
@@ -58,6 +61,7 @@ import BankReconciliation from './pages/BankReconciliation';
 import Blog from './pages/Blog';
 import BlogManager from './pages/BlogManager';
 import BlogSingle from './pages/BlogSingle';
+import CachingStrategy from './pages/CachingStrategy';
 import CashFlow from './pages/CashFlow';
 import CashFlowForecast from './pages/CashFlowForecast';
 import ChartOfAccounts from './pages/ChartOfAccounts';
@@ -74,15 +78,23 @@ import ImportCSV from './pages/ImportCSV';
 import Invoicing from './pages/Invoicing';
 import LegalProcesses from './pages/LegalProcesses';
 import ManualPosting from './pages/ManualPosting';
+import MobileAnalyticsDashboard from './pages/MobileAnalyticsDashboard';
+import MobileOptimized from './pages/MobileOptimized';
 import MyBookmarks from './pages/MyBookmarks';
+import Notifications from './pages/Notifications';
 import OnboardClient from './pages/OnboardClient';
+import PWASetup from './pages/PWASetup';
 import Payments from './pages/Payments';
+import PerformanceOptimization from './pages/PerformanceOptimization';
 import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
+import ProfilingDashboard from './pages/ProfilingDashboard';
 import QuoteRequest from './pages/QuoteRequest';
 import Quotes from './pages/Quotes';
+import RBACManagement from './pages/RBACManagement';
 import RLSDebugger from './pages/RLSDebugger';
+import RealtimeSyncDashboard from './pages/RealtimeSyncDashboard';
 import Reports from './pages/Reports';
 import Sales from './pages/Sales';
 import SecurityCenter from './pages/SecurityCenter';
@@ -93,26 +105,17 @@ import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
-import AnalyticsAdvanced from './pages/AnalyticsAdvanced';
-import RBACManagement from './pages/RBACManagement';
-import AdvancedML from './pages/AdvancedML';
-import PerformanceOptimization from './pages/PerformanceOptimization';
-import APIDashboard from './pages/APIDashboard';
-import MobileOptimized from './pages/MobileOptimized';
-import PWASetup from './pages/PWASetup';
-import Notifications from './pages/Notifications';
-import MobileAnalyticsDashboard from './pages/MobileAnalyticsDashboard';
-import RealtimeSyncDashboard from './pages/RealtimeSyncDashboard';
-import CachingStrategy from './pages/CachingStrategy';
-import ProfilingDashboard from './pages/ProfilingDashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "APIDashboard": APIDashboard,
     "About": About,
     "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
+    "AdvancedML": AdvancedML,
     "AdvancedReports": AdvancedReports,
+    "AnalyticsAdvanced": AnalyticsAdvanced,
     "App": App,
     "AuditLogs": AuditLogs,
     "Automations": Automations,
@@ -120,6 +123,7 @@ export const PAGES = {
     "Blog": Blog,
     "BlogManager": BlogManager,
     "BlogSingle": BlogSingle,
+    "CachingStrategy": CachingStrategy,
     "CashFlow": CashFlow,
     "CashFlowForecast": CashFlowForecast,
     "ChartOfAccounts": ChartOfAccounts,
@@ -136,15 +140,23 @@ export const PAGES = {
     "Invoicing": Invoicing,
     "LegalProcesses": LegalProcesses,
     "ManualPosting": ManualPosting,
+    "MobileAnalyticsDashboard": MobileAnalyticsDashboard,
+    "MobileOptimized": MobileOptimized,
     "MyBookmarks": MyBookmarks,
+    "Notifications": Notifications,
     "OnboardClient": OnboardClient,
+    "PWASetup": PWASetup,
     "Payments": Payments,
+    "PerformanceOptimization": PerformanceOptimization,
     "Portfolio": Portfolio,
     "PortfolioSingle": PortfolioSingle,
     "Pricing": Pricing,
+    "ProfilingDashboard": ProfilingDashboard,
     "QuoteRequest": QuoteRequest,
     "Quotes": Quotes,
+    "RBACManagement": RBACManagement,
     "RLSDebugger": RLSDebugger,
+    "RealtimeSyncDashboard": RealtimeSyncDashboard,
     "Reports": Reports,
     "Sales": Sales,
     "SecurityCenter": SecurityCenter,
@@ -155,18 +167,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
-    "AnalyticsAdvanced": AnalyticsAdvanced,
-    "RBACManagement": RBACManagement,
-    "AdvancedML": AdvancedML,
-    "PerformanceOptimization": PerformanceOptimization,
-    "APIDashboard": APIDashboard,
-    "MobileOptimized": MobileOptimized,
-    "PWASetup": PWASetup,
-    "Notifications": Notifications,
-    "MobileAnalyticsDashboard": MobileAnalyticsDashboard,
-    "RealtimeSyncDashboard": RealtimeSyncDashboard,
-    "CachingStrategy": CachingStrategy,
-    "ProfilingDashboard": ProfilingDashboard,
 }
 
 export const pagesConfig = {
