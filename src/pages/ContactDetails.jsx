@@ -30,6 +30,7 @@ export default function ContactDetails() {
    const [isEditing, setIsEditing] = useState(contactId === 'new');
    const [errors, setErrors] = useState({});
    const [saveMessage, setSaveMessage] = useState(null);
+   const [hasChanges, setHasChanges] = useState(false);
 
    // Fetch contact if not new
    const { data: contact, isLoading, error } = useQuery({
@@ -50,6 +51,7 @@ export default function ContactDetails() {
   React.useEffect(() => {
     if (contact) {
       setFormData(contact);
+      setHasChanges(false);
     } else if (contactId === 'new' && !formData) {
       setFormData({
         company_name: '',
@@ -68,6 +70,7 @@ export default function ContactDetails() {
         cep: '',
         tenant_id: workspaceId,
       });
+      setHasChanges(false);
     }
   }, [contact, contactId, workspaceId]);
 
@@ -87,6 +90,7 @@ export default function ContactDetails() {
       queryClient.invalidateQueries({ queryKey: ['contact-detail'] });
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
       setIsEditing(false);
+      setHasChanges(false);
       setSaveMessage({ type: 'success', text: 'Contato salvo com sucesso!' });
       setTimeout(() => setSaveMessage(null), 3000);
       if (contactId === 'new') {
@@ -119,6 +123,7 @@ export default function ContactDetails() {
     } else {
       setFormData(contact);
       setIsEditing(false);
+      setHasChanges(false);
     }
   };
 
@@ -146,14 +151,15 @@ export default function ContactDetails() {
         setErrors(prev => ({ ...prev, [name]: null }));
       }
     }
+    setHasChanges(true);
   };
 
   const handleBeforeUnload = React.useCallback((e) => {
-    if (isEditing && formData) {
+    if (hasChanges) {
       e.preventDefault();
       e.returnValue = '';
     }
-  }, [isEditing, formData]);
+  }, [hasChanges]);
 
   React.useEffect(() => {
     window.addEventListener('beforeunload', handleBeforeUnload);
