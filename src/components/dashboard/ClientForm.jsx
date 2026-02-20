@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useFormState } from '@/components/modals/useFormState';
 import { useFormValidation } from '@/components/hooks/useFormValidation';
@@ -8,6 +8,7 @@ import ModalWrapper from '@/components/modals/ModalWrapper';
 import FormField from '@/components/modals/FormField';
 import FormActions from '@/components/modals/FormActions';
 import { AlertCircle, CheckCircle, MapPin, Loader } from 'lucide-react';
+import { toast } from 'sonner';
 
 const VALIDATION_RULES = {
   company_name: {
