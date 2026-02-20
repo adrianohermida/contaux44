@@ -73,9 +73,9 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
        {/* Breadcrumbs */}
-       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 md:py-16">
+       <section className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 text-white py-12 md:py-16">
          <div className="max-w-6xl mx-auto px-4">
            <h1 className="text-2xl md:text-4xl font-bold mb-4">Fale Conosco</h1>
            <p className="text-blue-100 text-sm md:text-base mb-6">Dúvidas, sugestões ou reclamações? Deixe seu feedback ou envie sua mensagem.</p>
@@ -88,7 +88,7 @@ export default function Contact() {
        </section>
 
        {/* Contact Section */}
-       <section className="py-12 md:py-20">
+       <section className="py-12 md:py-20 dark:bg-slate-900">
          <div className="max-w-6xl mx-auto px-4">
            <div className="grid md:grid-cols-5 gap-6 md:gap-12">
              {/* Left - Contact Info */}
@@ -96,8 +96,8 @@ export default function Contact() {
                <div className="space-y-6 md:space-y-8">
                  {/* Header */}
                  <div>
-                   <h4 className="text-xl md:text-2xl font-bold mb-2">Informações de Contato</h4>
-                   <p className="text-gray-600 text-sm md:text-base">
+                   <h4 className="text-xl md:text-2xl font-bold dark:text-white mb-2">Informações de Contato</h4>
+                   <p className="text-gray-600 dark:text-slate-400 text-sm md:text-base">
                      Contaux Contabilidade<br />
                      CNPJ: 07.772.334/0001-22
                    </p>
