@@ -81,6 +81,8 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
   const [documentValidation, setDocumentValidation] = useState({});
   const [addressReadOnly, setAddressReadOnly] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [connectionError, setConnectionError] = useState(null);
+  const [apiError, setApiError] = useState(null);
 
   const currencyOptions = [
     { value: 'BRL', label: 'Real (BRL)' },
