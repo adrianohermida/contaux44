@@ -64,24 +64,39 @@ export default function ClientList({ refresh, onEdit }) {
             <th className="px-6 py-3 text-right text-sm font-medium text-slate-900">Ações</th>
           </tr>
         </thead>
-        <tbody>
-          {clients.map((client) => (
-            <tr key={client.id} className="border-b hover:bg-slate-50">
-              <td className="px-6 py-4 text-sm text-slate-900">{client.company_name}</td>
-              <td className="px-6 py-4 text-sm text-slate-600">{client.email}</td>
-              <td className="px-6 py-4 text-sm text-slate-600">{client.phone}</td>
-              <td className="px-6 py-4 text-right space-x-2 flex justify-end">
-                <button onClick={() => onEdit(client)} className="p-1 hover:bg-slate-200 rounded">
-                  <Edit2 className="w-4 h-4 text-blue-600" />
-                </button>
-                <button onClick={() => handleDelete(client.id)} className="p-1 hover:bg-slate-200 rounded">
-                  <Trash2 className="w-4 h-4 text-red-600" />
-                </button>
-              </td>
-            </tr>
-          ))}
+        <tbody 
+          ref={parentRef}
+          className="relative"
+          style={{ height: `${virtualizer.getTotalSize()}px` }}
+        >
+          {virtualizer.getVirtualItems().map((virtualRow) => {
+            const client = clients[virtualRow.index];
+            return (
+              <tr 
+                key={client.id} 
+                className="border-b hover:bg-slate-50 absolute top-0 left-0 w-full"
+                style={{
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <td className="px-6 py-4 text-sm text-slate-900">{client.company_name}</td>
+                <td className="px-6 py-4 text-sm text-slate-600">{client.email}</td>
+                <td className="px-6 py-4 text-sm text-slate-600">{client.phone}</td>
+                <td className="px-6 py-4 text-right space-x-2 flex justify-end">
+                  <button onClick={() => onEdit(client)} className="p-1 hover:bg-slate-200 rounded">
+                    <Edit2 className="w-4 h-4 text-blue-600" />
+                  </button>
+                  <button onClick={() => handleDelete(client.id)} className="p-1 hover:bg-slate-200 rounded">
+                    <Trash2 className="w-4 h-4 text-red-600" />
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
