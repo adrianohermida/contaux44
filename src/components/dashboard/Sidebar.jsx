@@ -19,11 +19,13 @@ import {
   ChevronRight,
   TrendingUp,
   Landmark,
-  PenTool
+  PenTool,
+  MessageCircle
 } from 'lucide-react';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
+  { icon: MessageCircle, label: 'Balcão Virtual', page: 'VirtualCounter', badge: 'unread' },
   { icon: Users, label: 'CRM - Clientes', page: 'Clients' },
   { icon: Ticket, label: 'Helpdesk - Tickets', page: 'Tickets' },
   { icon: FileText, label: 'Processos Judiciais', page: 'LegalProcesses' },
@@ -73,6 +75,29 @@ const menuItems = [
 const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   const location = useLocation();
   const [openMenus, setOpenMenus] = useState({});
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Carregar unread messages
+  React.useEffect(() => {
+    const loadUnread = async () => {
+      try {
+        const { base44 } = await import('@/api/base44Client');
+        const user = await base44.auth.me();
+        if (!user) return;
+        
+        // Extract workspace_id from user data
+        const convs = await base44.entities.VirtualCounterConversation.filter({ status: 'active' });
+        const total = convs.reduce((sum, c) => sum + (c.unread_count || 0), 0);
+        setUnreadCount(total);
+      } catch (error) {
+        console.error('Erro ao carregar unread:', error);
+      }
+    };
+
+    loadUnread();
+    const interval = setInterval(loadUnread, 30000); // Atualizar a cada 30s
+    return () => clearInterval(interval);
+  }, []);
 
   const toggleSubmenu = useCallback((label) => {
     setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
@@ -110,7 +135,14 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
                   <item.icon className="w-5 h-5 flex-shrink-0" />
                   {!collapsed && (
                     <>
-                      <span className="flex-1 text-left text-sm">{item.label}</span>
+                      <div className="flex-1 flex items-center gap-2">
+                        <span className="text-left text-sm">{item.label}</span>
+                        {item.badge === 'unread' && unreadCount > 0 && (
+                          <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </div>
                       {openMenus[item.label] ? (
                         <ChevronDown className="w-4 h-4" />
                       ) : (
@@ -137,15 +169,24 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
               </>
             ) : (
                <a
-                  href={`/${item.page.toLowerCase()}`}
-                  className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
-                    isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
-                  }`}
-                  title={collapsed ? item.label : ''}
-                >
-                 <item.icon className="w-5 h-5 flex-shrink-0" />
-                 {!collapsed && <span className="text-sm">{item.label}</span>}
-               </a>
+                   href={`/${item.page.toLowerCase()}`}
+                   className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
+                     isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
+                   }`}
+                   title={collapsed ? item.label : ''}
+                 >
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  {!collapsed && (
+                    <div className="flex items-center gap-2 flex-1">
+                      <span className="text-sm">{item.label}</span>
+                      {item.badge === 'unread' && unreadCount > 0 && (
+                        <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold ml-auto">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </a>
              )}
           </div>
         ))}
