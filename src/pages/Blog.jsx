@@ -156,7 +156,7 @@ export default function Blog() {
           {/* Tags Filter */}
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              <span className="text-sm text-slate-600">Tags:</span>
+              <span className="text-sm text-slate-600 dark:text-slate-300">Tags:</span>
               {tags.map(tag => (
                 <button
                   key={tag}
@@ -167,7 +167,7 @@ export default function Blog() {
                   className={`px-3 py-1 text-xs rounded-full transition-colors ${
                     selectedTag === tag
                       ? 'bg-blue-600 text-white'
-                      : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                      : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600'
                   }`}
                 >
                   {tag}
