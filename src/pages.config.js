@@ -166,6 +166,8 @@ import SocialMediaIntegration from './pages/SocialMediaIntegration';
 import EmailMarketing from './pages/EmailMarketing';
 import Sprint11Completion from './pages/Sprint11Completion';
 import Sprint12Tracker from './pages/Sprint12Tracker';
+import Sprint11FullReview from './pages/Sprint11FullReview';
+import Sprint12Planning from './pages/Sprint12Planning';
 import __Layout from './Layout.jsx';
 
 
@@ -289,6 +291,8 @@ export const PAGES = {
     "EmailMarketing": EmailMarketing,
     "Sprint11Completion": Sprint11Completion,
     "Sprint12Tracker": Sprint12Tracker,
+    "Sprint11FullReview": Sprint11FullReview,
+    "Sprint12Planning": Sprint12Planning,
 }
 
 export const pagesConfig = {
