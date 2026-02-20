@@ -50,12 +50,12 @@ const DashboardHeader = memo(function DashboardHeader() {
   return (
     <>
       <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40 transition-colors">
-        <div className="px-6 py-4 flex items-center justify-between">
+        <div className="px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
         {/* Search */}
         <SearchBox query={searchQuery} onQueryChange={setSearchQuery} />
 
         {/* Right Section */}
-        <div className="ml-6 flex items-center gap-4">
+        <div className="ml-2 sm:ml-6 flex items-center gap-2 sm:gap-4 flex-shrink-0">
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
@@ -72,12 +72,12 @@ const DashboardHeader = memo(function DashboardHeader() {
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="relative p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+              <button className="relative p-1 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
                 {notificationsLoading ? (
-                  <Loader2 className="w-5 h-5 text-slate-600 dark:text-slate-400 animate-spin" />
-                ) : (
-                  <>
-                    <Bell className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                   <Loader2 className="w-4 sm:w-5 h-4 sm:h-5 text-slate-600 dark:text-slate-400 animate-spin" />
+                 ) : (
+                   <>
+                     <Bell className="w-4 sm:w-5 h-4 sm:h-5 text-slate-600 dark:text-slate-400" />
                     {unreadCount > 0 && (
                       <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{unreadCount}</span>
                     )}
