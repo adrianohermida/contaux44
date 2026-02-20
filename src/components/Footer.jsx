@@ -22,7 +22,7 @@ export default function Footer() {
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/aaa0f7f85_contaux_blue.png" 
                 alt="Contaux" 
-                className="h-12"
+                className="h-12 brightness-0 invert"
               />
             </div>
             <p className="text-slate-400 text-sm mb-4">Aberto das 9 às 17h, seg. à sexta, horário de Brasília.</p>
@@ -85,7 +85,7 @@ export default function Footer() {
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/aaa0f7f85_contaux_blue.png" 
                   alt="Contaux" 
-                  className="h-10"
+                  className="h-10 brightness-0 invert"
                 />
               </div>
               <p className="text-slate-400 text-xs mb-2">Aberto das 9 às 17h, seg. à sexta.</p>
