@@ -197,24 +197,52 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
             required
           />
           {formData.client_type === 'pf' && (
-            <FormField
-              label="CPF"
-              name="cpf"
-              placeholder="XXX.XXX.XXX-XX"
-              value={formData.cpf}
-              onChange={handleChange}
-              error={errors.cpf}
-            />
+            <div>
+              <FormField
+                label="CPF"
+                name="cpf"
+                placeholder="XXX.XXX.XXX-XX"
+                value={formData.cpf}
+                onChange={(e) => handleDocumentChange('cpf', e.target.value)}
+                error={errors.cpf}
+              />
+              {documentValidation.cpf && (
+                <div className={`mt-1 flex items-center gap-2 text-sm ${
+                  documentValidation.cpf.valid ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {documentValidation.cpf.valid ? (
+                    <CheckCircle className="w-4 h-4" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4" />
+                  )}
+                  {documentValidation.cpf.message || 'CPF válido'}
+                </div>
+              )}
+            </div>
           )}
           {formData.client_type === 'pj' && (
-            <FormField
-              label="CNPJ"
-              name="cnpj"
-              placeholder="XX.XXX.XXX/XXXX-XX"
-              value={formData.cnpj}
-              onChange={handleChange}
-              error={errors.cnpj}
-            />
+            <div>
+              <FormField
+                label="CNPJ"
+                name="cnpj"
+                placeholder="XX.XXX.XXX/XXXX-XX"
+                value={formData.cnpj}
+                onChange={(e) => handleDocumentChange('cnpj', e.target.value)}
+                error={errors.cnpj}
+              />
+              {documentValidation.cnpj && (
+                <div className={`mt-1 flex items-center gap-2 text-sm ${
+                  documentValidation.cnpj.valid ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {documentValidation.cnpj.valid ? (
+                    <CheckCircle className="w-4 h-4" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4" />
+                  )}
+                  {documentValidation.cnpj.message || 'CNPJ válido'}
+                </div>
+              )}
+            </div>
           )}
           <FormField
             label="Email"
