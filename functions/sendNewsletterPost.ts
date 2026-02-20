@@ -3,71 +3,56 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
+    const { blogPostId } = await req.json();
 
-    if (user?.role !== 'admin') {
-      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    if (!blogPostId) {
+      return Response.json({ error: 'blogPostId required' }, { status: 400 });
     }
 
-    const { blog_post_id } = await req.json();
-
-    if (!blog_post_id) {
-      return Response.json({ error: 'blog_post_id obrigatório' }, { status: 400 });
+    // Get blog post
+    const blogPost = await base44.asServiceRole.entities.BlogPost.get(blogPostId);
+    if (!blogPost) {
+      return Response.json({ error: 'Blog post not found' }, { status: 404 });
     }
 
-    // Buscar post
-    const posts = await base44.asServiceRole.entities.BlogPost.filter({ id: blog_post_id });
-    if (posts.length === 0) {
-      return Response.json({ error: 'Post não encontrado' }, { status: 404 });
-    }
-
-    const post = posts[0];
-
-    // Buscar subscribers
-    const subscribers = await base44.asServiceRole.entities.NewsletterSubscriber.filter({ 
-      status: 'active' 
-    });
-
+    // Get all newsletter subscribers
+    const subscribers = await base44.asServiceRole.entities.NewsletterSubscriber.filter({}, 'email', 1000);
+    
     if (subscribers.length === 0) {
-      return Response.json({ success: true, sent: 0, message: 'Nenhum subscriber ativo' });
+      return Response.json({ sent: 0, message: 'No subscribers found' });
     }
 
-    const baseUrl = req.headers.get('origin') || 'https://yoursite.com';
-    const postUrl = `${baseUrl}/BlogSingle?id=${blog_post_id}`;
-
-    let sentCount = 0;
-    const errors = [];
-
-    // Enviar email para cada subscriber
+    // Send email to each subscriber
+    const results = [];
     for (const subscriber of subscribers) {
       try {
+        const emailBody = `
+<h2>${blogPost.data.title}</h2>
+<p>${blogPost.data.excerpt}</p>
+<img src="${blogPost.data.featured_image}" alt="${blogPost.data.title}" style="max-width:100%;height:auto;">
+<p>${blogPost.data.content.substring(0, 500)}...</p>
+<a href="https://hermidamaia.adv.br/blog/${blogPost.data.slug}" style="background-color:#3b82f6;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Leia o artigo completo</a>
+        `;
+
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: subscriber.email,
-          subject: `📰 Novo artigo: ${post.title}`,
-          body: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h1 style="color: #2563eb;">${post.title}</h1>
-              ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" style="width: 100%; border-radius: 8px; margin: 20px 0;" />` : ''}
-              <p style="font-size: 16px; color: #4b5563;">${post.excerpt}</p>
-              <a href="${postUrl}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0;">Ler artigo completo</a>
-              <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;" />
-              <p style="font-size: 12px; color: #9ca3af;">Você está recebendo este email porque se inscreveu na nossa newsletter. <a href="${baseUrl}/unsubscribe?email=${subscriber.email}">Cancelar inscrição</a></p>
-            </div>
-          `
+          subject: `Novo artigo: ${blogPost.data.title}`,
+          body: emailBody,
+          from_name: 'Contaux Blog'
         });
-        sentCount++;
+
+        results.push({ email: subscriber.email, status: 'sent' });
       } catch (error) {
-        errors.push({ email: subscriber.email, error: error.message });
+        results.push({ email: subscriber.email, status: 'failed', error: error.message });
       }
     }
 
     return Response.json({
-      success: true,
-      sent: sentCount,
-      total: subscribers.length,
-      errors: errors.length > 0 ? errors : undefined
+      sent: results.filter(r => r.status === 'sent').length,
+      failed: results.filter(r => r.status === 'failed').length,
+      total: results.length,
+      results
     });
-
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
