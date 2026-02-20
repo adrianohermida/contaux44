@@ -25,8 +25,14 @@ const StatCard = memo(function StatCard({ icon: Icon, title, value, subtitle, tr
       {subtitle && <p className="text-xs text-slate-500 dark:text-slate-500">{subtitle}</p>}
     </div>
   );
+}, (prevProps, nextProps) => {
+  // Comparação customizada para evitar re-renders desnecessários
+  return (
+    prevProps.value === nextProps.value &&
+    prevProps.title === nextProps.title &&
+    prevProps.trend === nextProps.trend &&
+    prevProps.color === nextProps.color
+  );
 });
-
-export default StatCard;);
 
 export default StatCard;
