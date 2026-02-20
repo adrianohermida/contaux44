@@ -4,7 +4,7 @@ export const validateEmail = (email) => {
 };
 
 export const validateCPF = (cpf) => {
-  if (!cpf) return true;
+  if (!cpf?.trim()) return false;
   const clean = cpf.replace(/\D/g, '');
   if (clean.length !== 11) return false;
   if (/^(\d)\1{10}$/.test(clean)) return false;
@@ -22,7 +22,7 @@ export const validateCPF = (cpf) => {
 };
 
 export const validateCNPJ = (cnpj) => {
-  if (!cnpj) return true;
+  if (!cnpj?.trim()) return false;
   const clean = cnpj.replace(/\D/g, '');
   if (clean.length !== 14) return false;
   if (/^(\d)\1{13}$/.test(clean)) return false;

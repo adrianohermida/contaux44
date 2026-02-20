@@ -71,11 +71,7 @@ export default function ContactDetails() {
     }
   }, [contact, contactId, workspaceId]);
 
-  // Warn before leaving with unsaved changes
-  React.useEffect(() => {
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [isEditing, formData]);
+
 
   // Save mutation
   const saveMutation = useMutation({
@@ -128,27 +124,41 @@ export default function ContactDetails() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // Limpar erros do campo e campos relacionados
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev, [name]: null };
-        // Limpar erros de CPF/CNPJ ao mudar tipo
-        if (name === 'client_type') {
-          newErrors.cpf = null;
-          newErrors.cnpj = null;
-        }
-        return newErrors;
-      });
+    let newValue = value;
+
+    // Limpar CPF/CNPJ quando muda tipo
+    if (name === 'client_type') {
+      setFormData(prev => ({ 
+        ...prev, 
+        [name]: newValue,
+        cpf: '',
+        cnpj: ''
+      }));
+      setErrors(prev => ({
+        ...prev,
+        [name]: null,
+        cpf: null,
+        cnpj: null
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: newValue }));
+      if (errors[name]) {
+        setErrors(prev => ({ ...prev, [name]: null }));
+      }
     }
   };
 
-  const handleBeforeUnload = (e) => {
+  const handleBeforeUnload = React.useCallback((e) => {
     if (isEditing && formData) {
       e.preventDefault();
       e.returnValue = '';
     }
-  };
+  }, [isEditing, formData]);
+
+  React.useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [handleBeforeUnload]);
 
   if (isLoading) {
     return (
