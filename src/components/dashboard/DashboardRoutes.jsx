@@ -41,6 +41,7 @@ const BlogSingle = lazy(() => import('../../pages/BlogSingle'));
 const About = lazy(() => import('../../pages/About'));
 const Contact = lazy(() => import('../../pages/Contact'));
 const Pricing = lazy(() => import('../../pages/Pricing'));
+const ClientDetail = lazy(() => import('../../pages/ClientDetail'));
 
 export default function DashboardRoutes() {
   return (
@@ -70,6 +71,12 @@ export default function DashboardRoutes() {
       <Route path="/clients" element={
         <LazyPageWrapper>
           <LazyClients />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/clientdetail/:clientId" element={
+        <LazyPageWrapper>
+          <ClientDetail />
         </LazyPageWrapper>
       } />
       

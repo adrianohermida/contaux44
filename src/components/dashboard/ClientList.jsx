@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Trash2, Edit2 } from 'lucide-react';
+import { Trash2, Edit2, Eye } from 'lucide-react';
 import { useMultitenantAuthOptimized } from '../auth/useMultitenantAuthOptimized';
 import { useCacheStrategy } from '../hooks/useCacheStrategy';
 import ClientCardMobile from './ClientCardMobile';
@@ -10,6 +11,7 @@ import ClientCardMobile from './ClientCardMobile';
 export default function ClientList({ refresh, onEdit }) {
   const { workspaceId } = useMultitenantAuthOptimized('internal');
   const { invalidateRelated } = useCacheStrategy();
+  const navigate = useNavigate();
   const parentRef = useRef(null);
 
   const { data: clients = [], isLoading, refetch } = useQuery({
@@ -99,10 +101,13 @@ export default function ClientList({ refresh, onEdit }) {
                     <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{client.email}</td>
                     <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{client.phone}</td>
                     <td className="px-6 py-4 text-right space-x-2 flex justify-end">
-                      <button onClick={() => onEdit(client)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-colors">
+                      <button onClick={() => navigate(`/clientdetail/${client.id}`)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-colors" title="Ver detalhes">
+                        <Eye className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </button>
+                      <button onClick={() => onEdit(client)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-colors" title="Editar">
                         <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       </button>
-                      <button onClick={() => handleDelete(client.id)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-colors">
+                      <button onClick={() => handleDelete(client.id)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-colors" title="Deletar">
                         <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
                       </button>
                     </td>
