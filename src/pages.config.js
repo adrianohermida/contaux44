@@ -130,6 +130,10 @@ import Welcome from './pages/Welcome';
 import DataValidation from './pages/DataValidation';
 import MobileFirstDesign from './pages/MobileFirstDesign';
 import UserOnboarding from './pages/UserOnboarding';
+import APIDocumentation from './pages/APIDocumentation';
+import WebhookManagement from './pages/WebhookManagement';
+import DatabaseOptimization from './pages/DatabaseOptimization';
+import RealtimeMonitoring from './pages/RealtimeMonitoring';
 import __Layout from './Layout.jsx';
 
 
@@ -217,6 +221,10 @@ export const PAGES = {
     "DataValidation": DataValidation,
     "MobileFirstDesign": MobileFirstDesign,
     "UserOnboarding": UserOnboarding,
+    "APIDocumentation": APIDocumentation,
+    "WebhookManagement": WebhookManagement,
+    "DatabaseOptimization": DatabaseOptimization,
+    "RealtimeMonitoring": RealtimeMonitoring,
 }
 
 export const pagesConfig = {
