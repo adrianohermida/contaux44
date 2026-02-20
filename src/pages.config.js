@@ -234,6 +234,24 @@ import CustomWebhooks from './pages/CustomWebhooks';
 import SDKGenerator from './pages/SDKGenerator';
 import DeveloperPortal from './pages/DeveloperPortal';
 import Sprint16Completion from './pages/Sprint16Completion';
+import Sprint16FinalReview from './pages/Sprint16FinalReview';
+import Sprint17Planning from './pages/Sprint17Planning';
+import AdvancedMetricsDashboard from './pages/AdvancedMetricsDashboard';
+import CustomUserSegments from './pages/CustomUserSegments';
+import MultiChannelCampaigns from './pages/MultiChannelCampaigns';
+import BehavioralAnalytics from './pages/BehavioralAnalytics';
+import ABTestingFramework from './pages/ABTestingFramework';
+import EmailMarketingAutomation from './pages/EmailMarketingAutomation';
+import SMSMarketingIntegration from './pages/SMSMarketingIntegration';
+import PushNotificationCampaigns from './pages/PushNotificationCampaigns';
+import CustomerJourneyMapping from './pages/CustomerJourneyMapping';
+import ConversionRateOptimizer from './pages/ConversionRateOptimizer';
+import DynamicContentEngine from './pages/DynamicContentEngine';
+import PersonalizationRulesEngine from './pages/PersonalizationRulesEngine';
+import AttributionModeling from './pages/AttributionModeling';
+import CohortAnalysisTool from './pages/CohortAnalysisTool';
+import LifetimeValuePredictor from './pages/LifetimeValuePredictor';
+import Sprint17Completion from './pages/Sprint17Completion';
 import __Layout from './Layout.jsx';
 
 
@@ -425,6 +443,24 @@ export const PAGES = {
     "SDKGenerator": SDKGenerator,
     "DeveloperPortal": DeveloperPortal,
     "Sprint16Completion": Sprint16Completion,
+    "Sprint16FinalReview": Sprint16FinalReview,
+    "Sprint17Planning": Sprint17Planning,
+    "AdvancedMetricsDashboard": AdvancedMetricsDashboard,
+    "CustomUserSegments": CustomUserSegments,
+    "MultiChannelCampaigns": MultiChannelCampaigns,
+    "BehavioralAnalytics": BehavioralAnalytics,
+    "ABTestingFramework": ABTestingFramework,
+    "EmailMarketingAutomation": EmailMarketingAutomation,
+    "SMSMarketingIntegration": SMSMarketingIntegration,
+    "PushNotificationCampaigns": PushNotificationCampaigns,
+    "CustomerJourneyMapping": CustomerJourneyMapping,
+    "ConversionRateOptimizer": ConversionRateOptimizer,
+    "DynamicContentEngine": DynamicContentEngine,
+    "PersonalizationRulesEngine": PersonalizationRulesEngine,
+    "AttributionModeling": AttributionModeling,
+    "CohortAnalysisTool": CohortAnalysisTool,
+    "LifetimeValuePredictor": LifetimeValuePredictor,
+    "Sprint17Completion": Sprint17Completion,
 }
 
 export const pagesConfig = {
