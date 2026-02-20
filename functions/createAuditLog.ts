@@ -9,23 +9,25 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
 
-    const { event, data, old_data } = body;
+    // Suporte para body direto (não apenas de automations)
+    const event = body.event || {};
+    const data = body.data || {};
+    const old_data = body.old_data || body.oldData || null;
+    const action = body.action || (event?.type ? event.type : 'update');
+    const entity_type = body.entity_type || event?.entity_name || 'Unknown';
+    const entity_id = body.entity_id || event?.entity_id || null;
+
     const user = await base44.auth.me();
 
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const workspaceId = data?.workspace_id || user.workspace_id;
+    const workspaceId = body.tenant_id || data?.tenant_id || data?.workspace_id || user.workspace_id;
     
     if (!workspaceId) {
       return Response.json({ error: 'Workspace ID required' }, { status: 403 });
     }
-
-    // Determina ação baseada no tipo de evento
-    let action = 'update';
-    if (event.type === 'create') action = 'create';
-    if (event.type === 'delete') action = 'delete';
 
     // Cria log de auditoria
     await base44.asServiceRole.entities.AuditLog.create({
