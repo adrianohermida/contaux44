@@ -134,6 +134,10 @@ import APIDocumentation from './pages/APIDocumentation';
 import WebhookManagement from './pages/WebhookManagement';
 import DatabaseOptimization from './pages/DatabaseOptimization';
 import RealtimeMonitoring from './pages/RealtimeMonitoring';
+import Sprint9Completion from './pages/Sprint9Completion';
+import Sprint10Tracker from './pages/Sprint10Tracker';
+import AIRecommendations from './pages/AIRecommendations';
+import EnterpriseSSOSetup from './pages/EnterpriseSSOSetup';
 import __Layout from './Layout.jsx';
 
 
@@ -225,6 +229,10 @@ export const PAGES = {
     "WebhookManagement": WebhookManagement,
     "DatabaseOptimization": DatabaseOptimization,
     "RealtimeMonitoring": RealtimeMonitoring,
+    "Sprint9Completion": Sprint9Completion,
+    "Sprint10Tracker": Sprint10Tracker,
+    "AIRecommendations": AIRecommendations,
+    "EnterpriseSSOSetup": EnterpriseSSOSetup,
 }
 
 export const pagesConfig = {
