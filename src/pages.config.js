@@ -101,6 +101,7 @@ import APIDashboard from './pages/APIDashboard';
 import MobileOptimized from './pages/MobileOptimized';
 import PWASetup from './pages/PWASetup';
 import Notifications from './pages/Notifications';
+import MobileAnalyticsDashboard from './pages/MobileAnalyticsDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -159,6 +160,7 @@ export const PAGES = {
     "MobileOptimized": MobileOptimized,
     "PWASetup": PWASetup,
     "Notifications": Notifications,
+    "MobileAnalyticsDashboard": MobileAnalyticsDashboard,
 }
 
 export const pagesConfig = {
