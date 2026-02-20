@@ -221,6 +221,19 @@ import OfflineSync from './pages/OfflineSync';
 import PushNotificationsPro from './pages/PushNotificationsPro';
 import Sprint15Completion from './pages/Sprint15Completion';
 import Sprint16Planning from './pages/Sprint16Planning';
+import Sprint15Review from './pages/Sprint15Review';
+import APIRateLimiting from './pages/APIRateLimiting';
+import RequestResponseCaching from './pages/RequestResponseCaching';
+import DistributedTracing from './pages/DistributedTracing';
+import SecurityAuditLogs from './pages/SecurityAuditLogs';
+import DDoSProtection from './pages/DDoSProtection';
+import IPWhitelisting from './pages/IPWhitelisting';
+import DataAnonymization from './pages/DataAnonymization';
+import AuditTrailDashboard from './pages/AuditTrailDashboard';
+import CustomWebhooks from './pages/CustomWebhooks';
+import SDKGenerator from './pages/SDKGenerator';
+import DeveloperPortal from './pages/DeveloperPortal';
+import Sprint16Completion from './pages/Sprint16Completion';
 import __Layout from './Layout.jsx';
 
 
@@ -399,6 +412,19 @@ export const PAGES = {
     "PushNotificationsPro": PushNotificationsPro,
     "Sprint15Completion": Sprint15Completion,
     "Sprint16Planning": Sprint16Planning,
+    "Sprint15Review": Sprint15Review,
+    "APIRateLimiting": APIRateLimiting,
+    "RequestResponseCaching": RequestResponseCaching,
+    "DistributedTracing": DistributedTracing,
+    "SecurityAuditLogs": SecurityAuditLogs,
+    "DDoSProtection": DDoSProtection,
+    "IPWhitelisting": IPWhitelisting,
+    "DataAnonymization": DataAnonymization,
+    "AuditTrailDashboard": AuditTrailDashboard,
+    "CustomWebhooks": CustomWebhooks,
+    "SDKGenerator": SDKGenerator,
+    "DeveloperPortal": DeveloperPortal,
+    "Sprint16Completion": Sprint16Completion,
 }
 
 export const pagesConfig = {
