@@ -322,18 +322,18 @@ export default function Blog() {
 
               {/* Popular Posts */}
               <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-3 sm:p-4 rounded-lg">
-                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Posts Populares</h5>
-                <div className="space-y-3 sm:space-y-4">
+                <h5 className="font-bold mb-2 text-sm dark:text-white">Posts Populares</h5>
+                <div className="space-y-2">
                   {popularPosts.length === 0 ? (
-                    <p className="text-xs text-slate-500">Nenhum post ainda</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Nenhum post ainda</p>
                   ) : (
                     popularPosts.map(post => (
                       <Link key={post.id} to={`${createPageUrl('BlogSingle')}?id=${post.id}`}>
-                        <div className="pb-3 sm:pb-4 border-b border-gray-200 last:border-0">
-                          <h6 className="font-semibold text-xs sm:text-sm hover:text-blue-600 mb-1 line-clamp-2">
+                        <div className="pb-2 border-b border-gray-200 dark:border-slate-700 last:border-0">
+                          <h6 className="font-semibold text-xs hover:text-blue-600 dark:hover:text-blue-400 mb-0.5 line-clamp-2 dark:text-white">
                             {post.title}
                           </h6>
-                          <span className="text-xs text-gray-500 flex items-center gap-1">
+                          <span className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             {new Date(post.publish_date || post.created_date).toLocaleDateString('pt-BR')}
                           </span>
@@ -345,8 +345,8 @@ export default function Blog() {
               </div>
 
               {/* Categories */}
-              <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
-                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Categorias</h5>
+              <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-3 sm:p-4 rounded-lg">
+                <h5 className="font-bold mb-2 text-sm dark:text-white">Categorias</h5>
                 <ul className="space-y-2">
                   {categories.length === 0 ? (
                     <li className="text-xs text-slate-500">Nenhuma categoria</li>
