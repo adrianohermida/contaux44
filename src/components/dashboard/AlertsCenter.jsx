@@ -9,8 +9,8 @@ const AlertsCenter = memo(function AlertsCenter({ tenantId }) {
     queryFn: () => base44.entities.Invoice.filter({ tenant_id: tenantId }),
     enabled: !!tenantId,
     staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000
+    gcTime: 15 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   const alerts = useMemo(() => {
