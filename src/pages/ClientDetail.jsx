@@ -9,6 +9,7 @@ import ContactManagementTab from '../components/dashboard/ContactManagementTab';
 import ShareholderManagementTab from '../components/dashboard/ShareholderManagementTab';
 import FiscalDataPanel from '../components/dashboard/FiscalDataPanel';
 import DigitalCertificateTab from '../components/dashboard/DigitalCertificateTab';
+import AccessCredentialTab from '../components/dashboard/AccessCredentialTab';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function ClientDetail() {
@@ -116,12 +117,13 @@ export default function ClientDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="addresses" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 gap-1">
           <TabsTrigger value="addresses" className="text-xs sm:text-sm">Endereços</TabsTrigger>
           <TabsTrigger value="contacts" className="text-xs sm:text-sm">Contatos</TabsTrigger>
           <TabsTrigger value="shareholders" className="text-xs sm:text-sm">Sócios</TabsTrigger>
           <TabsTrigger value="fiscal" className="text-xs sm:text-sm">Fiscal</TabsTrigger>
           <TabsTrigger value="certificates" className="text-xs sm:text-sm">Certs</TabsTrigger>
+          <TabsTrigger value="credentials" className="text-xs sm:text-sm">Acesso</TabsTrigger>
         </TabsList>
 
         <TabsContent value="addresses" className="bg-white rounded-lg shadow p-6">
@@ -142,6 +144,10 @@ export default function ClientDetail() {
 
         <TabsContent value="certificates" className="bg-white rounded-lg shadow p-6">
           <DigitalCertificateTab clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
+
+        <TabsContent value="credentials" className="bg-white rounded-lg shadow p-6">
+          <AccessCredentialTab clientId={client.id} tenantId={workspaceId} />
         </TabsContent>
       </Tabs>
     </div>
