@@ -94,6 +94,7 @@ import Transactions from './pages/Transactions';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
 import AnalyticsAdvanced from './pages/AnalyticsAdvanced';
+import RBACManagement from './pages/RBACManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -145,6 +146,7 @@ export const PAGES = {
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
     "AnalyticsAdvanced": AnalyticsAdvanced,
+    "RBACManagement": RBACManagement,
 }
 
 export const pagesConfig = {
