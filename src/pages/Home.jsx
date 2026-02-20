@@ -124,12 +124,12 @@ export default function Home() {
       <section className="py-12 sm:py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 sm:mb-6">Pronto para Começar?</h2>
-          <p className="text-base sm:text-lg text-slate-600 mb-8">Teste grátis por 30 dias. Sem cartão de crédito necessário.</p>
+          <p className="text-base sm:text-lg text-slate-600 mb-8">Crie sua conta grátis para solicitar serviços, acompanhar seus pedidos com transparência e facilidade.</p>
           <Link 
             to={createPageUrl('Contact')}
             className="inline-flex items-center justify-center bg-blue-600 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm sm:text-base"
           >
-            Acessar Dashboard <ArrowRight className="w-4 h-4 ml-2" />
+            Criar Conta Grátis <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </div>
       </section>
