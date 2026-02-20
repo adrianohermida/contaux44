@@ -31,18 +31,18 @@ const menuItems = [
   { icon: FileText, label: 'Processos Judiciais', page: 'LegalProcesses' },
   {
     icon: DollarSign,
-    label: 'Financeiro',
+    label: 'Vendas & Financeiro',
     submenu: [
       { label: 'Faturamento', page: 'Invoicing' },
-      { label: 'Pagamentos', page: 'Payments' },
       { label: 'Orçamentos', page: 'Quotes' },
       { label: 'Vendas', page: 'Sales' },
+      { label: 'Pagamentos', page: 'Payments' },
       { label: 'Fluxo de Caixa', page: 'CashFlow' },
+      { label: 'Previsão de Caixa', page: 'CashFlowForecast' },
       { label: 'Transações Bancárias', page: 'Transactions' },
-      { label: 'Previsão de Caixa', page: 'CashFlowForecast' }
+      { label: 'Prestação de Serviços', page: 'Services' }
     ]
   },
-  { icon: Calculator, label: 'Prestação de Serviços', page: 'Services' },
   {
     icon: FileSpreadsheet,
     label: 'Contabilidade',
