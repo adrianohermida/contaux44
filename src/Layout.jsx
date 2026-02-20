@@ -41,12 +41,48 @@ export default function Layout({ children, currentPageName }) {
   React.useEffect(() => {
     setupTheme();
     
+    // Listen for system theme changes
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleThemeChange = () => {
+      if (!localStorage.getItem('theme')) {
+        setupTheme();
+      }
+    };
+    darkModeQuery.addEventListener('change', handleThemeChange);
+    
     const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
     link.rel = 'icon';
     link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/d48cce015_favicon.png';
     if (!document.querySelector("link[rel~='icon']")) {
       document.head.appendChild(link);
     }
+
+    // Apply mobile-specific styles
+    const style = document.createElement('style');
+    style.textContent = `
+      * { box-sizing: border-box; }
+      body { 
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+      button, [role="button"], a, [tabindex] {
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      html { 
+        overscroll-behavior: none;
+        -webkit-user-select: none;
+      }
+      input, textarea, select {
+        -webkit-user-select: text;
+        user-select: text;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      darkModeQuery.removeEventListener('change', handleThemeChange);
+    };
   }, []);
 
   if (DASHBOARD_PAGES.includes(currentPageName)) {
