@@ -58,13 +58,25 @@ const menuItems = [
   },
   { icon: Zap, label: 'Automações', page: 'Automations' },
   { icon: BarChart3, label: 'Relatórios & Análises', page: 'Reports' },
-  { icon: FileText, label: 'Gerenciamento de Docs', page: 'DocumentManagement' },
-  { icon: PenTool, label: 'Gerenciador de Blogs', page: 'BlogManager' },
-  { icon: Phone, label: 'Comunicação', page: 'Communication' },
+  {
+   icon: FileText,
+   label: 'Gerenciamento',
+   submenu: [
+     { label: 'Documentos', page: 'DocumentManagement' },
+     { label: 'Blogs', page: 'BlogManager' },
+     { label: 'Comunicação', page: 'Communication' }
+   ]
+  },
   { icon: UserCircle, label: 'Meu Painel', page: 'ClientPortal' },
-  { icon: Settings, label: 'Configurações', page: 'SettingsPage' },
-  { icon: FileText, label: 'Logs de Auditoria', page: 'AuditLogs' },
-  { icon: AlertCircle, label: 'Centro de Segurança', page: 'SecurityCenter' }
+  {
+   icon: Settings,
+   label: 'Administração',
+   submenu: [
+     { label: 'Configurações', page: 'SettingsPage' },
+     { label: 'Logs de Auditoria', page: 'AuditLogs' },
+     { label: 'Centro de Segurança', page: 'SecurityCenter' }
+   ]
+  }
 ];
 
 
