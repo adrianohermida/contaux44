@@ -11,6 +11,7 @@ import {
 import { useUserAndTenantOptimized } from '../hooks/useUserAndTenantOptimized';
 import { useDebounce } from '../hooks/useDebounce';
 import UserPreferences from './UserPreferences';
+import Breadcrumbs from './Breadcrumbs';
 
 const DashboardHeader = memo(function DashboardHeader() {
   const { user, tenantId } = useUserAndTenantOptimized();
@@ -146,7 +147,7 @@ const DashboardHeader = memo(function DashboardHeader() {
 
       {/* Breadcrumbs */}
       <div className="sticky top-14 z-30">
-        <div className="lazy-breadcrumbs" />
+        <Breadcrumbs />
       </div>
     </>
   );
