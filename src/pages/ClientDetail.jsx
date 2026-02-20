@@ -16,13 +16,6 @@ import InvoiceDetailPanel from '../components/dashboard/InvoiceDetailPanel';
 import ReportGenerationPanel from '../components/dashboard/ReportGenerationPanel';
 import FinancialAnalyticsPanel from '../components/dashboard/FinancialAnalyticsPanel';
 import BankReconciliationPanel from '../components/dashboard/BankReconciliationPanel';
-import TaxCalculationPanel from '../components/dashboard/TaxCalculationPanel';
-import NFeIntegrationPanel from '../components/dashboard/NFeIntegrationPanel';
-import ComplianceDashboardPanel from '../components/dashboard/ComplianceDashboardPanel';
-import AutomatedWorkflowPanel from '../components/dashboard/AutomatedWorkflowPanel';
-import NotificationCenterPanel from '../components/dashboard/NotificationCenterPanel';
-import AdvancedAnalyticsDashboard from '../components/dashboard/AdvancedAnalyticsDashboard';
-import CustomReportBuilder from '../components/dashboard/CustomReportBuilder';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 
