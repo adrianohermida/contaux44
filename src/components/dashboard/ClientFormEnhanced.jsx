@@ -199,6 +199,8 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
 
     try {
       setSaving(true);
+      setConnectionError(null);
+      setApiError(null);
       
       // Preparar dados apenas com campos necessários
       const clientData = {
@@ -237,7 +239,22 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
       }, 600);
     } catch (err) {
       console.error('Erro ao salvar cliente:', err);
-      toast.error(err.message || 'Erro ao salvar cliente. Tente novamente.');
+      
+      // Detectar tipo de erro
+      if (!navigator.onLine) {
+        setConnectionError('Sem conexão com a internet. Verifique sua rede e tente novamente.');
+        toast.error('Sem conexão com a internet');
+      } else if (err?.status >= 500) {
+        const statusMsg = err.status === 500 ? '500 - Erro no servidor' : `${err.status} - Erro do servidor`;
+        setApiError(`Problema no servidor (${statusMsg}). Tente novamente em alguns instantes.`);
+        toast.error(`Erro do servidor: ${statusMsg}`);
+      } else if (err?.message?.includes('WebSocket') || err?.code === 'ECONNREFUSED') {
+        setConnectionError('Erro de conexão com o servidor. Verifique sua internet e tente novamente.');
+        toast.error('Erro de conexão');
+      } else {
+        setApiError(err?.message || 'Erro ao salvar cliente. Tente novamente.');
+        toast.error(err?.message || 'Erro ao salvar cliente');
+      }
     } finally {
       setSaving(false);
     }
