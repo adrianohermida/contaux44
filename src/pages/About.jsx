@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 const teamMembers = [
-  { name: 'Dahlia Moore', role: 'Senior Manager' },
-  { name: 'Jhone digo', role: 'Marketing' },
-  { name: 'Zara tingo', role: 'Web Developer' },
-  { name: 'David Zone', role: 'SEO Expert' },
+  { name: 'Dr. Ricardo Silva', role: 'Diretor de Produtos' },
+  { name: 'Fernanda Santos', role: 'Gerente de Clientes' },
+  { name: 'João Pereira', role: 'Desenvolvedor Sênior' },
+  { name: 'Marina Costa', role: 'Especialista em Contabilidade' },
 ];
 
 const services = [
-  { icon: '🔬', title: 'Discover, Explore the Product', desc: 'Discover, Explore & Understanding The Product' },
-  { icon: '📋', title: 'Art Direction & Brand Strategy', desc: 'Art Direction & Brand Communication' },
-  { icon: '💻', title: 'Product UX, Design & Development', desc: 'Digital Product UX, Design & Development' },
-  { icon: '📊', title: 'Marketing Strategy & SEO Campaigns', desc: 'Marketing Strategy & SEO Campaigns' },
+  { icon: '👥', title: 'Gestão de Clientes', desc: 'CRM completo para gerenciar PF e PJ com documentos e histórico' },
+  { icon: '📊', title: 'Dashboard Financeiro', desc: 'Relatórios em tempo real sobre receitas, despesas e fluxo de caixa' },
+  { icon: '📋', title: 'Gestão de Processos Jurídicos', desc: 'Organização completa de casos com prazos e acompanhamento automático' },
+  { icon: '💰', title: 'Faturamento Inteligente', desc: 'Emissão de invoices com integração contábil e rastreamento de pagamentos' },
 ];
 
 export default function About() {
