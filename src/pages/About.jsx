@@ -42,9 +42,9 @@ export default function About() {
              {/* Left Content */}
              <div>
                <div className="mb-8">
-                 <span className="text-blue-600 font-semibold text-sm md:text-base">O que fazemos</span>
-                 <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Tecnologia que organiza seu escritório</h2>
-                 <p className="text-gray-600 text-sm md:text-base">Contaux é uma plataforma integrada que combina CRM, gestão financeira e acompanhamento de processos judiciais em um único sistema.</p>
+                 <span className="text-blue-600 font-semibold text-sm md:text-base">Quem somos</span>
+                 <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Especialistas em Contabilidade Judicial</h2>
+                 <p className="text-gray-600 text-sm md:text-base">Contaux é um escritório de contabilidade especializado em contabilidade judicial, cálculos de custas processuais, pareceres técnicos e recolhimentos para escritórios de advocacia e empresas.</p>
                </div>
 
               {/* Tabs */}
@@ -71,27 +71,27 @@ export default function About() {
               <div className="space-y-4">
                 {activeTab === 'missao' && (
                   <>
-                    <p className="text-gray-600">Simplificar a gestão administrativa de escritórios de advocacia e empresas de contabilidade, fornecendo uma plataforma integrada que centraliza clientes, processos judiciais, documentação e finanças em um único sistema intuitivo.</p>
+                    <p className="text-gray-600">Fornecer serviços especializados de contabilidade judicial, custas processuais e pareceres técnicos de excelência para escritórios de advocacia e empresas, otimizando custos e garantindo conformidade legal em todos os processos judiciais.</p>
                     <ul className="space-y-3">
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Reduzir carga administrativa do profissional jurídico</span>
+                        <span className="text-gray-600">Calcular custas e honorários judiciais com precisão</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Aumentar eficiência operacional dos escritórios</span>
+                        <span className="text-gray-600">Gerar pareceres técnicos para assessoria jurídica</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Otimizar gestão financeira e de clientes</span>
+                        <span className="text-gray-600">Otimizar gestão de recolhimentos e planos de pagamento</span>
                       </li>
                     </ul>
                   </>
                 )}
                 {activeTab === 'visao' && (
                   <>
-                    <p className="text-gray-600">Ser a plataforma líder no Brasil para gestão integral de escritórios jurídicos e contábeis, oferecendo tecnologia inovadora que transforma processos manuais em fluxos automáticos e inteligentes.</p>
-                    <p className="text-gray-600 mt-4">Expandir para integração com sistemas de tribunal eletrônico, automações baseadas em IA e análise preditiva de casos e finanças.</p>
+                    <p className="text-gray-600">Ser referência nacional em contabilidade judicial, oferecendo soluções inovadoras que combinam expertise contábil com tecnologia avançada para simplificar processos judiciais complexos.</p>
+                    <p className="text-gray-600 mt-4">Expandir para integração com sistemas de tribunal eletrônico, automatizações baseadas em IA para cálculos judiciais e análise preditiva de custas processuais.</p>
                   </>
                 )}
                 {activeTab === 'valores' && (
@@ -99,19 +99,19 @@ export default function About() {
                     <ul className="space-y-3">
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600"><strong>Excelência:</strong> Compromisso com qualidade e inovação contínua</span>
+                        <span className="text-gray-600"><strong>Excelência:</strong> Qualidade e precisão em todos os cálculos</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600"><strong>Transparência:</strong> Clareza e honestidade em tudo que fazemos</span>
+                        <span className="text-gray-600"><strong>Confiabilidade:</strong> Respeito absoluto aos prazos e conformidade legal</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600"><strong>Segurança:</strong> Proteção rigorosa de dados e conformidade legal</span>
+                        <span className="text-gray-600"><strong>Especialização:</strong> Expertise profunda em contabilidade judicial</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600"><strong>Colaboração:</strong> Nossos clientes são parceiros no sucesso</span>
+                        <span className="text-gray-600"><strong>Parceria:</strong> Atuamos como extensão do seu escritório</span>
                       </li>
                     </ul>
                   </>
@@ -135,9 +135,9 @@ export default function About() {
       <section className="bg-gray-50 py-12 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-8 md:mb-12">
-            <span className="text-blue-600 font-semibold text-sm md:text-base">Recursos Principais</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Ferramentas Completas para Seu Escritório</h2>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Contaux integra todas as funcionalidades necessárias para gerenciar clientes, processos e finanças com eficiência.</p>
+            <span className="text-blue-600 font-semibold text-sm md:text-base">Serviços Principais</span>
+            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Especialidades Contaux</h2>
+            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Somos especializados em contabilidade judicial com soluções integradas para escritórios de advocacia e empresas.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -145,7 +145,7 @@ export default function About() {
               <div key={idx} className="bg-white p-8 rounded-lg text-center hover:shadow-lg transition-shadow">
                 <div className="text-4xl mb-4">{service.icon}</div>
                 <h3 className="font-bold text-lg mb-3">{service.title}</h3>
-                <p className="text-gray-600">{service.desc}</p>
+                <p className="text-gray-600 text-sm">{service.desc}</p>
               </div>
             ))}
           </div>
@@ -157,37 +157,33 @@ export default function About() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-8 md:mb-12">
             <span className="text-blue-600 font-semibold text-sm md:text-base">Conheça Nossa Equipe</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Profissionais Dedicados</h2>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Uma equipe multidisciplinar com expertise em tecnologia, direito e contabilidade.</p>
+            <h2 className="text-2xl md:text-4xl font-bold mt-2">Profissionais Experientes</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {teamMembers.map((member, idx) => {
-              const teamImages = [
-                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8da421752_t1.jpg',
-                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/5e76acbb9_t2.jpg',
-                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/d3c4c97f8_t3.jpg',
-                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/a90f2c1b4_t4.jpg',
-              ];
-              return (
-                <div key={idx} className="text-center">
-                  <img src={teamImages[idx]} alt={member.name} className="w-full h-64 object-cover rounded-lg mb-4" />
-                  <h4 className="font-bold text-lg">{member.name}</h4>
-                  <p className="text-gray-600">{member.role}</p>
+            {teamMembers.map((member, idx) => (
+              <div key={idx} className="bg-gray-50 p-6 rounded-lg text-center hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                  {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
-              );
-            })}
+                <h3 className="font-bold text-lg mb-1">{member.name}</h3>
+                <p className="text-gray-600 text-sm">{member.role}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 md:py-20">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-4xl font-bold mb-4">Pronto para modernizar seu escritório?</h2>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">Contaux simplifica a gestão do seu escritório de advocacia ou contabilidade. Comece agora com uma avaliação gratuita.</p>
-          <Link to={createPageUrl('Home')} className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
-            Solicitar Demo
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">Pronto para Melhorar Seus Processos Judiciais?</h2>
+          <p className="text-blue-100 mb-8 text-sm md:text-base">Trabalhe com especialistas em contabilidade judicial e otimize seus custos processuais.</p>
+          <Link 
+            to={createPageUrl('Contact')}
+            className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+          >
+            Fale Conosco
           </Link>
         </div>
       </section>
