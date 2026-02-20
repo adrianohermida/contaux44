@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useUserAndTenantOptimized } from '@/components/hooks/useUserAndTenantOptimized';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,60 +15,63 @@ import { Button } from '@/components/ui/button';
 
 export default function Reports() {
   const { tenantId } = useUserAndTenantOptimized();
-  const [reports, setReports] = useState([]);
-  const [analyticsData, setAnalyticsData] = useState(null);
   const [activeTab, setActiveTab] = useState('analytics');
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (!tenantId) return;
-      try {
-        const [reportsList, invoices, payments, tickets, clients] = await Promise.all([
-          base44.entities.Report.filter({ tenant_id: tenantId }),
-          base44.entities.Invoice.filter({ tenant_id: tenantId }),
-          base44.entities.Payment.filter({ tenant_id: tenantId }),
-          base44.entities.Ticket.filter({ tenant_id: tenantId }),
-          base44.entities.Client.filter({ tenant_id: tenantId })
-        ]);
+  // Query para dados de análise
+  const { data: analyticsData, isLoading: analyticsLoading } = useQuery({
+    queryKey: ['reports-analytics', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return null;
+      const [invoices, payments, tickets, clients] = await Promise.all([
+        base44.entities.Invoice.filter({ tenant_id: tenantId }),
+        base44.entities.Payment.filter({ tenant_id: tenantId }),
+        base44.entities.Ticket.filter({ tenant_id: tenantId }),
+        base44.entities.Client.filter({ tenant_id: tenantId })
+      ]);
 
-        const today = new Date();
-        const totalInvoiced = invoices.reduce((sum, i) => sum + (i.total_amount || 0), 0);
-        const totalPaid = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + (i.total_amount || 0), 0);
-        const overdue = invoices.filter(i => new Date(i.due_date) < today && i.status !== 'paid').reduce((sum, i) => sum + (i.total_amount || 0), 0);
-        const avgTicketResolution = tickets.length > 0 ? Math.round(tickets.filter(t => t.status === 'closed').length / tickets.length * 100) : 0;
+      const today = new Date();
+      const totalInvoiced = invoices.reduce((sum, i) => sum + (i.total_amount || 0), 0);
+      const totalPaid = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + (i.total_amount || 0), 0);
+      const overdue = invoices.filter(i => new Date(i.due_date) < today && i.status !== 'paid').reduce((sum, i) => sum + (i.total_amount || 0), 0);
+      const avgTicketResolution = tickets.length > 0 ? Math.round(tickets.filter(t => t.status === 'closed').length / tickets.length * 100) : 0;
 
-        setReports(reportsList || []);
-        setAnalyticsData({
-          invoices,
-          payments,
-          tickets,
-          clients,
-          metrics: {
-            totalInvoiced,
-            totalPaid,
-            overdue,
-            avgTicketResolution,
-            paymentRate: totalInvoiced > 0 ? Math.round((totalPaid / totalInvoiced) * 100) : 0
-          }
-        });
-      } catch (error) {
-        console.error('Erro:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, [tenantId]);
+      return {
+        invoices,
+        payments,
+        tickets,
+        clients,
+        metrics: {
+          totalInvoiced,
+          totalPaid,
+          overdue,
+          avgTicketResolution,
+          paymentRate: totalInvoiced > 0 ? Math.round((totalPaid / totalInvoiced) * 100) : 0
+        }
+      };
+    },
+    enabled: !!tenantId,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
+
+  // Query para relatórios salvos
+  const { data: reports = [] } = useQuery({
+    queryKey: ['reports-list', tenantId],
+    queryFn: () => base44.entities.Report.filter({ tenant_id: tenantId }),
+    enabled: !!tenantId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
 
   const handleDelete = async (id) => {
     if (confirm('Deletar este relatório?')) {
       await base44.entities.Report.delete(id);
-      setReports(reports.filter(r => r.id !== id));
     }
   };
 
-  if (loading) return <div className="text-center py-8">Carregando...</div>;
+  if (analyticsLoading) return <div className="text-center py-8">Carregando...</div>;
 
   return (
     <div className="space-y-6">
