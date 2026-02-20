@@ -154,6 +154,18 @@ import Sprint11Tracker from './pages/Sprint11Tracker';
 import AdvancedAnalyticsDashboard from './pages/AdvancedAnalyticsDashboard';
 import CustomBusinessRules from './pages/CustomBusinessRules';
 import DataExportImport from './pages/DataExportImport';
+import PerformanceScaling from './pages/PerformanceScaling';
+import BatchProcessing from './pages/BatchProcessing';
+import QueueManagement from './pages/QueueManagement';
+import AutomatedBackups from './pages/AutomatedBackups';
+import DisasterRecovery from './pages/DisasterRecovery';
+import UserActivityTimeline from './pages/UserActivityTimeline';
+import LoadTestingFramework from './pages/LoadTestingFramework';
+import SEOOptimization from './pages/SEOOptimization';
+import SocialMediaIntegration from './pages/SocialMediaIntegration';
+import EmailMarketing from './pages/EmailMarketing';
+import Sprint11Completion from './pages/Sprint11Completion';
+import Sprint12Tracker from './pages/Sprint12Tracker';
 import __Layout from './Layout.jsx';
 
 
@@ -265,6 +277,18 @@ export const PAGES = {
     "AdvancedAnalyticsDashboard": AdvancedAnalyticsDashboard,
     "CustomBusinessRules": CustomBusinessRules,
     "DataExportImport": DataExportImport,
+    "PerformanceScaling": PerformanceScaling,
+    "BatchProcessing": BatchProcessing,
+    "QueueManagement": QueueManagement,
+    "AutomatedBackups": AutomatedBackups,
+    "DisasterRecovery": DisasterRecovery,
+    "UserActivityTimeline": UserActivityTimeline,
+    "LoadTestingFramework": LoadTestingFramework,
+    "SEOOptimization": SEOOptimization,
+    "SocialMediaIntegration": SocialMediaIntegration,
+    "EmailMarketing": EmailMarketing,
+    "Sprint11Completion": Sprint11Completion,
+    "Sprint12Tracker": Sprint12Tracker,
 }
 
 export const pagesConfig = {
