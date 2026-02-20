@@ -18,7 +18,7 @@ const services = [
 ];
 
 export default function About() {
-  const [activeTab, setActiveTab] = useState('content');
+  const [activeTab, setActiveTab] = useState('missao');
 
   return (
     <div className="min-h-screen bg-white">
