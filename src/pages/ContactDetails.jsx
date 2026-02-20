@@ -13,25 +13,25 @@ export default function ContactDetails() {
   const { contactId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { workspaceId } = useMultitenantAuthOptimized('internal');
-  
-  const [formData, setFormData] = useState(null);
-  const [isEditing, setIsEditing] = useState(contactId === 'new');
+  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
 
-  // Fetch contact if not new
-  const { data: contact, isLoading, error } = useQuery({
-    queryKey: ['contact-detail', contactId, workspaceId],
-    queryFn: async () => {
-      if (!contactId || contactId === 'new' || !workspaceId) return null;
-      const data = await base44.entities.Client.get(contactId);
-      if (data?.tenant_id !== workspaceId) {
-        throw new Error('Acesso negado');
-      }
-      return data;
-    },
-    enabled: contactId !== 'new' && !!workspaceId,
-    staleTime: 5 * 60 * 1000,
-  });
+   const [formData, setFormData] = useState(null);
+   const [isEditing, setIsEditing] = useState(contactId === 'new');
+
+   // Fetch contact if not new
+   const { data: contact, isLoading, error } = useQuery({
+     queryKey: ['contact-detail', contactId, workspaceId],
+     queryFn: async () => {
+       if (!contactId || contactId === 'new' || !workspaceId) return null;
+       const data = await base44.entities.Client.get(contactId);
+       if (data?.tenant_id !== workspaceId) {
+         throw new Error('Acesso negado');
+       }
+       return data;
+     },
+     enabled: !authLoading && contactId !== 'new' && !!workspaceId,
+     staleTime: 5 * 60 * 1000,
+   });
 
   // Initialize form data
   React.useEffect(() => {
