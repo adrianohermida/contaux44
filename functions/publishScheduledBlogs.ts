@@ -23,6 +23,7 @@ Deno.serve(async (req) => {
 
     for (const blog of toPublish) {
       try {
+        const blogTitle = blog.data?.title || blog.title || 'Unknown';
         await base44.asServiceRole.entities.BlogPost.update(blog.id, {
           status: 'published',
           publish_date: new Date().toISOString()
@@ -30,14 +31,14 @@ Deno.serve(async (req) => {
 
         results.push({
           id: blog.id,
-          title: blog.title,
+          title: blogTitle,
           status: 'published'
         });
 
         // Enviar newsletter automática se configurado
         try {
           await base44.asServiceRole.functions.invoke('sendNewsletterPost', {
-            blog_post_id: blog.id
+            blogPostId: blog.id
           });
         } catch (newsletterError) {
           console.log('Newsletter error:', newsletterError.message);
