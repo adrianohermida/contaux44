@@ -99,13 +99,13 @@ import Reports from './pages/Reports';
 import Sales from './pages/Sales';
 import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
+import ServicesPage from './pages/ServicesPage';
 import SettingsPage from './pages/SettingsPage';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
-import ServicesPage from './pages/ServicesPage';
 import __Layout from './Layout.jsx';
 
 
@@ -162,13 +162,13 @@ export const PAGES = {
     "Sales": Sales,
     "SecurityCenter": SecurityCenter,
     "Services": Services,
+    "ServicesPage": ServicesPage,
     "SettingsPage": SettingsPage,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
-    "ServicesPage": ServicesPage,
 }
 
 export const pagesConfig = {
