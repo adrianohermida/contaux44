@@ -3,9 +3,9 @@ import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recha
 
 const COLORS = {
   paid: '#10b981',
-  overdue: '#ef4444',
-  sent: '#f59e0b',
-  draft: '#94a3b8'
+  overdue: '#f59e0b',
+  sent: '#3b82f6',
+  draft: '#cbd5e1'
 };
 
 export default function PaymentStatusChart({ invoices }) {
@@ -30,7 +30,7 @@ export default function PaymentStatusChart({ invoices }) {
       <PieChart>
         <Pie data={chartData} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name}: ${value}`} outerRadius={80} dataKey="value">
           {chartData.map((entry) => (
-            <Cell key={entry.name} fill={COLORS[entry.name.toLowerCase()] || '#8b5cf6'} />
+            <Cell key={entry.name} fill={COLORS[entry.name.toLowerCase()] || '#3b82f6'} />
           ))}
         </Pie>
         <Tooltip />

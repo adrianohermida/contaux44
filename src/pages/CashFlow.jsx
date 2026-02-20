@@ -55,13 +55,13 @@ export default function CashFlow() {
               </div>
             </div>
 
-            <div className="bg-red-50 rounded-lg shadow p-6 border-l-4 border-red-500">
+            <div className="bg-amber-50 rounded-lg shadow p-6 border-l-4 border-amber-500">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-600 text-sm mb-1">Saídas Registradas</p>
-                  <p className="text-3xl font-bold text-red-600">{outflow.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
+                  <p className="text-3xl font-bold text-amber-600">{outflow.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
                 </div>
-                <TrendingDown className="w-10 h-10 text-red-500" />
+                <TrendingDown className="w-10 h-10 text-amber-500" />
               </div>
             </div>
           </div>
@@ -91,9 +91,9 @@ export default function CashFlow() {
                         <td className="py-2 font-medium">{p.amount.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</td>
                         <td className="py-2">
                           <span className={`px-2 py-1 rounded text-xs font-medium ${
-                            p.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                            p.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-red-100 text-red-800'
+                            p.status === 'confirmed' ? 'bg-emerald-100 text-emerald-800' :
+                            p.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                            'bg-amber-100 text-amber-800'
                           }`}>
                             {p.status}
                           </span>
