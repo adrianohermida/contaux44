@@ -73,7 +73,7 @@ export default function DashboardRoutes() {
         </LazyPageWrapper>
       } />
       
-      <Route path="/contactdetails/:contactId" element={
+      <Route path="/ContactDetails/:contactId" element={
         <LazyPageWrapper>
           <ContactDetails />
         </LazyPageWrapper>
