@@ -196,8 +196,8 @@ export default function Blog() {
               </div>
 
               {paginatedPosts.length === 0 ? (
-                <div className="text-center py-12 bg-slate-50 rounded-lg">
-                  <p className="text-slate-600 mb-4">Nenhum post encontrado com os filtros aplicados.</p>
+                <div className="text-center py-12 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <p className="text-slate-600 dark:text-slate-400 mb-4">Nenhum post encontrado com os filtros aplicados.</p>
                   <button 
                     onClick={() => {
                       setSearchTerm('');
@@ -205,7 +205,7 @@ export default function Blog() {
                       setSelectedTag(null);
                       setCurrentPage(1);
                     }}
-                    className="text-blue-600 hover:text-blue-700 underline"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
                   >
                     Limpar filtros
                   </button>
