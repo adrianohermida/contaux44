@@ -131,6 +131,22 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
     }
   };
 
+  const handleCEPChange = async (e) => {
+    const cepValue = e.target.value;
+    setFieldValue('cep', cepValue);
+    clearCepError();
+
+    if (validateCEP(cepValue)) {
+      const addressData = await fetchAddress(cepValue);
+      if (addressData) {
+        setFieldValue('endereco', addressData.endereco);
+        setFieldValue('bairro', addressData.bairro);
+        setFieldValue('cidade', addressData.cidade);
+        setFieldValue('uf', addressData.uf);
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     clearErrors();
