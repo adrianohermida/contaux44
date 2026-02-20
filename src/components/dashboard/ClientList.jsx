@@ -21,7 +21,9 @@ export default function ClientList({ refresh, onEdit }) {
       });
     },
     enabled: !!workspaceId,
-    staleTime: 10 * 60 * 1000, // ✅ 10 min - dados mudam pouco
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   // Virtualização - renderiza apenas itens visíveis
