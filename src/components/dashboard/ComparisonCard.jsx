@@ -29,9 +29,9 @@ export default function ComparisonCard({ tenantId }) {
       {data.trend === 'up' ? (
         <TrendingUp className="w-5 h-5 text-green-500" />
       ) : (
-        <TrendingDown className="w-5 h-5 text-red-500" />
+        <TrendingDown className="w-5 h-5 text-amber-500" />
       )}
-      <span className={data.change >= 0 ? 'text-green-600' : 'text-red-600'}>
+      <span className={data.change >= 0 ? 'text-green-600' : 'text-amber-600'}>
         {data.change > 0 ? '+' : ''}{data.change.toFixed(1)}%
       </span>
     </div>
