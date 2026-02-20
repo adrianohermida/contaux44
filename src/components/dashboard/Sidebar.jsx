@@ -86,6 +86,11 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   const [openMenus, setOpenMenus] = useState({});
   const [unreadCount, setUnreadCount] = useState(0);
 
+  // Memorizar estado do sidebar em localStorage
+  React.useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
+  }, [collapsed]);
+
   // Carregar unread messages
   React.useEffect(() => {
     const loadUnread = async () => {

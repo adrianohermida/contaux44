@@ -8,7 +8,14 @@ import PerformanceMonitor from './PerformanceMonitor';
  * Deve ser usado através do Layout.js para todas as páginas dashboard
  */
 const DashboardLayout = memo(function DashboardLayout({ children }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sidebarCollapsed');
+      return saved ? JSON.parse(saved) : false;
+    } catch {
+      return false;
+    }
+  });
   
   const handleSetCollapsed = useCallback((value) => {
     setSidebarCollapsed(value);
