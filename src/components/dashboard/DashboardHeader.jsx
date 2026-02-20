@@ -49,7 +49,7 @@ const DashboardHeader = memo(function DashboardHeader() {
 
   return (
     <>
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40 transition-colors">
         <div className="px-6 py-4 flex items-center justify-between">
         {/* Search */}
         <SearchBox query={searchQuery} onQueryChange={setSearchQuery} />
@@ -59,11 +59,11 @@ const DashboardHeader = memo(function DashboardHeader() {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
             title={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
           >
             {theme === 'dark' ? (
-              <Sun className="w-5 h-5 text-slate-600" />
+              <Sun className="w-5 h-5 text-slate-400" />
             ) : (
               <Moon className="w-5 h-5 text-slate-600" />
             )}
@@ -72,12 +72,12 @@ const DashboardHeader = memo(function DashboardHeader() {
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="relative p-2 hover:bg-slate-100 rounded-lg transition-colors">
+              <button className="relative p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
                 {notificationsLoading ? (
-                  <Loader2 className="w-5 h-5 text-slate-600 animate-spin" />
+                  <Loader2 className="w-5 h-5 text-slate-600 dark:text-slate-400 animate-spin" />
                 ) : (
                   <>
-                    <Bell className="w-5 h-5 text-slate-600" />
+                    <Bell className="w-5 h-5 text-slate-600 dark:text-slate-400" />
                     {unreadCount > 0 && (
                       <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{unreadCount}</span>
                     )}
@@ -85,8 +85,8 @@ const DashboardHeader = memo(function DashboardHeader() {
                 )}
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-96">
-              <div className="p-4">
+            <DropdownMenuContent align="end" className="w-96 dark:bg-slate-700 dark:border-slate-600">
+              <div className="p-4 dark:text-slate-200">
                 <h3 className="font-semibold mb-3">Notificações</h3>
                 {notificationsLoading ? (
                   <div className="flex justify-center py-4">
@@ -116,19 +116,19 @@ const DashboardHeader = memo(function DashboardHeader() {
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-lg transition-colors">
+              <button className="flex items-center gap-2 p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                   <User className="w-5 h-5 text-white" />
                 </div>
                 <div className="text-left hidden md:block">
-                  <p className="text-sm font-medium text-slate-900">
+                  <p className="text-sm font-medium text-slate-900 dark:text-slate-200">
                     {user?.full_name || 'Usuário'}
                   </p>
-                  <p className="text-xs text-slate-500">{user?.role === 'admin' ? 'Administrador' : 'Usuário'}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{user?.role === 'admin' ? 'Administrador' : 'Usuário'}</p>
                 </div>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="dark:bg-slate-700 dark:border-slate-600">
               <DropdownMenuItem onClick={() => setPreferencesOpen(true)}>
                 <Settings className="w-4 h-4 mr-2" />
                 Preferências
@@ -151,7 +151,7 @@ const DashboardHeader = memo(function DashboardHeader() {
       </header>
 
       {/* Breadcrumbs */}
-      <div className="sticky top-14 z-30">
+      <div className="sticky top-14 z-30 dark:bg-slate-900">
         <Breadcrumbs />
       </div>
     </>

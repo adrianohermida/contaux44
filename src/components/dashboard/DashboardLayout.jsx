@@ -23,7 +23,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
       {/* Sidebar - hidden on mobile, visible on desktop */}
       <div className="hidden md:block">
         <Sidebar collapsed={sidebarCollapsed} setCollapsed={handleSetCollapsed} />
@@ -36,7 +36,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
         {/* Header - sempre visível e consistente */}
         <DashboardHeader />
         
-        <main className="flex-1 p-4 sm:p-6 overflow-x-hidden">
+        <main className="flex-1 p-4 sm:p-6 overflow-x-hidden dark:bg-slate-900">
           {children}
         </main>
       </div>
