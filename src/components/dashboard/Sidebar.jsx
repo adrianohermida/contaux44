@@ -92,16 +92,16 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
     localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
   }, [collapsed]);
 
-  // Carregar unread messages com React Query
+  // Carregar unread messages - SEM refetchInterval (otimizado)
   const { data: unreadConversations = [] } = useQuery({
     queryKey: ['sidebar-unread'],
     queryFn: async () => {
       const { base44 } = await import('@/api/base44Client');
       return base44.entities.VirtualCounterConversation.filter({ status: 'active' });
     },
-    staleTime: 1 * 60 * 1000,
+    staleTime: 2 * 60 * 1000, // 2 minutos
     gcTime: 5 * 60 * 1000,
-    refetchInterval: 30000
+    // ❌ Removido refetchInterval para performance
   });
 
   const unreadCount = useMemo(() => 

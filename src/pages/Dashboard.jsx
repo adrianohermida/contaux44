@@ -12,15 +12,37 @@ import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAu
 const Dashboard = memo(function Dashboard() {
   const { workspaceId } = useMultitenantAuthOptimized('internal');
 
-  const { data: dashboardData } = useQuery({
-    queryKey: ['dashboard', workspaceId],
+  // Query crítica (dados principais) - FASE 1
+  const { data: criticalData } = useQuery({
+    queryKey: ['dashboard-critical', workspaceId],
     queryFn: async () => {
       if (!workspaceId) return null;
       
-      const [clients, processes, tickets, invoices, quotes] = await Promise.all([
+      // Apenas dados críticos para exibição imediata
+      const [clients, tickets] = await Promise.all([
         base44.entities.Client.filter({ workspace_id: workspaceId, status: 'active' }),
+        base44.entities.Ticket.filter({ workspace_id: workspaceId, status: 'open' })
+      ]);
+
+      return {
+        clientsCount: clients.length,
+        ticketsCount: tickets.length,
+      };
+    },
+    enabled: !!workspaceId,
+    staleTime: 3 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
+
+  // Query secundária (carrega depois) - FASE 2
+  const { data: secondaryData } = useQuery({
+    queryKey: ['dashboard-secondary', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return null;
+      
+      const [processes, invoices, quotes] = await Promise.all([
         base44.entities.LegalProcess.filter({ workspace_id: workspaceId, status: 'in_progress' }),
-        base44.entities.Ticket.filter({ workspace_id: workspaceId, status: 'open' }),
         base44.entities.Invoice.filter({ workspace_id: workspaceId }),
         base44.entities.Quote.filter({ workspace_id: workspaceId, status: 'draft' })
       ]);
@@ -37,19 +59,30 @@ const Dashboard = memo(function Dashboard() {
       }).length;
 
       return {
-        clientsCount: clients.length,
         processesCount: processes.length,
-        ticketsCount: tickets.length,
         monthlyRevenue,
         upcomingDeadlines,
         quotesCount: quotes.length
       };
     },
-    enabled: !!workspaceId,
+    enabled: !!workspaceId && !!criticalData, // Carrega apenas após dados críticos
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false
   });
+
+  // Combinar dados
+  const dashboardData = useMemo(() => {
+    if (!criticalData) return null;
+    return {
+      ...criticalData,
+      ...(secondaryData || {
+        processesCount: 0,
+        monthlyRevenue: 0,
+        upcomingDeadlines: 0,
+        quotesCount: 0
+      })
+    };
+  }, [criticalData, secondaryData]);
 
   const stats = useMemo(() => {
     if (!dashboardData) {
