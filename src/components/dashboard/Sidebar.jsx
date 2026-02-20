@@ -1,5 +1,6 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import SidebarShortcuts from './SidebarShortcuts';
 import {
   LayoutDashboard,
@@ -92,27 +93,22 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
     localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
   }, [collapsed]);
 
-  // Carregar unread messages
-  React.useEffect(() => {
-    const loadUnread = async () => {
-      try {
-        const { base44 } = await import('@/api/base44Client');
-        const user = await base44.auth.me();
-        if (!user) return;
-        
-        // Extract workspace_id from user data
-        const convs = await base44.entities.VirtualCounterConversation.filter({ status: 'active' });
-        const total = convs.reduce((sum, c) => sum + (c.unread_count || 0), 0);
-        setUnreadCount(total);
-      } catch (error) {
-        console.error('Erro ao carregar unread:', error);
-      }
-    };
+  // Carregar unread messages com React Query
+  const { data: unreadConversations = [] } = useQuery({
+    queryKey: ['sidebar-unread'],
+    queryFn: async () => {
+      const { base44 } = await import('@/api/base44Client');
+      return base44.entities.VirtualCounterConversation.filter({ status: 'active' });
+    },
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchInterval: 30000
+  });
 
-    loadUnread();
-    const interval = setInterval(loadUnread, 30000); // Atualizar a cada 30s
-    return () => clearInterval(interval);
-  }, []);
+  const unreadCount = useMemo(() => 
+    unreadConversations.reduce((sum, c) => sum + (c.unread_count || 0), 0),
+    [unreadConversations]
+  );
 
   const toggleSubmenu = useCallback((label) => {
     setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
