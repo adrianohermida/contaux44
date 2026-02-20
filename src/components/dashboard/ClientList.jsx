@@ -56,9 +56,11 @@ export default function ClientList({ refresh, onEdit }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full">
+    <div>
+      {/* Desktop: Table */}
+      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
           <thead className="bg-slate-50 border-b sticky top-0 z-10">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Tipo</th>
