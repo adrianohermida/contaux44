@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Trash2, Edit2, Eye } from 'lucide-react';
 import { useMultitenantAuthOptimized } from '../auth/useMultitenantAuthOptimized';
 import { useCacheStrategy } from '../hooks/useCacheStrategy';
+import ClientCardMobile from './ClientCardMobile';
 
 export default function ClientList({ refresh, onEdit }) {
   const { workspaceId } = useMultitenantAuthOptimized('internal');
