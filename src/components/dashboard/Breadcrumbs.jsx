@@ -68,7 +68,7 @@ export default function Breadcrumbs() {
         : 'bg-slate-50 border-b border-slate-200 text-slate-600'
     }`} aria-label="Breadcrumb">
       {breadcrumbs.map((crumb, idx) => (
-        <React.Fragment key={crumb.path}>
+        <div key={crumb.path} className="flex items-center gap-2">
           {idx > 0 && <ChevronRight className={`w-4 h-4 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`} />}
           <a
             href={crumb.path}
@@ -80,7 +80,7 @@ export default function Breadcrumbs() {
           >
             {crumb.label}
           </a>
-        </React.Fragment>
+        </div>
       ))}
     </nav>
   );
