@@ -97,6 +97,7 @@ import AnalyticsAdvanced from './pages/AnalyticsAdvanced';
 import RBACManagement from './pages/RBACManagement';
 import AdvancedML from './pages/AdvancedML';
 import PerformanceOptimization from './pages/PerformanceOptimization';
+import APIDashboard from './pages/APIDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -151,6 +152,7 @@ export const PAGES = {
     "RBACManagement": RBACManagement,
     "AdvancedML": AdvancedML,
     "PerformanceOptimization": PerformanceOptimization,
+    "APIDashboard": APIDashboard,
 }
 
 export const pagesConfig = {
