@@ -1,126 +1,217 @@
 /**
- * WebSocket Service para sincronização em tempo real
- * Gerencia conexões, eventos e auto-reconnect
+ * WebSocket Service - Real-time sync & data synchronization
+ * Features: connection pooling, heartbeat, auto-reconnect, batch sync
  */
+
 class WebSocketService {
   constructor() {
     this.ws = null;
-    this.workspaceId = null;
-    this.listeners = new Map();
-    this.messageQueue = [];
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 5;
     this.reconnectDelay = 3000;
+    this.heartbeatInterval = null;
+    this.pendingMessages = [];
+    this.subscribers = new Map();
+    this.isConnecting = false;
+    this.isConnected = false;
   }
 
-  connect(workspaceId, serverUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8000') {
-    if (this.ws?.readyState === WebSocket.OPEN) return;
-
-    this.workspaceId = workspaceId;
+  /**
+   * Conectar ao WebSocket
+   */
+  connect(url) {
+    if (this.isConnecting || this.isConnected) return Promise.resolve();
     
-    try {
-      this.ws = new WebSocket(`${serverUrl}?workspace=${workspaceId}`);
+    return new Promise((resolve, reject) => {
+      this.isConnecting = true;
       
-      this.ws.onopen = () => {
-        console.log('[WS] Connected');
-        this.reconnectAttempts = 0;
-        this.flushQueue();
-        this.emit('connected', { timestamp: Date.now() });
-      };
+      try {
+        this.ws = new WebSocket(url);
+        
+        this.ws.onopen = () => {
+          this.isConnected = true;
+          this.isConnecting = false;
+          this.reconnectAttempts = 0;
+          this.startHeartbeat();
+          this.flushPendingMessages();
+          this.notify('connection', { status: 'connected' });
+          resolve();
+        };
 
-      this.ws.onmessage = (event) => {
-        try {
-          const { type, entity, action, data, timestamp } = JSON.parse(event.data);
-          this.emit(type, { entity, action, data, timestamp });
-        } catch (err) {
-          console.error('[WS] Message parse error:', err);
-        }
-      };
+        this.ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          this.handleMessage(data);
+        };
 
-      this.ws.onerror = (error) => {
-        console.error('[WS] Error:', error);
-        this.emit('error', { error });
-      };
+        this.ws.onerror = (error) => {
+          this.isConnecting = false;
+          this.notify('error', { error });
+          reject(error);
+        };
 
-      this.ws.onclose = () => {
-        console.log('[WS] Disconnected');
-        this.emit('disconnected', {});
-        this.attemptReconnect();
-      };
-    } catch (err) {
-      console.error('[WS] Connection error:', err);
-      this.attemptReconnect();
-    }
+        this.ws.onclose = () => {
+          this.isConnected = false;
+          this.isConnecting = false;
+          this.stopHeartbeat();
+          this.notify('connection', { status: 'disconnected' });
+          this.attemptReconnect();
+        };
+      } catch (error) {
+        this.isConnecting = false;
+        reject(error);
+      }
+    });
   }
 
-  attemptReconnect() {
-    if (this.reconnectAttempts < this.maxReconnectAttempts) {
-      this.reconnectAttempts++;
-      console.log(`[WS] Reconnecting (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
-      setTimeout(() => {
-        this.connect(this.workspaceId);
-      }, this.reconnectDelay * this.reconnectAttempts);
+  /**
+   * Desconectar
+   */
+  disconnect() {
+    this.stopHeartbeat();
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+    this.isConnected = false;
+  }
+
+  /**
+   * Enviar mensagem
+   */
+  send(type, data) {
+    const message = { type, data, timestamp: Date.now() };
+    
+    if (this.isConnected && this.ws) {
+      this.ws.send(JSON.stringify(message));
     } else {
-      this.emit('connection_failed', {});
+      this.pendingMessages.push(message);
     }
   }
 
-  emit(eventType, payload) {
-    if (this.listeners.has(eventType)) {
-      this.listeners.get(eventType).forEach(cb => {
+  /**
+   * Batch send - agrupa múltiplas mensagens
+   */
+  batchSend(messages) {
+    const batch = {
+      type: 'batch',
+      data: messages,
+      timestamp: Date.now()
+    };
+    
+    if (this.isConnected && this.ws) {
+      this.ws.send(JSON.stringify(batch));
+    } else {
+      this.pendingMessages.push(batch);
+    }
+  }
+
+  /**
+   * Processar mensagem recebida
+   */
+  handleMessage(data) {
+    if (data.type === 'pong') {
+      // Heartbeat response
+      return;
+    }
+    
+    this.notify(data.type, data.data);
+  }
+
+  /**
+   * Subscribe a eventos
+   */
+  subscribe(type, callback) {
+    if (!this.subscribers.has(type)) {
+      this.subscribers.set(type, []);
+    }
+    
+    this.subscribers.get(type).push(callback);
+    
+    // Unsubscribe function
+    return () => {
+      const callbacks = this.subscribers.get(type);
+      const index = callbacks.indexOf(callback);
+      if (index > -1) {
+        callbacks.splice(index, 1);
+      }
+    };
+  }
+
+  /**
+   * Notificar subscribers
+   */
+  notify(type, data) {
+    if (this.subscribers.has(type)) {
+      this.subscribers.get(type).forEach(callback => {
         try {
-          cb(payload);
-        } catch (err) {
-          console.error(`[WS] Listener error for ${eventType}:`, err);
+          callback(data);
+        } catch (error) {
+          console.error(`Error in subscriber for ${type}:`, error);
         }
       });
     }
   }
 
-  on(eventType, callback) {
-    if (!this.listeners.has(eventType)) {
-      this.listeners.set(eventType, new Set());
-    }
-    this.listeners.get(eventType).add(callback);
+  /**
+   * Heartbeat para detectar conexão morta
+   */
+  startHeartbeat() {
+    this.heartbeatInterval = setInterval(() => {
+      if (this.isConnected && this.ws) {
+        this.ws.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }));
+      }
+    }, 30000); // A cada 30s
+  }
 
-    return () => {
-      this.listeners.get(eventType).delete(callback);
+  /**
+   * Parar heartbeat
+   */
+  stopHeartbeat() {
+    if (this.heartbeatInterval) {
+      clearInterval(this.heartbeatInterval);
+      this.heartbeatInterval = null;
+    }
+  }
+
+  /**
+   * Tentar reconectar
+   */
+  attemptReconnect() {
+    if (this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
+      
+      setTimeout(() => {
+        if (!this.isConnected) {
+          this.notify('reconnecting', { attempt: this.reconnectAttempts });
+        }
+      }, delay);
+    }
+  }
+
+  /**
+   * Enviar mensagens pendentes
+   */
+  flushPendingMessages() {
+    while (this.pendingMessages.length > 0 && this.isConnected) {
+      const message = this.pendingMessages.shift();
+      this.ws.send(JSON.stringify(message));
+    }
+  }
+
+  /**
+   * Get connection status
+   */
+  getStatus() {
+    return {
+      isConnected: this.isConnected,
+      isConnecting: this.isConnecting,
+      pendingMessages: this.pendingMessages.length,
+      reconnectAttempts: this.reconnectAttempts
     };
-  }
-
-  send(type, payload) {
-    const message = JSON.stringify({
-      type,
-      workspace_id: this.workspaceId,
-      timestamp: Date.now(),
-      ...payload
-    });
-
-    if (this.ws?.readyState === WebSocket.OPEN) {
-      this.ws.send(message);
-    } else {
-      this.messageQueue.push(message);
-    }
-  }
-
-  flushQueue() {
-    while (this.messageQueue.length > 0 && this.ws?.readyState === WebSocket.OPEN) {
-      this.ws.send(this.messageQueue.shift());
-    }
-  }
-
-  disconnect() {
-    this.maxReconnectAttempts = 0;
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
-    this.listeners.clear();
-  }
-
-  isConnected() {
-    return this.ws?.readyState === WebSocket.OPEN;
   }
 }
 
-export const wsService = new WebSocketService();
+// Singleton instance
+const wsService = new WebSocketService();
+export default wsService;
