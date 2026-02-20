@@ -33,9 +33,11 @@ Deno.serve(async (req) => {
 
     // Add individual blog posts
     blogPosts.forEach(post => {
+      const slug = post.data?.slug || post.slug;
+      if (!slug) return;
       const lastMod = new Date(post.updated_date || post.created_date).toISOString().split('T')[0];
       sitemap += '  <url>\n';
-      sitemap += '    <loc>' + baseUrl + '/blog/' + post.data.slug + '</loc>\n';
+      sitemap += '    <loc>' + baseUrl + '/blog/' + slug + '</loc>\n';
       sitemap += '    <lastmod>' + lastMod + '</lastmod>\n';
       sitemap += '    <changefreq>monthly</changefreq>\n';
       sitemap += '    <priority>0.7</priority>\n';

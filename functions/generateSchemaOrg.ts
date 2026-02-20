@@ -13,22 +13,23 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Post not found' }, { status: 404 });
       }
 
+      const data = blogPost.data || blogPost;
       const schema = {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
-        'headline': blogPost.data.title,
-        'description': blogPost.data.seo_description || blogPost.data.excerpt,
+        'headline': data.title,
+        'description': data.seo_description || data.excerpt,
         'image': {
           '@type': 'ImageObject',
-          'url': blogPost.data.featured_image,
+          'url': data.featured_image,
           'width': 800,
           'height': 600
         },
-        'datePublished': blogPost.data.publish_date || blogPost.created_date,
+        'datePublished': data.publish_date || blogPost.created_date,
         'dateModified': blogPost.updated_date,
         'author': {
           '@type': 'Person',
-          'name': blogPost.data.author || 'Contaux'
+          'name': data.author || 'Contaux'
         },
         'publisher': {
           '@type': 'Organization',
@@ -40,11 +41,11 @@ Deno.serve(async (req) => {
         },
         'mainEntityOfPage': {
           '@type': 'WebPage',
-          '@id': 'https://hermidamaia.adv.br/blog/' + blogPost.data.slug
+          '@id': 'https://hermidamaia.adv.br/blog/' + data.slug
         },
-        'keywords': (blogPost.data.seo_keywords || []).join(', '),
-        'articleBody': blogPost.data.content.replace(/<[^>]*>/g, ''),
-        'wordCount': (blogPost.data.content.replace(/<[^>]*>/g, '').split(/\s+/).length)
+        'keywords': (data.seo_keywords || []).join(', '),
+        'articleBody': data.content.replace(/<[^>]*>/g, ''),
+        'wordCount': (data.content.replace(/<[^>]*>/g, '').split(/\s+/).length)
       };
 
       return Response.json(schema);
