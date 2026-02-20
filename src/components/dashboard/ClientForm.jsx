@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useFormState } from '@/components/modals/useFormState';
 import { useFormValidation } from '@/components/hooks/useFormValidation';
@@ -6,6 +6,7 @@ import { useFormSubmit } from '@/components/modals/useFormSubmit';
 import ModalWrapper from '@/components/modals/ModalWrapper';
 import FormField from '@/components/modals/FormField';
 import FormActions from '@/components/modals/FormActions';
+import { AlertCircle, CheckCircle } from 'lucide-react';
 
 const VALIDATION_RULES = {
   company_name: {
@@ -31,6 +32,25 @@ const VALIDATION_RULES = {
   }
 };
 
+function formatCPF(value) {
+  return value
+    .replace(/\D/g, '')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+    .slice(0, 14);
+}
+
+function formatCNPJ(value) {
+  return value
+    .replace(/\D/g, '')
+    .replace(/(\d{2})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1/$2')
+    .replace(/(\d{4})(\d)/, '$1-$2')
+    .slice(0, 18);
+}
+
 export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen = true }) {
   const initialData = useMemo(() => client || {
     tenant_id: tenantId,
@@ -49,6 +69,7 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
   const { formData, handleChange, setFieldValue, isDirty, reset } = useFormState(initialData);
   const { errors, validateForm, setFieldError, clearErrors } = useFormValidation();
   const { loading, submit } = useFormSubmit();
+  const [documentValidation, setDocumentValidation] = useState({});
 
   const currencyOptions = [
     { value: 'BRL', label: 'Real (BRL)' },
@@ -66,12 +87,65 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
     { value: 'pj', label: 'Pessoa Jurídica (PJ)' }
   ];
 
+  const validateDocument = async (field, value) => {
+    if (!value) {
+      setDocumentValidation(prev => ({ ...prev, [field]: null }));
+      return true;
+    }
+
+    try {
+      const response = await base44.functions.invoke('validateClientDocument', {
+        document: value,
+        type: field,
+        tenantId,
+        excludeClientId: client?.id
+      });
+
+      const isValid = response.data.valid;
+      setDocumentValidation(prev => ({
+        ...prev,
+        [field]: isValid ? { valid: true } : { valid: false, message: response.data.message }
+      }));
+
+      return isValid;
+    } catch (error) {
+      console.error('Erro na validação:', error);
+      return false;
+    }
+  };
+
+  const handleDocumentChange = async (field, value) => {
+    const formatted = field === 'cpf' ? formatCPF(value) : formatCNPJ(value);
+    setFieldValue(field, formatted);
+    
+    if (formatted.match(/\d/g)?.length === (field === 'cpf' ? 11 : 14)) {
+      await validateDocument(field, formatted);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     clearErrors();
 
     if (!validateForm(formData, VALIDATION_RULES)) {
       return;
+    }
+
+    // Validar documentos se necessário
+    if (formData.client_type === 'pf' && formData.cpf) {
+      const cpfValid = await validateDocument('cpf', formData.cpf);
+      if (!cpfValid) {
+        setFieldError('cpf', 'CPF inválido ou duplicado');
+        return;
+      }
+    }
+
+    if (formData.client_type === 'pj' && formData.cnpj) {
+      const cnpjValid = await validateDocument('cnpj', formData.cnpj);
+      if (!cnpjValid) {
+        setFieldError('cnpj', 'CNPJ inválido ou duplicado');
+        return;
+      }
     }
 
     await submit(
