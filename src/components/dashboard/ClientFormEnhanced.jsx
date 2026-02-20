@@ -211,6 +211,25 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
       setConnectionError(null);
       setApiError(null);
       
+      // Validação básica de documentos antes de salvar
+      const isPF = formData.client_type === 'pf';
+      const document = isPF ? formData.cpf : formData.cnpj;
+      
+      if (!document) {
+        const docType = isPF ? 'CPF' : 'CNPJ';
+        setApiError(`${docType} é obrigatório para ${isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}`);
+        setSaving(false);
+        return;
+      }
+      
+      const digitCount = document.match(/\d/g)?.length || 0;
+      if (digitCount !== (isPF ? 11 : 14)) {
+        const docType = isPF ? 'CPF' : 'CNPJ';
+        setApiError(`${docType} incompleto. Verifique o formato.`);
+        setSaving(false);
+        return;
+      }
+      
       // Preparar dados apenas com campos necessários
       const clientData = {
         tenant_id: formData.tenant_id,
