@@ -103,6 +103,7 @@ import PWASetup from './pages/PWASetup';
 import Notifications from './pages/Notifications';
 import MobileAnalyticsDashboard from './pages/MobileAnalyticsDashboard';
 import RealtimeSyncDashboard from './pages/RealtimeSyncDashboard';
+import CachingStrategy from './pages/CachingStrategy';
 import __Layout from './Layout.jsx';
 
 
@@ -163,6 +164,7 @@ export const PAGES = {
     "Notifications": Notifications,
     "MobileAnalyticsDashboard": MobileAnalyticsDashboard,
     "RealtimeSyncDashboard": RealtimeSyncDashboard,
+    "CachingStrategy": CachingStrategy,
 }
 
 export const pagesConfig = {
