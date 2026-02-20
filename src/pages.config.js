@@ -108,6 +108,7 @@ import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
 import SprintReview from './pages/SprintReview';
 import ABTesting from './pages/ABTesting';
+import NotificationsCenter from './pages/NotificationsCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -173,6 +174,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "SprintReview": SprintReview,
     "ABTesting": ABTesting,
+    "NotificationsCenter": NotificationsCenter,
 }
 
 export const pagesConfig = {
