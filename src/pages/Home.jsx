@@ -121,9 +121,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Virtual Counter Widget */}
-      <VirtualCounterWidget />
-
       {/* CTA Section */}
       <section className="py-12 sm:py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
