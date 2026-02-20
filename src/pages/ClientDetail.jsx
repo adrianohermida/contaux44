@@ -20,6 +20,8 @@ import NFeIntegrationPanel from '../components/dashboard/NFeIntegrationPanel';
 import ComplianceDashboardPanel from '../components/dashboard/ComplianceDashboardPanel';
 import AutomatedWorkflowPanel from '../components/dashboard/AutomatedWorkflowPanel';
 import NotificationCenterPanel from '../components/dashboard/NotificationCenterPanel';
+import AdvancedAnalyticsDashboard from '../components/dashboard/AdvancedAnalyticsDashboard';
+import CustomReportBuilder from '../components/dashboard/CustomReportBuilder';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function ClientDetail() {
