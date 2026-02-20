@@ -4,11 +4,11 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 export default function TicketAnalyticsChart({ tickets }) {
   const chartData = useMemo(() => {
     const statuses = {
-      open: { count: 0, color: '#ef4444' },
+      open: { count: 0, color: '#f59e0b' },
       in_progress: { count: 0, color: '#3b82f6' },
-      waiting_client: { count: 0, color: '#f59e0b' },
+      waiting_client: { count: 0, color: '#60a5fa' },
       resolved: { count: 0, color: '#10b981' },
-      closed: { count: 0, color: '#6b7280' }
+      closed: { count: 0, color: '#cbd5e1' }
     };
 
     tickets.forEach(t => {
@@ -31,7 +31,7 @@ export default function TicketAnalyticsChart({ tickets }) {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="tickets" fill="#8b5cf6" name="Quantidade" />
+        <Bar dataKey="tickets" fill="#3b82f6" name="Quantidade" />
       </BarChart>
     </ResponsiveContainer>
   );

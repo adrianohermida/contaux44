@@ -155,7 +155,7 @@ export default function VirtualCounter() {
                         </p>
                       </div>
                       {conv.unread_count > 0 && (
-                        <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                        <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
                           {conv.unread_count}
                         </span>
                       )}

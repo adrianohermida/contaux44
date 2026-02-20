@@ -96,7 +96,7 @@ export default function ComparisonCard({ tenantId }) {
               <span>Taxa de recebimento {comparison.comparison.paid.change >= 0 ? 'melhorou' : 'piorou'} {Math.abs(comparison.comparison.paid.change).toFixed(1)}%</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-purple-600 font-bold">•</span>
+              <span className="text-blue-600 font-bold">•</span>
               <span>{comparison.comparison.invoicesCount.current} faturas emitidas este mês</span>
             </li>
           </ul>
