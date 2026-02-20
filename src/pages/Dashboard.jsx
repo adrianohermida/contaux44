@@ -3,6 +3,7 @@ import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lu
 import { base44 } from '@/api/base44Client';
 import StatCard from '../components/dashboard/StatCard';
 import AlertsCenter from '../components/dashboard/AlertsCenter';
+import VirtualCounterWidget from '../components/dashboard/widgets/VirtualCounterWidget';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Dashboard() {
@@ -93,6 +94,9 @@ export default function Dashboard() {
                 <AlertsCenter tenantId={workspaceId} />
               </div>
             )}
+
+          {/* Balcão Virtual Widget */}
+           <VirtualCounterWidget />
 
           {/* Quick Actions */}
            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
