@@ -23,10 +23,11 @@ export default function ContactFormField({
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+      <label htmlFor={name} className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
         {label}
       </label>
       <Input
+        id={name}
         name={name}
         type={type}
         value={value || ''}
@@ -34,10 +35,12 @@ export default function ContactFormField({
         disabled={disabled}
         placeholder={placeholder}
         maxLength={maxLength}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${name}-error` : undefined}
         className={`disabled:opacity-60 ${error ? 'border-red-500' : ''}`}
       />
       {error && (
-        <p className="text-red-500 text-xs mt-1">{error}</p>
+        <p id={`${name}-error`} className="text-red-500 text-xs mt-1" role="alert">{error}</p>
       )}
     </div>
   );
