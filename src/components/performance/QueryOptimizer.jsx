@@ -11,7 +11,7 @@ export default function QueryOptimizer() {
     { id: 1, name: 'getInvoices', execTime: 245, status: 'slow', indexed: false },
     { id: 2, name: 'getPayments', execTime: 89, status: 'good', indexed: true },
     { id: 3, name: 'getClients', execTime: 412, status: 'slow', indexed: false },
-    { id: 4, name: 'getTransactions', execTime: 156, status: fair', indexed: false },
+    { id: 4, name: 'getTransactions', execTime: 156, status: 'fair', indexed: false },
   ]);
 
   const avgTime = Math.round(queries.reduce((sum, q) => sum + q.execTime, 0) / queries.length);
