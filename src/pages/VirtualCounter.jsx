@@ -115,7 +115,7 @@ export default function VirtualCounter() {
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-sm text-slate-600">Tickets Criados</p>
-          <p className="text-2xl font-bold text-green-600 mt-1">
+          <p className="text-2xl font-bold text-emerald-600 mt-1">
             {conversations.filter(c => c.ticket_id).length}
           </p>
         </div>
@@ -138,7 +138,7 @@ export default function VirtualCounter() {
                       selectedConv === conv.id
                         ? 'border-l-blue-600 bg-blue-50'
                         : conv.status === 'active'
-                        ? 'border-l-green-400'
+                        ? 'border-l-emerald-400'
                         : 'border-l-slate-200'
                     }`}
                   >

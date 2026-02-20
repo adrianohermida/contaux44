@@ -98,8 +98,8 @@ const DashboardHeader = memo(function DashboardHeader() {
                   <div className="space-y-2 max-h-80 overflow-y-auto">
                     {notifications.map((notif) => (
                       <div key={notif.id} className={`p-3 rounded-lg text-sm border-l-4 ${
-                        notif.type === 'success' ? 'bg-green-50 border-green-500' :
-                        notif.type === 'error' ? 'bg-red-50 border-red-500' :
+                        notif.type === 'success' ? 'bg-emerald-50 border-emerald-500' :
+                        notif.type === 'error' ? 'bg-amber-50 border-amber-500' :
                         notif.type === 'warning' ? 'bg-yellow-50 border-yellow-500' :
                         'bg-blue-50 border-blue-500'
                       } ${!notif.is_read ? 'font-medium' : ''}`}>
@@ -133,7 +133,7 @@ const DashboardHeader = memo(function DashboardHeader() {
                 <Settings className="w-4 h-4 mr-2" />
                 Preferências
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+              <DropdownMenuItem onClick={handleLogout} className="text-amber-600">
                 <LogOut className="w-4 h-4 mr-2" />
                 Sair
               </DropdownMenuItem>

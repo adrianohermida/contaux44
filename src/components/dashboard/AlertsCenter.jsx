@@ -66,7 +66,7 @@ const AlertsCenter = memo(function AlertsCenter({ tenantId }) {
   if (alerts.length === 0) return null;
 
   const colors = {
-    error: 'bg-red-50 border-red-200',
+    error: 'bg-amber-50 border-amber-200',
     warning: 'bg-yellow-50 border-yellow-200',
     info: 'bg-blue-50 border-blue-200'
   };
@@ -77,7 +77,7 @@ const AlertsCenter = memo(function AlertsCenter({ tenantId }) {
         const Icon = alert.icon;
         return (
           <div key={alert.id} className={`${colors[alert.type]} border rounded-lg p-4 flex gap-3`}>
-            <Icon className={`w-5 h-5 flex-shrink-0 ${alert.type === 'error' ? 'text-red-600' : 'text-yellow-600'}`} />
+            <Icon className={`w-5 h-5 flex-shrink-0 ${alert.type === 'error' ? 'text-amber-600' : 'text-yellow-600'}`} />
             <div>
               <p className="font-medium text-sm text-slate-900">{alert.title}</p>
               <p className="text-sm text-slate-600">{alert.message}</p>
