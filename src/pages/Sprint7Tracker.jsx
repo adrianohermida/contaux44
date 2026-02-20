@@ -1,179 +1,164 @@
-import React from 'react';
-import { CheckCircle2, Circle, AlertCircle, Zap } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import React, { useMemo } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { CheckCircle, Circle, AlertCircle } from 'lucide-react';
 
 export default function Sprint7Tracker() {
   const features = [
     {
-      name: 'Advanced Analytics Dashboard',
-      status: 'completed',
-      page: 'AnalyticsAdvanced',
-      details: 'Dashboard com métricas avançadas: views por período, distribuição por fonte, top posts, taxa de conversão',
-      completedDate: '2026-02-20'
+      category: 'Analytics & Testing',
+      items: [
+        { name: 'Advanced Analytics Dashboard', status: 'done', completion: 100 },
+        { name: 'A/B Testing Framework', status: 'done', completion: 100 },
+        { name: 'Real-time Notifications Center', status: 'done', completion: 100 },
+        { name: 'Conversion Tracking System', status: 'in_progress', completion: 65 },
+        { name: 'Custom Reports Builder', status: 'pending', completion: 0 }
+      ]
     },
     {
-      name: 'A/B Testing Framework',
-      status: 'completed',
-      page: 'ABTesting',
-      details: 'Sistema completo para testes A/B com nível de confiança, comparação de variantes, e análise estatística',
-      completedDate: '2026-02-20'
+      category: 'Performance & Optimization',
+      items: [
+        { name: 'Lazy Loading Implementation', status: 'pending', completion: 0 },
+        { name: 'Code Splitting & Bundling', status: 'pending', completion: 0 },
+        { name: 'Cache Strategy Optimization', status: 'pending', completion: 0 },
+        { name: 'Image Optimization', status: 'pending', completion: 0 }
+      ]
     },
     {
-      name: 'Real-time Notifications',
-      status: 'completed',
-      page: 'NotificationsCenter',
-      details: 'Centro de notificações em tempo real com filtros, prioridades, e preferências de notificação',
-      completedDate: '2026-02-20'
-    },
-    {
-      name: 'Performance Optimization',
-      status: 'in_progress',
-      details: 'Otimização de código, lazy loading, cache inteligente, code splitting',
-      completedDate: null
-    },
-    {
-      name: 'Conversion Tracking',
-      status: 'planned',
-      details: 'Rastreamento de conversões, funis de vendas, pixel de conversão',
-      completedDate: null
-    },
+      category: 'Infrastructure',
+      items: [
+        { name: 'CDN Integration', status: 'pending', completion: 0 },
+        { name: 'Database Query Optimization', status: 'pending', completion: 0 },
+        { name: 'Error Tracking & Monitoring', status: 'pending', completion: 0 }
+      ]
+    }
   ];
 
+  const stats = useMemo(() => {
+    const allItems = features.flatMap(f => f.items);
+    const done = allItems.filter(i => i.status === 'done').length;
+    const inProgress = allItems.filter(i => i.status === 'in_progress').length;
+    const pending = allItems.filter(i => i.status === 'pending').length;
+    const avgCompletion = Math.round(allItems.reduce((sum, i) => sum + i.completion, 0) / allItems.length);
+
+    return { done, inProgress, pending, avgCompletion, total: allItems.length };
+  }, []);
+
   const getStatusIcon = (status) => {
-    switch(status) {
-      case 'completed': return <CheckCircle2 className="w-5 h-5 text-green-600" />;
-      case 'in_progress': return <Zap className="w-5 h-5 text-yellow-600" />;
-      default: return <Circle className="w-5 h-5 text-slate-400" />;
-    }
+    if (status === 'done') return <CheckCircle className="h-5 w-5 text-green-600" />;
+    if (status === 'in_progress') return <AlertCircle className="h-5 w-5 text-yellow-600" />;
+    return <Circle className="h-5 w-5 text-slate-400" />;
   };
 
-  const getStatusLabel = (status) => {
-    const labels = {
-      completed: 'Concluído',
-      in_progress: 'Em Progresso',
-      planned: 'Planejado'
-    };
-    return labels[status] || 'Desconhecido';
+  const getStatusBadge = (status) => {
+    if (status === 'done') return <Badge className="bg-green-100 text-green-800">Concluído</Badge>;
+    if (status === 'in_progress') return <Badge className="bg-yellow-100 text-yellow-800">Em andamento</Badge>;
+    return <Badge className="bg-slate-100 text-slate-800">Pendente</Badge>;
   };
-
-  const completedCount = features.filter(f => f.status === 'completed').length;
-  const totalCount = features.length;
-  const progress = Math.round((completedCount / totalCount) * 100);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Sprint 7 - Tracker</h1>
-        <p className="text-slate-600 dark:text-slate-300 mt-1">Advanced Analytics & Performance</p>
+        <h1 className="text-3xl font-bold">Sprint 7 - Rastreador de Progresso</h1>
+        <p className="text-slate-600 dark:text-slate-400">Analytics, A/B Testing, Performance Optimization</p>
       </div>
 
-      {/* Progress */}
-      <Card className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
-        <CardContent className="pt-6">
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-slate-900 dark:text-white">Progresso Overall</h3>
-              <span className="text-2xl font-bold text-blue-600">{progress}%</span>
-            </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
-              <div 
-                className="bg-blue-600 h-full rounded-full transition-all duration-500"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              {completedCount} de {totalCount} objetivos concluídos
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total de Features</CardTitle>
+            <CheckCircle className="h-4 w-4 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total}</div>
+          </CardContent>
+        </Card>
 
-      {/* Features */}
-      <div className="grid gap-4">
-        {features.map((feature, idx) => (
-          <Card key={idx} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                {getStatusIcon(feature.status)}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Concluídas</CardTitle>
+            <CheckCircle className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.done}</div>
+            <p className="text-xs text-slate-600">de {stats.total}</p>
+          </CardContent>
+        </Card>
 
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-slate-900 dark:text-white text-lg">
-                      {feature.name}
-                    </h3>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      feature.status === 'completed' 
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                        : feature.status === 'in_progress'
-                        ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
-                        : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                    }`}>
-                      {getStatusLabel(feature.status)}
-                    </span>
-                  </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Em Progresso</CardTitle>
+            <AlertCircle className="h-4 w-4 text-yellow-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.inProgress}</div>
+          </CardContent>
+        </Card>
 
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                    {feature.details}
-                  </p>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Progresso Médio</CardTitle>
+            <Circle className="h-4 w-4 text-slate-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.avgCompletion}%</div>
+          </CardContent>
+        </Card>
+      </div>
 
-                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500">
-                    <span>Sprint 7</span>
-                    {feature.completedDate && (
-                      <span className="text-green-600 dark:text-green-400">
-                        ✓ Concluído em {new Date(feature.completedDate).toLocaleDateString('pt-BR')}
-                      </span>
-                    )}
-                  </div>
-
-                  {feature.page && (
-                    <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
-                      <a 
-                        href={`?page=${feature.page}`}
-                        className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
-                      >
-                        Acessar {feature.page} →
-                      </a>
+      {/* Features by Category */}
+      <div className="space-y-6">
+        {features.map(category => (
+          <Card key={category.category}>
+            <CardHeader>
+              <CardTitle>{category.category}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {category.items.map(item => (
+                <div key={item.name} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {getStatusIcon(item.status)}
+                      <span className="font-medium">{item.name}</span>
                     </div>
-                  )}
+                    {getStatusBadge(item.status)}
+                  </div>
+                  
+                  {/* Progress Bar */}
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all ${
+                        item.status === 'done' ? 'bg-green-600' :
+                        item.status === 'in_progress' ? 'bg-yellow-600' :
+                        'bg-slate-400'
+                      }`}
+                      style={{ width: `${item.completion}%` }}
+                    />
+                  </div>
+                  <div className="text-xs text-slate-600 dark:text-slate-400">
+                    {item.completion}% concluído
+                  </div>
                 </div>
-              </div>
+              ))}
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Next Sprint Preview */}
-      <Card className="border-2 border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20">
+      {/* Next Steps */}
+      <Card>
         <CardHeader>
-          <CardTitle className="text-purple-900 dark:text-purple-100">Próximo Sprint: Sprint 8 - Content & SEO Excellence</CardTitle>
+          <CardTitle>Próximas Prioridades</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2 text-sm text-purple-800 dark:text-purple-200">
-            <li>✓ Rich Content Editor com media library</li>
-            <li>✓ SEO Optimization Dashboard avançado</li>
-            <li>✓ Content Calendar & Planning</li>
-            <li>✓ Keyword Research Integration</li>
-            <li>✓ Backlink Monitoring</li>
-            <li>✓ Competitor Analysis Tools</li>
+          <ul className="space-y-2 text-sm">
+            <li>✅ Finalizar sistema de notificações em tempo real</li>
+            <li>🔄 Implementar Conversion Tracking com pixel tracking</li>
+            <li>⏳ Otimizar performance com lazy loading</li>
+            <li>⏳ Implementar estratégia de cache avançada</li>
+            <li>⏳ Configurar monitoramento de erros (Sentry/equivalent)</li>
           </ul>
-        </CardContent>
-      </Card>
-
-      {/* Completed in Sprint 6 Summary */}
-      <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-        <CardHeader>
-          <CardTitle className="text-green-900 dark:text-green-100">Sprint 6 - Recap (100% Completo)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2 text-sm text-green-800 dark:text-green-200">
-            <p>✅ Blog Analytics Dashboard com métricas em tempo real</p>
-            <p>✅ Sistema de Agendamento de Posts com automação</p>
-            <p>✅ Interface de Moderação de Comentários</p>
-            <p>✅ Advanced SEO (Sitemap XML + Schema.org)</p>
-            <p>✅ Newsletter Integration para Subscribers</p>
-            <p>✅ Bugs Corrigidos: generateSitemap, generateSchemaOrg, publishScheduledBlogs</p>
-          </div>
         </CardContent>
       </Card>
     </div>
