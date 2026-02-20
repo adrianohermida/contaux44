@@ -48,12 +48,16 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import ABTesting from './pages/ABTesting';
+import AIRecommendations from './pages/AIRecommendations';
 import APIDashboard from './pages/APIDashboard';
+import APIDocumentation from './pages/APIDocumentation';
 import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
 import AdvancedML from './pages/AdvancedML';
+import AdvancedNotifications from './pages/AdvancedNotifications';
 import AdvancedReports from './pages/AdvancedReports';
+import AdvancedSearch from './pages/AdvancedSearch';
 import AnalyticsAdvanced from './pages/AnalyticsAdvanced';
 import App from './pages/App';
 import AuditLogs from './pages/AuditLogs';
@@ -70,15 +74,21 @@ import ChartOfAccounts from './pages/ChartOfAccounts';
 import ClientPanel from './pages/ClientPanel';
 import ClientPortal from './pages/ClientPortal';
 import Clients from './pages/Clients';
+import CommentThreading from './pages/CommentThreading';
 import Communication from './pages/Communication';
 import ComplianceReports from './pages/ComplianceReports';
 import Contact from './pages/Contact';
 import ConversionTracking from './pages/ConversionTracking';
 import CustomReports from './pages/CustomReports';
+import CustomWorkflowBuilder from './pages/CustomWorkflowBuilder';
 import DarkMode from './pages/DarkMode';
 import Dashboard from './pages/Dashboard';
 import DataBackup from './pages/DataBackup';
+import DataValidation from './pages/DataValidation';
+import DatabaseOptimization from './pages/DatabaseOptimization';
 import DocumentManagement from './pages/DocumentManagement';
+import DocumentVersioning from './pages/DocumentVersioning';
+import EnterpriseSSOSetup from './pages/EnterpriseSSOSetup';
 import Entries from './pages/Entries';
 import ErrorTracking from './pages/ErrorTracking';
 import GDPRCompliance from './pages/GDPRCompliance';
@@ -90,7 +100,9 @@ import Invoicing from './pages/Invoicing';
 import LegalProcesses from './pages/LegalProcesses';
 import ManualPosting from './pages/ManualPosting';
 import MobileAnalyticsDashboard from './pages/MobileAnalyticsDashboard';
+import MobileFirstDesign from './pages/MobileFirstDesign';
 import MobileOptimized from './pages/MobileOptimized';
+import MultiLanguageSupport from './pages/MultiLanguageSupport';
 import MyBookmarks from './pages/MyBookmarks';
 import Notifications from './pages/Notifications';
 import NotificationsCenter from './pages/NotificationsCenter';
@@ -109,57 +121,54 @@ import QuoteRequest from './pages/QuoteRequest';
 import Quotes from './pages/Quotes';
 import RBACManagement from './pages/RBACManagement';
 import RLSDebugger from './pages/RLSDebugger';
+import RealTimeCollaboration from './pages/RealTimeCollaboration';
+import RealtimeMonitoring from './pages/RealtimeMonitoring';
 import RealtimeSyncDashboard from './pages/RealtimeSyncDashboard';
+import RegionalCustomization from './pages/RegionalCustomization';
 import Reports from './pages/Reports';
 import Sales from './pages/Sales';
+import SearchAnalytics from './pages/SearchAnalytics';
 import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
 import ServicesPage from './pages/ServicesPage';
 import SessionManagement from './pages/SessionManagement';
 import SettingsPage from './pages/SettingsPage';
+import SmartNotificationRules from './pages/SmartNotificationRules';
+import Sprint10Completion from './pages/Sprint10Completion';
+import Sprint10Tracker from './pages/Sprint10Tracker';
 import Sprint7Tracker from './pages/Sprint7Tracker';
 import Sprint8Tracker from './pages/Sprint8Tracker';
+import Sprint9Completion from './pages/Sprint9Completion';
 import Sprint9Tracker from './pages/Sprint9Tracker';
 import SprintReview from './pages/SprintReview';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import TwoFactorAuth from './pages/TwoFactorAuth';
-import VirtualCounter from './pages/VirtualCounter';
-import Welcome from './pages/Welcome';
-import DataValidation from './pages/DataValidation';
-import MobileFirstDesign from './pages/MobileFirstDesign';
 import UserOnboarding from './pages/UserOnboarding';
-import APIDocumentation from './pages/APIDocumentation';
+import VirtualCounter from './pages/VirtualCounter';
 import WebhookManagement from './pages/WebhookManagement';
-import DatabaseOptimization from './pages/DatabaseOptimization';
-import RealtimeMonitoring from './pages/RealtimeMonitoring';
-import Sprint9Completion from './pages/Sprint9Completion';
-import Sprint10Tracker from './pages/Sprint10Tracker';
-import AIRecommendations from './pages/AIRecommendations';
-import EnterpriseSSOSetup from './pages/EnterpriseSSOSetup';
-import CustomWorkflowBuilder from './pages/CustomWorkflowBuilder';
-import DocumentVersioning from './pages/DocumentVersioning';
-import AdvancedSearch from './pages/AdvancedSearch';
-import AdvancedNotifications from './pages/AdvancedNotifications';
-import MultiLanguageSupport from './pages/MultiLanguageSupport';
-import RealTimeCollaboration from './pages/RealTimeCollaboration';
-import CommentThreading from './pages/CommentThreading';
-import SearchAnalytics from './pages/SearchAnalytics';
-import SmartNotificationRules from './pages/SmartNotificationRules';
-import RegionalCustomization from './pages/RegionalCustomization';
-import Sprint10Completion from './pages/Sprint10Completion';
+import Welcome from './pages/Welcome';
+import Sprint10Validation from './pages/Sprint10Validation';
+import Sprint11Tracker from './pages/Sprint11Tracker';
+import AdvancedAnalyticsDashboard from './pages/AdvancedAnalyticsDashboard';
+import CustomBusinessRules from './pages/CustomBusinessRules';
+import DataExportImport from './pages/DataExportImport';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "ABTesting": ABTesting,
+    "AIRecommendations": AIRecommendations,
     "APIDashboard": APIDashboard,
+    "APIDocumentation": APIDocumentation,
     "About": About,
     "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
     "AdvancedML": AdvancedML,
+    "AdvancedNotifications": AdvancedNotifications,
     "AdvancedReports": AdvancedReports,
+    "AdvancedSearch": AdvancedSearch,
     "AnalyticsAdvanced": AnalyticsAdvanced,
     "App": App,
     "AuditLogs": AuditLogs,
@@ -176,15 +185,21 @@ export const PAGES = {
     "ClientPanel": ClientPanel,
     "ClientPortal": ClientPortal,
     "Clients": Clients,
+    "CommentThreading": CommentThreading,
     "Communication": Communication,
     "ComplianceReports": ComplianceReports,
     "Contact": Contact,
     "ConversionTracking": ConversionTracking,
     "CustomReports": CustomReports,
+    "CustomWorkflowBuilder": CustomWorkflowBuilder,
     "DarkMode": DarkMode,
     "Dashboard": Dashboard,
     "DataBackup": DataBackup,
+    "DataValidation": DataValidation,
+    "DatabaseOptimization": DatabaseOptimization,
     "DocumentManagement": DocumentManagement,
+    "DocumentVersioning": DocumentVersioning,
+    "EnterpriseSSOSetup": EnterpriseSSOSetup,
     "Entries": Entries,
     "ErrorTracking": ErrorTracking,
     "GDPRCompliance": GDPRCompliance,
@@ -196,7 +211,9 @@ export const PAGES = {
     "LegalProcesses": LegalProcesses,
     "ManualPosting": ManualPosting,
     "MobileAnalyticsDashboard": MobileAnalyticsDashboard,
+    "MobileFirstDesign": MobileFirstDesign,
     "MobileOptimized": MobileOptimized,
+    "MultiLanguageSupport": MultiLanguageSupport,
     "MyBookmarks": MyBookmarks,
     "Notifications": Notifications,
     "NotificationsCenter": NotificationsCenter,
@@ -215,46 +232,39 @@ export const PAGES = {
     "Quotes": Quotes,
     "RBACManagement": RBACManagement,
     "RLSDebugger": RLSDebugger,
+    "RealTimeCollaboration": RealTimeCollaboration,
+    "RealtimeMonitoring": RealtimeMonitoring,
     "RealtimeSyncDashboard": RealtimeSyncDashboard,
+    "RegionalCustomization": RegionalCustomization,
     "Reports": Reports,
     "Sales": Sales,
+    "SearchAnalytics": SearchAnalytics,
     "SecurityCenter": SecurityCenter,
     "Services": Services,
     "ServicesPage": ServicesPage,
     "SessionManagement": SessionManagement,
     "SettingsPage": SettingsPage,
+    "SmartNotificationRules": SmartNotificationRules,
+    "Sprint10Completion": Sprint10Completion,
+    "Sprint10Tracker": Sprint10Tracker,
     "Sprint7Tracker": Sprint7Tracker,
     "Sprint8Tracker": Sprint8Tracker,
+    "Sprint9Completion": Sprint9Completion,
     "Sprint9Tracker": Sprint9Tracker,
     "SprintReview": SprintReview,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
     "TwoFactorAuth": TwoFactorAuth,
-    "VirtualCounter": VirtualCounter,
-    "Welcome": Welcome,
-    "DataValidation": DataValidation,
-    "MobileFirstDesign": MobileFirstDesign,
     "UserOnboarding": UserOnboarding,
-    "APIDocumentation": APIDocumentation,
+    "VirtualCounter": VirtualCounter,
     "WebhookManagement": WebhookManagement,
-    "DatabaseOptimization": DatabaseOptimization,
-    "RealtimeMonitoring": RealtimeMonitoring,
-    "Sprint9Completion": Sprint9Completion,
-    "Sprint10Tracker": Sprint10Tracker,
-    "AIRecommendations": AIRecommendations,
-    "EnterpriseSSOSetup": EnterpriseSSOSetup,
-    "CustomWorkflowBuilder": CustomWorkflowBuilder,
-    "DocumentVersioning": DocumentVersioning,
-    "AdvancedSearch": AdvancedSearch,
-    "AdvancedNotifications": AdvancedNotifications,
-    "MultiLanguageSupport": MultiLanguageSupport,
-    "RealTimeCollaboration": RealTimeCollaboration,
-    "CommentThreading": CommentThreading,
-    "SearchAnalytics": SearchAnalytics,
-    "SmartNotificationRules": SmartNotificationRules,
-    "RegionalCustomization": RegionalCustomization,
-    "Sprint10Completion": Sprint10Completion,
+    "Welcome": Welcome,
+    "Sprint10Validation": Sprint10Validation,
+    "Sprint11Tracker": Sprint11Tracker,
+    "AdvancedAnalyticsDashboard": AdvancedAnalyticsDashboard,
+    "CustomBusinessRules": CustomBusinessRules,
+    "DataExportImport": DataExportImport,
 }
 
 export const pagesConfig = {
