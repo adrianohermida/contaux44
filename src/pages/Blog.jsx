@@ -253,13 +253,13 @@ export default function Blog() {
 
               {/* Pagination */}
               <div className="flex justify-center gap-1 sm:gap-2 mb-8 flex-wrap">
-                <button onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded hover:bg-gray-50 text-xs sm:text-sm">← Anterior</button>
+                <button onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded hover:bg-gray-50 dark:hover:bg-slate-600 text-xs sm:text-sm">← Anterior</button>
                 {Array.from({ length: totalPages }, (_, i) => (
-                  <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-2 sm:px-3 py-1 sm:py-2 rounded text-xs sm:text-sm ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-50'}`}>
+                  <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-2 sm:px-3 py-1 sm:py-2 rounded text-xs sm:text-sm ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-600'}`}>
                     {i + 1}
                   </button>
                 ))}
-                <button onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded hover:bg-gray-50 text-xs sm:text-sm">Próxima →</button>
+                <button onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded hover:bg-gray-50 dark:hover:bg-slate-600 text-xs sm:text-sm">Próxima →</button>
               </div>
             </div>
 
