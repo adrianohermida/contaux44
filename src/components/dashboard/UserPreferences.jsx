@@ -43,12 +43,12 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={onClose} title="Preferências" size="md">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Tema */}
-        <div className="space-y-3 border-b pb-4">
-          <h3 className="font-semibold text-slate-900">Aparência</h3>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-700">Tema Escuro</span>
+      <form onSubmit={handleSubmit} className="space-y-6 dark:text-slate-200">
+         {/* Tema */}
+         <div className="space-y-3 border-b border-slate-200 dark:border-slate-600 pb-4">
+           <h3 className="font-semibold text-slate-900 dark:text-slate-200">Aparência</h3>
+           <div className="flex items-center justify-between">
+             <span className="text-sm text-slate-700 dark:text-slate-300">Tema Escuro</span>
             <button
               type="button"
               onClick={toggleTheme}
@@ -66,20 +66,20 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
         </div>
 
         {/* Idioma */}
-        <div className="space-y-3 border-b pb-4">
-          <h3 className="font-semibold text-slate-900">Idioma</h3>
+        <div className="space-y-3 border-b border-slate-200 dark:border-slate-600 pb-4">
+          <h3 className="font-semibold text-slate-900 dark:text-slate-200">Idioma</h3>
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200"
           >
             <option value="pt-BR">Português (Brasil)</option>
             <option value="en-US">English (US)</option>
             <option value="es-ES">Español</option>
           </select>
         </div>
-        <div className="space-y-3 border-b pb-4">
-          <h3 className="font-semibold text-slate-900">Tipos de Notificação</h3>
+        <div className="space-y-3 border-b border-slate-200 dark:border-slate-600 pb-4">
+          <h3 className="font-semibold text-slate-900 dark:text-slate-200">Tipos de Notificação</h3>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
@@ -87,7 +87,7 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
               onChange={(e) => setFieldValue('notify_invoice_overdue', e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-slate-700">Faturas vencidas</span>
+            <span className="text-sm text-slate-700 dark:text-slate-300">Faturas vencidas</span>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -96,7 +96,7 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
               onChange={(e) => setFieldValue('notify_invoice_due_soon', e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-slate-700">Faturas próximas do vencimento</span>
+            <span className="text-sm text-slate-700 dark:text-slate-300">Faturas próximas do vencimento</span>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -105,7 +105,7 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
               onChange={(e) => setFieldValue('notify_payment_received', e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-slate-700">Pagamentos recebidos</span>
+            <span className="text-sm text-slate-700 dark:text-slate-300">Pagamentos recebidos</span>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -114,7 +114,7 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
               onChange={(e) => setFieldValue('notify_ticket_update', e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-slate-700">Atualizações de tickets</span>
+            <span className="text-sm text-slate-700 dark:text-slate-300">Atualizações de tickets</span>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -123,12 +123,12 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
               onChange={(e) => setFieldValue('notify_legal_update', e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-slate-700">Atualizações de processos legais</span>
+            <span className="text-sm text-slate-700 dark:text-slate-300">Atualizações de processos legais</span>
           </label>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-semibold text-slate-900">Método de Notificação</h3>
+          <h3 className="font-semibold text-slate-900 dark:text-slate-200">Método de Notificação</h3>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
@@ -136,7 +136,7 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
               onChange={(e) => setFieldValue('notification_method_email', e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-slate-700">Receber por email</span>
+            <span className="text-sm text-slate-700 dark:text-slate-300">Receber por email</span>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -145,7 +145,7 @@ export default function UserPreferences({ user, tenantId, isOpen = true, onClose
               onChange={(e) => setFieldValue('notification_method_in_app', e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-slate-700">Notificações no app</span>
+            <span className="text-sm text-slate-700 dark:text-slate-300">Notificações no app</span>
           </label>
         </div>
 
