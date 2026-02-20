@@ -232,7 +232,7 @@ export default function ClientDetail() {
           <CustomReportBuilder clientId={client.id} tenantId={workspaceId} />
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
     </ProtectedInternalRoute>
   );
 }
