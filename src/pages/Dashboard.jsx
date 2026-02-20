@@ -3,7 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import StatCard from '../components/dashboard/StatCard';
+import StatCardSkeleton from '../components/dashboard/StatCardSkeleton';
 import AlertsCenter from '../components/dashboard/AlertsCenter';
+import AlertsLoader from '../components/dashboard/AlertsLoader';
 import VirtualCounterWidget from '../components/dashboard/widgets/VirtualCounterWidget';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
@@ -71,26 +73,36 @@ const Dashboard = memo(function Dashboard() {
     ];
   }, [dashboardData]);
 
+  const { isLoading: alertsLoading } = useQuery({
+    queryKey: ['alerts-check', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return null;
+      return base44.entities.Invoice.filter({ tenant_id: workspaceId });
+    },
+    enabled: !!workspaceId,
+    staleTime: 5 * 60 * 1000
+  });
+
   return (
     <div className="space-y-4 sm:space-y-6">
            {/* Welcome */}
            <div>
-             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Dashboard</h1>
-             <p className="text-sm sm:text-base text-slate-600 mt-1">Bem-vindo ao sistema Contaux</p>
+             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">Dashboard</h1>
+             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-1">Bem-vindo ao sistema Contaux</p>
            </div>
 
            {/* Stats Grid */}
            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-             {stats.map((stat, index) => (
+             {dashboardData ? stats.map((stat, index) => (
                <StatCard key={index} {...stat} />
-             ))}
+             )) : [1,2,3,4,5,6].map(i => <StatCardSkeleton key={i} />)}
            </div>
 
            {/* Alerts Center */}
             {workspaceId && (
               <div>
-                <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-slate-900">Alertas</h2>
-                <AlertsCenter tenantId={workspaceId} />
+                <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-slate-900 dark:text-slate-100">Alertas</h2>
+                {alertsLoading ? <AlertsLoader /> : <AlertsCenter tenantId={workspaceId} />}
               </div>
             )}
 

@@ -1,25 +1,17 @@
-import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
+import React, { useMemo, memo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { AlertCircle, Clock, DollarSign } from 'lucide-react';
 
 const AlertsCenter = memo(function AlertsCenter({ tenantId }) {
-  const [invoices, setInvoices] = useState([]);
-
-  const loadInvoices = useCallback(async () => {
-    if (!tenantId) return;
-    try {
-      const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
-      setInvoices(data);
-    } catch (error) {
-      console.error('Erro ao verificar alertas:', error);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadInvoices();
-    const interval = setInterval(loadInvoices, 300000);
-    return () => clearInterval(interval);
-  }, [loadInvoices]);
+  const { data: invoices = [] } = useQuery({
+    queryKey: ['alerts-invoices', tenantId],
+    queryFn: () => base44.entities.Invoice.filter({ tenant_id: tenantId }),
+    enabled: !!tenantId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000
+  });
 
   const alerts = useMemo(() => {
     const alertList = [];
