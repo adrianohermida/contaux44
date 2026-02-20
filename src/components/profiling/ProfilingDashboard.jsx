@@ -38,25 +38,25 @@ export default function ProfilingDashboard() {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {metrics.map((metric, idx) => (
-          <Card key={idx} className="p-4">
+          <Card key={idx} className="p-4 border-blue-200 hover:shadow-md transition-shadow">
             <div className="flex items-start justify-between mb-2">
-              <p className="text-sm font-medium text-gray-700">{metric.label}</p>
+              <p className="text-sm font-medium text-blue-900">{metric.label}</p>
               <span className={`text-xs font-bold px-2 py-1 rounded ${getStatusColor(metric.status)}`}>
                 {getStatusIcon(metric.status)}
               </span>
             </div>
-            <p className="text-2xl font-bold text-gray-900 mb-1">{metric.value}</p>
-            <p className="text-xs text-gray-600">Target: {metric.target}</p>
+            <p className="text-2xl font-bold text-blue-900 mb-1">{metric.value}</p>
+            <p className="text-xs text-blue-600">Target: {metric.target}</p>
           </Card>
         ))}
       </div>
 
-      <Card className="p-4">
+      <Card className="p-4 border-blue-200 bg-blue-50">
         <div className="flex items-start gap-3">
-          <Activity className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <Activity className="w-5 h-5 text-blue-700 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold text-sm mb-2">Recomendações de Otimização</p>
-            <ul className="text-sm space-y-1 text-gray-700">
+            <p className="font-semibold text-sm mb-2 text-blue-900">Recomendações de Otimização</p>
+            <ul className="text-sm space-y-1 text-blue-800">
               <li>• Implementar lazy loading para componentes não críticos</li>
               <li>• Monitorar memory leaks com DevTools</li>
               <li>• Aplicar code splitting para reduzir bundle inicial</li>

@@ -69,7 +69,7 @@ const menuItems = [
      { label: 'Comunicação', page: 'Communication' }
    ]
   },
-  { icon: UserCircle, label: 'Meu Painel', page: 'ClientPortal' },
+
   {
    icon: Settings,
    label: 'Administração',
@@ -119,13 +119,13 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   }, [location.pathname]);
 
   return (
-    <aside className={`bg-slate-900 text-white min-h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col`}>
+    <aside className={`bg-gradient-to-b from-blue-900 to-blue-950 text-white min-h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col shadow-lg`}>
       {/* Logo */}
-      <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-        {!collapsed && <h2 className="text-xl font-bold">Contaux</h2>}
+      <div className="p-4 border-b border-blue-800 flex items-center justify-between">
+        {!collapsed && <h2 className="text-xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Contaux</h2>}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+          className="p-2 hover:bg-blue-800 rounded-lg transition-colors"
         >
           {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
         </button>
@@ -138,10 +138,10 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
             {item.submenu ? (
               <>
                 <button
-                  onClick={() => toggleSubmenu(item.label)}
-                  className="w-full px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors"
-                  title={collapsed ? item.label : ''}
-                >
+                   onClick={() => toggleSubmenu(item.label)}
+                   className="w-full px-4 py-3 flex items-center gap-3 hover:bg-blue-800 transition-colors"
+                   title={collapsed ? item.label : ''}
+                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
                   {!collapsed && (
                     <>
@@ -162,26 +162,26 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
                   )}
                 </button>
                 {!collapsed && openMenus[item.label] && (
-                  <div className="bg-slate-950">
-                    {item.submenu.map((sub, subIndex) => (
-                       <a
-                         key={subIndex}
-                         href={`/${sub.page.toLowerCase()}`}
-                         className={`block px-12 py-2 text-sm hover:bg-slate-800 transition-colors ${
-                           isActive(sub.page) ? 'bg-slate-800 text-blue-400' : ''
-                         }`}
-                       >
-                         {sub.label}
-                       </a>
-                     ))}
-                  </div>
-                )}
+                   <div className="bg-blue-950">
+                     {item.submenu.map((sub, subIndex) => (
+                        <a
+                          key={subIndex}
+                          href={`/${sub.page.toLowerCase()}`}
+                          className={`block px-12 py-2 text-sm hover:bg-blue-800 transition-colors ${
+                            isActive(sub.page) ? 'bg-blue-800 text-blue-200' : 'text-blue-100'
+                          }`}
+                        >
+                          {sub.label}
+                        </a>
+                      ))}
+                   </div>
+                 )}
               </>
             ) : (
                <a
                    href={`/${item.page.toLowerCase()}`}
-                   className={`block px-4 py-3 flex items-center gap-3 hover:bg-slate-800 transition-colors ${
-                     isActive(item.page) ? 'bg-slate-800 border-l-4 border-blue-500' : ''
+                   className={`block px-4 py-3 flex items-center gap-3 hover:bg-blue-800 transition-colors ${
+                     isActive(item.page) ? 'bg-blue-800 border-l-4 border-blue-300' : ''
                    }`}
                    title={collapsed ? item.label : ''}
                  >
@@ -207,9 +207,9 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
 
       {/* Footer - Info & Version */}
       {!collapsed && (
-        <div className="p-4 border-t border-slate-800 text-xs text-slate-500 text-center">
-          <p>Contaux v1.0.0</p>
-        </div>
+         <div className="p-4 border-t border-blue-800 text-xs text-blue-200 text-center">
+           <p>Contaux v1.0.0</p>
+         </div>
       )}
     </aside>
   );

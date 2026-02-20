@@ -52,23 +52,23 @@ export default function PerformanceReports() {
 
       <div className="space-y-2 max-h-96 overflow-y-auto">
         {reports.map(report => (
-          <Card key={report.id} className="p-4">
+          <Card key={report.id} className="p-4 border-blue-200 hover:shadow-md transition-shadow">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <p className="font-medium text-sm">{report.name}</p>
-                <p className="text-xs text-gray-500">{report.date}</p>
+                <p className="font-medium text-sm text-slate-900">{report.name}</p>
+                <p className="text-xs text-slate-500">{report.date}</p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-blue-600">{report.score}</p>
-                <p className="text-xs text-gray-500">score</p>
+                <p className="text-2xl font-bold text-blue-700">{report.score}</p>
+                <p className="text-xs text-slate-500">score</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 text-xs">
               {Object.entries(report.metrics).map(([key, value]) => (
-                <div key={key} className="p-2 bg-gray-50 rounded">
-                  <p className="text-gray-600 capitalize">{key}</p>
-                  <p className="font-bold text-gray-900">{value}</p>
+                <div key={key} className="p-2 bg-blue-50 rounded border border-blue-100">
+                  <p className="text-blue-600 capitalize font-medium">{key}</p>
+                  <p className="font-bold text-blue-900">{value}</p>
                 </div>
               ))}
             </div>

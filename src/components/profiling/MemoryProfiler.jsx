@@ -21,37 +21,37 @@ export default function MemoryProfiler() {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Card className="p-3 bg-blue-50">
-          <p className="text-xs text-gray-600">Usado</p>
-          <p className="text-2xl font-bold text-blue-900">{lastMemory.used}MB</p>
+        <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <p className="text-xs text-blue-600 font-semibold">Usado</p>
+          <p className="text-2xl font-bold text-blue-900 mt-1">{lastMemory.used}MB</p>
         </Card>
-        <Card className="p-3 bg-purple-50">
-          <p className="text-xs text-gray-600">Total</p>
-          <p className="text-2xl font-bold text-purple-900">{lastMemory.total}MB</p>
+        <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <p className="text-xs text-blue-600 font-semibold">Total</p>
+          <p className="text-2xl font-bold text-blue-900 mt-1">{lastMemory.total}MB</p>
         </Card>
-        <Card className="p-3 bg-green-50">
-          <p className="text-xs text-gray-600">Livre</p>
-          <p className="text-2xl font-bold text-green-900">{lastMemory.total - lastMemory.used}MB</p>
+        <Card className="p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
+          <p className="text-xs text-emerald-600 font-semibold">Livre</p>
+          <p className="text-2xl font-bold text-emerald-900 mt-1">{lastMemory.total - lastMemory.used}MB</p>
         </Card>
-        <Card className={`p-3 ${memoryUsagePercent > 80 ? 'bg-red-50' : 'bg-yellow-50'}`}>
-          <p className="text-xs text-gray-600">Uso</p>
-          <p className={`text-2xl font-bold ${memoryUsagePercent > 80 ? 'text-red-900' : 'text-yellow-900'}`}>
+        <Card className={`p-4 bg-gradient-to-br ${memoryUsagePercent > 80 ? 'from-red-50 to-red-100 border-red-200' : 'from-amber-50 to-amber-100 border-amber-200'}`}>
+          <p className={`text-xs font-semibold ${memoryUsagePercent > 80 ? 'text-red-600' : 'text-amber-600'}`}>Uso</p>
+          <p className={`text-2xl font-bold mt-1 ${memoryUsagePercent > 80 ? 'text-red-900' : 'text-amber-900'}`}>
             {memoryUsagePercent}%
           </p>
         </Card>
       </div>
 
-      <Card className="p-4">
-        <h3 className="font-semibold mb-4">Uso ao Longo do Tempo</h3>
+      <Card className="p-4 border-blue-200">
+        <h3 className="font-semibold mb-4 text-blue-900">Uso ao Longo do Tempo</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={memoryData}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#dbeafe" />
             <XAxis dataKey="time" />
             <YAxis domain={[0, 128]} />
-            <Tooltip />
+            <Tooltip contentStyle={{ backgroundColor: '#f0f9ff', border: '1px solid #bfdbfe' }} />
             <Legend />
-            <Line type="monotone" dataKey="used" stroke="#3b82f6" name="Usado (MB)" strokeWidth={2} />
-            <Line type="monotone" dataKey="total" stroke="#9ca3af" name="Total (MB)" strokeWidth={2} strokeDasharray="5 5" />
+            <Line type="monotone" dataKey="used" stroke="#1e40af" name="Usado (MB)" strokeWidth={2} dot={{ fill: '#1e40af' }} />
+            <Line type="monotone" dataKey="total" stroke="#60a5fa" name="Total (MB)" strokeWidth={2} strokeDasharray="5 5" dot={{ fill: '#60a5fa' }} />
           </LineChart>
         </ResponsiveContainer>
       </Card>

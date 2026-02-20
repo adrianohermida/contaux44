@@ -19,31 +19,31 @@ export default function BundleAnalyzer() {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <Card className="p-3 bg-blue-50">
-          <p className="text-xs text-gray-600">Tamanho Total</p>
-          <p className="text-2xl font-bold text-blue-900">{totalSize}KB</p>
+        <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <p className="text-xs text-blue-600 font-semibold">Tamanho Total</p>
+          <p className="text-2xl font-bold text-blue-900 mt-1">{totalSize}KB</p>
         </Card>
-        <Card className={`p-3 ${totalSize > 500 ? 'bg-red-50' : 'bg-green-50'}`}>
-          <p className="text-xs text-gray-600">Status</p>
-          <p className={`text-lg font-bold ${totalSize > 500 ? 'text-red-900' : 'text-green-900'}`}>
+        <Card className={`p-4 bg-gradient-to-br ${totalSize > 500 ? 'from-red-50 to-red-100 border-red-200' : 'from-emerald-50 to-emerald-100 border-emerald-200'}`}>
+          <p className={`text-xs font-semibold ${totalSize > 500 ? 'text-red-600' : 'text-emerald-600'}`}>Status</p>
+          <p className={`text-lg font-bold mt-1 ${totalSize > 500 ? 'text-red-900' : 'text-emerald-900'}`}>
             {totalSize > 500 ? 'Acima do alvo' : '✓ Dentro do alvo'}
           </p>
         </Card>
-        <Card className="p-3 bg-purple-50">
-          <p className="text-xs text-gray-600">Target</p>
-          <p className="text-2xl font-bold text-purple-900">500KB</p>
+        <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <p className="text-xs text-blue-600 font-semibold">Target</p>
+          <p className="text-2xl font-bold text-blue-900 mt-1">500KB</p>
         </Card>
       </div>
 
-      <Card className="p-4">
-        <h3 className="font-semibold mb-4">Distribuição de Dependências</h3>
+      <Card className="p-4 border-blue-200">
+        <h3 className="font-semibold mb-4 text-blue-900">Distribuição de Dependências</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={bundleData} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#dbeafe" />
             <XAxis type="number" />
             <YAxis dataKey="name" type="category" width={80} />
-            <Tooltip />
-            <Bar dataKey="size" fill="#3b82f6">
+            <Tooltip contentStyle={{ backgroundColor: '#f0f9ff', border: '1px solid #bfdbfe' }} />
+            <Bar dataKey="size" fill="#1e40af">
               {bundleData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index]} />
               ))}
@@ -52,18 +52,18 @@ export default function BundleAnalyzer() {
         </ResponsiveContainer>
       </Card>
 
-      <Card className="p-4">
-        <h3 className="font-semibold mb-3">Detalhamento</h3>
+      <Card className="p-4 border-blue-200">
+        <h3 className="font-semibold mb-3 text-blue-900">Detalhamento</h3>
         <div className="space-y-2">
           {bundleData.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded" style={{ backgroundColor: colors[idx] }} />
+            <div key={idx} className="flex items-center gap-3 p-2 hover:bg-blue-50 rounded transition-colors">
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx] }} />
               <div className="flex-1">
-                <p className="text-sm font-medium">{item.name}</p>
+                <p className="text-sm font-medium text-slate-900">{item.name}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-bold">{item.size}KB</p>
-                <p className="text-xs text-gray-500">{item.percent}%</p>
+                <p className="text-sm font-bold text-blue-900">{item.size}KB</p>
+                <p className="text-xs text-slate-500">{item.percent}%</p>
               </div>
             </div>
           ))}
