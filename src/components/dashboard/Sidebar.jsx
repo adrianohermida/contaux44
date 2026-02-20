@@ -119,7 +119,7 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   }, [location.pathname]);
 
   return (
-    <aside className={`bg-gradient-to-b from-blue-900 to-blue-950 text-white min-h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col shadow-lg`}>
+    <aside className={`bg-gradient-to-b from-blue-900 to-blue-950 text-white h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col shadow-lg sticky top-0`}>
       {/* Logo */}
       <div className="p-4 border-b border-blue-800 flex items-center justify-between">
         {!collapsed && <h2 className="text-xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Contaux</h2>}
@@ -132,7 +132,7 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
       </div>
 
       {/* Menu Items */}
-      <nav className="flex-1 overflow-y-auto py-4 space-y-1">
+      <nav className="flex-1 overflow-y-auto py-2 md:py-4 space-y-0.5 md:space-y-1">
         {menuItems.map((item, index) => (
           <div key={index}>
             {item.submenu ? (
