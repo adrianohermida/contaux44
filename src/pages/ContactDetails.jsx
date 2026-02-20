@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import ContactFormField from '../components/dashboard/ContactFormField';
+import ContactDeleteButton from '../components/dashboard/ContactDeleteButton';
 import {
   validateContactForm,
   formatCPF,
@@ -330,22 +331,30 @@ export default function ContactDetails() {
               </div>
 
               {/* Action Buttons */}
-              {isEditing && (
-                <div className="flex gap-3 pt-4 border-t">
-                  <Button
-                    onClick={handleSave}
-                    disabled={saveMutation.isPending}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    {saveMutation.isPending ? 'Salvando...' : 'Salvar'}
-                  </Button>
-                  <Button onClick={handleCancel} variant="outline">
-                    <X className="w-4 h-4 mr-2" />
-                    Cancelar
-                  </Button>
-                </div>
-              )}
+              <div className="pt-4 border-t space-y-3">
+                {isEditing && (
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={handleSave}
+                      disabled={saveMutation.isPending}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      {saveMutation.isPending ? 'Salvando...' : 'Salvar'}
+                    </Button>
+                    <Button onClick={handleCancel} variant="outline">
+                      <X className="w-4 h-4 mr-2" />
+                      Cancelar
+                    </Button>
+                  </div>
+                )}
+                {!isEditing && contactId !== 'new' && (
+                  <ContactDeleteButton 
+                    contactId={contactId} 
+                    onSuccess={() => navigate('/contact')}
+                  />
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
