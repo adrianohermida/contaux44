@@ -347,9 +347,9 @@ export default function Blog() {
               {/* Categories */}
               <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-3 sm:p-4 rounded-lg">
                 <h5 className="font-bold mb-2 text-sm dark:text-white">Categorias</h5>
-                <ul className="space-y-2">
+                <ul className="space-y-1">
                   {categories.length === 0 ? (
-                    <li className="text-xs text-slate-500">Nenhuma categoria</li>
+                    <li className="text-xs text-slate-500 dark:text-slate-400">Nenhuma categoria</li>
                   ) : (
                     categories.map((cat) => {
                       const count = blogPosts.filter(p => p.category_id === cat.id).length;
@@ -361,13 +361,13 @@ export default function Blog() {
                               setSelectedCategory(isActive ? null : cat.id);
                               setCurrentPage(1);
                             }}
-                            className={`w-full text-left text-xs sm:text-sm flex justify-between items-center hover:text-blue-700 ${isActive ? 'text-blue-600 font-semibold' : 'text-slate-700'}`}
+                            className={`w-full text-left text-xs flex justify-between items-center hover:text-blue-700 dark:hover:text-blue-400 ${isActive ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'text-slate-700 dark:text-slate-300'}`}
                           >
-                            <span className="flex items-center gap-2">
-                              {cat.icon && <span className="text-base">{cat.icon}</span>}
-                              {cat.name}
+                            <span className="flex items-center gap-1 flex-1 min-w-0">
+                              {cat.icon && <span className="text-sm flex-shrink-0">{cat.icon}</span>}
+                              <span className="truncate">{cat.name}</span>
                             </span>
-                            <span className="text-xs text-slate-500">({count})</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 flex-shrink-0 ml-1">({count})</span>
                           </button>
                         </li>
                       );
@@ -377,8 +377,8 @@ export default function Blog() {
               </div>
 
               {/* Tags */}
-              <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg">
-                <h5 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">Tags Populares</h5>
+              <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-3 sm:p-4 rounded-lg">
+                <h5 className="font-bold mb-2 text-sm dark:text-white">Tags Populares</h5>
                 <div className="flex flex-wrap gap-1 sm:gap-2">
                   {tags.length === 0 ? (
                     <p className="text-xs text-slate-500">Nenhuma tag ainda</p>
