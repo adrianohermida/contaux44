@@ -88,7 +88,7 @@ export default function ContactDetails() {
 
   const handleCancel = () => {
     if (contactId === 'new') {
-      navigate('/Contact');
+      navigate('/contact');
     } else {
       setFormData(contact);
       setIsEditing(false);
