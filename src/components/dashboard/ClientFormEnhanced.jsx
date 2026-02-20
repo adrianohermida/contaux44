@@ -114,16 +114,17 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
         excludeClientId: client?.id
       });
 
-      const isValid = response.data.valid;
+      const isValid = response?.data?.valid ?? true;
       setDocumentValidation(prev => ({
         ...prev,
-        [field]: isValid ? { valid: true } : { valid: false, message: response.data.message }
+        [field]: isValid ? { valid: true } : { valid: false, message: response?.data?.message || 'Inválido' }
       }));
 
       return isValid;
     } catch (error) {
       console.error('Erro na validação:', error);
-      return false;
+      setDocumentValidation(prev => ({ ...prev, [field]: { valid: true } }));
+      return true;
     }
   };
 
