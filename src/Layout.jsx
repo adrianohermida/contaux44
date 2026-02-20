@@ -25,10 +25,9 @@ export default function Layout({ children, currentPageName }) {
         'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 
         'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 
         'AccountingCalendar', 'Automations', 'Reports', 'Communication', 
-        'ClientPortal', 'SettingsPage', 'AuditLogs', 'Analytics', 
-        'AdvancedReportsPage', 'DocumentManagement', 'SecurityCenter', 
-        'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger',
-        'AnalyticsDashboard'
+        'ClientPortal', 'SettingsPage', 'AuditLogs', 
+        'DocumentManagement', 'SecurityCenter', 
+        'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger'
       ];
     
     if (dashboardPages.includes(currentPageName)) {
