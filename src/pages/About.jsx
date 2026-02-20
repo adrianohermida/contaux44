@@ -25,12 +25,12 @@ export default function About() {
       {/* Breadcrumbs */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">About Us</h1>
-          <p className="text-blue-100 mb-6">Business plan draws on a wide range of knowledge from different business disciplines.</p>
+          <h1 className="text-4xl font-bold mb-4">Sobre Nós</h1>
+          <p className="text-blue-100 mb-6">Transformando a gestão de escritórios de advocacia e serviços contábeis com tecnologia inteligente.</p>
           <div className="flex gap-2 text-sm">
-            <Link to={createPageUrl('Home')} className="hover:underline">Home</Link>
+            <Link to={createPageUrl('Home')} className="hover:underline">Início</Link>
             <span>/</span>
-            <span>About Us</span>
+            <span>Sobre Nós</span>
           </div>
         </div>
       </section>
@@ -42,70 +42,76 @@ export default function About() {
              {/* Left Content */}
              <div>
                <div className="mb-8">
-                 <span className="text-blue-600 font-semibold text-sm md:text-base">What we do</span>
-                 <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Websites that tell your brand's story</h2>
-                 <p className="text-gray-600 text-sm md:text-base">We're a digital product and UX agency Strategy, design and development across all platforms.</p>
+                 <span className="text-blue-600 font-semibold text-sm md:text-base">O que fazemos</span>
+                 <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Tecnologia que organiza seu escritório</h2>
+                 <p className="text-gray-600 text-sm md:text-base">Contaux é uma plataforma integrada que combina CRM, gestão financeira e acompanhamento de processos judiciais em um único sistema.</p>
                </div>
 
               {/* Tabs */}
                   <div className="border-b border-gray-200 mb-6 overflow-x-auto">
                       <div className="flex gap-4 md:gap-8">
-                        {['content', 'strategy', 'development'].map(tab => (
-                          <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`py-4 font-semibold capitalize whitespace-nowrap text-sm md:text-base ${
-                              activeTab === tab ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'
-                            }`}
-                          >
-                            {tab}
-                          </button>
-                        ))}
+                        {['missao', 'visao', 'valores'].map(tab => {
+                          const labels = { missao: 'Missão', visao: 'Visão', valores: 'Valores' };
+                          return (
+                            <button
+                              key={tab}
+                              onClick={() => setActiveTab(tab)}
+                              className={`py-4 font-semibold capitalize whitespace-nowrap text-sm md:text-base ${
+                                activeTab === tab ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'
+                              }`}
+                            >
+                              {labels[tab]}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
 
               {/* Tab Content */}
               <div className="space-y-4">
-                {activeTab === 'content' && (
+                {activeTab === 'missao' && (
                   <>
-                    <p className="text-gray-600">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla. Nemo en ipsam voluptatem quia voluptas sit asper.</p>
+                    <p className="text-gray-600">Simplificar a gestão administrativa de escritórios de advocacia e empresas de contabilidade, fornecendo uma plataforma integrada que centraliza clientes, processos judiciais, documentação e finanças em um único sistema intuitivo.</p>
                     <ul className="space-y-3">
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Commitment to excellence</span>
+                        <span className="text-gray-600">Reduzir carga administrativa do profissional jurídico</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Clients are our partners</span>
+                        <span className="text-gray-600">Aumentar eficiência operacional dos escritórios</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Fun is an absolute must</span>
+                        <span className="text-gray-600">Otimizar gestão financeira e de clientes</span>
                       </li>
                     </ul>
                   </>
                 )}
-                {activeTab === 'strategy' && (
+                {activeTab === 'visao' && (
                   <>
-                    <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing, sed do eiusmod tempor incididunt ut labore et dolore. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-                    <p className="text-gray-600">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla. Nemo en ipsam voluptatem quia voluptas sit asper.</p>
+                    <p className="text-gray-600">Ser a plataforma líder no Brasil para gestão integral de escritórios jurídicos e contábeis, oferecendo tecnologia inovadora que transforma processos manuais em fluxos automáticos e inteligentes.</p>
+                    <p className="text-gray-600 mt-4">Expandir para integração com sistemas de tribunal eletrônico, automações baseadas em IA e análise preditiva de casos e finanças.</p>
                   </>
                 )}
-                {activeTab === 'development' && (
+                {activeTab === 'valores' && (
                   <>
-                    <p className="text-gray-600">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla. Nemo en ipsam voluptatem quia voluptas sit asper.</p>
                     <ul className="space-y-3">
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Commitment to excellence</span>
+                        <span className="text-gray-600"><strong>Excelência:</strong> Compromisso com qualidade e inovação contínua</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Clients are our partners</span>
+                        <span className="text-gray-600"><strong>Transparência:</strong> Clareza e honestidade em tudo que fazemos</span>
                       </li>
                       <li className="flex gap-3 items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">Fun is an absolute must</span>
+                        <span className="text-gray-600"><strong>Segurança:</strong> Proteção rigorosa de dados e conformidade legal</span>
+                      </li>
+                      <li className="flex gap-3 items-start">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-600"><strong>Colaboração:</strong> Nossos clientes são parceiros no sucesso</span>
                       </li>
                     </ul>
                   </>
@@ -129,9 +135,9 @@ export default function About() {
       <section className="bg-gray-50 py-12 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-8 md:mb-12">
-            <span className="text-blue-600 font-semibold text-sm md:text-base">Care Features</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Provide Awesome Service With Our Tools</h2>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
+            <span className="text-blue-600 font-semibold text-sm md:text-base">Recursos Principais</span>
+            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Ferramentas Completas para Seu Escritório</h2>
+            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Contaux integra todas as funcionalidades necessárias para gerenciar clientes, processos e finanças com eficiência.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -150,9 +156,9 @@ export default function About() {
       <section className="py-12 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-8 md:mb-12">
-            <span className="text-blue-600 font-semibold text-sm md:text-base">Meet our Creative Team</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Our Awesome Team</h2>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
+            <span className="text-blue-600 font-semibold text-sm md:text-base">Conheça Nossa Equipe</span>
+            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Profissionais Dedicados</h2>
+            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Uma equipe multidisciplinar com expertise em tecnologia, direito e contabilidade.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -160,18 +166,14 @@ export default function About() {
               const teamImages = [
                 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/8da421752_t1.jpg',
                 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/5e76acbb9_t2.jpg',
-                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/d9a30fbe5_t3.jpg',
-                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/77f17b817_t4.jpg'
+                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/d3c4c97f8_t3.jpg',
+                'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/a90f2c1b4_t4.jpg',
               ];
               return (
                 <div key={idx} className="text-center">
-                  <img 
-                    src={teamImages[idx]}
-                    alt={member.name}
-                    className="w-full rounded-lg mb-4"
-                  />
+                  <img src={teamImages[idx]} alt={member.name} className="w-full h-64 object-cover rounded-lg mb-4" />
                   <h4 className="font-bold text-lg">{member.name}</h4>
-                  <p className="text-gray-600 text-sm">{member.role}</p>
+                  <p className="text-gray-600">{member.role}</p>
                 </div>
               );
             })}
@@ -179,55 +181,14 @@ export default function About() {
         </div>
       </section>
 
-      {/* Video Section */}
-      <section 
-        className="bg-cover bg-center text-white py-16 md:py-32 relative"
-        style={{backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/715a66c58_video-bg.png)'}}
-      >
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
-          <span className="text-blue-100 font-semibold text-sm md:text-base">Create your own experience</span>
-          <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Ready to grow faster?</h2>
-          <p className="text-blue-100 text-sm md:text-base mb-8 max-w-2xl mx-auto">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-
-          <a 
-            href="https://www.youtube.com/watch?v=r44RKWyfcFw"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full hover:bg-blue-100 transition-colors"
-          >
-            <Play className="w-6 h-6 text-blue-600 ml-1" />
-          </a>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="py-12 md:py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-6 md:gap-12">
-            <div>
-              <h3 className="text-xl md:text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
-              <p className="text-gray-600 text-sm md:text-base mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
-              <form className="flex flex-col sm:flex-row gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Seu endereço de e-mail"
-                  className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
-                />
-                <button className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm whitespace-nowrap">
-                  Registre-se
-                </button>
-              </form>
-            </div>
-
-            <div className="bg-white p-4 md:p-8 rounded-lg">
-              <h4 className="text-xl md:text-2xl font-bold mb-3">Quer abrir sua empresa grátis?</h4>
-              <p className="text-gray-600 text-sm md:text-base mb-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-              <button className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
-                Fale com um especialista
-              </button>
-            </div>
-          </div>
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 md:py-20">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">Pronto para modernizar seu escritório?</h2>
+          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">Contaux simplifica a gestão do seu escritório de advocacia ou contabilidade. Comece agora com uma avaliação gratuita.</p>
+          <Link to={createPageUrl('Home')} className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+            Solicitar Demo
+          </Link>
         </div>
       </section>
     </div>
