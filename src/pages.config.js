@@ -254,6 +254,7 @@ import Welcome from './pages/Welcome';
 import WhiteLabel from './pages/WhiteLabel';
 import CRMEnhancementPlan from './pages/CRMEnhancementPlan';
 import Sprint18Planning from './pages/Sprint18Planning';
+import ClientDetail from './pages/ClientDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -465,6 +466,7 @@ export const PAGES = {
     "WhiteLabel": WhiteLabel,
     "CRMEnhancementPlan": CRMEnhancementPlan,
     "Sprint18Planning": Sprint18Planning,
+    "ClientDetail": ClientDetail,
 }
 
 export const pagesConfig = {
