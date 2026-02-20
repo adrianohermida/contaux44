@@ -34,8 +34,8 @@ Deno.serve(async (req) => {
       tenant_id: workspaceId,
       user_email: user.email,
       action,
-      entity_type: event.entity_name,
-      entity_id: event.entity_id,
+      entity_type,
+      entity_id,
       old_values: old_data || null,
       new_values: data || null,
       ip_address: req.headers.get('x-forwarded-for') || 'unknown',
@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
       timestamp: new Date().toISOString()
     });
 
-    return Response.json({ success: true });
+    return Response.json({ success: true, logId: entity_id });
   } catch (error) {
     console.error('Erro ao criar auditlog:', error);
     return Response.json({ error: error.message }, { status: 500 });
