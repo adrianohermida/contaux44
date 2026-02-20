@@ -1,46 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { MessageCircle, Plus, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useMultitenantAuthOptimized } from '@/components/auth/useMultitenantAuthOptimized';
 import { createPageUrl } from '@/utils';
 
-export default function VirtualCounterWidget() {
+const VirtualCounterWidget = memo(function VirtualCounterWidget() {
   const { workspaceId } = useMultitenantAuthOptimized('internal');
-  const [stats, setStats] = useState({ active: 0, unread: 0 });
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!workspaceId) return;
+  const { data: conversations = [] } = useQuery({
+    queryKey: ['virtual-counter-stats', workspaceId],
+    queryFn: () => base44.entities.VirtualCounterConversation.filter({
+      workspace_id: workspaceId
+    }),
+    enabled: !!workspaceId,
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchInterval: 1 * 60 * 1000
+  });
 
-    const loadStats = async () => {
-      try {
-        const conversations = await base44.entities.VirtualCounterConversation.filter({
-          workspace_id: workspaceId
-        });
-        
-        const active = conversations.filter(c => c.status === 'active').length;
-        const unread = conversations.reduce((sum, c) => sum + (c.unread_count || 0), 0);
-        
-        setStats({ active, unread });
-        setLoading(false);
-      } catch (error) {
-        console.error('Erro ao carregar stats:', error);
-        setLoading(false);
-      }
-    };
-
-    loadStats();
-
-    // Subscribe para atualizações
+  // Subscribe para atualizações em tempo real
+  React.useEffect(() => {
     const unsubscribe = base44.entities.VirtualCounterConversation.subscribe(() => {
-      loadStats();
+      // React Query invalidará automaticamente
     });
-
     return unsubscribe;
-  }, [workspaceId]);
+  }, []);
 
-  const handleNewConversation = async () => {
+  const stats = useMemo(() => ({
+    active: conversations.filter(c => c.status === 'active').length,
+    unread: conversations.reduce((sum, c) => sum + (c.unread_count || 0), 0)
+  }), [conversations]);
+
+  const handleNewConversation = useCallback(async () => {
     try {
       await base44.entities.VirtualCounterConversation.create({
         workspace_id: workspaceId,
@@ -51,7 +44,7 @@ export default function VirtualCounterWidget() {
     } catch (error) {
       console.error('Erro:', error);
     }
-  };
+  }, [workspaceId]);
 
   return (
     <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg shadow p-6 border border-purple-100">
@@ -106,4 +99,6 @@ export default function VirtualCounterWidget() {
       </div>
     </div>
   );
-}
+});
+
+export default VirtualCounterWidget;
