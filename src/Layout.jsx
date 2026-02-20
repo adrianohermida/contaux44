@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from './components/auth/ProtectedInternalRoute';
 import BottomNav from './components/BottomNav';
+import RouteTransition from './components/RouteTransition';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // ✅ Constante FORA do componente - criada uma única vez
