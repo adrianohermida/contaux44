@@ -35,6 +35,14 @@ export default function RoleManager() {
     setRoles(roles.filter(r => r.id !== id));
   }, [roles]);
 
+  const updateRole = useCallback((id, updates) => {
+    setRoles(roles.map(r => r.id === id ? { ...r, ...updates } : r));
+  }, [roles]);
+
+  const toggleEditMode = useCallback((id) => {
+    setEditingId(editingId === id ? null : id);
+  }, [editingId]);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 mb-6">
@@ -85,19 +93,32 @@ export default function RoleManager() {
               <div className="flex gap-2">
                 {!role.locked && (
                   <>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={() => toggleEditMode(role.id)}>
                       <Edit2 className="w-4 h-4" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeRole(role.id)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => removeRole(role.id)}>
                       <Trash2 className="w-4 h-4 text-red-500" />
                     </Button>
                   </>
                 )}
               </div>
+              {editingId === role.id && !role.locked && (
+                <div className="mt-3 pt-3 border-t space-y-2">
+                  <Input
+                    placeholder="Nome"
+                    defaultValue={role.name}
+                    onChange={(e) => updateRole(role.id, { name: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Descrição"
+                    defaultValue={role.description}
+                    onChange={(e) => updateRole(role.id, { description: e.target.value })}
+                  />
+                  <Button size="sm" onClick={() => toggleEditMode(role.id)} className="w-full">
+                    Salvar
+                  </Button>
+                </div>
+              )}
             </div>
           </Card>
         ))}
