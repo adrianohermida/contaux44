@@ -23,20 +23,22 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
-      {/* Sidebar - hidden on mobile, visible on desktop */}
-      <div className="hidden md:block">
-        <Sidebar collapsed={sidebarCollapsed} setCollapsed={handleSetCollapsed} />
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors flex-col md:flex-row">
+      {/* Mobile Menu - sempre no topo em mobile */}
+      <div className="md:hidden">
+        <MobileMenu />
       </div>
 
-      {/* Mobile Menu */}
-      <MobileMenu />
+      {/* Sidebar - hidden on mobile, visible on desktop */}
+      <div className="hidden md:flex md:flex-col">
+        <Sidebar collapsed={sidebarCollapsed} setCollapsed={handleSetCollapsed} />
+      </div>
       
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-screen md:min-h-auto">
         {/* Header - sempre visível e consistente */}
         <DashboardHeader />
         
-        <main className="flex-1 p-4 sm:p-6 overflow-x-hidden dark:bg-slate-900">
+        <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden dark:bg-slate-900 bg-white md:bg-slate-50">
           {children}
         </main>
       </div>
