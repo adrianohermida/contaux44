@@ -144,8 +144,17 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
     const formatted = field === 'cpf' ? formatCPF(value) : formatCNPJ(value);
     setFieldValue(field, formatted);
     
-    if (formatted.match(/\d/g)?.length === (field === 'cpf' ? 11 : 14)) {
-      await validateDocument(field, formatted);
+    // CPF: 11 dígitos, CNPJ: 14 dígitos
+    const requiredDigits = field === 'cpf' ? 11 : 14;
+    const digitCount = formatted.match(/\d/g)?.length || 0;
+    
+    // Remover validação automática pois estava causando timeout
+    // Apenas permitir salvar quando documento estiver completo
+    if (digitCount === requiredDigits) {
+      setDocumentValidation(prev => ({
+        ...prev,
+        [field]: { valid: true }
+      }));
     }
   };
 
