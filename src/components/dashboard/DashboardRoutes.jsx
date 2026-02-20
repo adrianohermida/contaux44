@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LazyPageWrapper from './LazyPageWrapper';
 import {
   LazyDashboard,
+  LazyVirtualCounter,
   LazyClients,
   LazyTickets,
   LazyLegalProcesses,
@@ -42,6 +43,12 @@ export default function DashboardRoutes() {
       <Route path="/dashboard" element={
         <LazyPageWrapper>
           <LazyDashboard />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/virtualcounter" element={
+        <LazyPageWrapper>
+          <LazyVirtualCounter />
         </LazyPageWrapper>
       } />
       
