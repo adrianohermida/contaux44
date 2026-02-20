@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
-import { Bell, Search, User, LogOut, Settings, Loader2 } from 'lucide-react';
+import { Bell, User, LogOut, Settings, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -53,7 +53,7 @@ const DashboardHeader = memo(function DashboardHeader() {
         <SearchBox query={searchQuery} onQueryChange={setSearchQuery} />
 
         {/* Right Section */}
-        <div className="flex items-center gap-4">
+        <div className="ml-6 flex items-center gap-4">
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
