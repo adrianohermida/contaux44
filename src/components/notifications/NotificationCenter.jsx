@@ -92,5 +92,3 @@ export default function NotificationCenter() {
     </div>
   );
 }
-
-export { addNotification: useAddNotification };
