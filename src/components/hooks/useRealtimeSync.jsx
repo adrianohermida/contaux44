@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { wsService } from '../services/WebSocketService';
+import wsService from '../services/WebSocketService';
 
 /**
  * Hook para sincronização em tempo real de entidades
