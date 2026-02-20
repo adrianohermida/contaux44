@@ -45,7 +45,7 @@ export default function Header() {
         ? 'bg-slate-800 border-b border-slate-700'
         : 'bg-white'
     }`}
-    style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+    style={{ paddingTop: 'max(env(safe-area-inset-top), 12px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <nav className="flex items-center justify-between py-3 sm:py-4">
           {/* Logo */}
