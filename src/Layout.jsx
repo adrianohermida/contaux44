@@ -38,8 +38,41 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
+  const setupMobileEnhancements = () => {
+    const style = document.createElement('style');
+    style.textContent = `
+      /* Safe area support */
+      html { 
+        overscroll-behavior: none;
+        -webkit-user-select: none;
+      }
+      body { 
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+      input, textarea, select {
+        -webkit-user-select: text;
+        user-select: text;
+      }
+      button, [role="button"], a, [tabindex] {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      * { box-sizing: border-box; }
+      @supports (padding: env(safe-area-inset-top)) {
+        body { padding-top: env(safe-area-inset-top); }
+      }
+      @supports (padding: env(safe-area-inset-bottom)) {
+        main { padding-bottom: env(safe-area-inset-bottom); }
+      }
+    `;
+    document.head.appendChild(style);
+  };
+
   React.useEffect(() => {
     setupTheme();
+    setupMobileEnhancements();
     
     // Listen for system theme changes
     const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
