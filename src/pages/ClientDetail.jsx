@@ -16,6 +16,8 @@ import ReportGenerationPanel from '../components/dashboard/ReportGenerationPanel
 import FinancialAnalyticsPanel from '../components/dashboard/FinancialAnalyticsPanel';
 import BankReconciliationPanel from '../components/dashboard/BankReconciliationPanel';
 import TaxCalculationPanel from '../components/dashboard/TaxCalculationPanel';
+import NFeIntegrationPanel from '../components/dashboard/NFeIntegrationPanel';
+import ComplianceDashboardPanel from '../components/dashboard/ComplianceDashboardPanel';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function ClientDetail() {
@@ -123,19 +125,21 @@ export default function ClientDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="addresses" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-12 gap-1">
-          <TabsTrigger value="addresses" className="text-xs sm:text-sm">Endereços</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-14 gap-1">
+          <TabsTrigger value="addresses" className="text-xs sm:text-sm">End.</TabsTrigger>
           <TabsTrigger value="contacts" className="text-xs sm:text-sm">Contatos</TabsTrigger>
           <TabsTrigger value="shareholders" className="text-xs sm:text-sm">Sócios</TabsTrigger>
           <TabsTrigger value="fiscal" className="text-xs sm:text-sm">Fiscal</TabsTrigger>
           <TabsTrigger value="certificates" className="text-xs sm:text-sm">Certs</TabsTrigger>
           <TabsTrigger value="credentials" className="text-xs sm:text-sm">Acesso</TabsTrigger>
-          <TabsTrigger value="invoices" className="text-xs sm:text-sm">Faturas</TabsTrigger>
-          <TabsTrigger value="payments" className="text-xs sm:text-sm">Pagtos</TabsTrigger>
-          <TabsTrigger value="analytics" className="text-xs sm:text-sm">Analytics</TabsTrigger>
-          <TabsTrigger value="reports" className="text-xs sm:text-sm">Relat.</TabsTrigger>
+          <TabsTrigger value="invoices" className="text-xs sm:text-sm">Notas</TabsTrigger>
+          <TabsTrigger value="payments" className="text-xs sm:text-sm">Pags</TabsTrigger>
+          <TabsTrigger value="analytics" className="text-xs sm:text-sm">Gráf.</TabsTrigger>
+          <TabsTrigger value="reports" className="text-xs sm:text-sm">Rel.</TabsTrigger>
           <TabsTrigger value="reconciliation" className="text-xs sm:text-sm">Banco</TabsTrigger>
-          <TabsTrigger value="taxes" className="text-xs sm:text-sm">Impostos</TabsTrigger>
+          <TabsTrigger value="taxes" className="text-xs sm:text-sm">Imp.</TabsTrigger>
+          <TabsTrigger value="nfe" className="text-xs sm:text-sm">NF-e</TabsTrigger>
+          <TabsTrigger value="compliance" className="text-xs sm:text-sm">Conf.</TabsTrigger>
         </TabsList>
 
         <TabsContent value="addresses" className="bg-white rounded-lg shadow p-6">
@@ -184,6 +188,14 @@ export default function ClientDetail() {
 
         <TabsContent value="taxes" className="bg-white rounded-lg shadow p-6">
           <TaxCalculationPanel clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
+
+        <TabsContent value="nfe" className="bg-white rounded-lg shadow p-6">
+          <NFeIntegrationPanel clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
+
+        <TabsContent value="compliance" className="bg-white rounded-lg shadow p-6">
+          <ComplianceDashboardPanel clientId={client.id} tenantId={workspaceId} />
         </TabsContent>
       </Tabs>
     </div>
