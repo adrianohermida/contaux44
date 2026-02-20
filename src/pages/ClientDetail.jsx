@@ -129,7 +129,7 @@ export default function ClientDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="addresses" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-18 gap-1 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-20 gap-1 overflow-x-auto">
           <TabsTrigger value="addresses" className="text-xs sm:text-sm">End.</TabsTrigger>
           <TabsTrigger value="contacts" className="text-xs sm:text-sm">Cont.</TabsTrigger>
           <TabsTrigger value="shareholders" className="text-xs sm:text-sm">Sóc.</TabsTrigger>
@@ -140,6 +140,8 @@ export default function ClientDetail() {
           <TabsTrigger value="payments" className="text-xs sm:text-sm">Pags</TabsTrigger>
           <TabsTrigger value="analytics" className="text-xs sm:text-sm">Gráf.</TabsTrigger>
           <TabsTrigger value="reports" className="text-xs sm:text-sm">Rel.</TabsTrigger>
+          <TabsTrigger value="advanced-analytics" className="text-xs sm:text-sm">Adv.</TabsTrigger>
+          <TabsTrigger value="custom-reports" className="text-xs sm:text-sm">Custom</TabsTrigger>
           <TabsTrigger value="reconciliation" className="text-xs sm:text-sm">Banco</TabsTrigger>
           <TabsTrigger value="taxes" className="text-xs sm:text-sm">Imp.</TabsTrigger>
           <TabsTrigger value="nfe" className="text-xs sm:text-sm">NF-e</TabsTrigger>
