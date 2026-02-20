@@ -138,6 +138,17 @@ import Sprint9Completion from './pages/Sprint9Completion';
 import Sprint10Tracker from './pages/Sprint10Tracker';
 import AIRecommendations from './pages/AIRecommendations';
 import EnterpriseSSOSetup from './pages/EnterpriseSSOSetup';
+import CustomWorkflowBuilder from './pages/CustomWorkflowBuilder';
+import DocumentVersioning from './pages/DocumentVersioning';
+import AdvancedSearch from './pages/AdvancedSearch';
+import AdvancedNotifications from './pages/AdvancedNotifications';
+import MultiLanguageSupport from './pages/MultiLanguageSupport';
+import RealTimeCollaboration from './pages/RealTimeCollaboration';
+import CommentThreading from './pages/CommentThreading';
+import SearchAnalytics from './pages/SearchAnalytics';
+import SmartNotificationRules from './pages/SmartNotificationRules';
+import RegionalCustomization from './pages/RegionalCustomization';
+import Sprint10Completion from './pages/Sprint10Completion';
 import __Layout from './Layout.jsx';
 
 
@@ -233,6 +244,17 @@ export const PAGES = {
     "Sprint10Tracker": Sprint10Tracker,
     "AIRecommendations": AIRecommendations,
     "EnterpriseSSOSetup": EnterpriseSSOSetup,
+    "CustomWorkflowBuilder": CustomWorkflowBuilder,
+    "DocumentVersioning": DocumentVersioning,
+    "AdvancedSearch": AdvancedSearch,
+    "AdvancedNotifications": AdvancedNotifications,
+    "MultiLanguageSupport": MultiLanguageSupport,
+    "RealTimeCollaboration": RealTimeCollaboration,
+    "CommentThreading": CommentThreading,
+    "SearchAnalytics": SearchAnalytics,
+    "SmartNotificationRules": SmartNotificationRules,
+    "RegionalCustomization": RegionalCustomization,
+    "Sprint10Completion": Sprint10Completion,
 }
 
 export const pagesConfig = {
