@@ -57,7 +57,7 @@ const Dashboard = memo(function Dashboard() {
         { icon: Users, title: 'Clientes Ativos', value: '0', subtitle: 'Total de clientes', color: 'blue' },
         { icon: FileText, title: 'Processos em Andamento', value: '0', subtitle: 'Processos ativos', color: 'green' },
         { icon: Ticket, title: 'Tickets Abertos', value: '0', subtitle: 'Aguardando atendimento', color: 'yellow' },
-        { icon: DollarSign, title: 'Receita do Mês', value: 'R$ 0,00', subtitle: 'Faturamento atual', color: 'purple' },
+        { icon: DollarSign, title: 'Receita do Mês', value: 'R$ 0,00', subtitle: 'Faturamento atual', color: 'blue' },
         { icon: AlertCircle, title: 'Prazos Críticos', value: '0', subtitle: 'Próximos 7 dias', color: 'red' },
         { icon: TrendingUp, title: 'Orçamentos Pendentes', value: '0', subtitle: 'Aguardando aprovação', color: 'blue' }
       ];
@@ -67,7 +67,7 @@ const Dashboard = memo(function Dashboard() {
       { icon: Users, title: 'Clientes Ativos', value: dashboardData.clientsCount.toString(), subtitle: 'Total de clientes', color: 'blue' },
       { icon: FileText, title: 'Processos em Andamento', value: dashboardData.processesCount.toString(), subtitle: 'Processos ativos', color: 'green' },
       { icon: Ticket, title: 'Tickets Abertos', value: dashboardData.ticketsCount.toString(), subtitle: 'Aguardando atendimento', color: 'yellow' },
-      { icon: DollarSign, title: 'Receita do Mês', value: `R$ ${dashboardData.monthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: 'Faturamento atual', color: 'purple' },
+      { icon: DollarSign, title: 'Receita do Mês', value: `R$ ${dashboardData.monthlyRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, subtitle: 'Faturamento atual', color: 'blue' },
       { icon: AlertCircle, title: 'Prazos Críticos', value: dashboardData.upcomingDeadlines.toString(), subtitle: 'Próximos 7 dias', color: 'red' },
       { icon: TrendingUp, title: 'Orçamentos Pendentes', value: dashboardData.quotesCount.toString(), subtitle: 'Aguardando aprovação', color: 'blue' }
     ];
@@ -153,15 +153,15 @@ const Dashboard = memo(function Dashboard() {
                 <p className="text-xs sm:text-sm text-slate-600">Tickets</p>
                 <p className="text-lg sm:text-xl font-bold text-yellow-600 mt-1">-5%</p>
               </div>
-              <div className="text-center p-2 sm:p-3 bg-purple-50 rounded">
+              <div className="text-center p-2 sm:p-3 bg-blue-50 rounded">
                 <p className="text-xs sm:text-sm text-slate-600">Clientes Novos</p>
-                <p className="text-lg sm:text-xl font-bold text-purple-600 mt-1">+3</p>
+                <p className="text-lg sm:text-xl font-bold text-blue-600 mt-1">+3</p>
               </div>
             </div>
           </div>
 
           {/* Link to Reports */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow p-4 sm:p-6 text-white">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow p-4 sm:p-6 text-white">
             <h3 className="text-base sm:text-lg font-semibold mb-2">Análise Detalhada</h3>
             <p className="text-xs sm:text-sm text-blue-100 mb-3 sm:mb-4">Veja relatórios completos, gráficos e métricas de evolução</p>
             <a href="/reports" className="inline-block bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-lg font-medium text-sm sm:text-base hover:bg-blue-50 transition-colors">

@@ -118,22 +118,22 @@ export default function Reports() {
                     <CheckCircle className="w-8 h-8 text-green-500 opacity-20" />
                   </div>
                 </div>
-                <div className="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+                <div className="bg-white rounded-lg shadow p-6 border-l-4 border-amber-500">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-slate-600 text-sm">Vencido</p>
                       <p className="text-2xl font-bold mt-1">R$ {analyticsData.metrics.overdue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                     </div>
-                    <AlertCircle className="w-8 h-8 text-red-500 opacity-20" />
+                    <AlertCircle className="w-8 h-8 text-amber-500 opacity-20" />
                   </div>
                 </div>
-                <div className="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+                <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-slate-600 text-sm">Taxa de Recebimento</p>
                       <p className="text-2xl font-bold mt-1">{analyticsData.metrics.paymentRate}%</p>
                     </div>
-                    <Clock className="w-8 h-8 text-purple-500 opacity-20" />
+                    <Clock className="w-8 h-8 text-blue-500 opacity-20" />
                   </div>
                 </div>
               </div>
