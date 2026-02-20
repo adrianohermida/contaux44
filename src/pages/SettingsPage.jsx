@@ -90,20 +90,26 @@ export default function SettingsPage() {
                 <Input label="Função" value={formData.role || ''} disabled />
                 
                 <div className="flex flex-col gap-3 pt-4">
-                  <div className="flex gap-3">
-                    <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 sm:flex-1">
                       <Save className="w-4 h-4 mr-2" />
                       {saving ? 'Salvando...' : 'Salvar Alterações'}
                     </Button>
-                    <Button onClick={handleLogout} variant="outline" className="text-red-600 hover:text-red-700">
+                    <Button onClick={handleLogout} variant="outline" className="text-red-600 hover:text-red-700 sm:flex-1">
                       <LogOut className="w-4 h-4 mr-2" />
                       Logout
                     </Button>
                   </div>
-                  <Button onClick={handleDeleteAccount} variant="destructive" className="w-full bg-red-600 hover:bg-red-700">
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Deletar Conta
-                  </Button>
+                  <div className="border-t pt-4 mt-2">
+                    <h3 className="font-semibold text-red-600 mb-3 text-sm">Zona de Perigo</h3>
+                    <Button onClick={handleDeleteAccount} variant="destructive" className="w-full bg-red-600 hover:bg-red-700">
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Deletar Conta Permanentemente
+                    </Button>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                      Esta ação é irreversível. Sua conta e todos os dados serão deletados.
+                    </p>
+                  </div>
                 </div>
               </div>
             </TabsContent>
