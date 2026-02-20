@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
-import ClientForm from '../components/dashboard/ClientForm';
+import ClientFormEnhanced from '../components/dashboard/ClientFormEnhanced';
 import ClientList from '../components/dashboard/ClientList';
 import { Button } from '@/components/ui/button';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
