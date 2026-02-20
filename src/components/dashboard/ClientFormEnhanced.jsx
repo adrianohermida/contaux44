@@ -109,6 +109,7 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
     }
 
     try {
+      setApiError(null);
       const response = await base44.functions.invoke('validateClientDocument', {
         document: value,
         type: field,
@@ -124,7 +125,16 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
 
       return isValid;
     } catch (error) {
-      console.error('Erro na validação:', error);
+      console.error('Erro na validação de documento:', error);
+      const errMsg = error?.message || 'Erro ao validar documento';
+      
+      // Detectar erro de conexão
+      if (error?.code === 'ECONNREFUSED' || error?.status >= 500 || !navigator.onLine) {
+        setConnectionError(`Erro de conexão ao validar ${field === 'cpf' ? 'CPF' : 'CNPJ'}. Verifique sua internet.`);
+      } else {
+        setApiError(`Erro ao validar ${field === 'cpf' ? 'CPF' : 'CNPJ'}: ${errMsg}`);
+      }
+      
       setDocumentValidation(prev => ({ ...prev, [field]: { valid: true } }));
       return true;
     }
