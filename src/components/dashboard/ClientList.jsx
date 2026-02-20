@@ -8,24 +8,25 @@ import { useMultitenantAuthOptimized } from '../auth/useMultitenantAuthOptimized
 import { useCacheStrategy } from '../hooks/useCacheStrategy';
 import ClientCardMobile from './ClientCardMobile';
 
-export default function ClientList({ refresh, onEdit }) {
+export default function ClientList({ refresh, onEdit, tenantId, onRefresh }) {
   const { workspaceId } = useMultitenantAuthOptimized('internal');
   const { invalidateRelated } = useCacheStrategy();
   const navigate = useNavigate();
   const parentRef = useRef(null);
+  const finalTenantId = tenantId || workspaceId;
 
   const { data: clients = [], isLoading, refetch } = useQuery({
-    queryKey: ['clients', workspaceId],
+    queryKey: ['clients', finalTenantId],
     queryFn: async () => {
-      if (!workspaceId) return [];
+      if (!finalTenantId) return [];
       return base44.entities.Client.filter({ 
-        tenant_id: workspaceId,
+        tenant_id: finalTenantId,
         status: 'active'
       });
     },
-    enabled: !!workspaceId,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
+    enabled: !!finalTenantId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
     refetchOnWindowFocus: false
   });
 
@@ -37,6 +38,10 @@ export default function ClientList({ refresh, onEdit }) {
     overscan: 5,
   });
 
+  React.useEffect(() => {
+    refetch();
+  }, [onRefresh, refetch]);
+  
   React.useEffect(() => {
     if (refresh) refetch();
   }, [refresh, refetch]);
