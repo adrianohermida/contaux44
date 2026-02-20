@@ -210,7 +210,7 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId 
 
   return (
     <ModalWrapper 
-      isOpen={isOpen} 
+      isOpen={true} 
       onClose={onCancel}
       title={client ? 'Editar Cliente' : 'Novo Cliente'}
       size="md"
