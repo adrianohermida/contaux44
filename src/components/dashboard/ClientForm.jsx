@@ -61,7 +61,13 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
     cnpj: '',
     email: '',
     phone: '',
-    address: '',
+    cep: '',
+    endereco: '',
+    numero: '',
+    complemento: '',
+    bairro: '',
+    cidade: '',
+    uf: '',
     fiscal_year_start: '',
     currency: 'BRL',
     status: 'active'
@@ -70,6 +76,7 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
   const { formData, handleChange, setFieldValue, isDirty, reset } = useFormState(initialData);
   const { errors, validateForm, setFieldError, clearErrors } = useFormValidation();
   const { loading, submit } = useFormSubmit();
+  const { fetchAddress, loading: cepLoading, error: cepError, clearError: clearCepError } = useViaCEP();
   const [documentValidation, setDocumentValidation] = useState({});
 
   const currencyOptions = [
