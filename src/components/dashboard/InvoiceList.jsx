@@ -7,31 +7,6 @@ import { Edit2, Trash2 } from 'lucide-react';
 import { useCacheStrategy } from '../hooks/useCacheStrategy';
 import { useRealtimeSync } from '../hooks/useRealtimeSync';
 
-const InvoiceRow = React.memo(({ invoice, onEdit, onDelete, getStatusColor }) => (
-  <tr className="hover:bg-slate-50">
-    <td className="px-6 py-4 text-sm font-medium">{invoice.invoice_number}</td>
-    <td className="px-6 py-4 text-sm">{new Date(invoice.issue_date).toLocaleDateString('pt-BR')}</td>
-    <td className="px-6 py-4 text-sm">{invoice.total_amount.toLocaleString('pt-BR', {style: 'currency', currency: invoice.currency})}</td>
-    <td className="px-6 py-4 text-sm">
-      <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(invoice.status)}`}>
-        {invoice.status}
-      </span>
-    </td>
-    <td className="px-6 py-4 text-right">
-      <div className="flex justify-end gap-2">
-        <Button variant="ghost" size="sm" onClick={() => onEdit(invoice)}>
-          <Edit2 className="w-4 h-4" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={() => onDelete(invoice.id)}>
-          <Trash2 className="w-4 h-4 text-red-500" />
-        </Button>
-      </div>
-    </td>
-  </tr>
-));
-
-InvoiceRow.displayName = 'InvoiceRow';
-
 export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
   const { invalidateRelated } = useCacheStrategy();
   const { isConnected } = useRealtimeSync('Invoice', tenantId);
@@ -92,16 +67,43 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
             <th className="px-6 py-3 text-right text-sm font-semibold">Ações</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-200">
-          {invoices.map((inv) => (
-            <InvoiceRow 
-              key={inv.id} 
-              invoice={inv} 
-              onEdit={onEdit} 
-              onDelete={handleDelete} 
-              getStatusColor={getStatusColor} 
-            />
-          ))}
+        <tbody 
+          ref={parentRef}
+          className="relative"
+          style={{ height: `${virtualizer.getTotalSize()}px` }}
+        >
+          {virtualizer.getVirtualItems().map((virtualRow) => {
+            const invoice = invoices[virtualRow.index];
+            return (
+              <tr 
+                key={invoice.id}
+                className="hover:bg-slate-50 absolute top-0 left-0 w-full"
+                style={{
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <td className="px-6 py-4 text-sm font-medium">{invoice.invoice_number}</td>
+                <td className="px-6 py-4 text-sm">{new Date(invoice.issue_date).toLocaleDateString('pt-BR')}</td>
+                <td className="px-6 py-4 text-sm">{invoice.total_amount.toLocaleString('pt-BR', {style: 'currency', currency: invoice.currency})}</td>
+                <td className="px-6 py-4 text-sm">
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(invoice.status)}`}>
+                    {invoice.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => onEdit(invoice)}>
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => handleDelete(invoice.id)}>
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       {invoices.length === 0 && <div className="text-center py-8 text-slate-500">Nenhuma fatura cadastrada</div>}

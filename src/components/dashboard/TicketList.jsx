@@ -8,31 +8,6 @@ import { toast } from 'sonner';
 import { useCacheStrategy } from '../hooks/useCacheStrategy';
 import { useRealtimeSync } from '../hooks/useRealtimeSync';
 
-const TicketRow = React.memo(({ ticket, onEdit, onDelete, getStatusColor }) => (
-  <tr className="hover:bg-slate-50">
-    <td className="px-6 py-4 text-sm font-medium">{ticket.ticket_number}</td>
-    <td className="px-6 py-4 text-sm">{ticket.title}</td>
-    <td className="px-6 py-4 text-sm capitalize">{ticket.category}</td>
-    <td className="px-6 py-4 text-sm">
-      <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(ticket.status)}`}>
-        {ticket.status}
-      </span>
-    </td>
-    <td className="px-6 py-4 text-right">
-      <div className="flex justify-end gap-2">
-        <Button variant="ghost" size="sm" onClick={() => onEdit(ticket)}>
-          <Edit2 className="w-4 h-4" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={() => onDelete(ticket.id)}>
-          <Trash2 className="w-4 h-4 text-red-500" />
-        </Button>
-      </div>
-    </td>
-  </tr>
-));
-
-TicketRow.displayName = 'TicketRow';
-
 export default function TicketList({ tenantId, onEdit, onRefresh }) {
   const { invalidateRelated } = useCacheStrategy();
   const { isConnected } = useRealtimeSync('Ticket', tenantId);
@@ -109,16 +84,43 @@ export default function TicketList({ tenantId, onEdit, onRefresh }) {
             <th className="px-6 py-3 text-right text-sm font-semibold">Ações</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-200">
-          {tickets.map((t) => (
-            <TicketRow 
-              key={t.id} 
-              ticket={t} 
-              onEdit={onEdit} 
-              onDelete={handleDelete} 
-              getStatusColor={getStatusColor} 
-            />
-          ))}
+        <tbody 
+          ref={parentRef}
+          className="relative"
+          style={{ height: `${virtualizer.getTotalSize()}px` }}
+        >
+          {virtualizer.getVirtualItems().map((virtualRow) => {
+            const ticket = tickets[virtualRow.index];
+            return (
+              <tr 
+                key={ticket.id}
+                className="hover:bg-slate-50 absolute top-0 left-0 w-full"
+                style={{
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <td className="px-6 py-4 text-sm font-medium">{ticket.ticket_number}</td>
+                <td className="px-6 py-4 text-sm">{ticket.title}</td>
+                <td className="px-6 py-4 text-sm capitalize">{ticket.category}</td>
+                <td className="px-6 py-4 text-sm">
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(ticket.status)}`}>
+                    {ticket.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => onEdit(ticket)}>
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => handleDelete(ticket.id)}>
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
