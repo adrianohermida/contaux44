@@ -24,7 +24,7 @@ const DashboardHeader = memo(function DashboardHeader() {
 
   // Lazy-load notifications with React Query
   const { data: notifications = [], isLoading: notificationsLoading } = useQuery({
-    queryKey: ['notifications', tenantId, user?.email],
+    queryKey: ['header-notifications', tenantId], // ✅ Simplificada - sem user?.email
     queryFn: async () => {
       if (!tenantId || !user?.email) return [];
       const notifs = await base44.entities.Notification.filter({
@@ -34,7 +34,7 @@ const DashboardHeader = memo(function DashboardHeader() {
       return notifs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date)).slice(0, 5);
     },
     enabled: !!tenantId && !!user?.email,
-    staleTime: 2 * 60 * 1000, // 2 minutos
+    staleTime: 2 * 60 * 1000, // ✅ 2 minutos
     gcTime: 5 * 60 * 1000,
   });
 
