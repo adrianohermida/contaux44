@@ -119,7 +119,7 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   }, [location.pathname]);
 
   return (
-    <aside className={`bg-gradient-to-b from-blue-900 to-blue-950 text-white h-screen transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col shadow-lg sticky top-0`}>
+    <aside className={`bg-gradient-to-b from-blue-900 to-blue-950 text-white h-full transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col shadow-lg overflow-y-auto`}>
       {/* Logo */}
       <div className="p-4 border-b border-blue-800 flex items-center justify-between">
         {!collapsed && <h2 className="text-xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Contaux</h2>}
