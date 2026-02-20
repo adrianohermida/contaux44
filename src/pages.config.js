@@ -99,6 +99,7 @@ import AdvancedML from './pages/AdvancedML';
 import PerformanceOptimization from './pages/PerformanceOptimization';
 import APIDashboard from './pages/APIDashboard';
 import MobileOptimized from './pages/MobileOptimized';
+import PWASetup from './pages/PWASetup';
 import __Layout from './Layout.jsx';
 
 
@@ -155,6 +156,7 @@ export const PAGES = {
     "PerformanceOptimization": PerformanceOptimization,
     "APIDashboard": APIDashboard,
     "MobileOptimized": MobileOptimized,
+    "PWASetup": PWASetup,
 }
 
 export const pagesConfig = {
