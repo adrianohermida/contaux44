@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import ABTesting from './pages/ABTesting';
 import APIDashboard from './pages/APIDashboard';
 import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
@@ -61,6 +62,7 @@ import BankReconciliation from './pages/BankReconciliation';
 import Blog from './pages/Blog';
 import BlogManager from './pages/BlogManager';
 import BlogSingle from './pages/BlogSingle';
+import BulkImportExport from './pages/BulkImportExport';
 import CachingStrategy from './pages/CachingStrategy';
 import CashFlow from './pages/CashFlow';
 import CashFlowForecast from './pages/CashFlowForecast';
@@ -69,12 +71,21 @@ import ClientPanel from './pages/ClientPanel';
 import ClientPortal from './pages/ClientPortal';
 import Clients from './pages/Clients';
 import Communication from './pages/Communication';
+import ComplianceReports from './pages/ComplianceReports';
 import Contact from './pages/Contact';
+import ConversionTracking from './pages/ConversionTracking';
+import CustomReports from './pages/CustomReports';
+import DarkMode from './pages/DarkMode';
 import Dashboard from './pages/Dashboard';
+import DataBackup from './pages/DataBackup';
 import DocumentManagement from './pages/DocumentManagement';
 import Entries from './pages/Entries';
+import ErrorTracking from './pages/ErrorTracking';
+import GDPRCompliance from './pages/GDPRCompliance';
 import Home from './pages/Home';
 import ImportCSV from './pages/ImportCSV';
+import InfrastructureMonitoring from './pages/InfrastructureMonitoring';
+import Internationalization from './pages/Internationalization';
 import Invoicing from './pages/Invoicing';
 import LegalProcesses from './pages/LegalProcesses';
 import ManualPosting from './pages/ManualPosting';
@@ -82,13 +93,17 @@ import MobileAnalyticsDashboard from './pages/MobileAnalyticsDashboard';
 import MobileOptimized from './pages/MobileOptimized';
 import MyBookmarks from './pages/MyBookmarks';
 import Notifications from './pages/Notifications';
+import NotificationsCenter from './pages/NotificationsCenter';
+import OAuth2Setup from './pages/OAuth2Setup';
 import OnboardClient from './pages/OnboardClient';
 import PWASetup from './pages/PWASetup';
+import PWASetupPage from './pages/PWASetupPage';
 import Payments from './pages/Payments';
 import PerformanceOptimization from './pages/PerformanceOptimization';
 import Portfolio from './pages/Portfolio';
 import PortfolioSingle from './pages/PortfolioSingle';
 import Pricing from './pages/Pricing';
+import PrivacyDashboard from './pages/PrivacyDashboard';
 import ProfilingDashboard from './pages/ProfilingDashboard';
 import QuoteRequest from './pages/QuoteRequest';
 import Quotes from './pages/Quotes';
@@ -100,37 +115,26 @@ import Sales from './pages/Sales';
 import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
 import ServicesPage from './pages/ServicesPage';
+import SessionManagement from './pages/SessionManagement';
 import SettingsPage from './pages/SettingsPage';
+import Sprint7Tracker from './pages/Sprint7Tracker';
+import Sprint8Tracker from './pages/Sprint8Tracker';
+import Sprint9Tracker from './pages/Sprint9Tracker';
+import SprintReview from './pages/SprintReview';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
+import TwoFactorAuth from './pages/TwoFactorAuth';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
-import SprintReview from './pages/SprintReview';
-import ABTesting from './pages/ABTesting';
-import NotificationsCenter from './pages/NotificationsCenter';
-import Sprint7Tracker from './pages/Sprint7Tracker';
-import ConversionTracking from './pages/ConversionTracking';
-import CustomReports from './pages/CustomReports';
-import InfrastructureMonitoring from './pages/InfrastructureMonitoring';
-import ErrorTracking from './pages/ErrorTracking';
-import Sprint8Tracker from './pages/Sprint8Tracker';
-import TwoFactorAuth from './pages/TwoFactorAuth';
-import DataBackup from './pages/DataBackup';
-import GDPRCompliance from './pages/GDPRCompliance';
-import DarkMode from './pages/DarkMode';
-import OAuth2Setup from './pages/OAuth2Setup';
-import BulkImportExport from './pages/BulkImportExport';
-import Internationalization from './pages/Internationalization';
-import PWASetupPage from './pages/PWASetupPage';
-import PrivacyDashboard from './pages/PrivacyDashboard';
-import SessionManagement from './pages/SessionManagement';
-import ComplianceReports from './pages/ComplianceReports';
-import Sprint9Tracker from './pages/Sprint9Tracker';
+import DataValidation from './pages/DataValidation';
+import MobileFirstDesign from './pages/MobileFirstDesign';
+import UserOnboarding from './pages/UserOnboarding';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "ABTesting": ABTesting,
     "APIDashboard": APIDashboard,
     "About": About,
     "AccountingCalendar": AccountingCalendar,
@@ -145,6 +149,7 @@ export const PAGES = {
     "Blog": Blog,
     "BlogManager": BlogManager,
     "BlogSingle": BlogSingle,
+    "BulkImportExport": BulkImportExport,
     "CachingStrategy": CachingStrategy,
     "CashFlow": CashFlow,
     "CashFlowForecast": CashFlowForecast,
@@ -153,12 +158,21 @@ export const PAGES = {
     "ClientPortal": ClientPortal,
     "Clients": Clients,
     "Communication": Communication,
+    "ComplianceReports": ComplianceReports,
     "Contact": Contact,
+    "ConversionTracking": ConversionTracking,
+    "CustomReports": CustomReports,
+    "DarkMode": DarkMode,
     "Dashboard": Dashboard,
+    "DataBackup": DataBackup,
     "DocumentManagement": DocumentManagement,
     "Entries": Entries,
+    "ErrorTracking": ErrorTracking,
+    "GDPRCompliance": GDPRCompliance,
     "Home": Home,
     "ImportCSV": ImportCSV,
+    "InfrastructureMonitoring": InfrastructureMonitoring,
+    "Internationalization": Internationalization,
     "Invoicing": Invoicing,
     "LegalProcesses": LegalProcesses,
     "ManualPosting": ManualPosting,
@@ -166,13 +180,17 @@ export const PAGES = {
     "MobileOptimized": MobileOptimized,
     "MyBookmarks": MyBookmarks,
     "Notifications": Notifications,
+    "NotificationsCenter": NotificationsCenter,
+    "OAuth2Setup": OAuth2Setup,
     "OnboardClient": OnboardClient,
     "PWASetup": PWASetup,
+    "PWASetupPage": PWASetupPage,
     "Payments": Payments,
     "PerformanceOptimization": PerformanceOptimization,
     "Portfolio": Portfolio,
     "PortfolioSingle": PortfolioSingle,
     "Pricing": Pricing,
+    "PrivacyDashboard": PrivacyDashboard,
     "ProfilingDashboard": ProfilingDashboard,
     "QuoteRequest": QuoteRequest,
     "Quotes": Quotes,
@@ -184,33 +202,21 @@ export const PAGES = {
     "SecurityCenter": SecurityCenter,
     "Services": Services,
     "ServicesPage": ServicesPage,
+    "SessionManagement": SessionManagement,
     "SettingsPage": SettingsPage,
+    "Sprint7Tracker": Sprint7Tracker,
+    "Sprint8Tracker": Sprint8Tracker,
+    "Sprint9Tracker": Sprint9Tracker,
+    "SprintReview": SprintReview,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
+    "TwoFactorAuth": TwoFactorAuth,
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
-    "SprintReview": SprintReview,
-    "ABTesting": ABTesting,
-    "NotificationsCenter": NotificationsCenter,
-    "Sprint7Tracker": Sprint7Tracker,
-    "ConversionTracking": ConversionTracking,
-    "CustomReports": CustomReports,
-    "InfrastructureMonitoring": InfrastructureMonitoring,
-    "ErrorTracking": ErrorTracking,
-    "Sprint8Tracker": Sprint8Tracker,
-    "TwoFactorAuth": TwoFactorAuth,
-    "DataBackup": DataBackup,
-    "GDPRCompliance": GDPRCompliance,
-    "DarkMode": DarkMode,
-    "OAuth2Setup": OAuth2Setup,
-    "BulkImportExport": BulkImportExport,
-    "Internationalization": Internationalization,
-    "PWASetupPage": PWASetupPage,
-    "PrivacyDashboard": PrivacyDashboard,
-    "SessionManagement": SessionManagement,
-    "ComplianceReports": ComplianceReports,
-    "Sprint9Tracker": Sprint9Tracker,
+    "DataValidation": DataValidation,
+    "MobileFirstDesign": MobileFirstDesign,
+    "UserOnboarding": UserOnboarding,
 }
 
 export const pagesConfig = {
