@@ -50,8 +50,11 @@ const DashboardHeader = memo(function DashboardHeader() {
 
   return (
     <>
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40 transition-colors">
+      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40 transition-colors" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
+        {/* Mobile Back Button */}
+        <MobileBackButton />
+        
         {/* Search */}
         <SearchBox query={searchQuery} onQueryChange={setSearchQuery} />
 
