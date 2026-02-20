@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,32 +24,41 @@ import NotificationCenterPanel from '../components/dashboard/NotificationCenterP
 import AdvancedAnalyticsDashboard from '../components/dashboard/AdvancedAnalyticsDashboard';
 import CustomReportBuilder from '../components/dashboard/CustomReportBuilder';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 
 export default function ClientDetail() {
   const { clientId } = useParams();
   const navigate = useNavigate();
   const { workspaceId } = useMultitenantAuthOptimized('internal');
-  const [client, setClient] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadClient();
-  }, [clientId, workspaceId]);
-
-  const loadClient = async () => {
-    try {
-      setLoading(true);
-      const data = await base44.entities.Client.get(clientId);
-      
-      if (data && data.tenant_id === workspaceId) {
-        setClient(data);
+  const { data: client, isLoading: loading, error } = useQuery({
+    queryKey: ['client-detail', clientId, workspaceId],
+    queryFn: async () => {
+      if (!clientId || !workspaceId) return null;
+      try {
+        const data = await base44.entities.Client.get(clientId);
+        if (!data) return null;
+        
+        // Validar multitenant
+        if (data.tenant_id !== workspaceId) {
+          console.error('Cliente não pertence ao workspace', { 
+            clientTenant: data.tenant_id, 
+            currentWorkspace: workspaceId 
+          });
+          return null;
+        }
+        return data;
+      } catch (err) {
+        console.error('Erro ao carregar cliente:', err);
+        throw err;
       }
-    } catch (error) {
-      console.error('Erro ao carregar cliente:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    enabled: !!clientId && !!workspaceId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    retry: 1
+  });
 
   if (loading) {
     return (
