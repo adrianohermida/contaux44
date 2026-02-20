@@ -2,12 +2,20 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Loader2, Save, X } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, X, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
+import ContactFormField from '../components/dashboard/ContactFormField';
+import {
+  validateContactForm,
+  formatCPF,
+  formatCNPJ,
+  formatPhone,
+  formatCEP,
+} from '../components/dashboard/ContactFormValidation';
 
 export default function ContactDetails() {
   const { contactId } = useParams();
@@ -17,6 +25,8 @@ export default function ContactDetails() {
 
    const [formData, setFormData] = useState(null);
    const [isEditing, setIsEditing] = useState(contactId === 'new');
+   const [errors, setErrors] = useState({});
+   const [saveMessage, setSaveMessage] = useState(null);
 
    // Fetch contact if not new
    const { data: contact, isLoading, error } = useQuery({
@@ -72,13 +82,25 @@ export default function ContactDetails() {
       queryClient.invalidateQueries({ queryKey: ['contact-detail'] });
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
       setIsEditing(false);
+      setSaveMessage({ type: 'success', text: 'Contato salvo com sucesso!' });
+      setTimeout(() => setSaveMessage(null), 3000);
       if (contactId === 'new') {
         navigate(`/contact/${result.id}`);
       }
     },
+    onError: (error) => {
+      setSaveMessage({ type: 'error', text: error.message || 'Erro ao salvar contato' });
+    },
   });
 
   const handleSave = async () => {
+    const formErrors = validateContactForm(formData);
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      setSaveMessage({ type: 'error', text: 'Corrija os erros no formulário' });
+      return;
+    }
+    setErrors({});
     try {
       await saveMutation.mutateAsync(formData);
     } catch (err) {
@@ -98,6 +120,9 @@ export default function ContactDetails() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: null }));
+    }
   };
 
   if (isLoading) {
@@ -137,12 +162,20 @@ export default function ContactDetails() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar
           </Button>
-          <div>
+          <div className="flex-1">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
               {isEditing ? (contactId === 'new' ? 'Novo Contato' : 'Editar Contato') : formData.company_name}
             </h1>
           </div>
         </div>
+
+        {/* Messages */}
+        {saveMessage && (
+          <div className={`p-3 rounded-lg flex items-center gap-2 ${saveMessage.type === 'success' ? 'bg-green-50 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-red-50 dark:bg-red-900 text-red-800 dark:text-red-200'}`}>
+            {saveMessage.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+            <p className="text-sm">{saveMessage.text}</p>
+          </div>
+        )}
 
         {/* Form Card */}
         <Card className="bg-white dark:bg-slate-800">
@@ -158,45 +191,40 @@ export default function ContactDetails() {
             <div className="space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ContactFormField
+                  label="Nome da Empresa"
+                  name="company_name"
+                  value={formData.company_name}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                  error={errors.company_name}
+                />
+                <ContactFormField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                  error={errors.email}
+                />
+                <ContactFormField
+                  label="Telefone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                  error={errors.phone}
+                  formatFn={formatPhone}
+                />
                 <div>
-                  <label className="block text-sm font-medium mb-2">Nome da Empresa</label>
-                  <Input
-                    name="company_name"
-                    value={formData.company_name}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="disabled:opacity-60"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Email</label>
-                  <Input
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="disabled:opacity-60"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Telefone</label>
-                  <Input
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="disabled:opacity-60"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Tipo</label>
+                  <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Tipo</label>
                   <select
                     name="client_type"
                     value={formData.client_type}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border rounded-md disabled:opacity-60"
+                    className="w-full px-3 py-2 border rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
                   >
                     <option value="pf">Pessoa Física</option>
                     <option value="pj">Pessoa Jurídica</option>
@@ -207,36 +235,34 @@ export default function ContactDetails() {
               {/* Document Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {formData.client_type === 'pf' ? (
-                  <div>
-                    <label className="block text-sm font-medium mb-2">CPF</label>
-                    <Input
-                      name="cpf"
-                      value={formData.cpf}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
+                  <ContactFormField
+                    label="CPF"
+                    name="cpf"
+                    value={formData.cpf}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    error={errors.cpf}
+                    formatFn={formatCPF}
+                  />
                 ) : (
-                  <div>
-                    <label className="block text-sm font-medium mb-2">CNPJ</label>
-                    <Input
-                      name="cnpj"
-                      value={formData.cnpj}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
+                  <ContactFormField
+                    label="CNPJ"
+                    name="cnpj"
+                    value={formData.cnpj}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    error={errors.cnpj}
+                    formatFn={formatCNPJ}
+                  />
                 )}
                 <div>
-                  <label className="block text-sm font-medium mb-2">Status</label>
+                  <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Status</label>
                   <select
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border rounded-md disabled:opacity-60"
+                    className="w-full px-3 py-2 border rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
                   >
                     <option value="active">Ativo</option>
                     <option value="inactive">Inativo</option>
@@ -248,77 +274,58 @@ export default function ContactDetails() {
               <div className="space-y-3">
                 <h3 className="font-semibold text-slate-900 dark:text-slate-100">Endereço</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">CEP</label>
-                    <Input
-                      name="cep"
-                      value={formData.cep}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Rua</label>
-                    <Input
-                      name="endereco"
-                      value={formData.endereco}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Número</label>
-                    <Input
-                      name="numero"
-                      value={formData.numero}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Complemento</label>
-                    <Input
-                      name="complemento"
-                      value={formData.complemento}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Bairro</label>
-                    <Input
-                      name="bairro"
-                      value={formData.bairro}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Cidade</label>
-                    <Input
-                      name="cidade"
-                      value={formData.cidade}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">UF</label>
-                    <Input
-                      name="uf"
-                      maxLength="2"
-                      value={formData.uf}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="disabled:opacity-60"
-                    />
-                  </div>
+                  <ContactFormField
+                    label="CEP"
+                    name="cep"
+                    value={formData.cep}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    error={errors.cep}
+                    formatFn={formatCEP}
+                  />
+                  <ContactFormField
+                    label="Rua"
+                    name="endereco"
+                    value={formData.endereco}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                  <ContactFormField
+                    label="Número"
+                    name="numero"
+                    value={formData.numero}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                  <ContactFormField
+                    label="Complemento"
+                    name="complemento"
+                    value={formData.complemento}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                  <ContactFormField
+                    label="Bairro"
+                    name="bairro"
+                    value={formData.bairro}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                  <ContactFormField
+                    label="Cidade"
+                    name="cidade"
+                    value={formData.cidade}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                  <ContactFormField
+                    label="UF"
+                    name="uf"
+                    value={formData.uf}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    maxLength="2"
+                  />
                 </div>
               </div>
 
