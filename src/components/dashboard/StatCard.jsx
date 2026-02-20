@@ -26,7 +26,6 @@ const StatCard = memo(function StatCard({ icon: Icon, title, value, subtitle, tr
     </div>
   );
 }, (prevProps, nextProps) => {
-  // Comparação customizada para evitar re-renders desnecessários
   return (
     prevProps.value === nextProps.value &&
     prevProps.title === nextProps.title &&
