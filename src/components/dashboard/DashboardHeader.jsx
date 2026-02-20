@@ -44,8 +44,9 @@ const DashboardHeader = memo(function DashboardHeader() {
   }, []);
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
-      <div className="px-6 py-4 flex items-center justify-between">
+    <>
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div className="px-6 py-4 flex items-center justify-between">
         {/* Search */}
         <div className="flex-1 max-w-xl">
           <div className="relative">
@@ -141,7 +142,13 @@ const DashboardHeader = memo(function DashboardHeader() {
         isOpen={preferencesOpen} 
         onClose={() => setPreferencesOpen(false)} 
       />
-    </header>
+      </header>
+
+      {/* Breadcrumbs */}
+      <div className="sticky top-14 z-30">
+        <div className="lazy-breadcrumbs" />
+      </div>
+    </>
   );
 });
 
