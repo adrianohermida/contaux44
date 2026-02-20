@@ -38,13 +38,10 @@ export default function ClientDetail() {
   const loadClient = async () => {
     try {
       setLoading(true);
-      const data = await base44.entities.Client.filter({ 
-        id: clientId,
-        tenant_id: workspaceId 
-      });
+      const data = await base44.entities.Client.get(clientId);
       
-      if (data.length > 0) {
-        setClient(data[0]);
+      if (data && data.tenant_id === workspaceId) {
+        setClient(data);
       }
     } catch (error) {
       console.error('Erro ao carregar cliente:', error);
