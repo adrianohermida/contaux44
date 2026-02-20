@@ -107,6 +107,7 @@ import Transactions from './pages/Transactions';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
 import SprintReview from './pages/SprintReview';
+import ABTesting from './pages/ABTesting';
 import __Layout from './Layout.jsx';
 
 
@@ -171,6 +172,7 @@ export const PAGES = {
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
     "SprintReview": SprintReview,
+    "ABTesting": ABTesting,
 }
 
 export const pagesConfig = {
