@@ -7,6 +7,13 @@ import { useMultitenantAuthOptimized } from '@/components/auth/useMultitenantAut
 import { createPageUrl } from '@/utils';
 
 const VirtualCounterWidget = memo(function VirtualCounterWidget() {
+  const { user: authUser } = useMultitenantAuthOptimized('internal');
+  
+  // Mostrar apenas para admin
+  if (!authUser || authUser.role !== 'admin') {
+    return null;
+  }
+  
   const { workspaceId } = useMultitenantAuthOptimized('internal');
 
   const { data: conversations = [] } = useQuery({
