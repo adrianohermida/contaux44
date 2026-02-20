@@ -46,20 +46,20 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   if (DASHBOARD_PAGES.includes(currentPageName)) {
-      return (
-        <AuthProvider>
-          <CacheProvider>
-            <ThemeProvider>
-              <DashboardLayout>
-                <ProtectedInternalRoute>
-                  {children}
-                </ProtectedInternalRoute>
-              </DashboardLayout>
-            </ThemeProvider>
-          </CacheProvider>
-        </AuthProvider>
-      );
-    }
+    return (
+      <AuthProvider>
+        <CacheProvider>
+          <ThemeProvider>
+            <DashboardLayout>
+              <ProtectedInternalRoute>
+                {children}
+              </ProtectedInternalRoute>
+            </DashboardLayout>
+          </ThemeProvider>
+        </CacheProvider>
+      </AuthProvider>
+    );
+  }
 
   return (
     <AuthProvider>
