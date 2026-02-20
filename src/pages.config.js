@@ -115,6 +115,10 @@ import CustomReports from './pages/CustomReports';
 import InfrastructureMonitoring from './pages/InfrastructureMonitoring';
 import ErrorTracking from './pages/ErrorTracking';
 import Sprint8Tracker from './pages/Sprint8Tracker';
+import TwoFactorAuth from './pages/TwoFactorAuth';
+import DataBackup from './pages/DataBackup';
+import GDPRCompliance from './pages/GDPRCompliance';
+import DarkMode from './pages/DarkMode';
 import __Layout from './Layout.jsx';
 
 
@@ -187,6 +191,10 @@ export const PAGES = {
     "InfrastructureMonitoring": InfrastructureMonitoring,
     "ErrorTracking": ErrorTracking,
     "Sprint8Tracker": Sprint8Tracker,
+    "TwoFactorAuth": TwoFactorAuth,
+    "DataBackup": DataBackup,
+    "GDPRCompliance": GDPRCompliance,
+    "DarkMode": DarkMode,
 }
 
 export const pagesConfig = {
