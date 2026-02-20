@@ -63,7 +63,24 @@ export default function ComplianceDashboardPanel({ clientId, tenantId }) {
     try {
       setLoading(true);
 
-      // Simular dados de compliance
+      // Carregar audit logs reais
+      const logs = await base44.entities.AuditLog?.filter({
+        tenant_id: tenantId
+      }) || [];
+
+      // Mapear logs reais
+      const formattedLogs = logs.slice(0, 10).map(log => ({
+        id: log.id,
+        action: log.action || 'unknown',
+        user_email: log.user_email || 'system',
+        timestamp: log.timestamp || log.created_date,
+        resource: log.entity_type || 'Unknown',
+        status: log.status || 'success'
+      }));
+
+      setAuditLogs(formattedLogs);
+
+      // Simular issues (em prod viria de tabela issues_compliance)
       const simulatedIssues = [
         {
           id: 1,
@@ -72,40 +89,10 @@ export default function ComplianceDashboardPanel({ clientId, tenantId }) {
           description: 'Seu certificado A1 vence em 30 dias',
           created_at: new Date(Date.now() - 86400000).toISOString(),
           resolved: false
-        },
-        {
-          id: 2,
-          type: 'info',
-          title: 'Nova NF-e emitida',
-          description: 'NF-e número 001234 foi autorizada',
-          created_at: new Date(Date.now() - 3600000).toISOString(),
-          resolved: false
         }
       ];
 
       setIssues(simulatedIssues);
-
-      // Simular audit logs
-      const simulatedLogs = [
-        {
-          id: 'log_001',
-          action: 'create_invoice',
-          user_email: 'admin@company.com',
-          timestamp: new Date(Date.now() - 7200000).toISOString(),
-          resource: 'Invoice NF-001234',
-          status: 'success'
-        },
-        {
-          id: 'log_002',
-          action: 'update_fiscal_data',
-          user_email: 'admin@company.com',
-          timestamp: new Date(Date.now() - 14400000).toISOString(),
-          resource: 'FiscalData Cliente ABC',
-          status: 'success'
-        }
-      ];
-
-      setAuditLogs(simulatedLogs);
 
       // Calcular score de compliance
       const okCount = COMPLIANCE_CHECKS.filter(c => c.status === 'ok').length;
