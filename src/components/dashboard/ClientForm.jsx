@@ -79,6 +79,8 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
   const { loading, submit } = useFormSubmit();
   const { fetchAddress, loading: cepLoading, error: cepError, clearError: clearCepError } = useViaCEP();
   const [documentValidation, setDocumentValidation] = useState({});
+  const [addressReadOnly, setAddressReadOnly] = useState(false);
+  const closeModalRef = useRef(null);
 
   const currencyOptions = [
     { value: 'BRL', label: 'Real (BRL)' },
