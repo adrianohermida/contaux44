@@ -211,6 +211,14 @@ export default function ClientDetail() {
         <TabsContent value="notifications" className="bg-white rounded-lg shadow p-6">
           <NotificationCenterPanel clientId={client.id} tenantId={workspaceId} />
         </TabsContent>
+
+        <TabsContent value="advanced-analytics" className="bg-white rounded-lg shadow p-6">
+          <AdvancedAnalyticsDashboard clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
+
+        <TabsContent value="custom-reports" className="bg-white rounded-lg shadow p-6">
+          <CustomReportBuilder clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
       </Tabs>
     </div>
   );
