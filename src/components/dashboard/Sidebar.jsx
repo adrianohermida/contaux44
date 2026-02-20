@@ -86,7 +86,6 @@ const menuItems = [
 const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   const location = useLocation();
   const [openMenus, setOpenMenus] = useState({});
-  const [unreadCount, setUnreadCount] = useState(0);
 
   // Memorizar estado do sidebar em localStorage
   React.useEffect(() => {
