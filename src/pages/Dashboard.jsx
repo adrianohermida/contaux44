@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Users, Ticket, FileText, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import StatCard from '../components/dashboard/StatCard';
@@ -6,49 +7,47 @@ import AlertsCenter from '../components/dashboard/AlertsCenter';
 import VirtualCounterWidget from '../components/dashboard/widgets/VirtualCounterWidget';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
-export default function Dashboard() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
-  const [dashboardData, setDashboardData] = useState(null);
+const Dashboard = memo(function Dashboard() {
+  const { workspaceId } = useMultitenantAuthOptimized('internal');
 
-  useEffect(() => {
-    const loadDashboardData = async () => {
-      if (!workspaceId) return;
+  const { data: dashboardData } = useQuery({
+    queryKey: ['dashboard', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return null;
       
-      try {
-        const [clients, processes, tickets, invoices, quotes] = await Promise.all([
-          base44.entities.Client.filter({ workspace_id: workspaceId, status: 'active' }),
-          base44.entities.LegalProcess.filter({ workspace_id: workspaceId, status: 'in_progress' }),
-          base44.entities.Ticket.filter({ workspace_id: workspaceId, status: 'open' }),
-          base44.entities.Invoice.filter({ workspace_id: workspaceId }),
-          base44.entities.Quote.filter({ workspace_id: workspaceId, status: 'draft' })
-        ]);
+      const [clients, processes, tickets, invoices, quotes] = await Promise.all([
+        base44.entities.Client.filter({ workspace_id: workspaceId, status: 'active' }),
+        base44.entities.LegalProcess.filter({ workspace_id: workspaceId, status: 'in_progress' }),
+        base44.entities.Ticket.filter({ workspace_id: workspaceId, status: 'open' }),
+        base44.entities.Invoice.filter({ workspace_id: workspaceId }),
+        base44.entities.Quote.filter({ workspace_id: workspaceId, status: 'draft' })
+      ]);
 
-        const currentMonth = new Date().getMonth();
-        const monthlyInvoices = invoices.filter(i => new Date(i.issue_date).getMonth() === currentMonth);
-        const monthlyRevenue = monthlyInvoices.reduce((sum, i) => sum + (i.total_amount || 0), 0);
+      const currentMonth = new Date().getMonth();
+      const monthlyInvoices = invoices.filter(i => new Date(i.issue_date).getMonth() === currentMonth);
+      const monthlyRevenue = monthlyInvoices.reduce((sum, i) => sum + (i.total_amount || 0), 0);
 
-        const upcomingDeadlines = processes.filter(p => {
-          const nextDate = new Date(p.next_hearing_date);
-          const today = new Date();
-          const daysUntil = Math.ceil((nextDate - today) / (1000 * 60 * 60 * 24));
-          return daysUntil <= 7 && daysUntil > 0;
-        }).length;
+      const upcomingDeadlines = processes.filter(p => {
+        const nextDate = new Date(p.next_hearing_date);
+        const today = new Date();
+        const daysUntil = Math.ceil((nextDate - today) / (1000 * 60 * 60 * 24));
+        return daysUntil <= 7 && daysUntil > 0;
+      }).length;
 
-        setDashboardData({
-          clientsCount: clients.length,
-          processesCount: processes.length,
-          ticketsCount: tickets.length,
-          monthlyRevenue,
-          upcomingDeadlines,
-          quotesCount: quotes.length
-        });
-      } catch (error) {
-        console.error('Erro ao carregar dados do dashboard:', error);
-      }
-    };
-
-    loadDashboardData();
-  }, [workspaceId]);
+      return {
+        clientsCount: clients.length,
+        processesCount: processes.length,
+        ticketsCount: tickets.length,
+        monthlyRevenue,
+        upcomingDeadlines,
+        quotesCount: quotes.length
+      };
+    },
+    enabled: !!workspaceId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
 
   const stats = useMemo(() => {
     if (!dashboardData) {
@@ -157,6 +156,8 @@ export default function Dashboard() {
               Acessar Relatórios
             </a>
           </div>
-        </div>
-        );
-        }
+          </div>
+          );
+          });
+
+          export default Dashboard;
