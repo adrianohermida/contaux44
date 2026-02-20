@@ -1,8 +1,10 @@
 import React from 'react';
-import { Edit2, Trash2, Mail, Phone } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Edit2, Trash2, Mail, Phone, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function ClientCardMobile({ client, onEdit, onDelete }) {
+  const navigate = useNavigate();
   const handleDelete = () => {
     if (confirm(`Tem certeza que deseja deletar ${client.company_name}?`)) {
       onDelete(client.id);
@@ -38,13 +40,20 @@ export default function ClientCardMobile({ client, onEdit, onDelete }) {
 
       <div className="flex gap-2">
         <Button
-          onClick={() => onEdit(client)}
+          onClick={() => navigate(`/clientdetail/${client.id}`)}
           size="sm"
           variant="outline"
           className="flex-1"
         >
-          <Edit2 className="w-3 h-3 mr-1" />
-          Editar
+          <Eye className="w-3 h-3 mr-1" />
+          Detalhes
+        </Button>
+        <Button
+          onClick={() => onEdit(client)}
+          size="sm"
+          variant="outline"
+        >
+          <Edit2 className="w-3 h-3" />
         </Button>
         <Button
           onClick={handleDelete}
