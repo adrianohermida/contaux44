@@ -91,28 +91,7 @@ export default function Layout({ children, currentPageName }) {
       document.head.appendChild(link);
     }
 
-    // Apply mobile-specific styles
-    const style = document.createElement('style');
-    style.textContent = `
-      * { box-sizing: border-box; }
-      body { 
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-      }
-      button, [role="button"], a, [tabindex] {
-        user-select: none;
-        -webkit-user-select: none;
-      }
-      html { 
-        overscroll-behavior: none;
-        -webkit-user-select: none;
-      }
-      input, textarea, select {
-        -webkit-user-select: text;
-        user-select: text;
-      }
-    `;
-    document.head.appendChild(style);
+    // Remove old style - it's now in setupMobileEnhancements
 
     return () => {
       darkModeQuery.removeEventListener('change', handleThemeChange);
