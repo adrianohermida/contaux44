@@ -48,9 +48,10 @@ Deno.serve(async (req) => {
         // if (blog.auto_share) { ... }
 
       } catch (error) {
+        const blogTitle = blog.data?.title || blog.title || 'Unknown';
         results.push({
           id: blog.id,
-          title: blog.title,
+          title: blogTitle,
           status: 'error',
           error: error.message
         });
