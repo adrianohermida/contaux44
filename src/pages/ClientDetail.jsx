@@ -233,5 +233,6 @@ export default function ClientDetail() {
         </TabsContent>
       </Tabs>
     </div>
+    </ProtectedInternalRoute>
   );
 }
