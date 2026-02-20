@@ -395,7 +395,7 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId,
         <FormActions
           onCancel={onCancel}
           onSubmit={handleSubmit}
-          loading={loading}
+          loading={saving || loading}
           submitLabel={client ? 'Atualizar' : 'Criar'}
           isDirty={isDirty}
         />
