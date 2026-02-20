@@ -284,10 +284,49 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
             onChange={handleChange}
           />
           <FormField
-            label="Endereço"
-            name="address"
-            value={formData.address}
+            label="CEP"
+            name="cep"
+            placeholder="XXXXX-XXX"
+            value={formData.cep}
+            onChange={handleCEPChange}
+            error={cepError}
+          />
+          <FormField
+            label="Rua"
+            name="endereco"
+            value={formData.endereco}
             onChange={handleChange}
+          />
+          <FormField
+            label="Número"
+            name="numero"
+            value={formData.numero}
+            onChange={handleChange}
+          />
+          <FormField
+            label="Complemento"
+            name="complemento"
+            value={formData.complemento}
+            onChange={handleChange}
+          />
+          <FormField
+            label="Bairro"
+            name="bairro"
+            value={formData.bairro}
+            onChange={handleChange}
+          />
+          <FormField
+            label="Cidade"
+            name="cidade"
+            value={formData.cidade}
+            onChange={handleChange}
+          />
+          <FormField
+            label="UF"
+            name="uf"
+            value={formData.uf}
+            onChange={handleChange}
+            maxLength="2"
           />
           <FormField
             label="Início do Ano Fiscal"
