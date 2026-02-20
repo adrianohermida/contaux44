@@ -27,13 +27,10 @@ import {
   LazySettings,
   LazyBlogManager,
   LazyAuditLogs,
-  LazyAnalytics,
   LazySecurityCenter,
   LazyTransactions,
   LazyCashFlowForecast,
-  LazyAdvancedReports,
   LazyDocumentManagement,
-  LazyAnalyticsDashboard,
   LazyRLSDebugger
 } from './LazyPages';
 
@@ -164,12 +161,6 @@ export default function DashboardRoutes() {
         </LazyPageWrapper>
       } />
       
-      <Route path="/analytics" element={
-        <LazyPageWrapper>
-          <LazyAnalytics />
-        </LazyPageWrapper>
-      } />
-      
       <Route path="/communication" element={
         <LazyPageWrapper>
           <LazyCommunication />
@@ -218,21 +209,9 @@ export default function DashboardRoutes() {
         </LazyPageWrapper>
       } />
       
-      <Route path="/advancedreports" element={
-        <LazyPageWrapper>
-          <LazyAdvancedReports />
-        </LazyPageWrapper>
-      } />
-      
       <Route path="/documentmanagement" element={
         <LazyPageWrapper>
           <LazyDocumentManagement />
-        </LazyPageWrapper>
-      } />
-      
-      <Route path="/analyticsdashboard" element={
-        <LazyPageWrapper>
-          <LazyAnalyticsDashboard />
         </LazyPageWrapper>
       } />
       
