@@ -53,7 +53,7 @@ function formatCNPJ(value) {
     .slice(0, 18);
 }
 
-export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId, isOpen = true }) {
+export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId }) {
   const initialData = useMemo(() => client || {
     tenant_id: tenantId,
     client_type: 'pj',
