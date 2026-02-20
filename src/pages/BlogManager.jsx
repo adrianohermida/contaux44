@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, ChevronDown } from 'lucide-react';
+import { Plus, ChevronDown, BarChart3, Clock, MessageSquare, Zap } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import BlogEditor from '../components/dashboard/blog/BlogEditor';
@@ -7,6 +7,9 @@ import BlogList from '../components/dashboard/blog/BlogList';
 import AIAssistant from '../components/dashboard/blog/AIAssistant';
 import SEOAnalyzer from '../components/dashboard/blog/SEOAnalyzer';
 import BlogComments from '../components/dashboard/blog/BlogComments';
+import BlogAnalyticsDashboard from '../components/dashboard/blog/BlogAnalyticsDashboard';
+import BlogScheduler from '../components/dashboard/blog/BlogScheduler';
+import CommentModerator from '../components/dashboard/blog/CommentModerator';
 
 export default function BlogManager() {
   const [view, setView] = useState('list');
