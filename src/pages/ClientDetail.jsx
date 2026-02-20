@@ -146,11 +146,6 @@ export default function ClientDetail() {
           <TabsTrigger value="advanced-analytics" className="text-xs sm:text-sm">Adv.</TabsTrigger>
           <TabsTrigger value="custom-reports" className="text-xs sm:text-sm">Custom</TabsTrigger>
           <TabsTrigger value="reconciliation" className="text-xs sm:text-sm">Banco</TabsTrigger>
-          <TabsTrigger value="taxes" className="text-xs sm:text-sm">Imp.</TabsTrigger>
-          <TabsTrigger value="nfe" className="text-xs sm:text-sm">NF-e</TabsTrigger>
-          <TabsTrigger value="compliance" className="text-xs sm:text-sm">Conf.</TabsTrigger>
-          <TabsTrigger value="workflows" className="text-xs sm:text-sm">Work.</TabsTrigger>
-          <TabsTrigger value="notifications" className="text-xs sm:text-sm">Not.</TabsTrigger>
         </TabsList>
 
         <TabsContent value="addresses" className="bg-white rounded-lg shadow p-6">
