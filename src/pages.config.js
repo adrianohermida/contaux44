@@ -110,6 +110,8 @@ import SprintReview from './pages/SprintReview';
 import ABTesting from './pages/ABTesting';
 import NotificationsCenter from './pages/NotificationsCenter';
 import Sprint7Tracker from './pages/Sprint7Tracker';
+import ConversionTracking from './pages/ConversionTracking';
+import CustomReports from './pages/CustomReports';
 import __Layout from './Layout.jsx';
 
 
@@ -177,6 +179,8 @@ export const PAGES = {
     "ABTesting": ABTesting,
     "NotificationsCenter": NotificationsCenter,
     "Sprint7Tracker": Sprint7Tracker,
+    "ConversionTracking": ConversionTracking,
+    "CustomReports": CustomReports,
 }
 
 export const pagesConfig = {
