@@ -18,7 +18,6 @@ const Dashboard = memo(function Dashboard() {
     queryFn: async () => {
       if (!workspaceId) return null;
       
-      // Apenas dados críticos para exibição imediata
       const [clients, tickets] = await Promise.all([
         base44.entities.Client.filter({ workspace_id: workspaceId, status: 'active' }),
         base44.entities.Ticket.filter({ workspace_id: workspaceId, status: 'open' })
@@ -30,8 +29,8 @@ const Dashboard = memo(function Dashboard() {
       };
     },
     enabled: !!workspaceId,
-    staleTime: 3 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: 2 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
 
@@ -65,9 +64,10 @@ const Dashboard = memo(function Dashboard() {
         quotesCount: quotes.length
       };
     },
-    enabled: !!workspaceId && !!criticalData, // Carrega apenas após dados críticos
+    enabled: !!workspaceId && !!criticalData,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   // Combinar dados
@@ -113,7 +113,9 @@ const Dashboard = memo(function Dashboard() {
       return base44.entities.Invoice.filter({ tenant_id: workspaceId });
     },
     enabled: !!workspaceId,
-    staleTime: 5 * 60 * 1000
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   return (
