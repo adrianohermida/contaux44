@@ -3,58 +3,43 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { blog_post_id } = await req.json();
+    const body = await req.json();
 
-    if (!blog_post_id) {
-      return Response.json({ error: 'blog_post_id obrigatório' }, { status: 400 });
+    // Validar parâmetros - aceitar blog_post_id, postId ou post_id
+    const postId = body.blog_post_id || body.postId || body.post_id;
+    const device = body.device || 'unknown';
+    const source = body.source || 'direct';
+
+    if (!postId) {
+      return Response.json({ error: 'post_id ou blog_post_id obrigatório' }, { status: 400 });
     }
 
-    // Incrementa views no blog post
-    const posts = await base44.entities.BlogPost.filter({ id: blog_post_id });
-    if (posts.length > 0) {
-      const currentPost = posts[0];
-      await base44.entities.BlogPost.update(blog_post_id, {
-        views: (currentPost.views || 0) + 1
-      });
-
-      // Registra analytics
-      const today = new Date().toISOString().split('T')[0];
-      const analyticsData = await base44.entities.BlogAnalytics.filter({
-        blog_post_id,
-        date: today
-      });
-
-      const device = /mobile/i.test(req.headers.get('user-agent')) ? 'mobile' : 'desktop';
-      const source = 'direct'; // Pode ser melhorado com referrer tracking
-
-      if (analyticsData.length > 0) {
-        // Atualiza registro existente
-        await base44.entities.BlogAnalytics.update(analyticsData[0].id, {
-          views: analyticsData[0].views + 1,
-          unique_visitors: analyticsData[0].unique_visitors + 1
-        });
-      } else {
-        // Cria novo registro
-        await base44.entities.BlogAnalytics.create({
-          blog_post_id,
-          date: today,
-          views: 1,
-          unique_visitors: 1,
-          average_time_on_page: 0,
-          bounce_rate: 0,
-          scroll_depth: 0,
-          shares: 0,
-          clicks: 0,
-          source,
-          device
-        });
-      }
+    // Obter o post
+    const post = await base44.asServiceRole.entities.BlogPost.get(postId);
+    if (!post) {
+      return Response.json({ error: 'Post não encontrado' }, { status: 404 });
     }
 
-    return Response.json({ success: true });
+    // Atualizar views
+    const newViews = (post.views || 0) + 1;
+    await base44.asServiceRole.entities.BlogPost.update(postId, { views: newViews });
 
+    // Registrar analytics
+    await base44.asServiceRole.entities.BlogAnalytics.create({
+      blog_post_id: postId,
+      views: 1,
+      unique_visitors: 1,
+      device,
+      source,
+      date: new Date().toISOString().split('T')[0]
+    });
+
+    return Response.json({ 
+      success: true,
+      newViews,
+      message: 'View rastreado com sucesso'
+    });
   } catch (error) {
-    console.error('Erro ao rastrear visualização:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
