@@ -11,15 +11,41 @@ import ProtectedInternalRoute from './components/auth/ProtectedInternalRoute';
 const DASHBOARD_PAGES = [
   'Dashboard', 'VirtualCounter', 'Clients', 'Tickets', 'LegalProcesses', 
   'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 
-        'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 
-        'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 
-        'AccountingCalendar', 'Automations', 'Reports', 'Communication', 
-        'ClientPortal', 'SettingsPage', 'AuditLogs', 
-        'DocumentManagement', 'SecurityCenter', 
-        'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger'
-      ];
+  'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 
+  'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 
+  'AccountingCalendar', 'Automations', 'Reports', 'Communication', 
+  'ClientPortal', 'SettingsPage', 'AuditLogs', 
+  'DocumentManagement', 'SecurityCenter', 
+  'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger'
+];
+
+export default function Layout({ children, currentPageName }) {
+  const setupTheme = () => {
+    try {
+      const saved = localStorage.getItem('theme') || 'light';
+      const root = document.documentElement;
+      if (saved === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+    } catch (e) {
+      // Ignore errors
+    }
+  };
+
+  React.useEffect(() => {
+    setupTheme();
     
-    if (dashboardPages.includes(currentPageName)) {
+    const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
+    link.rel = 'icon';
+    link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/d48cce015_favicon.png';
+    if (!document.querySelector("link[rel~='icon']")) {
+      document.head.appendChild(link);
+    }
+  }, []);
+
+  if (DASHBOARD_PAGES.includes(currentPageName)) {
       return (
         <AuthProvider>
           <CacheProvider>
@@ -35,19 +61,19 @@ const DASHBOARD_PAGES = [
       );
     }
 
-    return (
-      <AuthProvider>
-        <CacheProvider>
-          <ThemeProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-grow">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </ThemeProvider>
-        </CacheProvider>
-      </AuthProvider>
-    );
+  return (
+    <AuthProvider>
+      <CacheProvider>
+        <ThemeProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </ThemeProvider>
+      </CacheProvider>
+    </AuthProvider>
+  );
 }
