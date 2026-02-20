@@ -34,9 +34,27 @@ import {
   LazyRLSDebugger
 } from './LazyPages';
 
+// Public pages (não precisam de LazyPageWrapper)
+const Home = lazy(() => import('../../pages/Home'));
+const Blog = lazy(() => import('../../pages/Blog'));
+const BlogSingle = lazy(() => import('../../pages/BlogSingle'));
+const About = lazy(() => import('../../pages/About'));
+const Contact = lazy(() => import('../../pages/Contact'));
+const Pricing = lazy(() => import('../../pages/Pricing'));
+
 export default function DashboardRoutes() {
   return (
     <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<BlogSingle />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/pricing" element={<Pricing />} />
+      
+      {/* Dashboard Routes */}
       <Route path="/dashboard" element={
         <LazyPageWrapper>
           <LazyDashboard />
@@ -220,9 +238,6 @@ export default function DashboardRoutes() {
           <LazyRLSDebugger />
         </LazyPageWrapper>
       } />
-      
-      {/* Default redirect */}
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
 }
