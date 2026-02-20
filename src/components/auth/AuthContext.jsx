@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 
 const AuthContext = createContext(null);
@@ -8,13 +8,14 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Carregar user na primeira vez e manter em cache
+  // Carregar user na primeira vez e manter em cache agressivo
   useEffect(() => {
     const loadUser = async () => {
       try {
         const cachedUser = sessionStorage.getItem('authUser');
         if (cachedUser) {
-          setUser(JSON.parse(cachedUser));
+          const parsed = JSON.parse(cachedUser);
+          setUser(parsed);
           setLoading(false);
           return;
         }
@@ -44,8 +45,20 @@ export function AuthProvider({ children }) {
     await base44.auth.logout();
   }, []);
 
+  // Memoizar valores computados
+  const contextValue = useMemo(() => ({
+    user,
+    loading,
+    error,
+    logout,
+    workspaceId: user?.workspace_id,
+    userType: user?.user_type,
+    isInternal: user?.user_type === 'internal' || user?.role === 'user_internal' || user?.role === 'admin',
+    isClient: user?.user_type === 'client' || user?.role === 'user_client',
+  }), [user, loading, error, logout]);
+
   return (
-    <AuthContext.Provider value={{ user, loading, error, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
