@@ -95,6 +95,7 @@ import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
 import AnalyticsAdvanced from './pages/AnalyticsAdvanced';
 import RBACManagement from './pages/RBACManagement';
+import AdvancedML from './pages/AdvancedML';
 import __Layout from './Layout.jsx';
 
 
@@ -147,10 +148,11 @@ export const PAGES = {
     "Welcome": Welcome,
     "AnalyticsAdvanced": AnalyticsAdvanced,
     "RBACManagement": RBACManagement,
+    "AdvancedML": AdvancedML,
 }
 
 export const pagesConfig = {
-    mainPage: "Home",
+    mainPage: "Blog",
     Pages: PAGES,
     Layout: __Layout,
 };
