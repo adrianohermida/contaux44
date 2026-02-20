@@ -443,6 +443,10 @@ export default function Blog() {
                </div>
              </div>
            </section>
+
+      {/* Virtual Counter Widget */}
+      <VirtualCounterWidget />
+
     </div>
   );
 }
