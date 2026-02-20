@@ -7,37 +7,10 @@ import Footer from './components/Footer';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from './components/auth/ProtectedInternalRoute';
 
-export default function Layout({ children, currentPageName }) {
-    const setupTheme = () => {
-      try {
-        const saved = localStorage.getItem('theme') || 'light';
-        const root = document.documentElement;
-        if (saved === 'dark') {
-          root.classList.add('dark');
-        } else {
-          root.classList.remove('dark');
-        }
-      } catch (e) {
-        // Ignore errors
-      }
-    };
-
-    React.useEffect(() => {
-      setupTheme();
-      
-      const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
-      link.rel = 'icon';
-      link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/d48cce015_favicon.png';
-      if (!document.querySelector("link[rel~='icon']")) {
-        document.head.appendChild(link);
-      }
-    }, []);
-
-    // Dashboard pages - SEMPRE usam DashboardLayout com sidebar + header consistentes
-      // Lista completa de páginas do módulo admin/dashboard
-      const dashboardPages = [
-        'Dashboard', 'VirtualCounter', 'Clients', 'Tickets', 'LegalProcesses', 
-        'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 
+// ✅ Constante FORA do componente - criada uma única vez
+const DASHBOARD_PAGES = [
+  'Dashboard', 'VirtualCounter', 'Clients', 'Tickets', 'LegalProcesses', 
+  'Invoicing', 'Payments', 'Quotes', 'Sales', 'CashFlow', 
         'Services', 'Entries', 'ImportCSV', 'BankReconciliation', 
         'ManualPosting', 'ChartOfAccounts', 'TaxInvoices', 
         'AccountingCalendar', 'Automations', 'Reports', 'Communication', 
