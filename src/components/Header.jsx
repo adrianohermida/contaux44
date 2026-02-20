@@ -46,11 +46,9 @@ export default function Header() {
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center gap-6 lg:gap-8">
-            <li><Link to={createPageUrl('Home')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Início</Link></li>
             <li><Link to={createPageUrl('About')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Sobre</Link></li>
             <li><a href="#servicos" className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Serviços</a></li>
             <li><Link to={createPageUrl('Blog')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Blog</Link></li>
-            <li><Link to={createPageUrl('MyBookmarks')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">📚 Favoritos</Link></li>
             <li><Link to={createPageUrl('Contact')} className="text-sm lg:text-base text-slate-700 hover:text-blue-600 transition-colors duration-200">Contato</Link></li>
           </ul>
 
@@ -121,11 +119,9 @@ export default function Header() {
               <div className="px-4 py-4">
                 {/* Navigation Links */}
                 <ul className="space-y-1 mb-6">
-                  <li><Link to={createPageUrl('Home')} className="block px-3 py-2 text-base text-slate-700 hover:bg-slate-50 rounded transition-colors" onClick={closeMobileMenu}>Início</Link></li>
                   <li><Link to={createPageUrl('About')} className="block px-3 py-2 text-base text-slate-700 hover:bg-slate-50 rounded transition-colors" onClick={closeMobileMenu}>Sobre</Link></li>
                   <li><a href="#servicos" className="block px-3 py-2 text-base text-slate-700 hover:bg-slate-50 rounded transition-colors" onClick={closeMobileMenu}>Serviços</a></li>
                   <li><Link to={createPageUrl('Blog')} className="block px-3 py-2 text-base text-slate-700 hover:bg-slate-50 rounded transition-colors" onClick={closeMobileMenu}>Blog</Link></li>
-                  <li><Link to={createPageUrl('MyBookmarks')} className="block px-3 py-2 text-base text-slate-700 hover:bg-slate-50 rounded transition-colors" onClick={closeMobileMenu}>📚 Meus Favoritos</Link></li>
                   <li><Link to={createPageUrl('Contact')} className="block px-3 py-2 text-base text-slate-700 hover:bg-slate-50 rounded transition-colors" onClick={closeMobileMenu}>Contato</Link></li>
                 </ul>
 
