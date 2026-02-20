@@ -27,13 +27,10 @@ export const LazyClientPortal = lazy(() => import('../../pages/ClientPortal'));
 export const LazySettings = lazy(() => import('../../pages/SettingsPage'));
 export const LazyBlogManager = lazy(() => import('../../pages/BlogManager'));
 export const LazyAuditLogs = lazy(() => import('../../pages/AuditLogs'));
-export const LazyAnalytics = lazy(() => import('../../pages/Analytics'));
 export const LazySecurityCenter = lazy(() => import('../../pages/SecurityCenter'));
 export const LazyTransactions = lazy(() => import('../../pages/Transactions'));
 export const LazyCashFlowForecast = lazy(() => import('../../pages/CashFlowForecast'));
-export const LazyAdvancedReports = lazy(() => import('../../pages/AdvancedReportsPage'));
 export const LazyDocumentManagement = lazy(() => import('../../pages/DocumentManagement'));
-export const LazyAnalyticsDashboard = lazy(() => import('../../pages/AnalyticsDashboard'));
 export const LazyRLSDebugger = lazy(() => import('../../pages/RLSDebugger'));
 
 // Lazy load de componentes pesados
