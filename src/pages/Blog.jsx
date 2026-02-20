@@ -179,13 +179,13 @@ export default function Blog() {
       </section>
 
       {/* Blog Section */}
-      <section className="py-12 sm:py-20">
+      <section className="py-8 sm:py-12 md:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Posts */}
-            <div className="sm:col-span-2 lg:col-span-2">
+            <div className="lg:col-span-2">
               {/* Results count */}
-              <div className="mb-6 text-sm text-slate-600">
+              <div className="mb-4 sm:mb-6 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                 {filteredPosts.length === 0 ? (
                   <p>Nenhum resultado encontrado</p>
                 ) : (
