@@ -12,10 +12,16 @@ export default function Clients() {
   const [editingClient, setEditingClient] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback((createdClientId) => {
     setShowForm(false);
     setEditingClient(null);
     setRefreshKey(prev => prev + 1);
+    // If a new client was created, navigate to its details
+    if (createdClientId) {
+      setTimeout(() => {
+        window.location.href = `/clientdetail/${createdClientId}`;
+      }, 300);
+    }
   }, []);
 
   const handleEdit = useCallback((client) => {
