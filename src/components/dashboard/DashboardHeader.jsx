@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
-import { Bell, User, LogOut, Settings, Loader2 } from 'lucide-react';
+import { Bell, User, LogOut, Settings, Loader2, Moon, Sun } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -10,12 +10,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useUserAndTenantOptimized } from '../hooks/useUserAndTenantOptimized';
 import { useDebounce } from '../hooks/useDebounce';
+import { useTheme } from '../hooks/useTheme';
 import UserPreferences from './UserPreferences';
 import Breadcrumbs from './Breadcrumbs';
 import SearchBox from './SearchBox';
 
 const DashboardHeader = memo(function DashboardHeader() {
   const { user, tenantId } = useUserAndTenantOptimized();
+  const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   const debouncedSearch = useDebounce(searchQuery, 300);
@@ -54,6 +56,19 @@ const DashboardHeader = memo(function DashboardHeader() {
 
         {/* Right Section */}
         <div className="ml-6 flex items-center gap-4">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            title={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-5 h-5 text-slate-600" />
+            ) : (
+              <Moon className="w-5 h-5 text-slate-600" />
+            )}
+          </button>
+
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
