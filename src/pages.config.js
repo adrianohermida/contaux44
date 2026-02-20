@@ -187,6 +187,8 @@ import CacheManagement from './pages/CacheManagement';
 import AdvancedMonitoring from './pages/AdvancedMonitoring';
 import Sprint13Completion from './pages/Sprint13Completion';
 import FinalProjectSummary from './pages/FinalProjectSummary';
+import Sprint13Review from './pages/Sprint13Review';
+import Sprint14Planning from './pages/Sprint14Planning';
 import __Layout from './Layout.jsx';
 
 
@@ -331,6 +333,8 @@ export const PAGES = {
     "AdvancedMonitoring": AdvancedMonitoring,
     "Sprint13Completion": Sprint13Completion,
     "FinalProjectSummary": FinalProjectSummary,
+    "Sprint13Review": Sprint13Review,
+    "Sprint14Planning": Sprint14Planning,
 }
 
 export const pagesConfig = {
