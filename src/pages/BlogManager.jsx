@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, ChevronDown, BarChart3, Clock, MessageSquare, Zap } from 'lucide-react';
+import { Plus, ChevronDown, BarChart3, Clock, MessageSquare, Zap, Upload } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import BlogEditor from '../components/dashboard/blog/BlogEditor';
@@ -10,6 +10,7 @@ import BlogComments from '../components/dashboard/blog/BlogComments';
 import BlogAnalyticsDashboard from '../components/dashboard/blog/BlogAnalyticsDashboard';
 import BlogScheduler from '../components/dashboard/blog/BlogScheduler';
 import CommentModerator from '../components/dashboard/blog/CommentModerator';
+import BlogPostCSVUploader from '../components/dashboard/BlogPostCSVUploader';
 
 export default function BlogManager() {
   const [view, setView] = useState('list');
@@ -140,7 +141,17 @@ export default function BlogManager() {
         >
           🤖 Assistente IA
         </button>
-      </div>
+        <button
+          onClick={() => setView('import')}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-2 ${
+            view === 'import'
+              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+          }`}
+        >
+          <Upload className="w-4 h-4" /> Importar CSV
+        </button>
+        </div>
 
       {/* Content */}
       {view === 'list' && (
@@ -239,6 +250,15 @@ export default function BlogManager() {
       {view === 'comments' && (
         <BlogComments />
       )}
-    </div>
-  );
-}
+
+      {view === 'import' && (
+        <div className="max-w-2xl">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">📥 Importar Publicações</h2>
+          <BlogPostCSVUploader 
+            onSuccess={() => setRefreshKey(prev => prev + 1)}
+          />
+        </div>
+      )}
+      </div>
+      );
+      }
