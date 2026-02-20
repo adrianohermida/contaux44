@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from './components/auth/ProtectedInternalRoute';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // ✅ Constante FORA do componente - criada uma única vez
 const DASHBOARD_PAGES = [
@@ -55,6 +56,7 @@ export default function Layout({ children, currentPageName }) {
                 {children}
               </ProtectedInternalRoute>
             </DashboardLayout>
+            <ReactQueryDevtools initialIsOpen={false} />
           </ThemeProvider>
         </CacheProvider>
       </AuthProvider>
@@ -72,6 +74,7 @@ export default function Layout({ children, currentPageName }) {
             </main>
             <Footer />
           </div>
+          <ReactQueryDevtools initialIsOpen={false} />
         </ThemeProvider>
       </CacheProvider>
     </AuthProvider>
