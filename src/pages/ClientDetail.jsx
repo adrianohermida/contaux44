@@ -10,6 +10,8 @@ import ShareholderManagementTab from '../components/dashboard/ShareholderManagem
 import FiscalDataPanel from '../components/dashboard/FiscalDataPanel';
 import DigitalCertificateTab from '../components/dashboard/DigitalCertificateTab';
 import AccessCredentialTab from '../components/dashboard/AccessCredentialTab';
+import PaymentManagementTab from '../components/dashboard/PaymentManagementTab';
+import InvoiceDetailPanel from '../components/dashboard/InvoiceDetailPanel';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function ClientDetail() {
@@ -117,13 +119,15 @@ export default function ClientDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="addresses" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 gap-1">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 gap-1">
           <TabsTrigger value="addresses" className="text-xs sm:text-sm">Endereços</TabsTrigger>
           <TabsTrigger value="contacts" className="text-xs sm:text-sm">Contatos</TabsTrigger>
           <TabsTrigger value="shareholders" className="text-xs sm:text-sm">Sócios</TabsTrigger>
           <TabsTrigger value="fiscal" className="text-xs sm:text-sm">Fiscal</TabsTrigger>
           <TabsTrigger value="certificates" className="text-xs sm:text-sm">Certs</TabsTrigger>
           <TabsTrigger value="credentials" className="text-xs sm:text-sm">Acesso</TabsTrigger>
+          <TabsTrigger value="invoices" className="text-xs sm:text-sm">Faturas</TabsTrigger>
+          <TabsTrigger value="payments" className="text-xs sm:text-sm">Pagtos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="addresses" className="bg-white rounded-lg shadow p-6">
@@ -148,6 +152,14 @@ export default function ClientDetail() {
 
         <TabsContent value="credentials" className="bg-white rounded-lg shadow p-6">
           <AccessCredentialTab clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
+
+        <TabsContent value="invoices" className="bg-white rounded-lg shadow p-6">
+          <InvoiceDetailPanel clientId={client.id} tenantId={workspaceId} />
+        </TabsContent>
+
+        <TabsContent value="payments" className="bg-white rounded-lg shadow p-6">
+          <PaymentManagementTab clientId={client.id} tenantId={workspaceId} />
         </TabsContent>
       </Tabs>
     </div>
