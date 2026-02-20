@@ -80,7 +80,6 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId,
   const { fetchAddress, loading: cepLoading, error: cepError, clearError: clearCepError } = useViaCEP();
   const [documentValidation, setDocumentValidation] = useState({});
   const [addressReadOnly, setAddressReadOnly] = useState(false);
-  const modalCloseRef = useRef(null);
 
   const currencyOptions = [
     { value: 'BRL', label: 'Real (BRL)' },
@@ -219,7 +218,6 @@ export default function ClientFormEnhanced({ client, onSave, onCancel, tenantId,
       onClose={onCancel}
       title={client ? 'Editar Cliente' : 'Novo Cliente'}
       size="md"
-      ref={modalCloseRef}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
