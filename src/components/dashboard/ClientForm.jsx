@@ -143,6 +143,8 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
         setFieldValue('bairro', addressData.bairro);
         setFieldValue('cidade', addressData.cidade);
         setFieldValue('uf', addressData.uf);
+        // Limpar erro de CEP após sucesso
+        clearErrors();
       }
     }
   };
