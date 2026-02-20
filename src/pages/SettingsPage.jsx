@@ -48,6 +48,20 @@ export default function SettingsPage() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!confirm('Tem certeza que deseja deletar sua conta? Esta ação é irreversível.')) return;
+    if (!confirm('Digite "DELETAR" para confirmar a exclusão permanente de sua conta')) return;
+    
+    try {
+      // Call backend function to delete user account
+      await base44.functions.invoke('deleteUserAccount', { userId: user.id });
+      alert('Conta deletada com sucesso.');
+      base44.auth.logout();
+    } catch (error) {
+      alert('Erro ao deletar conta: ' + error.message);
+    }
+  };
+
   if (loading) return <div className="text-center py-8">Carregando...</div>;
 
   return (
