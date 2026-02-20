@@ -22,10 +22,10 @@ function NewsletterForm({ source }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
       {status === 'success' && (
-        <div className="p-3 bg-green-100 text-green-700 rounded-lg text-sm w-full">✓ Inscrição realizada!</div>
+        <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg text-sm w-full">✓ Inscrição realizada!</div>
       )}
       {status === 'error' && (
-        <div className="p-3 bg-red-100 text-red-700 rounded-lg text-sm w-full">✗ Erro ao inscrever.</div>
+        <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg text-sm w-full">✗ Erro ao inscrever.</div>
       )}
       <div className="flex flex-col sm:flex-row gap-2 w-full">
         <input 
@@ -34,9 +34,9 @@ function NewsletterForm({ source }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
+          className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
         />
-        <button type="submit" className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm whitespace-nowrap">
+        <button type="submit" className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm whitespace-nowrap">
           Registre-se
         </button>
       </div>
@@ -105,19 +105,19 @@ export default function Contact() {
 
                  {/* Phone */}
                  <div className="flex gap-4">
-                   <Phone className="w-5 h-5 md:w-6 md:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                   <Phone className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                    <div>
-                     <h5 className="font-bold text-sm md:text-base mb-1">Telefone</h5>
-                     <p className="text-gray-600 text-sm">+55 51 2391-1854</p>
+                     <h5 className="font-bold dark:text-white text-sm md:text-base mb-1">Telefone</h5>
+                     <p className="text-gray-600 dark:text-slate-400 text-sm">+55 51 2391-1854</p>
                    </div>
                  </div>
 
                  {/* Email */}
                  <div className="flex gap-4">
-                   <Mail className="w-5 h-5 md:w-6 md:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                   <Mail className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                    <div>
-                     <h5 className="font-bold text-sm md:text-base mb-1">Email</h5>
-                     <a href="mailto:contato@contaux.com.br" className="text-blue-600 hover:underline text-sm">
+                     <h5 className="font-bold dark:text-white text-sm md:text-base mb-1">Email</h5>
+                     <a href="mailto:contato@contaux.com.br" className="text-blue-600 dark:text-blue-400 hover:underline text-sm">
                        contato@contaux.com.br
                      </a>
                    </div>
@@ -125,10 +125,10 @@ export default function Contact() {
 
                  {/* Address */}
                  <div className="flex gap-4">
-                   <MapPin className="w-5 h-5 md:w-6 md:h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                   <MapPin className="w-5 h-5 md:w-6 md:h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                    <div>
-                     <h5 className="font-bold text-sm md:text-base mb-1">Endereço</h5>
-                     <p className="text-gray-600 text-sm">
+                     <h5 className="font-bold dark:text-white text-sm md:text-base mb-1">Endereço</h5>
+                     <p className="text-gray-600 dark:text-slate-400 text-sm">
                        Av. Dolores Alcaraz Caldas, 90, 8º Andar<br />
                        Praia de Belas, CEP 90110-180<br />
                        Porto Alegre / RS
@@ -138,22 +138,22 @@ export default function Contact() {
 
                  {/* Social Links */}
                  <div>
-                   <h5 className="font-bold text-sm md:text-base mb-4">Siga-nos</h5>
+                   <h5 className="font-bold dark:text-white text-sm md:text-base mb-4">Siga-nos</h5>
                    <div className="flex gap-4">
                      <a href="https://www.facebook.com/Contaux-Contabilidade" target="_blank" rel="noopener noreferrer" 
-                       className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors">
+                       className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition-colors">
                        <Facebook className="w-5 h-5" />
                      </a>
                      <a href="https://twitter.com/Contaux_c" target="_blank" rel="noopener noreferrer"
-                       className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors">
+                       className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition-colors">
                        <Twitter className="w-5 h-5" />
                      </a>
                      <a href="https://www.linkedin.com/company/contaux-contabilidade" target="_blank" rel="noopener noreferrer"
-                       className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors">
+                       className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition-colors">
                        <Linkedin className="w-5 h-5" />
                      </a>
                      <a href="https://www.instagram.com/contauxcontadoria/" target="_blank" rel="noopener noreferrer"
-                       className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors">
+                       className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition-colors">
                        <Instagram className="w-5 h-5" />
                      </a>
                    </div>
@@ -165,7 +165,7 @@ export default function Contact() {
              <div className="md:col-span-3">
                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                  {submitted && (
-                   <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+                   <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg text-sm">
                      ✓ Mensagem enviada com sucesso!
                    </div>
                  )}
@@ -178,7 +178,7 @@ export default function Contact() {
                      value={formData.name}
                      onChange={handleChange}
                      required
-                     className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
+                     className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
                    />
                    <input
                      type="text"
@@ -187,7 +187,7 @@ export default function Contact() {
                      value={formData.subject}
                      onChange={handleChange}
                      required
-                     className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
+                     className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
                    />
                  </div>
 
@@ -199,7 +199,7 @@ export default function Contact() {
                      value={formData.email}
                      onChange={handleChange}
                      required
-                     className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
+                     className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
                    />
                    <input
                      type="tel"
@@ -208,7 +208,7 @@ export default function Contact() {
                      value={formData.phone}
                      onChange={handleChange}
                      required
-                     className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
+                     className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
                    />
                  </div>
 
@@ -218,12 +218,12 @@ export default function Contact() {
                    rows="5"
                    value={formData.message}
                    onChange={handleChange}
-                   className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
+                   className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
                  />
 
                  <button
                    type="submit"
-                   className="w-full px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                   className="w-full px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-sm"
                  >
                    Enviar mensagem
                  </button>
@@ -233,42 +233,30 @@ export default function Contact() {
          </div>
        </section>
 
-       {/* Google Maps */}
-       <section className="py-12 bg-gray-50">
-         <div className="max-w-6xl mx-auto px-4">
-           <iframe
-             width="100%"
-             height="300"
-             frameBorder="0"
-             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.558101516756!2d-51.2296031236943!3d-30.049533074921044!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x951979b632a699cb%3A0xf4a87340534ec234!2sContaux%20Contabilidade%20Online!5e0!3m2!1spt-BR!2sbr!4v1715962160718!5m2!1spt-BR!2sbr"
-             allowFullScreen=""
-             loading="lazy"
-             referrerPolicy="no-referrer-when-downgrade"
-             className="rounded-lg w-full md:h-96"
-           />
+       {/* Newsletter Section */}
+       <section className="bg-slate-50 dark:bg-slate-800 py-12 md:py-16">
+         <div className="max-w-4xl mx-auto px-4 text-center">
+           <h4 className="text-xl md:text-2xl font-bold dark:text-white mb-2">Fique Atualizado</h4>
+           <p className="text-gray-600 dark:text-slate-400 text-sm md:text-base mb-6">Receba nossas novidades e atualizações sobre contabilidade, jurídico e gestão empresarial.</p>
+           <NewsletterForm source="contact" />
          </div>
        </section>
 
-      {/* CTA Section */}
-      <section className="py-12 md:py-20 bg-gray-50">
-       <div className="max-w-6xl mx-auto px-4">
-         <div className="grid md:grid-cols-2 gap-6 md:gap-12">
-           <div>
-             <h3 className="text-xl md:text-2xl font-bold mb-4">Boletim Informativo</h3>
-             <p className="text-gray-600 text-sm md:text-base mb-6">Inscreva-se e receba conteúdo exclusivo sobre contabilidade especializada</p>
-             <NewsletterForm source="contact" />
+       {/* CTA Section */}
+       <section className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-900 dark:to-blue-950 text-white py-12 md:py-16">
+         <div className="max-w-4xl mx-auto px-4 text-center">
+           <h4 className="text-xl md:text-2xl font-bold mb-3">Precisa de mais informações?</h4>
+           <p className="text-blue-100 mb-6 text-sm md:text-base">Confira nossos serviços ou agende uma consulta gratuita com nossos especialistas.</p>
+           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+             <a href="/services" className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors text-sm">
+               Ver Serviços
+             </a>
+             <a href="/quote-request" className="px-6 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors text-sm">
+               Solicitar Proposta
+             </a>
            </div>
-
-            <div className="bg-white p-4 md:p-8 rounded-lg border border-gray-200">
-              <h4 className="text-xl md:text-2xl font-bold mb-3">Quer abrir sua PJ gratuitamente?</h4>
-              <p className="text-gray-600 text-sm md:text-base mb-6">Disponível em qualquer plano anual.</p>
-              <button className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
-                Fale com um especialista
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+         </div>
+       </section>
     </div>
   );
 }
