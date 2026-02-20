@@ -40,7 +40,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
         {/* Header - sempre visível e consistente */}
         <DashboardHeader />
         
-        <main className="flex-1 p-3 sm:p-4 md:p-6 bg-white md:bg-slate-50 dark:bg-slate-900">
+        <main className="flex-1 p-3 sm:p-4 md:p-6 bg-white md:bg-slate-50 dark:bg-slate-900 pb-24 md:pb-6">
           {children}
         </main>
       </div>
