@@ -151,4 +151,4 @@ export function useWebSocket(workspaceId) {
   };
 }
 
-export default WebSocketService;
+export default WSManager;
