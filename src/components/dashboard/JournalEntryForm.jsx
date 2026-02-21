@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -18,21 +20,16 @@ export default function JournalEntryForm({ entry, onSave, onCancel, tenantId }) 
   }, [entry, tenantId]);
 
   const [formData, setFormData] = useState(initialFormData);
-  const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const loadAccounts = useCallback(async () => {
-    try {
-      const data = await base44.entities.Account.filter({ tenant_id: tenantId });
-      setAccounts(data);
-    } catch (error) {
-      console.error('Erro ao carregar contas:', error);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadAccounts();
-  }, [loadAccounts]);
+  const { data: accounts = [], isLoading: accountsLoading } = useQuery({
+    queryKey: ['accounts', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      return base44.entities.Account.filter({ tenant_id: tenantId });
+    },
+    enabled: !!tenantId
+  });
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -58,26 +55,77 @@ export default function JournalEntryForm({ entry, onSave, onCancel, tenantId }) 
   }, []);
 
   const removeLine = useCallback((index) => {
+    if (formData.line_items.length === 1) {
+      toast.error('Deve haver pelo menos uma linha no lançamento');
+      return;
+    }
     setFormData(prev => ({
       ...prev,
       line_items: prev.line_items.filter((_, i) => i !== index)
     }));
-  }, []);
+  }, [formData.line_items.length]);
 
-  const handleSubmit = useCallback(async (e) => {
+  const validateForm = () => {
+    if (!formData.entry_date) {
+      toast.error('Por favor, preencha a data do lançamento');
+      return false;
+    }
+    if (!formData.description || formData.description.trim() === '') {
+      toast.error('Por favor, preencha a descrição');
+      return false;
+    }
+    if (!formData.line_items || formData.line_items.length === 0) {
+      toast.error('O lançamento deve ter pelo menos uma linha');
+      return false;
+    }
+
+    let totalDebito = 0;
+    let totalCredito = 0;
+    for (const item of formData.line_items) {
+      if (!item.account_id) {
+        toast.error('Todas as linhas devem ter uma conta selecionada');
+        return false;
+      }
+      totalDebito += item.debit_amount || 0;
+      totalCredito += item.credit_amount || 0;
+    }
+
+    if (Math.abs(totalDebito - totalCredito) > 0.01) {
+      toast.error(`Débito total (${totalDebito.toFixed(2)}) deve ser igual ao Crédito total (${totalCredito.toFixed(2)})`);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     setLoading(true);
     try {
+      const dataToSave = {
+        ...formData,
+        tenant_id: tenantId,
+        description: formData.description.trim()
+      };
+
       if (entry?.id) {
-        await base44.entities.JournalEntry.update(entry.id, formData);
+        await base44.entities.JournalEntry.update(entry.id, dataToSave);
+        toast.success('Lançamento atualizado com sucesso');
       } else {
-        await base44.entities.JournalEntry.create(formData);
+        await base44.entities.JournalEntry.create(dataToSave);
+        toast.success('Lançamento criado com sucesso');
       }
       onSave();
+    } catch (err) {
+      console.error('Erro ao salvar:', err);
+      toast.error('Erro ao salvar lançamento. Tente novamente.');
     } finally {
       setLoading(false);
     }
-  }, [entry, formData, onSave]);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
@@ -150,10 +198,14 @@ export default function JournalEntryForm({ entry, onSave, onCancel, tenantId }) 
 
           <textarea className="w-full border rounded-lg p-2 text-sm" placeholder="Memo" name="memo" value={formData.memo} onChange={handleChange} rows={2}></textarea>
 
+          <div className="mt-4 p-3 bg-blue-50 rounded text-sm text-blue-700 border border-blue-200">
+            Débitos e Créditos devem ser iguais para equilibrar o lançamento
+          </div>
+
           <div className="flex justify-end gap-3 pt-4">
             <Button variant="outline" onClick={onCancel}>Cancelar</Button>
-            <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700">
-              {loading ? 'Salvando...' : 'Salvar'}
+            <Button type="submit" disabled={loading || accountsLoading} className="bg-blue-600 hover:bg-blue-700">
+              {loading ? 'Salvando...' : entry ? 'Atualizar' : 'Criar'}
             </Button>
           </div>
         </form>

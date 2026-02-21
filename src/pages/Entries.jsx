@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import JournalEntryForm from '../components/dashboard/JournalEntryForm';
 import JournalEntryList from '../components/dashboard/JournalEntryList';
 import { Button } from '@/components/ui/button';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Entries() {
-  const { tenantId } = useUserAndTenant();
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
 
   const handleSave = () => {
     setShowForm(false);
@@ -23,16 +29,6 @@ export default function Entries() {
     setEditingEntry(entry);
     setShowForm(true);
   };
-
-  if (!tenantId) {
-    return (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <div className="text-center py-8">Carregando...</div>
-        </DashboardLayout>
-      </ProtectedRoute>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -51,19 +47,19 @@ export default function Entries() {
       </div>
 
       {showForm && (
-        <JournalEntryForm
-          entry={editingEntry}
-          tenantId={tenantId}
-          onSave={handleSave}
-          onCancel={() => { setShowForm(false); setEditingEntry(null); }}
-        />
-      )}
+         <JournalEntryForm
+           entry={editingEntry}
+           tenantId={workspaceId}
+           onSave={handleSave}
+           onCancel={() => { setShowForm(false); setEditingEntry(null); }}
+         />
+       )}
 
-      <JournalEntryList
-        tenantId={tenantId}
-        onEdit={handleEdit}
-        onRefresh={refreshKey}
-      />
+       <JournalEntryList
+         tenantId={workspaceId}
+         onEdit={handleEdit}
+         onRefresh={refreshKey}
+       />
     </div>
   );
 }
