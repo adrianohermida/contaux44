@@ -6,7 +6,7 @@ import { LayoutDashboard, Users, FileText, Ticket } from 'lucide-react';
 export default function BottomNav() {
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
-    { icon: Users, label: 'Clientes', page: 'Clients' },
+    { icon: Users, label: 'Clientes', page: 'Contact' },
     { icon: FileText, label: 'Faturas', page: 'Invoicing' },
     { icon: Ticket, label: 'Tickets', page: 'Tickets' }
   ];
