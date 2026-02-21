@@ -24,4 +24,6 @@ const SidebarMenuList = memo(function SidebarMenuList({
   );
 });
 
+SidebarMenuList.displayName = 'SidebarMenuList';
+
 export default SidebarMenuList;

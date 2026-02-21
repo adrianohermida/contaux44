@@ -28,7 +28,6 @@ const SidebarMenuItem = memo(function SidebarMenuItem({
         <SidebarMenuItemBase
           icon={item.icon}
           label={item.label}
-          page={item.page}
           isActive={isActive(item.page)}
           isCollapsed={collapsed}
           href={`/${item.page.toLowerCase()}`}
