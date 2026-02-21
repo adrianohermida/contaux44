@@ -60,6 +60,11 @@ export default function ContactActivityTimeline({ contactId, workspaceId }) {
   const activityTypes = ['all', ...new Set(allActivities.map(a => a.activity_type))];
   const hasMore = allActivities.length > activities.length;
 
+  // Sort activities by date (newer first)
+  const sortedActivities = [...filteredActivities].sort((a, b) => 
+    new Date(b.created_date) - new Date(a.created_date)
+  );
+
   return (
     <div className="space-y-4">
       <div className="flex gap-2 flex-wrap">
@@ -103,7 +108,7 @@ export default function ContactActivityTimeline({ contactId, workspaceId }) {
           <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-700" />
 
           <div className="space-y-4">
-            {filteredActivities.map((activity) => (
+            {sortedActivities.map((activity) => (
               <ActivityItem key={activity.id} activity={activity} />
             ))}
           </div>
