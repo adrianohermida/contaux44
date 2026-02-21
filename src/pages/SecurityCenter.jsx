@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Shield, Lock, Zap, AlertCircle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SecurityDashboard from '../components/security/SecurityDashboard';
-import InputValidator, { sanitizeInput, validateInput } from '../components/security/InputValidator';
+import { sanitizeInput, isValidEmail, isValidURL } from '../components/security/InputValidator';
 import { useCSRFToken } from '../components/security/CSRFProtection';
 import { useRateLimit } from '../components/security/RateLimiter';
 
@@ -10,13 +10,22 @@ export default function SecurityCenter() {
   const [activeTab, setActiveTab] = useState('overview');
   const [testInput, setTestInput] = useState('');
   const [inputType, setInputType] = useState('email');
-  const { token, refreshToken } = useCSRFToken();
-  const { remaining, isBlocked } = useRateLimit();
+  const { token } = useCSRFToken();
+  const { remaining } = useRateLimit();
 
-  const handleRefreshToken = () => {
-    const newToken = refreshToken();
-    alert(`Token renovado: ${newToken}`);
+  const validateInput = (value, type) => {
+    if (!value) return false;
+    switch (type) {
+      case 'email': return isValidEmail(value);
+      case 'url': return isValidURL(value);
+      case 'phone': return /^[0-9+\-() ]{10,}$/.test(value);
+      case 'number': return /^-?\d+\.?\d*$/.test(value);
+      case 'text': return value.length > 0;
+      default: return false;
+    }
   };
+
+
 
   return (
     <div className="space-y-6">
@@ -62,12 +71,7 @@ export default function SecurityCenter() {
                 </p>
               </div>
 
-              <button
-                onClick={handleRefreshToken}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-              >
-                Renovar Token
-              </button>
+
 
               <div className="p-4 bg-slate-50 rounded-lg">
                 <h4 className="font-semibold text-sm mb-3">Como funciona?</h4>
@@ -88,10 +92,10 @@ export default function SecurityCenter() {
                 <p className="text-sm text-slate-600">Requisições Permitidas</p>
                 <p className="text-2xl font-bold text-emerald-600 mt-1">{remaining}</p>
               </div>
-              <div className={`p-4 rounded-lg border-l-4 ${isBlocked ? 'bg-amber-50 border-amber-500' : 'bg-slate-50 border-slate-500'}`}>
+              <div className="p-4 bg-slate-50 rounded-lg border-l-4 border-slate-500">
                 <p className="text-sm text-slate-600">Status</p>
-                <p className={`text-lg font-bold mt-1 ${isBlocked ? 'text-amber-600' : 'text-slate-600'}`}>
-                  {isBlocked ? 'Bloqueado' : 'Ativo'}
+                <p className="text-lg font-bold mt-1 text-slate-600">
+                  Ativo
                 </p>
               </div>
               <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
@@ -136,17 +140,12 @@ export default function SecurityCenter() {
                   Teste de Entrada
                 </label>
                 <input
-                  type="text"
-                  value={testInput}
-                  onChange={(e) => setTestInput(e.target.value)}
-                  placeholder={`Digite um ${inputType}...`}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <InputValidator 
-                  value={testInput} 
-                  type={inputType}
-                  showFeedback={true}
-                />
+                   type="text"
+                   value={testInput}
+                   onChange={(e) => setTestInput(e.target.value)}
+                   placeholder={`Digite um ${inputType}...`}
+                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                 />
               </div>
 
               {testInput && (
