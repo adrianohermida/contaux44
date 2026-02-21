@@ -13,7 +13,10 @@ import TicketAnalyticsChart from '@/components/dashboard/TicketAnalyticsChart';
 import ComparisonCard from '@/components/dashboard/ComparisonCard';
 import PredictiveAnalyticsDashboard from '@/components/dashboard/analytics/PredictiveAnalyticsDashboard';
 import ScheduledReportsManager from '@/components/dashboard/analytics/ScheduledReportsManager';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles } from 'lucide-react';
+import AIReportBuilder from '@/components/dashboard/analytics/AIReportBuilder';
+import CustomerInsightsDashboard from '@/components/dashboard/analytics/CustomerInsightsDashboard';
+import RevenueForecaster from '@/components/dashboard/analytics/RevenueForecaster';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
@@ -127,30 +130,42 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-9 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
-            <span className="hidden sm:inline">Dashboard</span>
+            <span className="hidden sm:inline text-xs">Dashboard</span>
           </TabsTrigger>
           <TabsTrigger value="predictive" className="flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
-            <span className="hidden sm:inline">Previsões</span>
+            <span className="hidden sm:inline text-xs">Previsões</span>
+          </TabsTrigger>
+          <TabsTrigger value="ai" className="flex items-center gap-2">
+            <Brain className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">IA</span>
+          </TabsTrigger>
+          <TabsTrigger value="customers" className="flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Clientes</span>
+          </TabsTrigger>
+          <TabsTrigger value="revenue" className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Receita</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
-            <span className="hidden sm:inline">Construtor</span>
+            <span className="hidden sm:inline text-xs">Construtor</span>
           </TabsTrigger>
           <TabsTrigger value="advanced" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
-            <span className="hidden sm:inline">Avançado</span>
+            <span className="hidden sm:inline text-xs">Avançado</span>
           </TabsTrigger>
           <TabsTrigger value="scheduled" className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
-            <span className="hidden sm:inline">Agendados</span>
+            <span className="hidden sm:inline text-xs">Agendados</span>
           </TabsTrigger>
           <TabsTrigger value="saved" className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
-            <span className="hidden sm:inline">Salvos</span>
+            <span className="hidden sm:inline text-xs">Salvos</span>
           </TabsTrigger>
         </TabsList>
 
@@ -236,6 +251,21 @@ export default function Reports() {
         {/* Predictive Analytics */}
         <TabsContent value="predictive" className="mt-6">
           {analyticsData && <PredictiveAnalyticsDashboard invoices={analyticsData.invoices} />}
+        </TabsContent>
+
+        {/* AI Report Builder */}
+        <TabsContent value="ai" className="mt-6">
+          {workspaceId && <AIReportBuilder workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Customer Insights */}
+        <TabsContent value="customers" className="mt-6">
+          {workspaceId && <CustomerInsightsDashboard workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Revenue Forecaster */}
+        <TabsContent value="revenue" className="mt-6">
+          {analyticsData && <RevenueForecaster invoices={analyticsData.invoices} />}
         </TabsContent>
 
         {/* Report Builder */}
