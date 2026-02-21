@@ -584,6 +584,7 @@ export default function ContactDetails() {
             </div>
           </CardContent>
         </Card>
+        )}
       </div>
     </ProtectedInternalRoute>
   );
