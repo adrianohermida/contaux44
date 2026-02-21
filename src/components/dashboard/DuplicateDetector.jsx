@@ -38,7 +38,11 @@ export default function DuplicateDetector({ workspaceId, contactId = null }) {
       <Card>
         <CardContent className="pt-6">
           <DuplicateStats />
-          <Button onClick={handleScan} disabled={isScanning} className="gap-2 mt-4">
+          <Button 
+            onClick={handleScan} 
+            disabled={isScanning} 
+            className="gap-2 mt-6 w-full"
+          >
             {isScanning ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
