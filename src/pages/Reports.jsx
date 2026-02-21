@@ -42,7 +42,7 @@ import AdvancedMonitoringDashboard from '@/components/dashboard/monitoring/Advan
 import MetricsCollector from '@/components/dashboard/monitoring/MetricsCollector';
 import PerformanceOptimizer from '@/components/dashboard/performance/PerformanceOptimizer';
 import ObservabilityEngine from '@/components/dashboard/monitoring/ObservabilityEngine';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, GitBranch, Server, Bell, BookOpen, Eye } from 'lucide-react';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, GitBranch, Server, Bell, BookOpen, Eye, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
