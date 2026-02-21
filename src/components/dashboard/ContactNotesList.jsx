@@ -26,23 +26,30 @@ const NOTE_TYPE_LABELS = {
 };
 
 export default function ContactNotesList({ contactId, workspaceId }) {
-  const [showForm, setShowForm] = useState(false);
-  const [editingNote, setEditingNote] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const queryClient = useQueryClient();
+   const [showForm, setShowForm] = useState(false);
+   const [editingNote, setEditingNote] = useState(null);
+   const [searchTerm, setSearchTerm] = useState('');
+   const [page, setPage] = useState(1);
+   const ITEMS_PER_PAGE = 20;
+   const queryClient = useQueryClient();
 
-  const { data: notes = [], isLoading } = useQuery({
-    queryKey: ['contact-notes', contactId],
-    queryFn: async () => {
-      const data = await base44.entities.ContactNote.filter({ contact_id: contactId });
-      return data.sort((a, b) => {
-        if (a.is_pinned && !b.is_pinned) return -1;
-        if (!a.is_pinned && b.is_pinned) return 1;
-        return new Date(b.created_date) - new Date(a.created_date);
-      });
-    },
-    enabled: !!contactId,
-  });
+   const { data: allNotes = [], isLoading } = useQuery({
+     queryKey: ['contact-notes', contactId, workspaceId],
+     queryFn: async () => {
+       const data = await base44.entities.ContactNote.filter({ 
+         contact_id: contactId,
+         workspace_id: workspaceId
+       });
+       return data.sort((a, b) => {
+         if (a.is_pinned && !b.is_pinned) return -1;
+         if (!a.is_pinned && b.is_pinned) return 1;
+         return new Date(b.created_date) - new Date(a.created_date);
+       });
+     },
+     enabled: !!contactId && !!workspaceId,
+   });
+
+   const notes = allNotes.slice(0, page * ITEMS_PER_PAGE);
 
   const createNoteMutation = useMutation({
     mutationFn: async (data) => {
@@ -115,6 +122,7 @@ export default function ContactNotesList({ contactId, workspaceId }) {
 
   const pinnedNotes = filteredNotes.filter(n => n.is_pinned);
   const regularNotes = filteredNotes.filter(n => !n.is_pinned);
+  const hasMore = allNotes.length > notes.length;
 
   if (showForm) {
     return (
@@ -200,8 +208,18 @@ export default function ContactNotesList({ contactId, workspaceId }) {
               ))}
             </div>
           )}
-        </div>
-      )}
+
+          {hasMore && (
+            <Button 
+              onClick={() => setPage(p => p + 1)}
+              variant="outline"
+              className="w-full"
+            >
+              Carregar mais ({allNotes.length - notes.length} restantes)
+            </Button>
+          )}
+          </div>
+          )}
     </div>
   );
 }
