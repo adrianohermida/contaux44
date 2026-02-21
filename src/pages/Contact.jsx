@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Upload, Download, Tag, Edit } from 'lucide-react';
+import { Plus, Search, Upload, Download, Tag, Edit, TrendingUp } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import ContactImportCSV from '../components/dashboard/ContactImportCSV';
 import ContactSorting from '../components/dashboard/ContactSorting';
 import ContactTagManager from '../components/dashboard/ContactTagManager';
 import ContactBulkTagEditor from '../components/dashboard/ContactBulkTagEditor';
+import ContactTagStatistics from '../components/dashboard/ContactTagStatistics';
 import { usePagination } from '../components/hooks/usePagination';
 import { Pagination } from '../components/ui/pagination';
 import { useDebounce } from '../components/hooks/useDebounce';
@@ -27,6 +28,7 @@ export default function Contact() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [showImport, setShowImport] = useState(false);
   const [showTagManager, setShowTagManager] = useState(false);
+  const [showTagStats, setShowTagStats] = useState(false);
   const [showBulkTagEditor, setShowBulkTagEditor] = useState(false);
   const [sortBy, setSortBy] = useState('created_date');
   const [sortOrder, setSortOrder] = useState('desc');
@@ -50,7 +52,25 @@ export default function Contact() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Client-side search and sort
+  const { data: tags = [] } = useQuery({
+    queryKey: ['contact-tags', workspaceId],
+    queryFn: async () => {
+      return await base44.entities.ContactTag.filter({ workspace_id: workspaceId });
+    },
+    enabled: !!workspaceId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const { data: allAssignments = [] } = useQuery({
+    queryKey: ['all-contact-tag-assignments', workspaceId],
+    queryFn: async () => {
+      return await base44.entities.ContactTagAssignment.filter({ workspace_id: workspaceId });
+    },
+    enabled: !!workspaceId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Client-side search, filter by tag, and sort
   const filteredAndSortedContacts = useMemo(() => {
     let result = contacts;
     
@@ -60,6 +80,14 @@ export default function Contact() {
         c.company_name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
         c.email.toLowerCase().includes(debouncedSearch.toLowerCase())
       );
+    }
+
+    // Filter by tag
+    if (filters.tag && filters.tag !== 'all') {
+      const contactIdsWithTag = allAssignments
+        .filter(a => a.tag_id === filters.tag)
+        .map(a => a.contact_id);
+      result = result.filter(c => contactIdsWithTag.includes(c.id));
     }
     
     // Sort
@@ -71,7 +99,7 @@ export default function Contact() {
     });
     
     return result;
-  }, [contacts, debouncedSearch, sortBy, sortOrder]);
+  }, [contacts, debouncedSearch, sortBy, sortOrder, filters.tag, allAssignments]);
 
   const { 
     paginatedItems, 
@@ -127,6 +155,24 @@ export default function Contact() {
     );
   }
 
+  if (showTagStats) {
+    return (
+      <ProtectedInternalRoute>
+        <div className="space-y-6 pb-12">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+              Estatísticas de Tags
+            </h1>
+            <Button onClick={() => setShowTagStats(false)} variant="outline">
+              Voltar
+            </Button>
+          </div>
+          <ContactTagStatistics workspaceId={workspaceId} />
+        </div>
+      </ProtectedInternalRoute>
+    );
+  }
+
   return (
     <ProtectedInternalRoute>
       <div className="space-y-6 pb-20">
@@ -138,7 +184,11 @@ export default function Contact() {
               {filteredAndSortedContacts.length} de {contacts.length} contato{contacts.length !== 1 ? 's' : ''}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Button onClick={() => setShowTagStats(true)} variant="outline" size="sm" className="gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Estatísticas
+            </Button>
             <Button onClick={() => setShowTagManager(true)} variant="outline" size="sm" className="gap-2">
               <Tag className="w-4 h-4" />
               Tags
@@ -171,7 +221,7 @@ export default function Contact() {
 
           {/* Filters and Sorting */}
           <div className="flex gap-2">
-            <ContactListFilters onFilterChange={setFilters} />
+            <ContactListFilters onFilterChange={setFilters} tags={tags} />
             <ContactSorting 
               sortBy={sortBy}
               sortOrder={sortOrder}
@@ -211,28 +261,35 @@ export default function Contact() {
                 </div>
               </div>
             ) : (
-              paginatedItems.map(contact => (
-                <div
-                  key={contact.id}
-                  className="relative"
-                  onClick={() => handleViewContact(contact.id)}
-                >
-                  {selectedIds.length > 0 && (
-                    <div className="absolute top-2 right-2 z-10">
-                      <input
-                        type="checkbox"
-                        checked={selectedIds.includes(contact.id)}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          toggleSelection(contact.id);
-                        }}
-                        className="w-5 h-5 rounded border-slate-300"
-                      />
-                    </div>
-                  )}
-                  <ContactCard contact={contact} onClick={() => {}} />
-                </div>
-              ))
+              paginatedItems.map(contact => {
+                const contactTags = allAssignments
+                  .filter(a => a.contact_id === contact.id)
+                  .map(a => tags.find(t => t.id === a.tag_id))
+                  .filter(Boolean);
+                
+                return (
+                  <div
+                    key={contact.id}
+                    className="relative"
+                    onClick={() => handleViewContact(contact.id)}
+                  >
+                    {selectedIds.length > 0 && (
+                      <div className="absolute top-2 right-2 z-10">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(contact.id)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            toggleSelection(contact.id);
+                          }}
+                          className="w-5 h-5 rounded border-slate-300"
+                        />
+                      </div>
+                    )}
+                    <ContactCard contact={contact} tags={contactTags} onClick={() => {}} />
+                  </div>
+                );
+              })
             )}
           </div>
 

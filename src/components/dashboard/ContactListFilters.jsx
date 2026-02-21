@@ -7,7 +7,7 @@ const filterReducer = (state, action) => {
     case 'SET_FILTER':
       return { ...state, [action.key]: action.value };
     case 'RESET_FILTERS':
-      return { status: 'all', type: 'all' };
+      return { status: 'all', type: 'all', tag: 'all' };
     case 'TOGGLE_VISIBILITY':
       return { ...state, showFilters: !state.showFilters };
     default:
@@ -15,10 +15,11 @@ const filterReducer = (state, action) => {
   }
 };
 
-export default function ContactListFilters({ onFilterChange }) {
+export default function ContactListFilters({ onFilterChange, tags = [] }) {
   const [state, dispatch] = useReducer(filterReducer, {
     status: 'all',
     type: 'all',
+    tag: 'all',
     showFilters: false,
   });
 
@@ -29,10 +30,10 @@ export default function ContactListFilters({ onFilterChange }) {
 
   const clearFilters = () => {
     dispatch({ type: 'RESET_FILTERS' });
-    onFilterChange({ status: 'all', type: 'all' });
+    onFilterChange({ status: 'all', type: 'all', tag: 'all' });
   };
 
-  const activeCount = [state.status, state.type].filter(v => v !== 'all').length;
+  const activeCount = [state.status, state.type, state.tag].filter(v => v !== 'all').length;
 
   return (
     <div className="space-y-3">
