@@ -35,22 +35,30 @@ const ACTIVITY_LABELS = {
 };
 
 export default function ContactActivityTimeline({ contactId, workspaceId }) {
-  const [filterType, setFilterType] = useState('all');
+   const [filterType, setFilterType] = useState('all');
+   const [page, setPage] = useState(1);
+   const ITEMS_PER_PAGE = 25;
 
-  const { data: activities = [], isLoading } = useQuery({
-    queryKey: ['contact-activities', contactId],
-    queryFn: async () => {
-      const data = await base44.entities.ContactActivity.filter({ contact_id: contactId });
-      return data.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-    },
-    enabled: !!contactId,
-  });
+   const { data: allActivities = [], isLoading } = useQuery({
+     queryKey: ['contact-activities', contactId, workspaceId],
+     queryFn: async () => {
+       const data = await base44.entities.ContactActivity.filter({ 
+         contact_id: contactId,
+         workspace_id: workspaceId
+       });
+       return data.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+     },
+     enabled: !!contactId && !!workspaceId,
+   });
+
+   const activities = allActivities.slice(0, page * ITEMS_PER_PAGE);
 
   const filteredActivities = filterType === 'all'
     ? activities
     : activities.filter(a => a.activity_type === filterType);
 
-  const activityTypes = ['all', ...new Set(activities.map(a => a.activity_type))];
+  const activityTypes = ['all', ...new Set(allActivities.map(a => a.activity_type))];
+  const hasMore = allActivities.length > activities.length;
 
   return (
     <div className="space-y-4">
@@ -99,8 +107,17 @@ export default function ContactActivityTimeline({ contactId, workspaceId }) {
               <ActivityItem key={activity.id} activity={activity} />
             ))}
           </div>
-        </div>
-      )}
+
+          {hasMore && (
+            <button
+              onClick={() => setPage(p => p + 1)}
+              className="w-full mt-4 px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              Carregar mais atividades ({allActivities.length - activities.length} restantes)
+            </button>
+          )}
+          </div>
+          )}
     </div>
   );
 }
