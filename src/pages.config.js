@@ -73,32 +73,12 @@ import ConversionTracking from './pages/ConversionTracking';
 import Dashboard from './pages/Dashboard';
 import DocumentManagement from './pages/DocumentManagement';
 import Entries from './pages/Entries';
-import FinalProjectSummary from './pages/FinalProjectSummary';
-import GDPRCompliance from './pages/GDPRCompliance';
-import GamificationEngine from './pages/GamificationEngine';
-import GraphQLSupport from './pages/GraphQLSupport';
 import Home from './pages/Home';
-import IPWhitelisting from './pages/IPWhitelisting';
 import ImportCSV from './pages/ImportCSV';
-import InfluencerCollaboration from './pages/InfluencerCollaboration';
-import InfrastructureMonitoring from './pages/InfrastructureMonitoring';
-import Internationalization from './pages/Internationalization';
-import InventoryManagement from './pages/InventoryManagement';
 import Invoicing from './pages/Invoicing';
 import LegalProcesses from './pages/LegalProcesses';
-import LifetimeValuePredictor from './pages/LifetimeValuePredictor';
-import LiveStreaming from './pages/LiveStreaming';
-import LoadTestingFramework from './pages/LoadTestingFramework';
 import LoyaltyPrograms from './pages/LoyaltyPrograms';
-import LoyaltyRewards from './pages/LoyaltyRewards';
 import ManualPosting from './pages/ManualPosting';
-import Marketplace from './pages/Marketplace';
-import MobileAnalyticsDashboard from './pages/MobileAnalyticsDashboard';
-import MobileAppIntegration from './pages/MobileAppIntegration';
-import MobileFirstDesign from './pages/MobileFirstDesign';
-import MobileOptimized from './pages/MobileOptimized';
-import MultiChannelCampaigns from './pages/MultiChannelCampaigns';
-import MultiCurrency from './pages/MultiCurrency';
 import MultiLanguageSupport from './pages/MultiLanguageSupport';
 import MyBookmarks from './pages/MyBookmarks';
 import Notifications from './pages/Notifications';
@@ -227,32 +207,12 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "DocumentManagement": DocumentManagement,
     "Entries": Entries,
-    "FinalProjectSummary": FinalProjectSummary,
-    "GDPRCompliance": GDPRCompliance,
-    "GamificationEngine": GamificationEngine,
-    "GraphQLSupport": GraphQLSupport,
     "Home": Home,
-    "IPWhitelisting": IPWhitelisting,
     "ImportCSV": ImportCSV,
-    "InfluencerCollaboration": InfluencerCollaboration,
-    "InfrastructureMonitoring": InfrastructureMonitoring,
-    "Internationalization": Internationalization,
-    "InventoryManagement": InventoryManagement,
     "Invoicing": Invoicing,
     "LegalProcesses": LegalProcesses,
-    "LifetimeValuePredictor": LifetimeValuePredictor,
-    "LiveStreaming": LiveStreaming,
-    "LoadTestingFramework": LoadTestingFramework,
     "LoyaltyPrograms": LoyaltyPrograms,
-    "LoyaltyRewards": LoyaltyRewards,
     "ManualPosting": ManualPosting,
-    "Marketplace": Marketplace,
-    "MobileAnalyticsDashboard": MobileAnalyticsDashboard,
-    "MobileAppIntegration": MobileAppIntegration,
-    "MobileFirstDesign": MobileFirstDesign,
-    "MobileOptimized": MobileOptimized,
-    "MultiChannelCampaigns": MultiChannelCampaigns,
-    "MultiCurrency": MultiCurrency,
     "MultiLanguageSupport": MultiLanguageSupport,
     "MyBookmarks": MyBookmarks,
     "Notifications": Notifications,
