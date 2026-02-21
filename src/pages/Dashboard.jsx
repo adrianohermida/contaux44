@@ -10,6 +10,7 @@ import TagPerformanceWidget from '../components/dashboard/widgets/TagPerformance
 import SalesPipelineWidget from '../components/dashboard/widgets/SalesPipelineWidget';
 import LeadScoringWidget from '../components/dashboard/widgets/LeadScoringWidget';
 import RevenueForecastWidget from '../components/dashboard/widgets/RevenueForecastWidget';
+import PipelinePerformanceWidget from '../components/dashboard/widgets/PipelinePerformanceWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -66,6 +67,11 @@ export default function Dashboard() {
         <div className="md:col-span-2">
           <RevenueForecastWidget workspaceId={workspaceId} />
         </div>
+      </div>
+
+      {/* Row 6 - Pipeline Performance Analysis */}
+      <div className="grid grid-cols-1 gap-6">
+        <PipelinePerformanceWidget workspaceId={workspaceId} />
       </div>
     </div>
   );
