@@ -8,6 +8,7 @@ import ContactHeader from '../components/dashboard/contact/ContactHeader';
 import ContactFiltersBar from '../components/dashboard/contact/ContactFiltersBar';
 import ContactGrid from '../components/dashboard/contact/ContactGrid';
 import ContactModals from '../components/dashboard/contact/ContactModals';
+import ContactCreateModal from '../components/dashboard/contact/ContactCreateModal';
 import ContactBulkActions from '../components/dashboard/ContactBulkActions';
 import ContactBulkTagEditor from '../components/dashboard/ContactBulkTagEditor';
 import { usePagination } from '../components/hooks/usePagination';
@@ -27,6 +28,7 @@ export default function Contact() {
   
   // Modal state
   const [modalState, setModalState] = useState({
+    createContact: false,
     import: false,
     tagManager: false,
     tagStats: false,
@@ -118,8 +120,8 @@ export default function Contact() {
 
   // Handlers
   const handleNewContact = useCallback(() => {
-    navigate('/contact/new');
-  }, [navigate]);
+    openModal('createContact');
+  }, []);
 
   const handleViewContact = useCallback((id) => {
     if (selectedIds.length > 0) {
@@ -204,6 +206,15 @@ export default function Contact() {
           workspaceId={workspaceId}
           open={modalState.bulkTagEditor}
           onClose={() => closeModal('bulkTagEditor')}
+        />
+
+        <ContactCreateModal
+          open={modalState.createContact}
+          onClose={() => closeModal('createContact')}
+          workspaceId={workspaceId}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ['contacts', workspaceId] });
+          }}
         />
 
         <ContactModals
