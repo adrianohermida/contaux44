@@ -172,7 +172,7 @@ export default function Reports() {
                 </div>
                 <div className="bg-white rounded-lg shadow p-6">
                   <h4 className="font-semibold text-slate-900 mb-4">Tickets Abertos</h4>
-                  <p className="text-3xl font-bold text-yellow-600">{analyticsData.tickets.filter(t => t.status === 'open').length}</p>
+                  <p className="text-3xl font-bold text-amber-600">{analyticsData.tickets.filter(t => t.status === 'open').length}</p>
                 </div>
                 <div className="bg-white rounded-lg shadow p-6">
                   <h4 className="font-semibold text-slate-900 mb-4">Taxa de Resolução</h4>
