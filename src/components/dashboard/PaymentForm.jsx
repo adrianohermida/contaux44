@@ -38,9 +38,24 @@ export default function PaymentForm({ payment, onSave, onCancel, tenantId, isOpe
          setInvoices(data || []);
        } catch (error) {
          console.error('Erro ao carregar faturas:', error);
+         setInvoices([]);
        }
      })();
     }, [tenantId]);
+
+  // Subscribe to invoice updates
+  React.useEffect(() => {
+    if (!tenantId) return;
+    const unsubscribe = base44.entities.Invoice.subscribe((event) => {
+      if (event.data?.workspace_id === tenantId) {
+        (async () => {
+          const data = await base44.entities.Invoice.filter({ workspace_id: tenantId });
+          setInvoices(data || []);
+        })();
+      }
+    });
+    return unsubscribe;
+  }, [tenantId]);
 
   const paymentMethodOptions = [
     { value: 'bank_transfer', label: 'Transferência Bancária' },
@@ -66,12 +81,35 @@ export default function PaymentForm({ payment, onSave, onCancel, tenantId, isOpe
 
     if (!validateForm(formData, VALIDATION_RULES)) return;
 
+    // Validar campos obrigatórios
+    if (!formData.client_id || formData.client_id.trim() === '') {
+      alert('Por favor, selecione um cliente');
+      return;
+    }
+
+    if (!formData.invoice_id || formData.invoice_id.trim() === '') {
+      alert('Por favor, selecione uma fatura');
+      return;
+    }
+
+    if (!formData.amount || formData.amount <= 0) {
+      alert('Por favor, insira um valor maior que zero');
+      return;
+    }
+
+    const updatedFormData = {
+      ...formData,
+      workspace_id: formData.workspace_id || tenantId,
+      tenant_id: tenantId,
+      amount: parseFloat(formData.amount)
+    };
+
     await submit(
       async () => {
         if (payment?.id) {
-          await base44.entities.Payment.update(payment.id, formData);
+          await base44.entities.Payment.update(payment.id, updatedFormData);
         } else {
-          await base44.entities.Payment.create(formData);
+          await base44.entities.Payment.create(updatedFormData);
         }
       },
       {
@@ -89,14 +127,15 @@ export default function PaymentForm({ payment, onSave, onCancel, tenantId, isOpe
     <ModalWrapper isOpen={isOpen} onClose={onCancel} title={payment ? 'Editar Pagamento' : 'Novo Pagamento'} size="md">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
-          <FormField label="Fatura" type="select" name="invoice_id" value={formData.invoice_id} onChange={(v) => setFieldValue('invoice_id', v)} options={invoiceOptions} />
-          <FormField label="Nº Pagamento" name="payment_number" value={formData.payment_number} onChange={handleChange} error={errors.payment_number} required />
-          <FormField label="Valor" type="number" name="amount" value={formData.amount} onChange={handleChange} error={errors.amount} required />
-          <FormField label="Data do Pagamento" type="date" name="payment_date" value={formData.payment_date} onChange={handleChange} required />
-          <FormField label="Método" type="select" name="payment_method" value={formData.payment_method} onChange={(v) => setFieldValue('payment_method', v)} options={paymentMethodOptions} />
-          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
-          <FormField label="ID da Transação" name="transaction_id" value={formData.transaction_id} onChange={handleChange} />
-        </div>
+            <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required />
+            <FormField label="Fatura" type="select" name="invoice_id" value={formData.invoice_id} onChange={(v) => setFieldValue('invoice_id', v)} options={invoiceOptions} required />
+            <FormField label="Nº Pagamento" name="payment_number" value={formData.payment_number} onChange={handleChange} error={errors.payment_number} required />
+            <FormField label="Valor" type="number" step="0.01" name="amount" value={formData.amount} onChange={handleChange} error={errors.amount} required />
+            <FormField label="Data do Pagamento" type="date" name="payment_date" value={formData.payment_date} onChange={handleChange} required />
+            <FormField label="Método" type="select" name="payment_method" value={formData.payment_method} onChange={(v) => setFieldValue('payment_method', v)} options={paymentMethodOptions} />
+            <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
+            <FormField label="ID da Transação" name="transaction_id" value={formData.transaction_id} onChange={handleChange} />
+          </div>
         <FormField label="Notas" type="textarea" name="notes" value={formData.notes} onChange={handleChange} rows={2} />
         <FormActions onCancel={onCancel} onSubmit={handleSubmit} loading={loading} submitLabel={payment ? 'Atualizar' : 'Criar'} isDirty={isDirty} />
       </form>

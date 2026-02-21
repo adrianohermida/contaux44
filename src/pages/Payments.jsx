@@ -8,10 +8,18 @@ import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAu
 import { base44 } from '@/api/base44Client';
 
 export default function Payments() {
-  const { workspaceId } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingPayment, setEditingPayment] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
 
   const handleSave = () => {
     setShowForm(false);
@@ -28,15 +36,19 @@ export default function Payments() {
     try {
       const payments = await base44.entities.Payment.filter({ tenant_id: workspaceId });
       
-      // Preparar dados CSV
-      const headers = ['Data', 'Cliente', 'Valor', 'Método', 'Status', 'Referência'];
+      if (!payments || payments.length === 0) {
+        alert('Nenhum pagamento para exportar');
+        return;
+      }
+
+      const headers = ['Data', 'Nº Pagamento', 'Valor', 'Método', 'Status', 'ID Transação'];
       const rows = payments.map(p => [
         new Date(p.payment_date).toLocaleDateString('pt-BR'),
-        p.client_name || '-',
+        p.payment_number || '-',
         `R$ ${(p.amount || 0).toFixed(2)}`,
         p.payment_method || '-',
         p.status || '-',
-        p.reference_number || '-'
+        p.transaction_id || '-'
       ]);
       
       const csvContent = [
@@ -44,7 +56,6 @@ export default function Payments() {
         ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
       ].join('\n');
       
-      // Download
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -52,7 +63,7 @@ export default function Payments() {
       link.click();
     } catch (error) {
       console.error('Erro ao exportar:', error);
-      alert('Erro ao exportar pagamentos');
+      alert('Erro ao exportar pagamentos. Tente novamente.');
     }
   };
 

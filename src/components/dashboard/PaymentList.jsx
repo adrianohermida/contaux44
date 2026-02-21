@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, AlertCircle } from 'lucide-react';
 
 const PaymentRow = React.memo(({ payment, onEdit, onDelete, getStatusColor, getMethodLabel }) => (
   <tr className="hover:bg-slate-50">
@@ -30,28 +31,29 @@ const PaymentRow = React.memo(({ payment, onEdit, onDelete, getStatusColor, getM
 PaymentRow.displayName = 'PaymentRow';
 
 export default function PaymentList({ tenantId, onEdit, onRefresh }) {
-  const [payments, setPayments] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadPayments = useCallback(async () => {
-    try {
-      const data = await base44.entities.Payment.filter({ tenant_id: tenantId });
-      setPayments(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadPayments();
-  }, [loadPayments, onRefresh]);
+  const { data: payments = [], isLoading: loading, error, refetch } = useQuery({
+    queryKey: ['Payment-list', tenantId, onRefresh],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      return base44.entities.Payment.filter({ tenant_id: tenantId });
+    },
+    enabled: !!tenantId,
+    staleTime: 3 * 60 * 1000,
+    retry: 2,
+    retryDelay: 1000
+  });
 
   const handleDelete = useCallback(async (id) => {
-    if (confirm('Tem certeza?')) {
-      await base44.entities.Payment.delete(id);
-      loadPayments();
+    if (confirm('Tem certeza? Esta ação não pode ser desfeita.')) {
+      try {
+        await base44.entities.Payment.delete(id);
+        refetch();
+      } catch (err) {
+        console.error('Erro ao deletar:', err);
+        alert('Erro ao deletar pagamento. Tente novamente.');
+      }
     }
-  }, [loadPayments]);
+  }, [refetch]);
 
   const getStatusColor = useCallback((status) => {
     const colors = { pending: 'bg-yellow-100 text-yellow-800', confirmed: 'bg-green-100 text-green-800', failed: 'bg-red-100 text-red-800', reversed: 'bg-slate-100 text-slate-800' };
@@ -62,6 +64,18 @@ export default function PaymentList({ tenantId, onEdit, onRefresh }) {
     const labels = { bank_transfer: 'Transferência', credit_card: 'Crédito', debit_card: 'Débito', pix: 'PIX', check: 'Cheque', cash: 'Dinheiro' };
     return labels[method] || method;
   }, []);
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
+        <p className="text-red-600 mb-4">Erro ao carregar pagamentos</p>
+        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+          Tentar novamente
+        </button>
+      </div>
+    );
+  }
 
   if (loading) return <div className="text-center py-8">Carregando...</div>;
 
