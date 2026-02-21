@@ -187,3 +187,5 @@ function ContactInfoDisplay({ formData, contact, workspaceId, contactId }) {
     </div>
   );
 }
+
+export { ContactInfoDisplay };
