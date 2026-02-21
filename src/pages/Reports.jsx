@@ -11,7 +11,9 @@ import RevenueChart from '@/components/dashboard/RevenueChart';
 import PaymentStatusChart from '@/components/dashboard/PaymentStatusChart';
 import TicketAnalyticsChart from '@/components/dashboard/TicketAnalyticsChart';
 import ComparisonCard from '@/components/dashboard/ComparisonCard';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw } from 'lucide-react';
+import PredictiveAnalyticsDashboard from '@/components/dashboard/analytics/PredictiveAnalyticsDashboard';
+import ScheduledReportsManager from '@/components/dashboard/analytics/ScheduledReportsManager';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
