@@ -37,9 +37,13 @@ export default function SettingsPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const { toast } = await import('sonner');
       await base44.auth.updateMe(formData);
       setUser(formData);
-      alert('Configurações salvas com sucesso!');
+      toast.success('Configurações salvas com sucesso');
+    } catch (error) {
+      const { toast } = await import('sonner');
+      toast.error('Erro ao salvar: ' + error.message);
     } finally {
       setSaving(false);
     }
@@ -53,15 +57,16 @@ export default function SettingsPage() {
 
   const handleDeleteAccount = async () => {
     if (!confirm('Tem certeza que deseja deletar sua conta? Esta ação é irreversível.')) return;
-    if (!confirm('Digite "DELETAR" para confirmar a exclusão permanente de sua conta')) return;
+    if (!confirm('Esta ação não pode ser desfeita. Tem certeza?')) return;
     
     try {
-      // Call backend function to delete user account
+      const { toast } = await import('sonner');
       await base44.functions.invoke('deleteUserAccount', { userId: user.id });
-      alert('Conta deletada com sucesso.');
+      toast.success('Conta deletada com sucesso');
       base44.auth.logout();
     } catch (error) {
-      alert('Erro ao deletar conta: ' + error.message);
+      const { toast } = await import('sonner');
+      toast.error('Erro ao deletar conta: ' + error.message);
     }
   };
 
