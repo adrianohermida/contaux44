@@ -1,131 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Loader2, Save, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2 } from 'lucide-react';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
-import ContactFormField from '../components/dashboard/ContactFormField';
-import ContactDeleteButton from '../components/dashboard/ContactDeleteButton';
-import ContactMetadata from '../components/dashboard/ContactMetadata';
-import ContactCEPLookup from '../components/dashboard/ContactCEPLookup';
-import ContactTagSelector from '../components/dashboard/ContactTagSelector';
-import ContactNotesList from '../components/dashboard/ContactNotesList';
-import ContactActivityTimeline from '../components/dashboard/ContactActivityTimeline';
-import ContactRelationshipManager from '../components/dashboard/ContactRelationshipManager';
-import DuplicateDetector from '../components/dashboard/DuplicateDetector';
-import ContactAttachments from '../components/dashboard/ContactAttachments';
-import ContactCustomFields from '../components/dashboard/ContactCustomFields';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '../components/hooks/useToast';
 import { ToastContainer } from '../components/ui/toast-notification';
 import { useDebounce } from '../components/hooks/useDebounce';
-import { sanitizeInput, hasSecurityRisk } from '../components/security/InputValidator';
+import { sanitizeInput } from '../components/security/InputValidator';
 import { useCSRFToken } from '../components/security/CSRFProtection';
-import {
-  validateContactForm,
-  validateEmailUniqueness,
-  formatCPF,
-  formatCNPJ,
-  formatPhone,
-  formatCEP,
-} from '../components/dashboard/ContactFormValidation';
-import LazyTabContent from '../components/dashboard/LazyTabContent';
+import { validateContactForm, validateEmailUniqueness } from '../components/dashboard/ContactFormValidation';
 import ContactRouteValidator from '../components/dashboard/ContactRouteValidator';
-
-function ContactInfoDisplay({ formData, contact, workspaceId, contactId }) {
-  return (
-    <div className="space-y-6">
-      {/* Basic Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Nome da Empresa</label>
-          <p className="text-slate-700 dark:text-slate-300">{formData.company_name}</p>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Email</label>
-          <p className="text-slate-700 dark:text-slate-300">{formData.email}</p>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Telefone</label>
-          <p className="text-slate-700 dark:text-slate-300">{formData.phone || '—'}</p>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Tipo</label>
-          <p className="text-slate-700 dark:text-slate-300">{formData.client_type === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}</p>
-        </div>
-      </div>
-
-      {/* Document Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
-            {formData.client_type === 'pf' ? 'CPF' : 'CNPJ'}
-          </label>
-          <p className="text-slate-700 dark:text-slate-300">
-            {formData.client_type === 'pf' ? (formData.cpf || '—') : (formData.cnpj || '—')}
-          </p>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Status</label>
-          <p className="text-slate-700 dark:text-slate-300">
-            {formData.status === 'active' ? 'Ativo' : 'Inativo'}
-          </p>
-        </div>
-      </div>
-
-      {/* Address */}
-      {(formData.endereco || formData.cidade) && (
-        <div>
-          <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Endereço</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {formData.cep && (
-              <div>
-                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">CEP</label>
-                <p className="text-slate-700 dark:text-slate-300">{formData.cep}</p>
-              </div>
-            )}
-            {formData.endereco && (
-              <div>
-                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Rua</label>
-                <p className="text-slate-700 dark:text-slate-300">{formData.endereco}</p>
-              </div>
-            )}
-            {formData.numero && (
-              <div>
-                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Número</label>
-                <p className="text-slate-700 dark:text-slate-300">{formData.numero}</p>
-              </div>
-            )}
-            {formData.complemento && (
-              <div>
-                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Complemento</label>
-                <p className="text-slate-700 dark:text-slate-300">{formData.complemento}</p>
-              </div>
-            )}
-            {formData.bairro && (
-              <div>
-                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Bairro</label>
-                <p className="text-slate-700 dark:text-slate-300">{formData.bairro}</p>
-              </div>
-            )}
-            {formData.cidade && (
-              <div>
-                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Cidade</label>
-                <p className="text-slate-700 dark:text-slate-300">{formData.cidade} - {formData.uf}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      <ContactMetadata contact={contact} />
-    </div>
-  );
-}
+import ContactDetailsHeader from '../components/dashboard/contactdetails/ContactDetailsHeader';
+import ContactDetailsTabs from '../components/dashboard/contactdetails/ContactDetailsTabs';
+import ContactEditForm from '../components/dashboard/contactdetails/ContactEditForm';
+import { useContactForm } from '../components/dashboard/contactdetails/useContactForm';
 
 export default function ContactDetails() {
    const { contactId } = useParams();
