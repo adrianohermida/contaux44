@@ -86,31 +86,12 @@ import Portfolio from './pages/Portfolio';
 import Pricing from './pages/Pricing';
 import QuoteRequest from './pages/QuoteRequest';
 import Quotes from './pages/Quotes';
-import RBACManagement from './pages/RBACManagement';
 import RLSDebugger from './pages/RLSDebugger';
-import RealTimeCollaboration from './pages/RealTimeCollaboration';
-import RealtimeMonitoring from './pages/RealtimeMonitoring';
-import RealtimeSyncDashboard from './pages/RealtimeSyncDashboard';
-import RecommendationEngine from './pages/RecommendationEngine';
-import ReferralProgram from './pages/ReferralProgram';
-import RegionalCustomization from './pages/RegionalCustomization';
 import Reports from './pages/Reports';
-import RequestResponseCaching from './pages/RequestResponseCaching';
-import RiskAssessment from './pages/RiskAssessment';
-import SDKGenerator from './pages/SDKGenerator';
-import SEOOptimization from './pages/SEOOptimization';
-import SMSMarketingIntegration from './pages/SMSMarketingIntegration';
 import Sales from './pages/Sales';
-import SearchAnalytics from './pages/SearchAnalytics';
-import SecurityAuditLogs from './pages/SecurityAuditLogs';
 import SecurityCenter from './pages/SecurityCenter';
-import ServerSentEvents from './pages/ServerSentEvents';
 import Services from './pages/Services';
-import ServicesPage from './pages/ServicesPage';
-import SessionManagement from './pages/SessionManagement';
 import SettingsPage from './pages/SettingsPage';
-import SmartNotificationRules from './pages/SmartNotificationRules';
-import SocialMediaIntegration from './pages/SocialMediaIntegration';
 import Sprint10Completion from './pages/Sprint10Completion';
 import Sprint10Tracker from './pages/Sprint10Tracker';
 import Sprint10Validation from './pages/Sprint10Validation';
@@ -140,7 +121,6 @@ import Sprint8Tracker from './pages/Sprint8Tracker';
 import Sprint9Completion from './pages/Sprint9Completion';
 import Sprint9Tracker from './pages/Sprint9Tracker';
 import SprintReview from './pages/SprintReview';
-import SubscriptionManagement from './pages/SubscriptionManagement';
 import SupplyChain from './pages/SupplyChain';
 import SustainabilityTracking from './pages/SustainabilityTracking';
 import TaxCalculation from './pages/TaxCalculation';
@@ -200,31 +180,12 @@ export const PAGES = {
     "Pricing": Pricing,
     "QuoteRequest": QuoteRequest,
     "Quotes": Quotes,
-    "RBACManagement": RBACManagement,
     "RLSDebugger": RLSDebugger,
-    "RealTimeCollaboration": RealTimeCollaboration,
-    "RealtimeMonitoring": RealtimeMonitoring,
-    "RealtimeSyncDashboard": RealtimeSyncDashboard,
-    "RecommendationEngine": RecommendationEngine,
-    "ReferralProgram": ReferralProgram,
-    "RegionalCustomization": RegionalCustomization,
     "Reports": Reports,
-    "RequestResponseCaching": RequestResponseCaching,
-    "RiskAssessment": RiskAssessment,
-    "SDKGenerator": SDKGenerator,
-    "SEOOptimization": SEOOptimization,
-    "SMSMarketingIntegration": SMSMarketingIntegration,
     "Sales": Sales,
-    "SearchAnalytics": SearchAnalytics,
-    "SecurityAuditLogs": SecurityAuditLogs,
     "SecurityCenter": SecurityCenter,
-    "ServerSentEvents": ServerSentEvents,
     "Services": Services,
-    "ServicesPage": ServicesPage,
-    "SessionManagement": SessionManagement,
     "SettingsPage": SettingsPage,
-    "SmartNotificationRules": SmartNotificationRules,
-    "SocialMediaIntegration": SocialMediaIntegration,
     "Sprint10Completion": Sprint10Completion,
     "Sprint10Tracker": Sprint10Tracker,
     "Sprint10Validation": Sprint10Validation,
@@ -254,7 +215,6 @@ export const PAGES = {
     "Sprint9Completion": Sprint9Completion,
     "Sprint9Tracker": Sprint9Tracker,
     "SprintReview": SprintReview,
-    "SubscriptionManagement": SubscriptionManagement,
     "SupplyChain": SupplyChain,
     "SustainabilityTracking": SustainabilityTracking,
     "TaxCalculation": TaxCalculation,
