@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, Upload, Download } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -10,15 +10,22 @@ import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import ContactListFilters from '../components/dashboard/ContactListFilters';
 import ContactExportButton from '../components/dashboard/ContactExportButton';
 import ContactCard from '../components/dashboard/ContactCard';
+import ContactBulkActions from '../components/dashboard/ContactBulkActions';
+import ContactImportCSV from '../components/dashboard/ContactImportCSV';
+import ContactSorting from '../components/dashboard/ContactSorting';
 import { usePagination } from '../components/hooks/usePagination';
 import { Pagination } from '../components/ui/pagination';
 import { useDebounce } from '../components/hooks/useDebounce';
 
 export default function Contact() {
   const navigate = useNavigate();
-  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, user, loading: authLoading } = useMultitenantAuthOptimized('internal');
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({ status: 'all', type: 'all' });
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showImport, setShowImport] = useState(false);
+  const [sortBy, setSortBy] = useState('created_date');
+  const [sortOrder, setSortOrder] = useState('desc');
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   // Build backend query
@@ -39,14 +46,28 @@ export default function Contact() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Client-side search only (backend doesn't support LIKE queries)
-  const filteredContacts = useMemo(() => {
-    if (!debouncedSearch) return contacts;
-    return contacts.filter(c => 
-      c.company_name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
-      c.email.toLowerCase().includes(debouncedSearch.toLowerCase())
-    );
-  }, [contacts, debouncedSearch]);
+  // Client-side search and sort
+  const filteredAndSortedContacts = useMemo(() => {
+    let result = contacts;
+    
+    // Search
+    if (debouncedSearch) {
+      result = result.filter(c => 
+        c.company_name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+        c.email.toLowerCase().includes(debouncedSearch.toLowerCase())
+      );
+    }
+    
+    // Sort
+    result = [...result].sort((a, b) => {
+      const aVal = a[sortBy] || '';
+      const bVal = b[sortBy] || '';
+      const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+    
+    return result;
+  }, [contacts, debouncedSearch, sortBy, sortOrder]);
 
   const { 
     paginatedItems, 
@@ -55,7 +76,7 @@ export default function Contact() {
     goToPage, 
     hasNext, 
     hasPrev 
-  } = usePagination(filteredContacts, 20);
+  } = usePagination(filteredAndSortedContacts, 20);
 
   const handleNewContact = useCallback(() => {
     navigate('/contact/new');
@@ -118,17 +139,40 @@ export default function Contact() {
                 <p className="text-slate-600 dark:text-slate-400 mb-4">
                   {contacts.length === 0 ? 'Nenhum contato encontrado' : 'Nenhum contato corresponde aos filtros'}
                 </p>
-                <Button onClick={handleNewContact} variant="outline">
-                  {contacts.length === 0 ? 'Criar primeiro contato' : 'Limpar filtros'}
-                </Button>
+                <div className="flex gap-2 justify-center">
+                  {contacts.length === 0 && (
+                    <Button onClick={() => setShowImport(true)} variant="outline" className="gap-2">
+                      <Upload className="w-4 h-4" />
+                      Importar CSV
+                    </Button>
+                  )}
+                  <Button onClick={handleNewContact} variant="outline">
+                    {contacts.length === 0 ? 'Criar primeiro contato' : 'Limpar filtros'}
+                  </Button>
+                </div>
               </div>
             ) : (
               paginatedItems.map(contact => (
-                <ContactCard
+                <div
                   key={contact.id}
-                  contact={contact}
+                  className="relative"
                   onClick={() => handleViewContact(contact.id)}
-                />
+                >
+                  {selectedIds.length > 0 && (
+                    <div className="absolute top-2 right-2 z-10">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(contact.id)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          toggleSelection(contact.id);
+                        }}
+                        className="w-5 h-5 rounded border-slate-300"
+                      />
+                    </div>
+                  )}
+                  <ContactCard contact={contact} onClick={() => {}} />
+                </div>
               ))
             )}
           </div>
@@ -142,6 +186,13 @@ export default function Contact() {
             hasPrev={hasPrev}
           />
         </div>
+
+        {/* Bulk Actions */}
+        <ContactBulkActions
+          selectedIds={selectedIds}
+          onClearSelection={() => setSelectedIds([])}
+          userRole={user?.role}
+        />
       </div>
     </ProtectedInternalRoute>
   );
