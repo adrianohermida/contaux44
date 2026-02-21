@@ -68,8 +68,8 @@ export default function ContactActivityTimeline({ contactId, workspaceId }) {
   return (
     <div className="space-y-4">
       <div className="flex gap-2 flex-wrap">
-        {activityTypes.map((type) => (
-          <Button
+         {activityTypeMap.map((type) => (
+           <Button
             key={type}
             onClick={() => setFilterType(type)}
             variant={filterType === type ? 'default' : 'outline'}
