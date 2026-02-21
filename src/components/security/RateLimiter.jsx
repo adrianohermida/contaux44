@@ -1,169 +1,169 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { AlertCircle, Clock } from 'lucide-react';
+import React from 'react';
+
+/**
+ * RateLimiter - Throttling and rate limiting para API calls
+ * Previne abuso e DDoS
+ */
 
 class RateLimitManager {
-  constructor(maxRequests = 60, timeWindowMs = 60000) {
+  constructor(maxRequests = 10, windowMs = 60000) {
     this.maxRequests = maxRequests;
-    this.timeWindowMs = timeWindowMs;
-    this.requestsKey = 'rate_limit_requests';
-    this.blockedKey = 'rate_limit_blocked';
+    this.windowMs = windowMs;
+    this.requests = [];
   }
 
-  getRequests() {
-    try {
-      const data = localStorage.getItem(this.requestsKey);
-      return data ? JSON.parse(data) : [];
-    } catch {
-      return [];
-    }
-  }
-
-  saveRequests(requests) {
-    localStorage.setItem(this.requestsKey, JSON.stringify(requests));
-  }
-
-  isBlocked() {
-    try {
-      const blocked = localStorage.getItem(this.blockedKey);
-      if (!blocked) return false;
-      
-      const { until } = JSON.parse(blocked);
-      if (Date.now() < until) {
-        return { blocked: true, remainingMs: until - Date.now() };
-      }
-      
-      localStorage.removeItem(this.blockedKey);
-      return false;
-    } catch {
-      return false;
-    }
-  }
-
-  canMakeRequest() {
-    const blocked = this.isBlocked();
-    if (blocked) return blocked;
-
+  /**
+   * Verifica se requisição está permitida
+   */
+  isAllowed() {
     const now = Date.now();
-    const requests = this.getRequests();
-    
-    // Remove old requests outside time window
-    const recentRequests = requests.filter(t => now - t < this.timeWindowMs);
-    
-    if (recentRequests.length >= this.maxRequests) {
-      // Block for exponential backoff
-      const blockDuration = Math.min(60000, 5000 * Math.pow(1.5, recentRequests.length - this.maxRequests));
-      localStorage.setItem(this.blockedKey, JSON.stringify({
-        until: now + blockDuration
-      }));
-      
-      return { blocked: true, remainingMs: blockDuration };
+    const windowStart = now - this.windowMs;
+
+    // Remove requisições fora da janela
+    this.requests = this.requests.filter(time => time > windowStart);
+
+    if (this.requests.length < this.maxRequests) {
+      this.requests.push(now);
+      return true;
     }
 
-    return { blocked: false, requestsUsed: recentRequests.length, remaining: this.maxRequests - recentRequests.length };
+    return false;
   }
 
-  recordRequest() {
-    const requests = this.getRequests();
-    requests.push(Date.now());
-    this.saveRequests(requests);
-  }
-
-  getRemainingRequests() {
+  /**
+   * Retorna quantos requests sobraram
+   */
+  getRemaining() {
     const now = Date.now();
-    const requests = this.getRequests();
-    const recentRequests = requests.filter(t => now - t < this.timeWindowMs);
-    return this.maxRequests - recentRequests.length;
+    const windowStart = now - this.windowMs;
+    const validRequests = this.requests.filter(time => time > windowStart);
+    return Math.max(0, this.maxRequests - validRequests.length);
   }
 
+  /**
+   * Retorna tempo até reset
+   */
+  getResetTime() {
+    if (this.requests.length === 0) return 0;
+    const oldestRequest = this.requests[0];
+    const resetTime = oldestRequest + this.windowMs;
+    return Math.max(0, resetTime - Date.now());
+  }
+
+  /**
+   * Reset manual
+   */
   reset() {
-    localStorage.removeItem(this.requestsKey);
-    localStorage.removeItem(this.blockedKey);
+    this.requests = [];
   }
 }
 
-export const rateLimiter = new RateLimitManager();
+// Instâncias por endpoint
+const limitersByEndpoint = new Map();
 
-const RateLimiterComponent = ({ maxRequests = 60, timeWindowMs = 60000, children }) => {
-  const [status, setStatus] = useState({ blocked: false, remaining: maxRequests });
-  const [showAlert, setShowAlert] = useState(false);
+export function getRateLimiter(endpoint, maxRequests = 10, windowMs = 60000) {
+  if (!limitersByEndpoint.has(endpoint)) {
+    limitersByEndpoint.set(endpoint, new RateLimitManager(maxRequests, windowMs));
+  }
+  return limitersByEndpoint.get(endpoint);
+}
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const status = rateLimiter.canMakeRequest();
-      setStatus(status);
-    }, 1000);
+/**
+ * Hook para rate limiting
+ */
+export function useRateLimit(endpoint, maxRequests = 10, windowMs = 60000) {
+  const [isLimited, setIsLimited] = React.useState(false);
+  const [remaining, setRemaining] = React.useState(maxRequests);
+  const [resetTime, setResetTime] = React.useState(0);
 
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleRequest = useCallback(() => {
-    const status = rateLimiter.canMakeRequest();
-    
-    if (status.blocked) {
-      setShowAlert(true);
-      setStatus(status);
-      setTimeout(() => setShowAlert(false), 3000);
-      return false;
-    }
-
-    rateLimiter.recordRequest();
-    setStatus({
-      blocked: false,
-      remaining: status.remaining - 1
-    });
-    return true;
-  }, []);
-
-  const remainingPercentage = useMemo(() => {
-    return Math.round((status.remaining / maxRequests) * 100);
-  }, [status.remaining, maxRequests]);
-
-  return (
-    <div>
-      {showAlert && status.blocked && (
-        <div className="fixed bottom-4 right-4 bg-amber-50 border border-amber-200 rounded-lg p-4 shadow-lg z-50">
-          <div className="flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-600" />
-            <div>
-              <p className="font-semibold text-amber-900">Limite de requisições atingido</p>
-              <p className="text-sm text-amber-700">Aguarde {Math.ceil(status.remainingMs / 1000)}s</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {children && typeof children === 'function' ? children(handleRequest, status) : children}
-    </div>
+  const limiter = React.useMemo(
+    () => getRateLimiter(endpoint, maxRequests, windowMs),
+    [endpoint, maxRequests, windowMs]
   );
-};
 
-export const useRateLimit = (maxRequests = 60, timeWindowMs = 60000) => {
-  const [status, setStatus] = useState({ blocked: false, remaining: maxRequests });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const limitStatus = rateLimiter.canMakeRequest();
-      setStatus(limitStatus);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const canMakeRequest = useCallback(() => {
-    const limitStatus = rateLimiter.canMakeRequest();
-    if (!limitStatus.blocked) {
-      rateLimiter.recordRequest();
-      return true;
-    }
-    return false;
-  }, []);
+  const checkLimit = React.useCallback(() => {
+    const allowed = limiter.isAllowed();
+    setIsLimited(!allowed);
+    setRemaining(limiter.getRemaining());
+    setResetTime(limiter.getResetTime());
+    return allowed;
+  }, [limiter]);
 
   return {
-    canMakeRequest,
-    isBlocked: status.blocked,
-    remaining: status.remaining || maxRequests,
-    remainingMs: status.remainingMs
+    isLimited,
+    remaining,
+    resetTime,
+    checkLimit,
+    reset: () => limiter.reset(),
   };
-};
+}
 
-export default RateLimiterComponent;
+/**
+ * HOC para proteger funções com rate limiting
+ */
+export function withRateLimit(fn, endpoint, maxRequests = 10, windowMs = 60000) {
+  const limiter = getRateLimiter(endpoint, maxRequests, windowMs);
+
+  return async function limitedFn(...args) {
+    if (!limiter.isAllowed()) {
+      const resetTime = limiter.getResetTime();
+      const error = new Error(`Rate limit exceeded. Reset in ${Math.ceil(resetTime / 1000)}s`);
+      error.code = 'RATE_LIMIT_EXCEEDED';
+      error.resetTime = resetTime;
+      throw error;
+    }
+
+    return fn(...args);
+  };
+}
+
+/**
+ * Component para mostrar rate limit status
+ */
+export const RateLimitIndicator = React.memo(function RateLimitIndicator({
+  endpoint,
+  maxRequests = 10,
+}) {
+  const { isLimited, remaining, resetTime } = useRateLimit(endpoint, maxRequests);
+
+  if (!isLimited) {
+    return null; // Não mostra se não está limitado
+  }
+
+  const seconds = Math.ceil(resetTime / 1000);
+
+  return (
+    <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-700 dark:text-amber-300">
+      ⚠️ Muitas requisições. Aguarde {seconds}s para tentar novamente.
+    </div>
+  );
+});
+
+RateLimitIndicator.displayName = 'RateLimitIndicator';
+
+/**
+ * Debounce helper (delay entre chamadas)
+ */
+export function debounce(fn, delay) {
+  let timeoutId;
+
+  return function debouncedFn(...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  };
+}
+
+/**
+ * Throttle helper (máximo de chamadas por período)
+ */
+export function throttle(fn, limit) {
+  let inThrottle;
+
+  return function throttledFn(...args) {
+    if (!inThrottle) {
+      fn(...args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+}

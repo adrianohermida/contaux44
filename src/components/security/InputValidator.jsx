@@ -1,119 +1,161 @@
-import React, { useMemo } from 'react';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import React from 'react';
 
-const InputValidator = ({ value, type = 'text', fieldName = '', showFeedback = true }) => {
-  const validation = useMemo(() => {
-    const validators = {
-      email: {
-        test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-        error: 'Email inválido',
-        sanitize: (v) => v.trim().toLowerCase()
-      },
-      url: {
-        test: (v) => {
-          try {
-            new URL(v);
-            return true;
-          } catch {
-            return false;
-          }
-        },
-        error: 'URL inválida',
-        sanitize: (v) => v.trim()
-      },
-      number: {
-        test: (v) => !isNaN(v) && v.trim() !== '',
-        error: 'Deve ser um número',
-        sanitize: (v) => v.replace(/[^\d.-]/g, '')
-      },
-      phone: {
-        test: (v) => /^\d{10,11}$/.test(v.replace(/\D/g, '')),
-        error: 'Telefone inválido (10-11 dígitos)',
-        sanitize: (v) => v.replace(/\D/g, '')
-      },
-      text: {
-        test: (v) => v.trim().length > 0 && v.length <= 500,
-        error: 'Texto inválido (máx 500 caracteres)',
-        sanitize: (v) => v.trim().substring(0, 500)
-      }
-    };
+/**
+ * InputValidator - Protege contra XSS, SQL injection e outros ataques
+ * Validações de segurança em tempo real
+ */
 
-    const validator = validators[type] || validators.text;
-    const isValid = value ? validator.test(value) : true;
-    const sanitized = value ? validator.sanitize(value) : '';
+// XSS Attack patterns
+const XSS_PATTERNS = [
+  /<script[^>]*>[\s\S]*?<\/script>/gi,
+  /on\w+\s*=/gi, // onload=, onclick=, etc
+  /javascript:/gi,
+  /data:text\/html/gi,
+  /<iframe/gi,
+  /<embed/gi,
+];
 
-    // XSS Prevention
-    const xssTest = /<[^>]*>|javascript:|on\w+\s*=/i.test(value);
-    const isSafe = !xssTest;
+// SQL Injection patterns
+const SQL_PATTERNS = [
+  /(\b(UNION|SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|EXECUTE)\b)/gi,
+  /('|"|;|--|\bOR\b|\bAND\b)/gi,
+];
 
-    return {
-      isValid,
-      sanitized,
-      error: !isValid ? validator.error : null,
-      isSafe,
-      xssWarning: !isSafe ? 'Conteúdo potencialmente perigoso detectado' : null
-    };
-  }, [value, type]);
+/**
+ * Sanitiza string removendo caracteres perigosos
+ */
+export function sanitizeInput(input, type = 'text') {
+  if (!input) return '';
 
-  if (!showFeedback) return null;
+  let sanitized = String(input).trim();
 
-  if (!value) return null;
+  // XSS Prevention
+  XSS_PATTERNS.forEach(pattern => {
+    sanitized = sanitized.replace(pattern, '');
+  });
+
+  // Type-specific sanitization
+  switch (type) {
+    case 'email':
+      // Apenas caracteres válidos em email
+      sanitized = sanitized.replace(/[^a-zA-Z0-9.@_-]/g, '');
+      break;
+    case 'phone':
+      // Apenas números, +, -, parênteses
+      sanitized = sanitized.replace(/[^0-9+\-()]/g, '');
+      break;
+    case 'url':
+      // Remove espaços e caracteres inválidos
+      sanitized = sanitized.replace(/\s/g, '');
+      break;
+    case 'number':
+      // Apenas números
+      sanitized = sanitized.replace(/[^0-9.-]/g, '');
+      break;
+  }
+
+  return sanitized;
+}
+
+/**
+ * Valida se input contém caracteres suspeitos
+ */
+export function hasSecurityRisk(input) {
+  if (!input) return false;
+
+  const str = String(input).toLowerCase();
+
+  // Check XSS
+  for (const pattern of XSS_PATTERNS) {
+    if (pattern.test(str)) {
+      return true;
+    }
+  }
+
+  // Check SQL injection
+  for (const pattern of SQL_PATTERNS) {
+    if (pattern.test(str)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Valida email format
+ */
+export function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/**
+ * Valida URL format
+ */
+export function isValidURL(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Hook para validação de input em tempo real
+ */
+export function useSecureInput(initialValue = '') {
+  const [value, setValue] = React.useState(initialValue);
+  const [risk, setRisk] = React.useState(null);
+
+  const handleChange = (newValue, type = 'text') => {
+    // Check for security risks
+    if (hasSecurityRisk(newValue)) {
+      setRisk('Entrada contém caracteres suspeitos');
+      return;
+    }
+
+    // Sanitize
+    const sanitized = sanitizeInput(newValue, type);
+    setValue(sanitized);
+    setRisk(null);
+  };
+
+  return { value, setValue: handleChange, risk, hasRisk: !!risk };
+}
+
+/**
+ * Component para input seguro
+ */
+export const SecureInput = React.memo(function SecureInput({
+  value,
+  onChange,
+  onSecurityRisk,
+  type = 'text',
+  ...props
+}) {
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+
+    if (hasSecurityRisk(newValue)) {
+      onSecurityRisk?.(true);
+      return;
+    }
+
+    const sanitized = sanitizeInput(newValue, type);
+    onSecurityRisk?.(false);
+    onChange?.({ target: { ...e.target, value: sanitized } });
+  };
 
   return (
-    <div className={`flex items-center gap-2 text-sm mt-1 ${
-      validation.isSafe && validation.isValid
-        ? 'text-emerald-600'
-        : 'text-amber-600'
-    }`}>
-      {validation.isSafe && validation.isValid ? (
-        <>
-          <CheckCircle2 className="w-4 h-4" />
-          <span>Validado</span>
-        </>
-      ) : (
-        <>
-          <AlertCircle className="w-4 h-4" />
-          <span>{validation.xssWarning || validation.error}</span>
-        </>
-      )}
-    </div>
+    <input
+      {...props}
+      value={value}
+      onChange={handleChange}
+      className="w-full px-3 py-2 border border-slate-300 rounded-md disabled:opacity-60"
+    />
   );
-};
+});
 
-export const sanitizeInput = (value, type = 'text') => {
-  const validators = {
-    email: (v) => v.trim().toLowerCase(),
-    url: (v) => v.trim(),
-    number: (v) => v.replace(/[^\d.-]/g, ''),
-    phone: (v) => v.replace(/\D/g, ''),
-    text: (v) => v.trim().substring(0, 500)
-  };
-  
-  const sanitizer = validators[type] || validators.text;
-  const sanitized = sanitizer(value);
-  
-  // Remove potential XSS
-  return sanitized.replace(/<[^>]*>|javascript:|on\w+\s*=/gi, '');
-};
-
-export const validateInput = (value, type = 'text') => {
-  const validators = {
-    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-    url: (v) => {
-      try {
-        new URL(v);
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    number: (v) => !isNaN(v) && v.trim() !== '',
-    phone: (v) => /^\d{10,11}$/.test(v.replace(/\D/g, '')),
-    text: (v) => v.trim().length > 0 && v.length <= 500
-  };
-  
-  const validator = validators[type] || validators.text;
-  return validator(value);
-};
-
-export default InputValidator;
+SecureInput.displayName = 'SecureInput';
