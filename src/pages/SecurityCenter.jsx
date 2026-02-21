@@ -288,6 +288,69 @@ export default function SecurityCenter() {
             </div>
           </div>
         </TabsContent>
+
+        {/* Audit Logs */}
+        <TabsContent value="logs" className="mt-6 space-y-6">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-blue-600" />
+              Logs de Auditoria
+            </h3>
+
+            {logsLoading ? (
+              <p className="text-center text-slate-500 py-8">Carregando logs...</p>
+            ) : auditLogs.length === 0 ? (
+              <p className="text-center text-slate-500 py-8">Nenhum log de auditoria</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="border-b bg-slate-50">
+                    <tr>
+                      <th className="text-left py-3 px-4">Data</th>
+                      <th className="text-left py-3 px-4">Ação</th>
+                      <th className="text-left py-3 px-4">Usuário</th>
+                      <th className="text-left py-3 px-4">Entidade</th>
+                      <th className="text-left py-3 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {auditLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-slate-50">
+                        <td className="py-3 px-4">{new Date(log.created_date).toLocaleDateString('pt-BR')}</td>
+                        <td className="py-3 px-4 capitalize">{log.action}</td>
+                        <td className="py-3 px-4 text-xs">{log.user_email}</td>
+                        <td className="py-3 px-4 capitalize">{log.entity_type}</td>
+                        <td className="py-3 px-4">
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${
+                            log.status === 'success' ? 'bg-green-100 text-green-800' :
+                            log.status === 'failed' ? 'bg-red-100 text-red-800' :
+                            'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {log.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4">Resumo de Segurança</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <p className="text-sm text-slate-600 mb-1">Taxa de Tentativas Falhas</p>
+                <p className="text-2xl font-bold text-amber-600">{securityMetrics.avgRiskScore}%</p>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <p className="text-sm text-slate-600 mb-1">Últimas 7 Dias</p>
+                <p className="text-2xl font-bold text-blue-600">{securityMetrics.recentEvents} eventos</p>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
