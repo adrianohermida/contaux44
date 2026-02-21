@@ -118,7 +118,7 @@ export default function ContactActivityTimeline({ contactId, workspaceId }) {
               onClick={() => setPage(p => p + 1)}
               className="w-full mt-4 px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
             >
-              Carregar mais atividades ({allActivities.length - activities.length} restantes)
+              Carregar mais atividades ({allActivities.length - filteredActivities.length} restantes)
             </button>
           )}
           </div>
