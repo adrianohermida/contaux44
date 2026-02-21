@@ -26,7 +26,11 @@ import MFASetup from '@/components/dashboard/security/MFASetup';
 import DataEncryption from '@/components/dashboard/security/DataEncryption';
 import ComplianceReporting from '@/components/dashboard/security/ComplianceReporting';
 import RoleBasedAccess from '@/components/dashboard/security/RoleBasedAccess';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock } from 'lucide-react';
+import AIRecommendations from '@/components/dashboard/ai/AIRecommendations';
+import WorkflowAutomation from '@/components/dashboard/automation/WorkflowAutomation';
+import AdvancedAnalytics from '@/components/dashboard/ai/AdvancedAnalytics';
+import NLPTextAnalysis from '@/components/dashboard/ai/NLPTextAnalysis';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
@@ -140,7 +144,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-19 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-23 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dashboard</span>
@@ -200,6 +204,22 @@ export default function Reports() {
           <TabsTrigger value="rbac" className="flex items-center gap-2">
             <Users className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Roles</span>
+          </TabsTrigger>
+          <TabsTrigger value="ai-rec" className="flex items-center gap-2">
+            <Lightbulb className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">IA Rec</span>
+          </TabsTrigger>
+          <TabsTrigger value="workflow" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Fluxo</span>
+          </TabsTrigger>
+          <TabsTrigger value="ml-analytics" className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">ML</span>
+          </TabsTrigger>
+          <TabsTrigger value="nlp" className="flex items-center gap-2">
+            <MessageSquare className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">NLP</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -366,6 +386,26 @@ export default function Reports() {
         {/* Role-Based Access Control */}
         <TabsContent value="rbac" className="mt-6">
           {workspaceId && <RoleBasedAccess workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* AI Recommendations */}
+        <TabsContent value="ai-rec" className="mt-6">
+          {workspaceId && <AIRecommendations workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Workflow Automation */}
+        <TabsContent value="workflow" className="mt-6">
+          {workspaceId && <WorkflowAutomation workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Advanced Analytics */}
+        <TabsContent value="ml-analytics" className="mt-6">
+          {workspaceId && <AdvancedAnalytics workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* NLP Text Analysis */}
+        <TabsContent value="nlp" className="mt-6">
+          <NLPTextAnalysis />
         </TabsContent>
 
         {/* Report Builder */}
