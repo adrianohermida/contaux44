@@ -291,14 +291,7 @@ export default function Reports() {
           )}
         </TabsContent>
 
-        {/* Historic */}
-        <TabsContent value="historic" className="mt-6">
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <Clock className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-600">Histórico de relatórios</p>
-            <p className="text-xs text-slate-500 mt-2">Em desenvolvimento...</p>
-          </div>
-        </TabsContent>
+
       </Tabs>
     </div>
   );
