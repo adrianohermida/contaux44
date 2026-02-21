@@ -141,45 +141,7 @@ export default function Contact() {
     setSortOrder(order);
   };
 
-  if (showImport) {
-    return (
-      <ProtectedInternalRoute>
-        <ContactImportCSV 
-          workspaceId={workspaceId}
-          onClose={() => setShowImport(false)}
-        />
-      </ProtectedInternalRoute>
-    );
-  }
 
-  if (showTagManager) {
-    return (
-      <ProtectedInternalRoute>
-        <ContactTagManager 
-          workspaceId={workspaceId}
-          onClose={() => setShowTagManager(false)}
-        />
-      </ProtectedInternalRoute>
-    );
-  }
-
-  if (showTagStats) {
-    return (
-      <ProtectedInternalRoute>
-        <div className="space-y-6 pb-12">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-              Estatísticas de Tags
-            </h1>
-            <Button onClick={() => setShowTagStats(false)} variant="outline">
-              Voltar
-            </Button>
-          </div>
-          <ContactTagStatistics workspaceId={workspaceId} />
-        </div>
-      </ProtectedInternalRoute>
-    );
-  }
 
   return (
     <ProtectedInternalRoute>
