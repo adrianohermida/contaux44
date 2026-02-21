@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Upload, Download } from 'lucide-react';
+import { Plus, Search, Upload, Download, Tag, Edit } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,8 @@ import ContactCard from '../components/dashboard/ContactCard';
 import ContactBulkActions from '../components/dashboard/ContactBulkActions';
 import ContactImportCSV from '../components/dashboard/ContactImportCSV';
 import ContactSorting from '../components/dashboard/ContactSorting';
+import ContactTagManager from '../components/dashboard/ContactTagManager';
+import ContactBulkTagEditor from '../components/dashboard/ContactBulkTagEditor';
 import { usePagination } from '../components/hooks/usePagination';
 import { Pagination } from '../components/ui/pagination';
 import { useDebounce } from '../components/hooks/useDebounce';
@@ -24,6 +26,8 @@ export default function Contact() {
   const [filters, setFilters] = useState({ status: 'all', type: 'all' });
   const [selectedIds, setSelectedIds] = useState([]);
   const [showImport, setShowImport] = useState(false);
+  const [showTagManager, setShowTagManager] = useState(false);
+  const [showBulkTagEditor, setShowBulkTagEditor] = useState(false);
   const [sortBy, setSortBy] = useState('created_date');
   const [sortOrder, setSortOrder] = useState('desc');
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -112,6 +116,17 @@ export default function Contact() {
     );
   }
 
+  if (showTagManager) {
+    return (
+      <ProtectedInternalRoute>
+        <ContactTagManager 
+          workspaceId={workspaceId}
+          onClose={() => setShowTagManager(false)}
+        />
+      </ProtectedInternalRoute>
+    );
+  }
+
   return (
     <ProtectedInternalRoute>
       <div className="space-y-6 pb-20">
@@ -124,12 +139,16 @@ export default function Contact() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => setShowImport(true)} variant="outline" className="gap-2">
+            <Button onClick={() => setShowTagManager(true)} variant="outline" size="sm" className="gap-2">
+              <Tag className="w-4 h-4" />
+              Tags
+            </Button>
+            <Button onClick={() => setShowImport(true)} variant="outline" size="sm" className="gap-2">
               <Upload className="w-4 h-4" />
               Importar
             </Button>
             <ContactExportButton contacts={filteredAndSortedContacts} />
-            <Button onClick={handleNewContact} className="gap-2">
+            <Button onClick={handleNewContact} size="sm" className="gap-2">
               <Plus className="w-5 h-5" />
               Novo
             </Button>
@@ -231,7 +250,16 @@ export default function Contact() {
         <ContactBulkActions
           selectedIds={selectedIds}
           onClearSelection={() => setSelectedIds([])}
+          onEditTags={() => setShowBulkTagEditor(true)}
           userRole={user?.role}
+        />
+
+        {/* Bulk Tag Editor */}
+        <ContactBulkTagEditor
+          selectedIds={selectedIds}
+          workspaceId={workspaceId}
+          open={showBulkTagEditor}
+          onClose={() => setShowBulkTagEditor(false)}
         />
       </div>
     </ProtectedInternalRoute>

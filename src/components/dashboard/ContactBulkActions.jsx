@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { Trash2, CheckCircle, XCircle, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -14,7 +14,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-export default function ContactBulkActions({ selectedIds, onClearSelection, userRole }) {
+export default function ContactBulkActions({ selectedIds, onClearSelection, onEditTags, userRole }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [targetStatus, setTargetStatus] = useState(null);
@@ -75,6 +75,16 @@ export default function ContactBulkActions({ selectedIds, onClearSelection, user
         </span>
         
         <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onEditTags}
+            className="gap-2"
+          >
+            <Tag className="w-4 h-4" />
+            Tags
+          </Button>
+
           <Button
             size="sm"
             variant="outline"

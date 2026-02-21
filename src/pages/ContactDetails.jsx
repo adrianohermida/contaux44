@@ -12,6 +12,7 @@ import ContactFormField from '../components/dashboard/ContactFormField';
 import ContactDeleteButton from '../components/dashboard/ContactDeleteButton';
 import ContactMetadata from '../components/dashboard/ContactMetadata';
 import ContactCEPLookup from '../components/dashboard/ContactCEPLookup';
+import ContactTagSelector from '../components/dashboard/ContactTagSelector';
 import { useToast } from '../components/hooks/useToast';
 import { ToastContainer } from '../components/ui/toast-notification';
 import { useDebounce } from '../components/hooks/useDebounce';
@@ -430,6 +431,14 @@ export default function ContactDetails() {
                   />
                 )}
               </div>
+
+              {/* Tags */}
+              {!isEditing && contactId !== 'new' && (
+                <div className="pt-4 border-t">
+                  <h3 className="font-semibold mb-3 text-slate-900 dark:text-slate-100">Tags</h3>
+                  <ContactTagSelector contactId={contactId} workspaceId={workspaceId} />
+                </div>
+              )}
 
               {/* Metadata */}
               {!isEditing && contactId !== 'new' && (
