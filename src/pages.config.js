@@ -47,31 +47,11 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import ABTesting from './pages/ABTesting';
-import ABTestingFramework from './pages/ABTestingFramework';
-import AICharbot from './pages/AICharbot';
-import AICustomerService from './pages/AICustomerService';
-import AIRecommendations from './pages/AIRecommendations';
-import APIDashboard from './pages/APIDashboard';
-import APIDocumentation from './pages/APIDocumentation';
-import APIRateLimiting from './pages/APIRateLimiting';
 import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
 import Admin from './pages/Admin';
-import AdvancedAnalyticsDashboard from './pages/AdvancedAnalyticsDashboard';
-import AdvancedML from './pages/AdvancedML';
-import AdvancedMetricsDashboard from './pages/AdvancedMetricsDashboard';
-import AdvancedMonitoring from './pages/AdvancedMonitoring';
-import AdvancedNotifications from './pages/AdvancedNotifications';
-import AdvancedReports from './pages/AdvancedReports';
-import AdvancedSearch from './pages/AdvancedSearch';
-import AdvancedWebhooks from './pages/AdvancedWebhooks';
-import AnalyticsAdvanced from './pages/AnalyticsAdvanced';
 import App from './pages/App';
-import AttributionModeling from './pages/AttributionModeling';
 import AuditLogs from './pages/AuditLogs';
-import AuditTrailDashboard from './pages/AuditTrailDashboard';
-import AutomatedBackups from './pages/AutomatedBackups';
 import Automations from './pages/Automations';
 import BankReconciliation from './pages/BankReconciliation';
 import BatchProcessing from './pages/BatchProcessing';
@@ -89,6 +69,7 @@ import CashFlowForecast from './pages/CashFlowForecast';
 import ChartOfAccounts from './pages/ChartOfAccounts';
 import ClientPanel from './pages/ClientPanel';
 import ClientPortal from './pages/ClientPortal';
+import Clients from './pages/Clients';
 import CohortAnalysisTool from './pages/CohortAnalysisTool';
 import CommentThreading from './pages/CommentThreading';
 import Communication from './pages/Communication';
@@ -161,12 +142,12 @@ import MultiCurrency from './pages/MultiCurrency';
 import MultiLanguageSupport from './pages/MultiLanguageSupport';
 import MyBookmarks from './pages/MyBookmarks';
 import Notifications from './pages/Notifications';
-import PWASetup from './pages/PWASetup';
 import NotificationsCenter from './pages/NotificationsCenter';
 import OAuth2Setup from './pages/OAuth2Setup';
 import OfflineSync from './pages/OfflineSync';
 import OnboardClient from './pages/OnboardClient';
 import OverallProjectStatus from './pages/OverallProjectStatus';
+import PWASetup from './pages/PWASetup';
 import PWASetupPage from './pages/PWASetupPage';
 import Payments from './pages/Payments';
 import PerformanceBenchmark from './pages/PerformanceBenchmark';
@@ -256,36 +237,15 @@ import VoiceCommerce from './pages/VoiceCommerce';
 import WebhookManagement from './pages/WebhookManagement';
 import Welcome from './pages/Welcome';
 import WhiteLabel from './pages/WhiteLabel';
-import Clients from './pages/Clients';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "ABTesting": ABTesting,
-    "ABTestingFramework": ABTestingFramework,
-    "AICharbot": AICharbot,
-    "AICustomerService": AICustomerService,
-    "AIRecommendations": AIRecommendations,
-    "APIDashboard": APIDashboard,
-    "APIDocumentation": APIDocumentation,
-    "APIRateLimiting": APIRateLimiting,
     "About": About,
     "AccountingCalendar": AccountingCalendar,
     "Admin": Admin,
-    "AdvancedAnalyticsDashboard": AdvancedAnalyticsDashboard,
-    "AdvancedML": AdvancedML,
-    "AdvancedMetricsDashboard": AdvancedMetricsDashboard,
-    "AdvancedMonitoring": AdvancedMonitoring,
-    "AdvancedNotifications": AdvancedNotifications,
-    "AdvancedReports": AdvancedReports,
-    "AdvancedSearch": AdvancedSearch,
-    "AdvancedWebhooks": AdvancedWebhooks,
-    "AnalyticsAdvanced": AnalyticsAdvanced,
     "App": App,
-    "AttributionModeling": AttributionModeling,
     "AuditLogs": AuditLogs,
-    "AuditTrailDashboard": AuditTrailDashboard,
-    "AutomatedBackups": AutomatedBackups,
     "Automations": Automations,
     "BankReconciliation": BankReconciliation,
     "BatchProcessing": BatchProcessing,
@@ -303,6 +263,7 @@ export const PAGES = {
     "ChartOfAccounts": ChartOfAccounts,
     "ClientPanel": ClientPanel,
     "ClientPortal": ClientPortal,
+    "Clients": Clients,
     "CohortAnalysisTool": CohortAnalysisTool,
     "CommentThreading": CommentThreading,
     "Communication": Communication,
@@ -375,12 +336,12 @@ export const PAGES = {
     "MultiLanguageSupport": MultiLanguageSupport,
     "MyBookmarks": MyBookmarks,
     "Notifications": Notifications,
-    "PWASetup": PWASetup,
     "NotificationsCenter": NotificationsCenter,
     "OAuth2Setup": OAuth2Setup,
     "OfflineSync": OfflineSync,
     "OnboardClient": OnboardClient,
     "OverallProjectStatus": OverallProjectStatus,
+    "PWASetup": PWASetup,
     "PWASetupPage": PWASetupPage,
     "Payments": Payments,
     "PerformanceBenchmark": PerformanceBenchmark,
@@ -470,7 +431,6 @@ export const PAGES = {
     "WebhookManagement": WebhookManagement,
     "Welcome": Welcome,
     "WhiteLabel": WhiteLabel,
-    "Clients": Clients,
 }
 
 export const pagesConfig = {
