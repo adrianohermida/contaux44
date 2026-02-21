@@ -51,19 +51,19 @@ export default function ContactActivityTimeline({ contactId, workspaceId }) {
      enabled: !!contactId && !!workspaceId,
    });
 
-   const activities = allActivities.slice(0, page * ITEMS_PER_PAGE);
+   // Memoized calculations (O(1) filtering with Map)
+   const activityTypeMap = React.useMemo(() => {
+     const types = new Set();
+     allActivities.forEach(a => types.add(a.activity_type));
+     return ['all', ...types];
+   }, [allActivities]);
 
-  const filteredActivities = filterType === 'all'
-    ? activities
-    : activities.filter(a => a.activity_type === filterType);
+   const filteredActivities = React.useMemo(() => {
+     if (filterType === 'all') return allActivities.slice(0, page * ITEMS_PER_PAGE);
+     return allActivities.filter(a => a.activity_type === filterType).slice(0, page * ITEMS_PER_PAGE);
+   }, [allActivities, filterType, page]);
 
-  const activityTypes = ['all', ...new Set(allActivities.map(a => a.activity_type))];
-  const hasMore = allActivities.length > activities.length;
-
-  // Sort activities by date (newer first)
-  const sortedActivities = [...filteredActivities].sort((a, b) => 
-    new Date(b.created_date) - new Date(a.created_date)
-  );
+   const hasMore = allActivities.length > filteredActivities.length;
 
   return (
     <div className="space-y-4">
