@@ -18,6 +18,7 @@ import ContactActivityTimeline from '../components/dashboard/ContactActivityTime
 import ContactRelationshipManager from '../components/dashboard/ContactRelationshipManager';
 import DuplicateDetector from '../components/dashboard/DuplicateDetector';
 import ContactAttachments from '../components/dashboard/ContactAttachments';
+import ContactCustomFields from '../components/dashboard/ContactCustomFields';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '../components/hooks/useToast';
 import { ToastContainer } from '../components/ui/toast-notification';
@@ -545,6 +546,13 @@ export default function ContactDetails() {
                   </select>
                 </div>
               </div>
+
+              {/* Custom Fields */}
+              <ContactCustomFields 
+                contactId={contactId}
+                workspaceId={workspaceId}
+                disabled={!isEditing}
+              />
 
               {/* Address Info */}
               <div className="space-y-3">
