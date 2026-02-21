@@ -16,6 +16,8 @@ import EnrichmentSuggestionsWidget from '../components/dashboard/widgets/Enrichm
 import CustomerHealthWidget from '../components/dashboard/widgets/CustomerHealthWidget';
 import RetentionRiskWidget from '../components/dashboard/widgets/RetentionRiskWidget';
 import CustomerJourneyWidget from '../components/dashboard/widgets/CustomerJourneyWidget';
+import CampaignManagerWidget from '../components/dashboard/widgets/CampaignManagerWidget';
+import CampaignAnalyticsWidget from '../components/dashboard/widgets/CampaignAnalyticsWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -94,6 +96,12 @@ export default function Dashboard() {
       {/* Row 9 - Customer Journey Timeline */}
       <div className="grid grid-cols-1 gap-6">
         <CustomerJourneyWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 10 - Campaign Manager & Analytics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CampaignManagerWidget workspaceId={workspaceId} />
+        <CampaignAnalyticsWidget workspaceId={workspaceId} />
       </div>
     </div>
   );

@@ -254,6 +254,7 @@ import VoiceCommerce from './pages/VoiceCommerce';
 import WebhookManagement from './pages/WebhookManagement';
 import Welcome from './pages/Welcome';
 import WhiteLabel from './pages/WhiteLabel';
+import Campaigns from './pages/Campaigns';
 import __Layout from './Layout.jsx';
 
 
@@ -465,6 +466,7 @@ export const PAGES = {
     "WebhookManagement": WebhookManagement,
     "Welcome": Welcome,
     "WhiteLabel": WhiteLabel,
+    "Campaigns": Campaigns,
 }
 
 export const pagesConfig = {
