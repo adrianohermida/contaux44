@@ -42,7 +42,11 @@ import AdvancedMonitoringDashboard from '@/components/dashboard/monitoring/Advan
 import MetricsCollector from '@/components/dashboard/monitoring/MetricsCollector';
 import PerformanceOptimizer from '@/components/dashboard/performance/PerformanceOptimizer';
 import ObservabilityEngine from '@/components/dashboard/monitoring/ObservabilityEngine';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, GitBranch, Server, Bell, BookOpen, Eye, Database } from 'lucide-react';
+import AutoScalingManager from '@/components/dashboard/scalability/AutoScalingManager';
+import TenantIsolationManager from '@/components/dashboard/scalability/TenantIsolationManager';
+import DistributedCacheManager from '@/components/dashboard/scalability/DistributedCacheManager';
+import GlobalReplicationManager from '@/components/dashboard/scalability/GlobalReplicationManager';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, GitBranch, Server, Bell, BookOpen, Eye, Database, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
@@ -156,7 +160,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-35 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-39 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dashboard</span>
@@ -280,6 +284,22 @@ export default function Reports() {
           <TabsTrigger value="observ" className="flex items-center gap-2">
             <Eye className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Observ</span>
+          </TabsTrigger>
+          <TabsTrigger value="autoscale" className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Auto</span>
+          </TabsTrigger>
+          <TabsTrigger value="tenant" className="flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Tenant</span>
+          </TabsTrigger>
+          <TabsTrigger value="cache" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Cache</span>
+          </TabsTrigger>
+          <TabsTrigger value="replicate" className="flex items-center gap-2">
+            <Globe className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Replicate</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -526,6 +546,26 @@ export default function Reports() {
         {/* Observability Engine */}
         <TabsContent value="observ" className="mt-6">
           {workspaceId && <ObservabilityEngine workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Auto Scaling Manager */}
+        <TabsContent value="autoscale" className="mt-6">
+          {workspaceId && <AutoScalingManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Tenant Isolation Manager */}
+        <TabsContent value="tenant" className="mt-6">
+          {workspaceId && <TenantIsolationManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Distributed Cache Manager */}
+        <TabsContent value="cache" className="mt-6">
+          {workspaceId && <DistributedCacheManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Global Replication Manager */}
+        <TabsContent value="replicate" className="mt-6">
+          {workspaceId && <GlobalReplicationManager workspaceId={workspaceId} />}
         </TabsContent>
 
         {/* Report Builder */}
