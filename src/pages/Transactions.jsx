@@ -1,76 +1,111 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowUpRight, ArrowDownLeft, Plus, Download, Search } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Plus, Download, Search, AlertCircle, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export default function Transactions() {
-  const { tenantId } = useUserAndTenant();
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [bankAccounts, setBankAccounts] = useState([]);
+  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
   const [selectedAccount, setSelectedAccount] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
 
-  const loadData = useCallback(async () => {
-    if (!tenantId) return;
-    
-    try {
-      const accounts = await base44.entities.BankAccount.filter({ tenant_id: tenantId });
-      setBankAccounts(accounts);
+  const { data: bankAccounts = [], isLoading: accountsLoading } = useQuery({
+    queryKey: ['BankAccount-list', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return [];
+      return base44.entities.BankAccount.filter({ tenant_id: workspaceId });
+    },
+    enabled: !!workspaceId && !authLoading,
+    staleTime: 10 * 60 * 1000,
+    retry: 2
+  });
 
-      const txns = await base44.entities.Transaction.filter(
-        { tenant_id: tenantId },
+  const { data: transactions = [], isLoading: transactionsLoading, refetch, error } = useQuery({
+    queryKey: ['Transaction-list', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return [];
+      return base44.entities.Transaction.filter(
+        { tenant_id: workspaceId },
         '-transaction_date',
         200
       );
-      setTransactions(txns);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const filteredTransactions = transactions.filter(txn => {
-    const matchesAccount = selectedAccount === 'all' || txn.bank_account_id === selectedAccount;
-    const matchesType = filterType === 'all' || txn.transaction_type === filterType;
-    const matchesSearch = txn.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         txn.counterparty?.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesAccount && matchesType && matchesSearch;
+    },
+    enabled: !!workspaceId && !authLoading,
+    staleTime: 5 * 60 * 1000,
+    retry: 2
   });
 
-  const stats = {
+  const loading = authLoading || accountsLoading || transactionsLoading;
+
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter(txn => {
+      const matchesAccount = selectedAccount === 'all' || txn.bank_account_id === selectedAccount;
+      const matchesType = filterType === 'all' || txn.transaction_type === filterType;
+      const matchesSearch = !searchTerm || txn.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           txn.counterparty?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesAccount && matchesType && matchesSearch;
+    });
+  }, [transactions, selectedAccount, filterType, searchTerm]);
+
+  const stats = useMemo(() => ({
     totalInflows: filteredTransactions
-      .filter(t => t.transaction_type === 'credit').reduce((sum, t) => sum + t.amount, 0),
+      .filter(t => t.transaction_type === 'credit').reduce((sum, t) => sum + (t.amount || 0), 0),
     totalOutflows: filteredTransactions
-      .filter(t => t.transaction_type === 'debit').reduce((sum, t) => sum + t.amount, 0),
+      .filter(t => t.transaction_type === 'debit').reduce((sum, t) => sum + (t.amount || 0), 0),
     pending: filteredTransactions.filter(t => t.status === 'pending').length,
     reconciled: filteredTransactions.filter(t => t.status === 'reconciled').length
-  };
+  }), [filteredTransactions]);
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
+
+  if (error && !transactions.length) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold text-slate-900">Transações Bancárias</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
+          <p className="text-red-600 mb-4">Erro ao carregar transações</p>
+          <Button onClick={() => refetch()} className="gap-2">
+            <RefreshCw className="w-4 h-4" />
+            Tentar Novamente
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <ProtectedInternalRoute>
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">Transações Bancárias</h1>
-              <p className="text-slate-600 mt-1">Histórico de movimentações bancárias</p>
-            </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-4 h-4 mr-2" />
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Transações Bancárias</h1>
+            <p className="text-slate-600 mt-1">Histórico de movimentações e reconciliação</p>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={() => refetch()} variant="outline" size="sm" className="gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Atualizar
+            </Button>
+            <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
+              <Plus className="w-4 h-4" />
               Nova Transação
             </Button>
           </div>
+        </div>
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -139,7 +174,7 @@ export default function Transactions() {
                   <SelectContent>
                     <SelectItem value="all">Todas as contas</SelectItem>
                     {bankAccounts.map(acc => (
-                      <SelectItem key={acc.id} value={acc.id}>{acc.bank_name}</SelectItem>
+                      <SelectItem key={acc.id} value={acc.id}>{acc.bank_name} ({acc.account_type})</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -165,9 +200,13 @@ export default function Transactions() {
           <Card>
             <CardContent className="pt-6">
               {loading ? (
-                <div className="text-center py-8">Carregando transações...</div>
+                <div className="text-center py-8 text-slate-500">Carregando transações...</div>
               ) : filteredTransactions.length === 0 ? (
-                <div className="text-center py-8 text-slate-600">Nenhuma transação encontrada</div>
+                <div className="text-center py-12">
+                  <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-500 font-medium">Nenhuma transação encontrada</p>
+                  <p className="text-slate-400 text-sm mt-1">Tente ajustar seus filtros de busca</p>
+                </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -209,12 +248,11 @@ export default function Transactions() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          </div>
-          </ProtectedInternalRoute>
-          );
-          }
+                    </table>
+                    </div>
+                    )}
+                    </CardContent>
+                    </Card>
+                    </div>
+                    );
+                    }
