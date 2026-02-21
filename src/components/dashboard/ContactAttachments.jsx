@@ -30,19 +30,27 @@ function getFileIcon(fileType) {
 }
 
 export default function ContactAttachments({ contactId, workspaceId }) {
-  const [showDialog, setShowDialog] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('outro');
-  const [selectedFile, setSelectedFile] = useState(null);
-  const fileInputRef = useRef(null);
-  const queryClient = useQueryClient();
+   const [showDialog, setShowDialog] = useState(false);
+   const [uploading, setUploading] = useState(false);
+   const [description, setDescription] = useState('');
+   const [category, setCategory] = useState('outro');
+   const [selectedFile, setSelectedFile] = useState(null);
+   const [page, setPage] = useState(1);
+   const ITEMS_PER_PAGE = 15;
+   const fileInputRef = useRef(null);
+   const queryClient = useQueryClient();
 
-  const { data: attachments = [], isLoading } = useQuery({
-    queryKey: ['contact-attachments', contactId],
-    queryFn: () => base44.entities.ContactAttachment.filter({ contact_id: contactId }),
-    enabled: !!contactId,
-  });
+   const { data: allAttachments = [], isLoading } = useQuery({
+     queryKey: ['contact-attachments', contactId, workspaceId],
+     queryFn: () => base44.entities.ContactAttachment.filter({ 
+       contact_id: contactId,
+       workspace_id: workspaceId
+     }),
+     enabled: !!contactId && !!workspaceId,
+   });
+
+   const attachments = allAttachments.slice(0, page * ITEMS_PER_PAGE);
+   const hasMore = allAttachments.length > attachments.length;
 
   const uploadMutation = useMutation({
     mutationFn: async ({ file, description, category }) => {
@@ -230,6 +238,16 @@ export default function ContactAttachments({ contactId, workspaceId }) {
               </Card>
             );
           })}
+
+          {hasMore && (
+            <Button 
+              onClick={() => setPage(p => p + 1)}
+              variant="outline"
+              className="w-full"
+            >
+              Carregar mais ({allAttachments.length - attachments.length} arquivos)
+            </Button>
+          )}
         </div>
       )}
 
