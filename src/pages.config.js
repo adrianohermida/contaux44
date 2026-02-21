@@ -70,29 +70,9 @@ import ContactDetails from './pages/ContactDetails';
 import ContractManagement from './pages/ContractManagement';
 import ConversionRateOptimizer from './pages/ConversionRateOptimizer';
 import ConversionTracking from './pages/ConversionTracking';
-import DDoSProtection from './pages/DDoSProtection';
 import Dashboard from './pages/Dashboard';
-import DataAnonymization from './pages/DataAnonymization';
-import DataBackup from './pages/DataBackup';
-import DataExportImport from './pages/DataExportImport';
-import DataValidation from './pages/DataValidation';
-import DataVisualization from './pages/DataVisualization';
-import DatabaseOptimization from './pages/DatabaseOptimization';
-import DatabaseSharding from './pages/DatabaseSharding';
-import DeveloperPortal from './pages/DeveloperPortal';
-import DisasterRecovery from './pages/DisasterRecovery';
-import DistributedTracing from './pages/DistributedTracing';
 import DocumentManagement from './pages/DocumentManagement';
-import DocumentSigning from './pages/DocumentSigning';
-import DocumentVersioning from './pages/DocumentVersioning';
-import DynamicContentEngine from './pages/DynamicContentEngine';
-import DynamicPricingEngine from './pages/DynamicPricingEngine';
-import EmailCampaigns from './pages/EmailCampaigns';
-import EmailMarketing from './pages/EmailMarketing';
-import EmailMarketingAutomation from './pages/EmailMarketingAutomation';
-import EnterpriseSSOSetup from './pages/EnterpriseSSOSetup';
 import Entries from './pages/Entries';
-import ErrorTracking from './pages/ErrorTracking';
 import FinalProjectSummary from './pages/FinalProjectSummary';
 import GDPRCompliance from './pages/GDPRCompliance';
 import GamificationEngine from './pages/GamificationEngine';
@@ -244,29 +224,9 @@ export const PAGES = {
     "ContractManagement": ContractManagement,
     "ConversionRateOptimizer": ConversionRateOptimizer,
     "ConversionTracking": ConversionTracking,
-    "DDoSProtection": DDoSProtection,
     "Dashboard": Dashboard,
-    "DataAnonymization": DataAnonymization,
-    "DataBackup": DataBackup,
-    "DataExportImport": DataExportImport,
-    "DataValidation": DataValidation,
-    "DataVisualization": DataVisualization,
-    "DatabaseOptimization": DatabaseOptimization,
-    "DatabaseSharding": DatabaseSharding,
-    "DeveloperPortal": DeveloperPortal,
-    "DisasterRecovery": DisasterRecovery,
-    "DistributedTracing": DistributedTracing,
     "DocumentManagement": DocumentManagement,
-    "DocumentSigning": DocumentSigning,
-    "DocumentVersioning": DocumentVersioning,
-    "DynamicContentEngine": DynamicContentEngine,
-    "DynamicPricingEngine": DynamicPricingEngine,
-    "EmailCampaigns": EmailCampaigns,
-    "EmailMarketing": EmailMarketing,
-    "EmailMarketingAutomation": EmailMarketingAutomation,
-    "EnterpriseSSOSetup": EnterpriseSSOSetup,
     "Entries": Entries,
-    "ErrorTracking": ErrorTracking,
     "FinalProjectSummary": FinalProjectSummary,
     "GDPRCompliance": GDPRCompliance,
     "GamificationEngine": GamificationEngine,
