@@ -194,7 +194,7 @@ export default function GlobalReplicationManager({ workspaceId }) {
           </div>
           <div className="border-l-4 border-green-500 pl-4 py-2">
             <p className="text-sm font-medium text-slate-900">RPO (Recovery Point Objective)</p>
-            <p className="text-lg font-bold text-green-600">< 1 minuto</p>
+            <p className="text-lg font-bold text-green-600">&lt; 1 minuto</p>
           </div>
           <Button variant="outline" className="w-full">
             Testar Failover
