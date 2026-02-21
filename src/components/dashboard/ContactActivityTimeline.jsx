@@ -108,7 +108,7 @@ export default function ContactActivityTimeline({ contactId, workspaceId }) {
           <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-700" />
 
           <div className="space-y-4">
-            {sortedActivities.map((activity) => (
+            {filteredActivities.map((activity) => (
               <ActivityItem key={activity.id} activity={activity} />
             ))}
           </div>
@@ -121,8 +121,8 @@ export default function ContactActivityTimeline({ contactId, workspaceId }) {
               Carregar mais atividades ({allActivities.length - filteredActivities.length} restantes)
             </button>
           )}
-          </div>
-          )}
+        </div>
+      )}
     </div>
   );
 }
