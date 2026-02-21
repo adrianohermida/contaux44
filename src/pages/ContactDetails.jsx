@@ -23,16 +23,9 @@ export default function ContactDetails() {
    const queryClient = useQueryClient();
    const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
    const { toasts, removeToast, success, error, info } = useToast();
+   const { token } = useCSRFToken();
 
-    const [formData, setFormData] = useState(null);
-    const [isEditing, setIsEditing] = useState(contactId === 'new');
-    const [errors, setErrors] = useState({});
-    const [hasChanges, setHasChanges] = useState(false);
-    const [activeTab, setActiveTab] = useState('info');
-    const [loadedTabs, setLoadedTabs] = useState(new Set(['info']));
-
-   // Real-time validation with debounce
-   const debouncedFormData = useDebounce(formData, 500);
+   const [isEditing, setIsEditing] = useState(contactId === 'new');
 
    // Fetch contact if not new
    const { data: contact, isLoading, error: queryError } = useQuery({
@@ -40,54 +33,46 @@ export default function ContactDetails() {
      queryFn: async () => {
        if (!contactId || contactId === 'new' || !workspaceId) return null;
        const data = await base44.entities.Client.get(contactId);
-       if (data?.tenant_id !== workspaceId) {
-         throw new Error('Acesso negado');
-       }
+       if (data?.tenant_id !== workspaceId) throw new Error('Acesso negado');
        return data;
      },
      enabled: !authLoading && contactId !== 'new' && !!workspaceId,
      staleTime: 5 * 60 * 1000,
    });
 
-  // Initialize form data
-  React.useEffect(() => {
-    if (contact) {
-      setFormData(contact);
-      setHasChanges(false);
-    } else if (contactId === 'new' && !formData) {
-      setFormData({
-        company_name: '',
-        email: '',
-        phone: '',
-        client_type: 'pj',
-        status: 'active',
-        cnpj: '',
-        cpf: '',
-        endereco: '',
-        numero: '',
-        complemento: '',
-        bairro: '',
-        cidade: '',
-        uf: '',
-        cep: '',
-        tenant_id: workspaceId,
-      });
-      setHasChanges(false);
-    }
-  }, [contact, contactId, workspaceId]);
+   // Initialize form with defaults
+   const getInitialFormData = () => {
+     if (contact) return contact;
+     if (contactId === 'new') {
+       return {
+         company_name: '', email: '', phone: '', client_type: 'pj', status: 'active',
+         cnpj: '', cpf: '', endereco: '', numero: '', complemento: '', bairro: '',
+         cidade: '', uf: '', cep: '', tenant_id: workspaceId,
+       };
+     }
+     return null;
+   };
 
-  // Real-time validation
-  React.useEffect(() => {
-    if (debouncedFormData && isEditing) {
-      const validationErrors = validateContactForm(debouncedFormData);
-      setErrors(validationErrors);
-    }
-  }, [debouncedFormData, isEditing]);
+   const { formData, setFormData, errors, hasChanges, handleInputChange, validateForm, reset } = useContactForm(
+     getInitialFormData(),
+     contactId,
+     workspaceId,
+     base44,
+     (msg) => info(msg),
+     (msg) => error(msg)
+   );
 
-
-
-  // CSRF Token
-  const { token } = useCSRFToken();
+   // Handle unsaved changes warning
+   useEffect(() => {
+     const handleBeforeUnload = (e) => {
+       if (hasChanges) {
+         e.preventDefault();
+         e.returnValue = '';
+       }
+     };
+     window.addEventListener('beforeunload', handleBeforeUnload);
+     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+   }, [hasChanges]);
 
   // Save mutation
    const saveMutation = useMutation({
