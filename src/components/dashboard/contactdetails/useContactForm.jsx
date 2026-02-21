@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { sanitizeInput, hasSecurityRisk } from '../security/InputValidator';
+import { sanitizeInput, hasSecurityRisk } from '../../security/InputValidator';
 import { validateContactForm, validateEmailUniqueness } from '../ContactFormValidation';
 
 export function useContactForm(initialData, contactId, workspaceId, base44, onSuccess, onError) {
