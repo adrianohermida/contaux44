@@ -11,6 +11,8 @@ import SalesPipelineWidget from '../components/dashboard/widgets/SalesPipelineWi
 import LeadScoringWidget from '../components/dashboard/widgets/LeadScoringWidget';
 import RevenueForecastWidget from '../components/dashboard/widgets/RevenueForecastWidget';
 import PipelinePerformanceWidget from '../components/dashboard/widgets/PipelinePerformanceWidget';
+import AIInsightsWidget from '../components/dashboard/widgets/AIInsightsWidget';
+import EnrichmentSuggestionsWidget from '../components/dashboard/widgets/EnrichmentSuggestionsWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -72,6 +74,12 @@ export default function Dashboard() {
       {/* Row 6 - Pipeline Performance Analysis */}
       <div className="grid grid-cols-1 gap-6">
         <PipelinePerformanceWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 7 - AI Insights & Enrichment */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <AIInsightsWidget workspaceId={workspaceId} />
+        <EnrichmentSuggestionsWidget workspaceId={workspaceId} />
       </div>
     </div>
   );
