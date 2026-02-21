@@ -16,7 +16,10 @@ import ScheduledReportsManager from '@/components/dashboard/analytics/ScheduledR
 import AIReportBuilder from '@/components/dashboard/analytics/AIReportBuilder';
 import CustomerInsightsDashboard from '@/components/dashboard/analytics/CustomerInsightsDashboard';
 import RevenueForecaster from '@/components/dashboard/analytics/RevenueForecaster';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users } from 'lucide-react';
+import ExportEngine from '@/components/dashboard/export/ExportEngine';
+import AdvancedScheduler from '@/components/dashboard/export/AdvancedScheduler';
+import DataEnrichment from '@/components/dashboard/export/DataEnrichment';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
@@ -130,7 +133,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-9 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-12 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dashboard</span>
@@ -150,6 +153,18 @@ export default function Reports() {
           <TabsTrigger value="revenue" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Receita</span>
+          </TabsTrigger>
+          <TabsTrigger value="export" className="flex items-center gap-2">
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Exportar</span>
+          </TabsTrigger>
+          <TabsTrigger value="scheduler" className="flex items-center gap-2">
+            <Package className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Agendador</span>
+          </TabsTrigger>
+          <TabsTrigger value="enrichment" className="flex items-center gap-2">
+            <Database className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Dados</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -266,6 +281,21 @@ export default function Reports() {
         {/* Revenue Forecaster */}
         <TabsContent value="revenue" className="mt-6">
           {analyticsData && <RevenueForecaster invoices={analyticsData.invoices} />}
+        </TabsContent>
+
+        {/* Export Engine */}
+        <TabsContent value="export" className="mt-6">
+          <ExportEngine data={analyticsData || {}} reportName="Relatório de Análises" />
+        </TabsContent>
+
+        {/* Advanced Scheduler */}
+        <TabsContent value="scheduler" className="mt-6">
+          {workspaceId && <AdvancedScheduler workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Data Enrichment */}
+        <TabsContent value="enrichment" className="mt-6">
+          {workspaceId && <DataEnrichment workspaceId={workspaceId} />}
         </TabsContent>
 
         {/* Report Builder */}
