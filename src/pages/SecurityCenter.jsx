@@ -137,6 +137,10 @@ export default function SecurityCenter() {
             <Zap className="w-4 h-4" />
             <span className="hidden sm:inline">Validação</span>
           </TabsTrigger>
+          <TabsTrigger value="logs" className="flex items-center gap-2">
+            <Activity className="w-4 h-4" />
+            <span className="hidden sm:inline">Logs</span>
+          </TabsTrigger>
         </TabsList>
 
         {/* Overview */}
