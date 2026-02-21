@@ -14,7 +14,10 @@ export default function InterventionRecommendationWidget({ workspaceId }) {
       return (response.data?.predictions || []).filter(p => p.risk_level !== 'low').slice(0, 5);
     },
     enabled: !!workspaceId,
-    staleTime: 1000 * 60 * 15
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 45,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
   });
 
   const { data: interventions = [], isLoading: loadingInterventions } = useQuery({
@@ -36,7 +39,10 @@ export default function InterventionRecommendationWidget({ workspaceId }) {
       return results.map(r => r.data).filter(Boolean);
     },
     enabled: !!workspaceId && predictions.length > 0,
-    staleTime: 1000 * 60 * 15
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 45,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
   });
 
   if (isLoading || loadingInterventions) {

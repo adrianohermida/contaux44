@@ -15,7 +15,10 @@ export default function ChurnAnalyticsWidget({ workspaceId }) {
       return response.data?.predictions || [];
     },
     enabled: !!workspaceId,
-    staleTime: 1000 * 60 * 15
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 45,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
   });
 
   if (isLoading) {

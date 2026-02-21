@@ -23,7 +23,10 @@ export default function ChurnRiskWidget({ workspaceId }) {
       return (response.data?.predictions || []).filter(p => p.risk_level !== 'low').sort((a, b) => b.churn_risk_score - a.churn_risk_score).slice(0, 8);
     },
     enabled: !!workspaceId,
-    staleTime: 1000 * 60 * 15
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 45,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
   });
 
   if (isLoading) {
@@ -87,7 +90,7 @@ export default function ChurnRiskWidget({ workspaceId }) {
                       onClick={() => setExpandedId(expandedId === pred.contact_id ? null : pred.contact_id)}
                       className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
                     >
-                      <ChevronDown className={`w-4 h-4 transition-transform ${expanded === pred.contact_id ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 transition-transform ${expandedId === pred.contact_id ? 'rotate-180' : ''}`} />
                     </button>
                   </div>
 
