@@ -321,20 +321,18 @@ export default function ContactDetails() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // Security: Check for XSS/SQL injection
+
     if (hasSecurityRisk(value)) {
       console.warn(`Security risk detected in field: ${name}`);
       setErrors(prev => ({ ...prev, [name]: 'Entrada contém caracteres suspeitos' }));
       return;
     }
 
-    // Security: Sanitize input
     const fieldType = name === 'email' ? 'email' : name === 'phone' ? 'phone' : 'text';
     let newValue = sanitizeInput(value, fieldType);
 
-    // Limpar CPF/CNPJ quando muda tipo
-    if (name === 'client_type') {
+    // Validação de negócio: PF com CPF, PJ com CNPJ
+    if (name === 'client_type' && formData.client_type !== newValue) {
       setFormData(prev => ({ 
         ...prev, 
         [name]: newValue,
@@ -347,6 +345,12 @@ export default function ContactDetails() {
         cpf: null,
         cnpj: null
       }));
+    } else if (name === 'cpf' && formData.client_type === 'pj') {
+      setErrors(prev => ({ ...prev, [name]: 'CPF não é permitido para Pessoa Jurídica' }));
+      return;
+    } else if (name === 'cnpj' && formData.client_type === 'pf') {
+      setErrors(prev => ({ ...prev, [name]: 'CNPJ não é permitido para Pessoa Física' }));
+      return;
     } else {
       setFormData(prev => ({ ...prev, [name]: newValue }));
       if (errors[name]) {
