@@ -19,7 +19,10 @@ import RevenueForecaster from '@/components/dashboard/analytics/RevenueForecaste
 import ExportEngine from '@/components/dashboard/export/ExportEngine';
 import AdvancedScheduler from '@/components/dashboard/export/AdvancedScheduler';
 import DataEnrichment from '@/components/dashboard/export/DataEnrichment';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package } from 'lucide-react';
+import AlertSystem from '@/components/dashboard/realtime/AlertSystem';
+import LiveCharts from '@/components/dashboard/realtime/LiveCharts';
+import MonitoringDashboard from '@/components/dashboard/realtime/MonitoringDashboard';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
@@ -133,7 +136,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-12 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-15 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dashboard</span>
@@ -165,6 +168,18 @@ export default function Reports() {
           <TabsTrigger value="enrichment" className="flex items-center gap-2">
             <Database className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dados</span>
+          </TabsTrigger>
+          <TabsTrigger value="alerts" className="flex items-center gap-2">
+            <Bell className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Alertas</span>
+          </TabsTrigger>
+          <TabsTrigger value="live" className="flex items-center gap-2">
+            <Activity className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Live</span>
+          </TabsTrigger>
+          <TabsTrigger value="monitoring" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Monitor</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -296,6 +311,21 @@ export default function Reports() {
         {/* Data Enrichment */}
         <TabsContent value="enrichment" className="mt-6">
           {workspaceId && <DataEnrichment workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Alert System */}
+        <TabsContent value="alerts" className="mt-6">
+          {workspaceId && <AlertSystem workspaceId={workspaceId} alerts={alerts} />}
+        </TabsContent>
+
+        {/* Live Charts */}
+        <TabsContent value="live" className="mt-6">
+          {analyticsData && <LiveCharts data={analyticsData.invoices} metric="revenue" interval={5000} />}
+        </TabsContent>
+
+        {/* Monitoring Dashboard */}
+        <TabsContent value="monitoring" className="mt-6">
+          {workspaceId && <MonitoringDashboard workspaceId={workspaceId} />}
         </TabsContent>
 
         {/* Report Builder */}
