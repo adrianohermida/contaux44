@@ -1,30 +1,10 @@
 import React from 'react';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
-import ContactStatisticsWidget from '../components/dashboard/widgets/ContactStatisticsWidget';
-import ContactTagsWidget from '../components/dashboard/widgets/ContactTagsWidget';
-import RecentActivityWidget from '../components/dashboard/widgets/RecentActivityWidget';
-import DuplicateAlertsWidget from '../components/dashboard/widgets/DuplicateAlertsWidget';
-import DataQualityWidget from '../components/dashboard/widgets/DataQualityWidget';
-import ContactGrowthWidget from '../components/dashboard/widgets/ContactGrowthWidget';
-import TagPerformanceWidget from '../components/dashboard/widgets/TagPerformanceWidget';
-import SalesPipelineWidget from '../components/dashboard/widgets/SalesPipelineWidget';
-import LeadScoringWidget from '../components/dashboard/widgets/LeadScoringWidget';
-import RevenueForecastWidget from '../components/dashboard/widgets/RevenueForecastWidget';
-import PipelinePerformanceWidget from '../components/dashboard/widgets/PipelinePerformanceWidget';
-import AIInsightsWidget from '../components/dashboard/widgets/AIInsightsWidget';
-import EnrichmentSuggestionsWidget from '../components/dashboard/widgets/EnrichmentSuggestionsWidget';
-import CustomerHealthWidget from '../components/dashboard/widgets/CustomerHealthWidget';
-import RetentionRiskWidget from '../components/dashboard/widgets/RetentionRiskWidget';
-import CustomerJourneyWidget from '../components/dashboard/widgets/CustomerJourneyWidget';
-import CampaignManagerWidget from '../components/dashboard/widgets/CampaignManagerWidget';
-import CampaignAnalyticsWidget from '../components/dashboard/widgets/CampaignAnalyticsWidget';
-import LoyaltyProgramWidget from '../components/dashboard/widgets/LoyaltyProgramWidget';
-import PointsTrackerWidget from '../components/dashboard/widgets/PointsTrackerWidget';
-import RedemptionDashboardWidget from '../components/dashboard/widgets/RedemptionDashboardWidget';
-import ProgramAnalyticsWidget from '../components/dashboard/widgets/ProgramAnalyticsWidget';
-import ChurnRiskWidget from '../components/dashboard/widgets/ChurnRiskWidget';
-import ChurnAnalyticsWidget from '../components/dashboard/widgets/ChurnAnalyticsWidget';
-import InterventionRecommendationWidget from '../components/dashboard/widgets/InterventionRecommendationWidget';
+import DashboardStatsRow from '../components/dashboard/DashboardStatsRow';
+import DashboardActivityRow from '../components/dashboard/DashboardActivityRow';
+import DashboardSalesRow from '../components/dashboard/DashboardSalesRow';
+import DashboardInsightsRow from '../components/dashboard/DashboardInsightsRow';
+import DashboardCampaignRow from '../components/dashboard/DashboardCampaignRow';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -42,98 +22,16 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Dashboard</h1>
         <p className="text-slate-600 dark:text-slate-400 mt-1">Visão geral do seu workspace</p>
       </div>
-      {/* Phase 0 Complete - All optimizations deployed */}
 
-      {/* Widgets Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Row 1 */}
-        <ContactStatisticsWidget workspaceId={workspaceId} />
-        <ContactTagsWidget workspaceId={workspaceId} />
-        <div className="grid grid-cols-1 gap-6 md:col-span-2 lg:col-span-1">
-          <DuplicateAlertsWidget workspaceId={workspaceId} />
-          <DataQualityWidget workspaceId={workspaceId} />
-        </div>
-      </div>
-
-      {/* Row 2 - Activity + Growth */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentActivityWidget workspaceId={workspaceId} />
-        <TagPerformanceWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 3 - Full width growth chart */}
-      <div className="grid grid-cols-1 gap-6">
-        <ContactGrowthWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 4 - Sales Pipeline & Forecasting */}
-      <div className="grid grid-cols-1 gap-6">
-        <SalesPipelineWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 5 - Lead Scoring & Revenue Forecast */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <LeadScoringWidget workspaceId={workspaceId} />
-        <div className="md:col-span-2">
-          <RevenueForecastWidget workspaceId={workspaceId} />
-        </div>
-      </div>
-
-      {/* Row 6 - Pipeline Performance Analysis */}
-      <div className="grid grid-cols-1 gap-6">
-        <PipelinePerformanceWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 7 - AI Insights & Enrichment */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <AIInsightsWidget workspaceId={workspaceId} />
-        <EnrichmentSuggestionsWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 8 - Customer Health & Retention Risk */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <CustomerHealthWidget workspaceId={workspaceId} />
-        <RetentionRiskWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 9 - Customer Journey Timeline */}
-      <div className="grid grid-cols-1 gap-6">
-        <CustomerJourneyWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 10 - Campaign Manager & Analytics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <CampaignManagerWidget workspaceId={workspaceId} />
-        <CampaignAnalyticsWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 11 - Loyalty Programs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <LoyaltyProgramWidget workspaceId={workspaceId} />
-        <PointsTrackerWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 12 - Redemptions & Analytics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <RedemptionDashboardWidget workspaceId={workspaceId} />
-        <ProgramAnalyticsWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 13 - Churn Risk & Analytics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ChurnRiskWidget workspaceId={workspaceId} />
-        <ChurnAnalyticsWidget workspaceId={workspaceId} />
-      </div>
-
-      {/* Row 14 - Intervention Recommendations */}
-      <div className="grid grid-cols-1 gap-6">
-        <InterventionRecommendationWidget workspaceId={workspaceId} />
-      </div>
+      <DashboardStatsRow workspaceId={workspaceId} />
+      <DashboardActivityRow workspaceId={workspaceId} />
+      <DashboardSalesRow workspaceId={workspaceId} />
+      <DashboardInsightsRow workspaceId={workspaceId} />
+      <DashboardCampaignRow workspaceId={workspaceId} />
     </div>
   );
 }
