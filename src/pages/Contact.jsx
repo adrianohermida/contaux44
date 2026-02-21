@@ -286,6 +286,47 @@ export default function Contact() {
           open={showBulkTagEditor}
           onClose={() => setShowBulkTagEditor(false)}
         />
+
+        {/* Import Modal */}
+        {showImport && (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-end">
+            <div className="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-t-xl max-h-[90vh] overflow-y-auto">
+              <ContactImportCSV 
+                workspaceId={workspaceId}
+                onClose={() => setShowImport(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Tag Manager Modal */}
+        {showTagManager && (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-end">
+            <div className="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-t-xl max-h-[90vh] overflow-y-auto">
+              <ContactTagManager 
+                workspaceId={workspaceId}
+                onClose={() => setShowTagManager(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Tag Stats Modal */}
+        {showTagStats && (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-end">
+            <div className="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-t-xl max-h-[90vh] overflow-y-auto">
+              <div className="p-6 space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    Estatísticas de Tags
+                  </h2>
+                  <Button onClick={() => setShowTagStats(false)} variant="ghost" size="sm">✕</Button>
+                </div>
+                <ContactTagStatistics workspaceId={workspaceId} />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </ProtectedInternalRoute>
   );
