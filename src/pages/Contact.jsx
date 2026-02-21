@@ -48,20 +48,33 @@ export default function Contact() {
      withRateLimit(
        () => base44.entities.Client.filter(backendQuery),
        'contacts.list',
-       15, // Allow 15 requests per minute for list
+       15,
        60000
      ),
      [backendQuery]
    );
 
-   // Query 1: Contacts (with rate limiting)
-   const { data: contacts = [], isLoading } = useQuery({
+   // Query 1: Contacts (with rate limiting + error handling)
+   const { data: contacts = [], isLoading, error: contactsError, refetch } = useQuery({
      queryKey: ['contacts', workspaceId, filters],
      queryFn: limitedContactFetch,
      enabled: !!workspaceId && !authLoading,
      staleTime: 5 * 60 * 1000,
      gcTime: 10 * 60 * 1000,
+     retry: 2,
+     retryDelay: 1000
    });
+
+  // Subscribe to real-time contact updates
+  React.useEffect(() => {
+    if (!workspaceId) return;
+    const unsubscribe = base44.entities.Client.subscribe((event) => {
+      if (event.data?.tenant_id === workspaceId) {
+        queryClient.invalidateQueries({ queryKey: ['contacts', workspaceId] });
+      }
+    });
+    return unsubscribe;
+  }, [workspaceId, queryClient]);
 
   // Query 2: Tags (once per workspace) - longer cache
   const { data: tags = [] } = useQuery({
@@ -148,6 +161,20 @@ export default function Contact() {
   };
 
 
+
+  // Show error state if contacts query failed
+  if (contactsError) {
+    return (
+      <ProtectedInternalRoute>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <p className="text-red-600 mb-4">Erro ao carregar contatos</p>
+          <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+            Tentar novamente
+          </button>
+        </div>
+      </ProtectedInternalRoute>
+    );
+  }
 
   return (
     <ProtectedInternalRoute>
