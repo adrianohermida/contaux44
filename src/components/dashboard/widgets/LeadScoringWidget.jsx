@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { TrendingUp, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { formatCurrency } from '@/lib/utils';
 
 function ScoreGauge({ score }) {
   const percentage = Math.min(100, Math.max(0, score));
