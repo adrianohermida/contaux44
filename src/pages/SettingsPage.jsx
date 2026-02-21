@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import IntegrationsManager from '../components/dashboard/IntegrationsManager';
+import CustomFieldsManager from '../components/dashboard/CustomFieldsManager';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Save, LogOut, Settings, Trash2 } from 'lucide-react';
+import { Save, LogOut, Settings, Trash2, Sliders } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function SettingsPage() {
+  const { workspaceId } = useMultitenantAuthOptimized('internal');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -72,10 +75,14 @@ export default function SettingsPage() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="profile" className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
                 Meu Perfil
+              </TabsTrigger>
+              <TabsTrigger value="custom-fields" className="flex items-center gap-2">
+                <Sliders className="w-4 h-4" />
+                Campos Customizados
               </TabsTrigger>
               <TabsTrigger value="integrations" className="flex items-center gap-2">
                 🔌 Integrações
@@ -111,6 +118,12 @@ export default function SettingsPage() {
                     </p>
                   </div>
                 </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="custom-fields">
+              <div className="bg-white rounded-lg shadow p-6">
+                <CustomFieldsManager workspaceId={workspaceId} />
               </div>
             </TabsContent>
 
