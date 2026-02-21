@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, User } from 'lucide-react';
+import { ClipboardCopy } from '@/components/ui/clipboard-copy';
 
 export default function ContactMetadata({ contact }) {
   const formatDate = (date) => {
@@ -19,12 +20,12 @@ export default function ContactMetadata({ contact }) {
     <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
       <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Informações do Sistema</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-        <div>
-          <p className="text-slate-600 dark:text-slate-400 flex items-center gap-2 mb-1">
+        <div className="md:col-span-2">
+          <p className="text-slate-600 dark:text-slate-400 flex items-center gap-2 mb-2">
             <User className="w-4 h-4" />
             ID do Contato
           </p>
-          <p className="text-slate-900 dark:text-slate-100 font-mono text-xs break-all">{contact.id}</p>
+          <ClipboardCopy text={contact.id} label="ID" />
         </div>
         <div>
           <p className="text-slate-600 dark:text-slate-400 flex items-center gap-2 mb-1">

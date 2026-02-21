@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Loader2, Save, X, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,9 @@ import ContactFormField from '../components/dashboard/ContactFormField';
 import ContactDeleteButton from '../components/dashboard/ContactDeleteButton';
 import ContactMetadata from '../components/dashboard/ContactMetadata';
 import ContactCEPLookup from '../components/dashboard/ContactCEPLookup';
+import { useToast } from '../components/hooks/useToast';
+import { ToastContainer } from '../components/ui/toast-notification';
+import { useDebounce } from '../components/hooks/useDebounce';
 import {
   validateContactForm,
   validateEmailUniqueness,
@@ -26,12 +29,15 @@ export default function ContactDetails() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
+  const { toasts, removeToast, success, error, info } = useToast();
 
    const [formData, setFormData] = useState(null);
    const [isEditing, setIsEditing] = useState(contactId === 'new');
    const [errors, setErrors] = useState({});
-   const [saveMessage, setSaveMessage] = useState(null);
    const [hasChanges, setHasChanges] = useState(false);
+
+   // Real-time validation with debounce
+   const debouncedFormData = useDebounce(formData, 500);
 
    // Fetch contact if not new
    const { data: contact, isLoading, error } = useQuery({
@@ -75,6 +81,14 @@ export default function ContactDetails() {
     }
   }, [contact, contactId, workspaceId]);
 
+  // Real-time validation
+  React.useEffect(() => {
+    if (debouncedFormData && isEditing) {
+      const validationErrors = validateContactForm(debouncedFormData);
+      setErrors(validationErrors);
+    }
+  }, [debouncedFormData, isEditing]);
+
 
 
   // Save mutation
@@ -92,14 +106,13 @@ export default function ContactDetails() {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
       setIsEditing(false);
       setHasChanges(false);
-      setSaveMessage({ type: 'success', text: 'Contato salvo com sucesso!' });
-      setTimeout(() => setSaveMessage(null), 3000);
+      success('Contato salvo com sucesso!');
       if (contactId === 'new') {
         navigate(`/contact/${result.id}`);
       }
     },
-    onError: (error) => {
-      setSaveMessage({ type: 'error', text: error.message || 'Erro ao salvar contato' });
+    onError: (err) => {
+      error(err.message || 'Erro ao salvar contato');
     },
   });
 
@@ -107,16 +120,16 @@ export default function ContactDetails() {
     const formErrors = validateContactForm(formData);
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
-      setSaveMessage({ type: 'error', text: 'Corrija os erros no formulário' });
+      error('Corrija os erros no formulário');
       return;
     }
 
     // Async email uniqueness validation
-    setSaveMessage({ type: 'info', text: 'Validando email...' });
+    info('Validando email...');
     const isEmailUnique = await validateEmailUniqueness(base44, formData.email, contactId, workspaceId);
     if (!isEmailUnique) {
       setErrors({ email: 'Este email já está em uso por outro contato' });
-      setSaveMessage({ type: 'error', text: 'Email já existe no sistema' });
+      error('Email já existe no sistema');
       return;
     }
 
@@ -203,6 +216,7 @@ export default function ContactDetails() {
 
   return (
     <ProtectedInternalRoute>
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
       <div className="space-y-6 pb-12">
         {/* Header */}
         <div className="flex items-center gap-4">
@@ -220,14 +234,6 @@ export default function ContactDetails() {
             </h1>
           </div>
         </div>
-
-        {/* Messages */}
-        {saveMessage && (
-          <div className={`p-3 rounded-lg flex items-center gap-2 ${saveMessage.type === 'success' ? 'bg-green-50 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-red-50 dark:bg-red-900 text-red-800 dark:text-red-200'}`}>
-            {saveMessage.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-            <p className="text-sm">{saveMessage.text}</p>
-          </div>
-        )}
 
         {/* Form Card */}
         <Card className="bg-white dark:bg-slate-800">
