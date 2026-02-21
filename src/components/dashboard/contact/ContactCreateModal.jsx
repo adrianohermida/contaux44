@@ -11,7 +11,16 @@ export default function ContactCreateModal({ open, onClose, workspaceId, onSucce
     email: '',
     phone: '',
     client_type: 'pj',
-    status: 'active'
+    status: 'active',
+    cpf: '',
+    cnpj: '',
+    endereco: '',
+    numero: '',
+    complemento: '',
+    bairro: '',
+    cidade: '',
+    uf: '',
+    cep: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -50,7 +59,16 @@ export default function ContactCreateModal({ open, onClose, workspaceId, onSucce
         email: '',
         phone: '',
         client_type: 'pj',
-        status: 'active'
+        status: 'active',
+        cpf: '',
+        cnpj: '',
+        endereco: '',
+        numero: '',
+        complemento: '',
+        bairro: '',
+        cidade: '',
+        uf: '',
+        cep: ''
       });
       onSuccess?.(newContact);
       onClose();
@@ -64,50 +82,10 @@ export default function ContactCreateModal({ open, onClose, workspaceId, onSucce
   return (
     <ContactModal open={open} onClose={onClose} title="Novo Contato">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
-            Nome da Empresa *
-          </label>
-          <Input
-            name="company_name"
-            value={formData.company_name}
-            onChange={handleChange}
-            placeholder="Digite o nome"
-            disabled={isLoading}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
-            Email *
-          </label>
-          <Input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="email@example.com"
-            disabled={isLoading}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
-            Telefone
-          </label>
-          <Input
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="(11) 98765-4321"
-            disabled={isLoading}
-          />
-        </div>
-
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
-              Tipo
+              Tipo *
             </label>
             <select
               name="client_type"
@@ -135,6 +113,154 @@ export default function ContactCreateModal({ open, onClose, workspaceId, onSucce
               <option value="active">Ativo</option>
               <option value="inactive">Inativo</option>
             </select>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+            Nome {formData.client_type === 'pf' ? 'da Pessoa' : 'da Empresa'} *
+          </label>
+          <Input
+            name="company_name"
+            value={formData.company_name}
+            onChange={handleChange}
+            placeholder={formData.client_type === 'pf' ? 'Seu nome completo' : 'Nome da empresa'}
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              {formData.client_type === 'pf' ? 'CPF' : 'CNPJ'}
+            </label>
+            <Input
+              name={formData.client_type === 'pf' ? 'cpf' : 'cnpj'}
+              value={formData.client_type === 'pf' ? formData.cpf : formData.cnpj}
+              onChange={handleChange}
+              placeholder={formData.client_type === 'pf' ? '123.456.789-00' : '12.345.678/0001-90'}
+              disabled={isLoading}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              Email *
+            </label>
+            <Input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="email@example.com"
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+            Telefone
+          </label>
+          <Input
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="(11) 98765-4321"
+            disabled={isLoading}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+            CEP
+          </label>
+          <Input
+            name="cep"
+            value={formData.cep}
+            onChange={handleChange}
+            placeholder="12345-678"
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="grid grid-cols-3 gap-4">
+          <div className="col-span-2">
+            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              Endereço
+            </label>
+            <Input
+              name="endereco"
+              value={formData.endereco}
+              onChange={handleChange}
+              placeholder="Rua/Avenida"
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              Número
+            </label>
+            <Input
+              name="numero"
+              value={formData.numero}
+              onChange={handleChange}
+              placeholder="123"
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+            Complemento
+          </label>
+          <Input
+            name="complemento"
+            value={formData.complemento}
+            onChange={handleChange}
+            placeholder="Apto, Sala, etc"
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              Bairro
+            </label>
+            <Input
+              name="bairro"
+              value={formData.bairro}
+              onChange={handleChange}
+              placeholder="Bairro"
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              Cidade
+            </label>
+            <Input
+              name="cidade"
+              value={formData.cidade}
+              onChange={handleChange}
+              placeholder="Cidade"
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              UF
+            </label>
+            <Input
+              name="uf"
+              value={formData.uf}
+              onChange={handleChange}
+              placeholder="SP"
+              maxLength="2"
+              disabled={isLoading}
+            />
           </div>
         </div>
 
