@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2, RefreshCw } from 'lucide-react';
 
 export default function RLSDebugger() {
   const [loading, setLoading] = useState(false);
@@ -17,8 +18,11 @@ export default function RLSDebugger() {
         action: 'validate'
       });
       setResults(data);
+      toast.success('Validação RLS concluída');
     } catch (err) {
-      setError(err.message || 'Erro ao validar RLS');
+      const message = err.message || 'Erro ao validar RLS';
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -33,8 +37,11 @@ export default function RLSDebugger() {
         target_workspace_id: 'other-workspace-test'
       });
       setResults(data);
+      toast.success('Teste de isolamento concluído');
     } catch (err) {
-      setError(err.message || 'Erro ao testar isolamento');
+      const message = err.message || 'Erro ao testar isolamento';
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -48,19 +55,35 @@ export default function RLSDebugger() {
         action: 'generate_sql'
       });
       setResults(data);
+      toast.success('SQL gerado com sucesso');
     } catch (err) {
-      setError(err.message || 'Erro ao gerar SQL');
+      const message = err.message || 'Erro ao gerar SQL';
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
+  const clearResults = () => {
+    setResults(null);
+    setError(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">RLS Debugger - Sprint 9</h1>
-          <p className="text-slate-600">Validar e testar Row Level Security</p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">RLS Debugger</h1>
+            <p className="text-slate-600">Validar e testar Row Level Security</p>
+          </div>
+          {(results || error) && (
+            <Button onClick={clearResults} variant="outline" size="sm" className="gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Limpar
+            </Button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
