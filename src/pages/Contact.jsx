@@ -32,6 +32,7 @@ export default function Contact() {
   const [showTagManager, setShowTagManager] = useState(false);
   const [showTagStats, setShowTagStats] = useState(false);
   const [showBulkTagEditor, setShowBulkTagEditor] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [sortBy, setSortBy] = useState('created_date');
   const [sortOrder, setSortOrder] = useState('desc');
   const debouncedSearch = useDebounce(searchTerm, 300);
