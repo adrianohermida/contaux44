@@ -53,13 +53,13 @@ export default function ContactNotesList({ contactId, workspaceId }) {
 
   const createNoteMutation = useMutation({
     mutationFn: async (data) => {
+      if (!workspaceId || !contactId) throw new Error('Workspace ID required');
       const note = await base44.entities.ContactNote.create({
         ...data,
         workspace_id: workspaceId,
         contact_id: contactId,
       });
-      
-      // Create activity
+
       await base44.entities.ContactActivity.create({
         workspace_id: workspaceId,
         contact_id: contactId,
@@ -67,13 +67,16 @@ export default function ContactNotesList({ contactId, workspaceId }) {
         description: `Nota adicionada: ${NOTE_TYPE_LABELS[data.note_type]}`,
         metadata: { note_id: note.id, note_type: data.note_type },
       });
-      
+
       return note;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['contact-notes'] });
-      queryClient.invalidateQueries({ queryKey: ['contact-activities'] });
+      queryClient.invalidateQueries({ queryKey: ['contact-notes', contactId, workspaceId] });
+      queryClient.invalidateQueries({ queryKey: ['contact-activities', contactId, workspaceId] });
       setShowForm(false);
+    },
+    onError: () => {
+      throw new Error('Erro ao adicionar nota');
     },
   });
 
@@ -90,10 +93,22 @@ export default function ContactNotesList({ contactId, workspaceId }) {
 
   const deleteNoteMutation = useMutation({
     mutationFn: async (id) => {
+      if (!workspaceId) throw new Error('Workspace ID required');
+      await base44.entities.ContactActivity.create({
+        workspace_id: workspaceId,
+        contact_id: contactId,
+        activity_type: 'note',
+        description: 'Nota deletada',
+        metadata: { deleted_note_id: id },
+      });
       return await base44.entities.ContactNote.delete(id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['contact-notes'] });
+      queryClient.invalidateQueries({ queryKey: ['contact-notes', contactId, workspaceId] });
+      queryClient.invalidateQueries({ queryKey: ['contact-activities', contactId, workspaceId] });
+    },
+    onError: () => {
+      throw new Error('Erro ao deletar nota');
     },
   });
 
