@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import ChartOfAccountsForm from '../components/dashboard/ChartOfAccountsForm';
 import ChartOfAccountsList from '../components/dashboard/ChartOfAccountsList';
 import { Button } from '@/components/ui/button';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function ChartOfAccounts() {
-  const { tenantId } = useUserAndTenant();
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
 
   const handleSave = () => {
     setShowForm(false);
@@ -23,16 +29,6 @@ export default function ChartOfAccounts() {
     setEditingAccount(account);
     setShowForm(true);
   };
-
-  if (!tenantId) {
-    return (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <div className="text-center py-8">Carregando...</div>
-        </DashboardLayout>
-      </ProtectedRoute>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -51,19 +47,19 @@ export default function ChartOfAccounts() {
       </div>
 
       {showForm && (
-        <ChartOfAccountsForm
-          account={editingAccount}
-          tenantId={tenantId}
-          onSave={handleSave}
-          onCancel={() => { setShowForm(false); setEditingAccount(null); }}
-        />
-      )}
+         <ChartOfAccountsForm
+           account={editingAccount}
+           tenantId={workspaceId}
+           onSave={handleSave}
+           onCancel={() => { setShowForm(false); setEditingAccount(null); }}
+         />
+       )}
 
-      <ChartOfAccountsList
-        tenantId={tenantId}
-        onEdit={handleEdit}
-        onRefresh={refreshKey}
-      />
+       <ChartOfAccountsList
+         tenantId={workspaceId}
+         onEdit={handleEdit}
+         onRefresh={refreshKey}
+       />
     </div>
   );
 }
