@@ -264,12 +264,14 @@ export default function BlogEditor({ blog, onSave, categories = [] }) {
           <Button
             onClick={async () => {
               try {
+                const { toast } = await import('sonner');
                 await base44.functions.invoke('sendNewsletterPost', {
                   blog_post_id: formData.id
                 });
-                alert('Newsletter enviada com sucesso!');
+                toast.success('Newsletter enviada com sucesso!');
               } catch (error) {
-                alert('Erro ao enviar newsletter: ' + error.message);
+                const { toast } = await import('sonner');
+                toast.error('Erro ao enviar newsletter: ' + error.message);
               }
             }}
             variant="outline"

@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, ChevronDown, BarChart3, Clock, MessageSquare, Zap, Upload } from 'lucide-react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Plus, BarChart3, Clock, MessageSquare, Upload, AlertCircle, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import BlogEditor from '../components/dashboard/blog/BlogEditor';
 import BlogList from '../components/dashboard/blog/BlogList';
@@ -15,21 +17,14 @@ import BlogPostCSVUploader from '../components/dashboard/BlogPostCSVUploader';
 export default function BlogManager() {
   const [view, setView] = useState('list');
   const [editingBlog, setEditingBlog] = useState(null);
-  const [categories, setCategories] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
-
-  const loadCategories = async () => {
-    try {
-      const data = await base44.entities.BlogCategory.list();
-      setCategories(data);
-    } catch (error) {
-      console.error('Erro ao carregar categorias:', error);
-    }
-  };
+  const { data: categories = [], isLoading: categoriesLoading, refetch: refetchCategories, error: categoriesError } = useQuery({
+    queryKey: ['BlogCategory-list'],
+    queryFn: async () => base44.entities.BlogCategory.list(),
+    staleTime: 10 * 60 * 1000,
+    retry: 2
+  });
 
   const handleNewBlog = () => {
     setEditingBlog(null);
@@ -45,14 +40,16 @@ export default function BlogManager() {
     try {
       if (editingBlog?.id) {
         await base44.entities.BlogPost.update(editingBlog.id, data);
+        toast.success('Blog atualizado com sucesso');
       } else {
         await base44.entities.BlogPost.create(data);
+        toast.success('Blog criado com sucesso');
       }
       setRefreshKey(prev => prev + 1);
       setView('list');
       setEditingBlog(null);
     } catch (error) {
-      console.error('Erro ao salvar blog:', error);
+      toast.error('Erro ao salvar blog: ' + error.message);
     }
   };
 
@@ -63,6 +60,22 @@ export default function BlogManager() {
     }));
   };
 
+  if (categoriesError && !categories.length) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold text-slate-900">Gerenciador de Blogs</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
+          <p className="text-red-600 mb-4">Erro ao carregar categorias</p>
+          <Button onClick={() => refetchCategories()} className="gap-2">
+            <RefreshCw className="w-4 h-4" />
+            Tentar Novamente
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -71,12 +84,20 @@ export default function BlogManager() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Gerenciador de Blogs</h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">Crie, edite, otimize e agende seus artigos com IA</p>
         </div>
-        {view === 'list' && (
-          <Button onClick={handleNewBlog} className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
-            <Plus className="w-4 h-4" />
-            Novo Blog
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {view === 'list' && (
+            <>
+              <Button onClick={() => refetchCategories()} variant="outline" size="sm" className="gap-2">
+                <RefreshCw className="w-4 h-4" />
+                Atualizar
+              </Button>
+              <Button onClick={handleNewBlog} className="gap-2 bg-blue-600 hover:bg-blue-700">
+                <Plus className="w-4 h-4" />
+                Novo Blog
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Navigation Tabs */}
