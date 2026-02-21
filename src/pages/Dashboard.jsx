@@ -5,6 +5,8 @@ import ContactTagsWidget from '../components/dashboard/widgets/ContactTagsWidget
 import RecentActivityWidget from '../components/dashboard/widgets/RecentActivityWidget';
 import DuplicateAlertsWidget from '../components/dashboard/widgets/DuplicateAlertsWidget';
 import DataQualityWidget from '../components/dashboard/widgets/DataQualityWidget';
+import ContactGrowthWidget from '../components/dashboard/widgets/ContactGrowthWidget';
+import TagPerformanceWidget from '../components/dashboard/widgets/TagPerformanceWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -39,9 +41,15 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Row 2 - Full width activity feed */}
-      <div className="grid grid-cols-1 gap-6">
+      {/* Row 2 - Activity + Growth */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RecentActivityWidget workspaceId={workspaceId} />
+        <TagPerformanceWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 3 - Full width growth chart */}
+      <div className="grid grid-cols-1 gap-6">
+        <ContactGrowthWidget workspaceId={workspaceId} />
       </div>
     </div>
   );
