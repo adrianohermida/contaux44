@@ -30,7 +30,11 @@ import AIRecommendations from '@/components/dashboard/ai/AIRecommendations';
 import WorkflowAutomation from '@/components/dashboard/automation/WorkflowAutomation';
 import AdvancedAnalytics from '@/components/dashboard/ai/AdvancedAnalytics';
 import NLPTextAnalysis from '@/components/dashboard/ai/NLPTextAnalysis';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare } from 'lucide-react';
+import StripeIntegration from '@/components/dashboard/integrations/StripeIntegration';
+import GoogleWorkspaceSync from '@/components/dashboard/integrations/GoogleWorkspaceSync';
+import BundleOptimizer from '@/components/dashboard/performance/BundleOptimizer';
+import UsageAnalytics from '@/components/dashboard/monitoring/UsageAnalytics';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, Zap as ZapIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
@@ -144,7 +148,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-23 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-27 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dashboard</span>
@@ -220,6 +224,22 @@ export default function Reports() {
           <TabsTrigger value="nlp" className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">NLP</span>
+          </TabsTrigger>
+          <TabsTrigger value="stripe" className="flex items-center gap-2">
+            <CreditCard className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Stripe</span>
+          </TabsTrigger>
+          <TabsTrigger value="google" className="flex items-center gap-2">
+            <Mail className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Google</span>
+          </TabsTrigger>
+          <TabsTrigger value="bundle" className="flex items-center gap-2">
+            <Package className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Bundle</span>
+          </TabsTrigger>
+          <TabsTrigger value="usage" className="flex items-center gap-2">
+            <Activity className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Uso</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -406,6 +426,26 @@ export default function Reports() {
         {/* NLP Text Analysis */}
         <TabsContent value="nlp" className="mt-6">
           <NLPTextAnalysis />
+        </TabsContent>
+
+        {/* Stripe Integration */}
+        <TabsContent value="stripe" className="mt-6">
+          {workspaceId && <StripeIntegration workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Google Workspace Sync */}
+        <TabsContent value="google" className="mt-6">
+          {workspaceId && <GoogleWorkspaceSync workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Bundle Optimizer */}
+        <TabsContent value="bundle" className="mt-6">
+          <BundleOptimizer />
+        </TabsContent>
+
+        {/* Usage Analytics */}
+        <TabsContent value="usage" className="mt-6">
+          {workspaceId && <UsageAnalytics workspaceId={workspaceId} />}
         </TabsContent>
 
         {/* Report Builder */}
