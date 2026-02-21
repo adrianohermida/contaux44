@@ -1,100 +1,64 @@
-import * as React from "react"
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
+import React from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button";
+export function Pagination({ currentPage, totalPages, onPageChange, hasPrev, hasNext }) {
+  if (totalPages <= 1) return null;
 
-const Pagination = ({
-  className,
-  ...props
-}) => (
-  <nav
-    role="navigation"
-    aria-label="pagination"
-    className={cn("mx-auto flex w-full justify-center", className)}
-    {...props} />
-)
-Pagination.displayName = "Pagination"
+  const getPageNumbers = () => {
+    const pages = [];
+    const showPages = 5;
+    let start = Math.max(1, currentPage - Math.floor(showPages / 2));
+    let end = Math.min(totalPages, start + showPages - 1);
 
-const PaginationContent = React.forwardRef(({ className, ...props }, ref) => (
-  <ul
-    ref={ref}
-    className={cn("flex flex-row items-center gap-1", className)}
-    {...props} />
-))
-PaginationContent.displayName = "PaginationContent"
+    if (end - start < showPages - 1) {
+      start = Math.max(1, end - showPages + 1);
+    }
 
-const PaginationItem = React.forwardRef(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn("", className)} {...props} />
-))
-PaginationItem.displayName = "PaginationItem"
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
 
-const PaginationLink = ({
-  className,
-  isActive,
-  size = "icon",
-  ...props
-}) => (
-  <a
-    aria-current={isActive ? "page" : undefined}
-    className={cn(buttonVariants({
-      variant: isActive ? "outline" : "ghost",
-      size,
-    }), className)}
-    {...props} />
-)
-PaginationLink.displayName = "PaginationLink"
+    return pages;
+  };
 
-const PaginationPrevious = ({
-  className,
-  ...props
-}) => (
-  <PaginationLink
-    aria-label="Go to previous page"
-    size="default"
-    className={cn("gap-1 pl-2.5", className)}
-    {...props}>
-    <ChevronLeft className="h-4 w-4" />
-    <span>Previous</span>
-  </PaginationLink>
-)
-PaginationPrevious.displayName = "PaginationPrevious"
+  return (
+    <div className="flex items-center justify-center gap-2 mt-6">
+      <Button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={!hasPrev}
+        variant="outline"
+        size="sm"
+        className="gap-1"
+      >
+        <ChevronLeft className="w-4 h-4" />
+        Anterior
+      </Button>
 
-const PaginationNext = ({
-  className,
-  ...props
-}) => (
-  <PaginationLink
-    aria-label="Go to next page"
-    size="default"
-    className={cn("gap-1 pr-2.5", className)}
-    {...props}>
-    <span>Next</span>
-    <ChevronRight className="h-4 w-4" />
-  </PaginationLink>
-)
-PaginationNext.displayName = "PaginationNext"
+      <div className="flex gap-1">
+        {getPageNumbers().map((page) => (
+          <Button
+            key={page}
+            onClick={() => onPageChange(page)}
+            variant={page === currentPage ? 'default' : 'outline'}
+            size="sm"
+            className={page === currentPage ? 'bg-blue-600 hover:bg-blue-700' : ''}
+          >
+            {page}
+          </Button>
+        ))}
+      </div>
 
-const PaginationEllipsis = ({
-  className,
-  ...props
-}) => (
-  <span
-    aria-hidden
-    className={cn("flex h-9 w-9 items-center justify-center", className)}
-    {...props}>
-    <MoreHorizontal className="h-4 w-4" />
-    <span className="sr-only">More pages</span>
-  </span>
-)
-PaginationEllipsis.displayName = "PaginationEllipsis"
-
-export {
-  Pagination,
-  PaginationContent,
-  PaginationLink,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-  PaginationEllipsis,
+      <Button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={!hasNext}
+        variant="outline"
+        size="sm"
+        className="gap-1"
+      >
+        Próxima
+        <ChevronRight className="w-4 h-4" />
+      </Button>
+    </div>
+  );
 }

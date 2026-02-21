@@ -1,33 +1,44 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import { Filter, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function ContactListFilters({ onFilterChange, activeFilters }) {
-  const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState({
+const filterReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_FILTER':
+      return { ...state, [action.key]: action.value };
+    case 'RESET_FILTERS':
+      return { status: 'all', type: 'all' };
+    case 'TOGGLE_VISIBILITY':
+      return { ...state, showFilters: !state.showFilters };
+    default:
+      return state;
+  }
+};
+
+export default function ContactListFilters({ onFilterChange }) {
+  const [state, dispatch] = useReducer(filterReducer, {
     status: 'all',
     type: 'all',
+    showFilters: false,
   });
 
   const handleFilterChange = (key, value) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
+    dispatch({ type: 'SET_FILTER', key, value });
+    onFilterChange({ ...state, [key]: value });
   };
 
   const clearFilters = () => {
-    const defaultFilters = { status: 'all', type: 'all' };
-    setFilters(defaultFilters);
-    onFilterChange(defaultFilters);
+    dispatch({ type: 'RESET_FILTERS' });
+    onFilterChange({ status: 'all', type: 'all' });
   };
 
-  const activeCount = Object.values(filters).filter(v => v !== 'all').length;
+  const activeCount = [state.status, state.type].filter(v => v !== 'all').length;
 
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <Button
-          onClick={() => setShowFilters(!showFilters)}
+          onClick={() => dispatch({ type: 'TOGGLE_VISIBILITY' })}
           variant="outline"
           size="sm"
           className="gap-2"
@@ -53,7 +64,7 @@ export default function ContactListFilters({ onFilterChange, activeFilters }) {
         )}
       </div>
 
-      {showFilters && (
+      {state.showFilters && (
         <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 space-y-3">
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
@@ -65,7 +76,7 @@ export default function ContactListFilters({ onFilterChange, activeFilters }) {
                   key={value}
                   onClick={() => handleFilterChange('status', value)}
                   className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                    filters.status === value
+                    state.status === value
                       ? 'bg-blue-600 text-white dark:bg-blue-700'
                       : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-blue-300'
                   }`}
@@ -86,7 +97,7 @@ export default function ContactListFilters({ onFilterChange, activeFilters }) {
                   key={value}
                   onClick={() => handleFilterChange('type', value)}
                   className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                    filters.type === value
+                    state.type === value
                       ? 'bg-blue-600 text-white dark:bg-blue-700'
                       : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-blue-300'
                   }`}
