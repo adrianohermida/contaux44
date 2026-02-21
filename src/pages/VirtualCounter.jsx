@@ -30,7 +30,7 @@ export default function VirtualCounter() {
 
     loadConversations();
 
-    // Subscribe para novas conversas
+    // Subscribe para novas conversas e atualizações
     const unsubscribe = base44.entities.VirtualCounterConversation.subscribe((event) => {
       if (event.type === 'create' && event.data.workspace_id === workspaceId) {
         setConversations(prev => [event.data, ...prev]);
@@ -38,6 +38,8 @@ export default function VirtualCounter() {
         setConversations(prev => 
           prev.map(c => c.id === event.id ? event.data : c)
         );
+      } else if (event.type === 'delete' && event.data?.workspace_id === workspaceId) {
+        setConversations(prev => prev.filter(c => c.id !== event.id));
       }
     });
 
