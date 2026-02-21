@@ -49,7 +49,6 @@
  */
 import About from './pages/About';
 import AccountingCalendar from './pages/AccountingCalendar';
-import Admin from './pages/Admin';
 import App from './pages/App';
 import AuditLogs from './pages/AuditLogs';
 import Automations from './pages/Automations';
@@ -92,25 +91,6 @@ import Sales from './pages/Sales';
 import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
 import SettingsPage from './pages/SettingsPage';
-import Sprint13Planning from './pages/Sprint13Planning';
-import Sprint13Review from './pages/Sprint13Review';
-import Sprint14Completion from './pages/Sprint14Completion';
-import Sprint14Planning from './pages/Sprint14Planning';
-import Sprint14Review from './pages/Sprint14Review';
-import Sprint15Completion from './pages/Sprint15Completion';
-import Sprint15Planning from './pages/Sprint15Planning';
-import Sprint15Review from './pages/Sprint15Review';
-import Sprint16Completion from './pages/Sprint16Completion';
-import Sprint16FinalReview from './pages/Sprint16FinalReview';
-import Sprint16Planning from './pages/Sprint16Planning';
-import Sprint17Completion from './pages/Sprint17Completion';
-import Sprint17Planning from './pages/Sprint17Planning';
-import Sprint18Planning from './pages/Sprint18Planning';
-import Sprint7Tracker from './pages/Sprint7Tracker';
-import Sprint8Tracker from './pages/Sprint8Tracker';
-import Sprint9Completion from './pages/Sprint9Completion';
-import Sprint9Tracker from './pages/Sprint9Tracker';
-import SprintReview from './pages/SprintReview';
 import TaxCalculation from './pages/TaxCalculation';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
@@ -123,7 +103,6 @@ import __Layout from './Layout.jsx';
 export const PAGES = {
     "About": About,
     "AccountingCalendar": AccountingCalendar,
-    "Admin": Admin,
     "App": App,
     "AuditLogs": AuditLogs,
     "Automations": Automations,
@@ -166,25 +145,6 @@ export const PAGES = {
     "SecurityCenter": SecurityCenter,
     "Services": Services,
     "SettingsPage": SettingsPage,
-    "Sprint13Planning": Sprint13Planning,
-    "Sprint13Review": Sprint13Review,
-    "Sprint14Completion": Sprint14Completion,
-    "Sprint14Planning": Sprint14Planning,
-    "Sprint14Review": Sprint14Review,
-    "Sprint15Completion": Sprint15Completion,
-    "Sprint15Planning": Sprint15Planning,
-    "Sprint15Review": Sprint15Review,
-    "Sprint16Completion": Sprint16Completion,
-    "Sprint16FinalReview": Sprint16FinalReview,
-    "Sprint16Planning": Sprint16Planning,
-    "Sprint17Completion": Sprint17Completion,
-    "Sprint17Planning": Sprint17Planning,
-    "Sprint18Planning": Sprint18Planning,
-    "Sprint7Tracker": Sprint7Tracker,
-    "Sprint8Tracker": Sprint8Tracker,
-    "Sprint9Completion": Sprint9Completion,
-    "Sprint9Tracker": Sprint9Tracker,
-    "SprintReview": SprintReview,
     "TaxCalculation": TaxCalculation,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
