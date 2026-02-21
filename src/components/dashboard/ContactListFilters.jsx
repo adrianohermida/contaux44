@@ -108,6 +108,39 @@ export default function ContactListFilters({ onFilterChange, tags = [] }) {
               ))}
             </div>
           </div>
+
+          {tags.length > 0 && (
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                Tag
+              </label>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={() => handleFilterChange('tag', 'all')}
+                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                    state.tag === 'all'
+                      ? 'bg-blue-600 text-white dark:bg-blue-700'
+                      : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-blue-300'
+                  }`}
+                >
+                  Todas
+                </button>
+                {tags.map((tag) => (
+                  <button
+                    key={tag.id}
+                    onClick={() => handleFilterChange('tag', tag.id)}
+                    className={`px-3 py-1 rounded-full text-sm transition-colors border ${
+                      state.tag === tag.id
+                        ? 'bg-blue-600 text-white border-blue-600 dark:bg-blue-700'
+                        : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-blue-300'
+                    }`}
+                  >
+                    {tag.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
