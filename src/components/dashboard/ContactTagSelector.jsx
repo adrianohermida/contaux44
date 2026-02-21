@@ -46,14 +46,27 @@ export default function ContactTagSelector({ contactId, workspaceId }) {
 
   const addTagMutation = useMutation({
     mutationFn: async (tagId) => {
-      return await base44.entities.ContactTagAssignment.create({
+      const assignment = await base44.entities.ContactTagAssignment.create({
         workspace_id: workspaceId,
         contact_id: contactId,
         tag_id: tagId,
       });
+      
+      // Create activity log
+      const tag = allTags.find(t => t.id === tagId);
+      await base44.entities.ContactActivity.create({
+        workspace_id: workspaceId,
+        contact_id: contactId,
+        activity_type: 'tag_added',
+        description: `Tag adicionada: ${tag?.name || 'Tag'}`,
+        metadata: { tag_id: tagId, tag_name: tag?.name },
+      });
+      
+      return assignment;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact-tag-assignments'] });
+      queryClient.invalidateQueries({ queryKey: ['contact-activities'] });
       updateTagCount();
     },
   });
@@ -62,11 +75,23 @@ export default function ContactTagSelector({ contactId, workspaceId }) {
     mutationFn: async (tagId) => {
       const assignment = assignments.find(a => a.tag_id === tagId);
       if (assignment) {
-        return await base44.entities.ContactTagAssignment.delete(assignment.id);
+        const tag = allTags.find(t => t.id === tagId);
+        
+        await base44.entities.ContactTagAssignment.delete(assignment.id);
+        
+        // Create activity log
+        await base44.entities.ContactActivity.create({
+          workspace_id: workspaceId,
+          contact_id: contactId,
+          activity_type: 'tag_removed',
+          description: `Tag removida: ${tag?.name || 'Tag'}`,
+          metadata: { tag_id: tagId, tag_name: tag?.name },
+        });
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact-tag-assignments'] });
+      queryClient.invalidateQueries({ queryKey: ['contact-activities'] });
       updateTagCount();
     },
   });

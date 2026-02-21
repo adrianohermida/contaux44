@@ -40,6 +40,7 @@ export default function ContactBulkTagEditor({ selectedIds, workspaceId, open, o
       if (action === 'add') {
         // Add tags to all selected contacts
         const operations = [];
+        const activityOps = [];
         for (const contactId of contactIds) {
           for (const tagId of tagIds) {
             // Check if assignment already exists
@@ -55,13 +56,27 @@ export default function ContactBulkTagEditor({ selectedIds, workspaceId, open, o
                   tag_id: tagId,
                 })
               );
+              
+              // Create activity for each tag added
+              const tag = tags.find(t => t.id === tagId);
+              activityOps.push(
+                base44.entities.ContactActivity.create({
+                  workspace_id: workspaceId,
+                  contact_id: contactId,
+                  activity_type: 'tag_added',
+                  description: `Tag adicionada em massa: ${tag?.name || 'Tag'}`,
+                  metadata: { tag_id: tagId, tag_name: tag?.name, bulk_operation: true },
+                })
+              );
             }
           }
         }
-        return await Promise.all(operations);
+        await Promise.all([...operations, ...activityOps]);
+        return operations.length;
       } else {
         // Remove tags from all selected contacts
         const operations = [];
+        const activityOps = [];
         for (const contactId of contactIds) {
           for (const tagId of tagIds) {
             const assignments = await base44.entities.ContactTagAssignment.filter({
@@ -70,15 +85,29 @@ export default function ContactBulkTagEditor({ selectedIds, workspaceId, open, o
             });
             for (const assignment of assignments) {
               operations.push(base44.entities.ContactTagAssignment.delete(assignment.id));
+              
+              // Create activity for each tag removed
+              const tag = tags.find(t => t.id === tagId);
+              activityOps.push(
+                base44.entities.ContactActivity.create({
+                  workspace_id: workspaceId,
+                  contact_id: contactId,
+                  activity_type: 'tag_removed',
+                  description: `Tag removida em massa: ${tag?.name || 'Tag'}`,
+                  metadata: { tag_id: tagId, tag_name: tag?.name, bulk_operation: true },
+                })
+              );
             }
           }
         }
-        return await Promise.all(operations);
+        await Promise.all([...operations, ...activityOps]);
+        return operations.length;
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact-tag-assignments'] });
       queryClient.invalidateQueries({ queryKey: ['contact-tags'] });
+      queryClient.invalidateQueries({ queryKey: ['contact-activities'] });
       handleClose();
     },
   });
