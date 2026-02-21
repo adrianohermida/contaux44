@@ -23,6 +23,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '../components/hooks/useToast';
 import { ToastContainer } from '../components/ui/toast-notification';
 import { useDebounce } from '../components/hooks/useDebounce';
+import { sanitizeInput, hasSecurityRisk } from '../components/security/InputValidator';
+import { useCSRFToken } from '../components/security/CSRFProtection';
 import {
   validateContactForm,
   validateEmailUniqueness,
@@ -192,12 +194,25 @@ export default function ContactDetails() {
 
 
 
+  // CSRF Token
+  const { token } = useCSRFToken();
+
   // Save mutation
-  const saveMutation = useMutation({
-    mutationFn: async (data) => {
-      let result;
-      if (contactId === 'new') {
-        result = await base44.entities.Client.create(data);
+   const saveMutation = useMutation({
+     mutationFn: async (data) => {
+       // Security: Verify CSRF token before save
+       if (!token) throw new Error('CSRF token missing');
+
+       // Security: Final sanitization before save
+       const sanitizedData = {
+         ...data,
+         company_name: sanitizeInput(data.company_name, 'text'),
+         email: sanitizeInput(data.email, 'email'),
+         phone: sanitizeInput(data.phone, 'phone'),
+       };
+       let result;
+       if (contactId === 'new') {
+         result = await base44.entities.Client.create(sanitizedData);
         
         // Create "created" activity for new contact
         await base44.entities.ContactActivity.create({
@@ -210,8 +225,8 @@ export default function ContactDetails() {
       } else {
         // Check if status changed
         const statusChanged = contact.status !== data.status;
-        
-        await base44.entities.Client.update(contactId, data);
+
+        await base44.entities.Client.update(contactId, sanitizedData);
         result = { id: contactId, ...data };
         
         // Create "edit" activity
@@ -221,7 +236,7 @@ export default function ContactDetails() {
           activity_type: 'edit',
           description: 'Informações do contato editadas',
           metadata: { 
-            fields_updated: Object.keys(data).filter(key => contact[key] !== data[key])
+            fields_updated: Object.keys(sanitizedData).filter(key => contact[key] !== sanitizedData[key])
           },
         });
         
@@ -308,7 +323,17 @@ export default function ContactDetails() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    let newValue = value;
+    
+    // Security: Check for XSS/SQL injection
+    if (hasSecurityRisk(value)) {
+      console.warn(`Security risk detected in field: ${name}`);
+      setErrors(prev => ({ ...prev, [name]: 'Entrada contém caracteres suspeitos' }));
+      return;
+    }
+
+    // Security: Sanitize input
+    const fieldType = name === 'email' ? 'email' : name === 'phone' ? 'phone' : 'text';
+    let newValue = sanitizeInput(value, fieldType);
 
     // Limpar CPF/CNPJ quando muda tipo
     if (name === 'client_type') {
