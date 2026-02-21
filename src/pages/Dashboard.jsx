@@ -4,6 +4,7 @@ import ContactStatisticsWidget from '../components/dashboard/widgets/ContactStat
 import ContactTagsWidget from '../components/dashboard/widgets/ContactTagsWidget';
 import RecentActivityWidget from '../components/dashboard/widgets/RecentActivityWidget';
 import DuplicateAlertsWidget from '../components/dashboard/widgets/DuplicateAlertsWidget';
+import DataQualityWidget from '../components/dashboard/widgets/DataQualityWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -32,7 +33,10 @@ export default function Dashboard() {
         {/* Row 1 */}
         <ContactStatisticsWidget workspaceId={workspaceId} />
         <ContactTagsWidget workspaceId={workspaceId} />
-        <DuplicateAlertsWidget duplicateCount={0} />
+        <div className="grid grid-cols-1 gap-6 md:col-span-2 lg:col-span-1">
+          <DuplicateAlertsWidget workspaceId={workspaceId} />
+          <DataQualityWidget workspaceId={workspaceId} />
+        </div>
       </div>
 
       {/* Row 2 - Full width activity feed */}

@@ -1,13 +1,47 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, CheckCircle, Search } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Search, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
-export default function DuplicateAlertsWidget({ duplicateCount = 0 }) {
+export default function DuplicateAlertsWidget({ workspaceId }) {
+  const { data: duplicateData, isLoading } = useQuery({
+    queryKey: ['scan-duplicates', workspaceId],
+    queryFn: async () => {
+      const result = await base44.functions.invoke('scanDuplicates', { 
+        workspace_id: workspaceId 
+      });
+      return result.data;
+    },
+    enabled: !!workspaceId,
+    staleTime: 15 * 60 * 1000, // Cache 15 min
+  });
+
+  const duplicateCount = duplicateData?.totalFound || 0;
   const hasDuplicates = duplicateCount > 0;
   const isHigh = duplicateCount > 5;
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5 text-slate-400" />
+            Alertas de Duplicatas
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="text-center space-y-2">
+            <Loader2 className="w-6 h-6 animate-spin mx-auto text-blue-600" />
+            <p className="text-sm text-slate-600 dark:text-slate-400">Escaneando...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className={hasDuplicates ? 'border-yellow-300 dark:border-yellow-700' : ''}>
