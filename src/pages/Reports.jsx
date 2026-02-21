@@ -38,7 +38,11 @@ import CIPipelineManager from '@/components/dashboard/devops/CIPipelineManager';
 import InfrastructureManager from '@/components/dashboard/devops/InfrastructureManager';
 import AlertingManager from '@/components/dashboard/devops/AlertingManager';
 import APIDocumentation from '@/components/dashboard/documentation/APIDocumentation';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, GitBranch, Server, Bell, BookOpen } from 'lucide-react';
+import AdvancedMonitoringDashboard from '@/components/dashboard/monitoring/AdvancedMonitoringDashboard';
+import MetricsCollector from '@/components/dashboard/monitoring/MetricsCollector';
+import PerformanceOptimizer from '@/components/dashboard/performance/PerformanceOptimizer';
+import ObservabilityEngine from '@/components/dashboard/monitoring/ObservabilityEngine';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, GitBranch, Server, Bell, BookOpen, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
@@ -152,7 +156,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-31 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-35 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dashboard</span>
@@ -260,6 +264,22 @@ export default function Reports() {
           <TabsTrigger value="docs" className="flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Docs</span>
+          </TabsTrigger>
+          <TabsTrigger value="advmon" className="flex items-center gap-2">
+            <Activity className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Adv Mon</span>
+          </TabsTrigger>
+          <TabsTrigger value="metricsco" className="flex items-center gap-2">
+            <Database className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Métricas</span>
+          </TabsTrigger>
+          <TabsTrigger value="perfopt" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Otim</span>
+          </TabsTrigger>
+          <TabsTrigger value="observ" className="flex items-center gap-2">
+            <Eye className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Observ</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -486,6 +506,26 @@ export default function Reports() {
         {/* API Documentation */}
         <TabsContent value="docs" className="mt-6">
           <APIDocumentation />
+        </TabsContent>
+
+        {/* Advanced Monitoring */}
+        <TabsContent value="advmon" className="mt-6">
+          {workspaceId && <AdvancedMonitoringDashboard workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Metrics Collector */}
+        <TabsContent value="metricsco" className="mt-6">
+          {workspaceId && <MetricsCollector workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Performance Optimizer */}
+        <TabsContent value="perfopt" className="mt-6">
+          {workspaceId && <PerformanceOptimizer workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Observability Engine */}
+        <TabsContent value="observ" className="mt-6">
+          {workspaceId && <ObservabilityEngine workspaceId={workspaceId} />}
         </TabsContent>
 
         {/* Report Builder */}
