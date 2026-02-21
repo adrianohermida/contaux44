@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ChevronRight, TrendingUp } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency } from '@/lib/PageNotFound';
 
 const PIPELINE_STAGES = [
   { id: 'prospect', label: 'Prospect', color: 'bg-slate-100 border-slate-300' },
