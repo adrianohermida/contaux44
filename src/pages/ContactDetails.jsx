@@ -161,21 +161,9 @@ export default function ContactDetails() {
     );
   }
 
-  // Route validation - check for error/not found
-  const routeErrorElement = ContactRouteValidator({ 
-    contactId,
-    isLoading,
-    error: queryError,
-    contact,
-    onNavigateBack: () => navigate('/contact')
-  });
-
+  const routeErrorElement = ContactRouteValidator({ contactId, isLoading, error: queryError, contact, onNavigateBack: () => navigate('/contact') });
   if (routeErrorElement) {
-    return (
-      <ProtectedInternalRoute>
-        {routeErrorElement}
-      </ProtectedInternalRoute>
-    );
+    return <ProtectedInternalRoute>{routeErrorElement}</ProtectedInternalRoute>;
   }
 
   if (!formData) return null;
@@ -184,322 +172,37 @@ export default function ContactDetails() {
     <ProtectedInternalRoute>
       <ToastContainer toasts={toasts} onRemove={removeToast} />
       <div className="space-y-6 pb-12">
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate('/contact')}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
-          </Button>
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-              {isEditing ? (contactId === 'new' ? 'Novo Contato' : 'Editar Contato') : formData.company_name}
-            </h1>
-          </div>
-        </div>
+        <ContactDetailsHeader 
+          isEditing={isEditing} 
+          contactId={contactId} 
+          formData={formData}
+          onBack={() => navigate('/contact')}
+        />
 
-        {/* Tabs Navigation with Lazy Loading */}
-         {contactId !== 'new' && !isEditing && contact && (
-           <Tabs value={activeTab} onValueChange={(value) => {
-             setActiveTab(value);
-             setLoadedTabs(prev => new Set([...prev, value]));
-           }} className="space-y-6">
-             <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:grid-cols-none">
-               <TabsTrigger value="info">Info</TabsTrigger>
-               <TabsTrigger value="notes">Notas</TabsTrigger>
-               <TabsTrigger value="activity">Atividades</TabsTrigger>
-               <TabsTrigger value="tags">Tags</TabsTrigger>
-               <TabsTrigger value="relationships">Relações</TabsTrigger>
-               <TabsTrigger value="files">Arquivos</TabsTrigger>
-               <TabsTrigger value="duplicates">Duplicatas</TabsTrigger>
-             </TabsList>
+        {contactId !== 'new' && !isEditing && contact && (
+          <ContactDetailsTabs 
+            contact={contact}
+            contactId={contactId}
+            workspaceId={workspaceId}
+            formData={formData}
+            onEditClick={() => setIsEditing(true)}
+          />
+        )}
 
-             <LazyTabContent value="info" activeTab={activeTab}>
-               <Card className="bg-white dark:bg-slate-800">
-                 <CardHeader className="flex flex-row items-center justify-between">
-                   <CardTitle>Informações do Contato</CardTitle>
-                   <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
-                     Editar
-                   </Button>
-                 </CardHeader>
-                 <CardContent>
-                   <ContactInfoDisplay 
-                     formData={formData} 
-                     contact={contact}
-                     workspaceId={workspaceId}
-                     contactId={contactId}
-                   />
-                 </CardContent>
-               </Card>
-             </LazyTabContent>
-
-             <LazyTabContent value="notes" activeTab={activeTab} loading={!loadedTabs.has('notes')}>
-               {loadedTabs.has('notes') && <ContactNotesList contactId={contactId} workspaceId={workspaceId} />}
-             </LazyTabContent>
-
-             <LazyTabContent value="activity" activeTab={activeTab} loading={!loadedTabs.has('activity')}>
-               {loadedTabs.has('activity') && <ContactActivityTimeline contactId={contactId} workspaceId={workspaceId} />}
-             </LazyTabContent>
-
-             <LazyTabContent value="tags" activeTab={activeTab} loading={!loadedTabs.has('tags')}>
-               {loadedTabs.has('tags') && (
-                 <Card className="bg-white dark:bg-slate-800">
-                   <CardHeader>
-                     <CardTitle>Tags do Contato</CardTitle>
-                   </CardHeader>
-                   <CardContent>
-                     <ContactTagSelector contactId={contactId} workspaceId={workspaceId} />
-                   </CardContent>
-                 </Card>
-               )}
-             </LazyTabContent>
-
-             <LazyTabContent value="relationships" activeTab={activeTab} loading={!loadedTabs.has('relationships')}>
-               {loadedTabs.has('relationships') && (
-                 <Card className="bg-white dark:bg-slate-800">
-                   <CardHeader>
-                     <CardTitle>Relacionamentos</CardTitle>
-                   </CardHeader>
-                   <CardContent>
-                     <ContactRelationshipManager contactId={contactId} workspaceId={workspaceId} />
-                   </CardContent>
-                 </Card>
-               )}
-             </LazyTabContent>
-
-             <LazyTabContent value="files" activeTab={activeTab} loading={!loadedTabs.has('files')}>
-               {loadedTabs.has('files') && (
-                 <Card className="bg-white dark:bg-slate-800">
-                   <CardHeader>
-                     <CardTitle>Arquivos Anexados</CardTitle>
-                   </CardHeader>
-                   <CardContent>
-                     <ContactAttachments contactId={contactId} workspaceId={workspaceId} />
-                   </CardContent>
-                 </Card>
-               )}
-             </LazyTabContent>
-
-             <LazyTabContent value="duplicates" activeTab={activeTab} loading={!loadedTabs.has('duplicates')}>
-               {loadedTabs.has('duplicates') && <DuplicateDetector workspaceId={workspaceId} contactId={contactId} />}
-             </LazyTabContent>
-           </Tabs>
-         )}
-
-        {/* Edit Form (shown when editing or creating new) */}
         {(isEditing || contactId === 'new') && (
-          <Card className="bg-white dark:bg-slate-800">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Informações do Contato</CardTitle>
-              {!isEditing && contactId !== 'new' && (
-                <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
-                  Editar
-                </Button>
-              )}
-            </CardHeader>
-            <CardContent>
-            <div className="space-y-6">
-              {/* Basic Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <ContactFormField
-                  label="Nome da Empresa"
-                  name="company_name"
-                  value={formData.company_name}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  error={errors.company_name}
-                />
-                <ContactFormField
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  error={errors.email}
-                />
-                <ContactFormField
-                  label="Telefone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  error={errors.phone}
-                  formatFn={formatPhone}
-                />
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Tipo</label>
-                  <select
-                    name="client_type"
-                    value={formData.client_type}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
-                  >
-                    <option value="pf">Pessoa Física</option>
-                    <option value="pj">Pessoa Jurídica</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Document Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {formData.client_type === 'pf' ? (
-                  <ContactFormField
-                    label="CPF"
-                    name="cpf"
-                    value={formData.cpf}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    error={errors.cpf}
-                    formatFn={formatCPF}
-                  />
-                ) : (
-                  <ContactFormField
-                    label="CNPJ"
-                    name="cnpj"
-                    value={formData.cnpj}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    error={errors.cnpj}
-                    formatFn={formatCNPJ}
-                  />
-                )}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Status</label>
-                  <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
-                  >
-                    <option value="active">Ativo</option>
-                    <option value="inactive">Inativo</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Custom Fields */}
-              <ContactCustomFields 
-                contactId={contactId}
-                workspaceId={workspaceId}
-                disabled={!isEditing}
-              />
-
-              {/* Address Info */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100">Endereço</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <ContactFormField
-                      label="CEP"
-                      name="cep"
-                      value={formData.cep}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      error={errors.cep}
-                      formatFn={formatCEP}
-                    />
-                    {isEditing && formData.cep && (
-                      <div className="mt-2">
-                        <ContactCEPLookup 
-                          cep={formData.cep}
-                          disabled={!isEditing}
-                          onAddressFound={(address) => {
-                            setFormData(prev => ({ ...prev, ...address }));
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <ContactFormField
-                    label="Rua"
-                    name="endereco"
-                    value={formData.endereco}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    placeholder="Preenchido automaticamente ao buscar CEP"
-                  />
-                  <ContactFormField
-                    label="Número"
-                    name="numero"
-                    value={formData.numero}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                  />
-                  <ContactFormField
-                    label="Complemento"
-                    name="complemento"
-                    value={formData.complemento}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                  />
-                  <ContactFormField
-                    label="Bairro"
-                    name="bairro"
-                    value={formData.bairro}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    placeholder="Preenchido automaticamente ao buscar CEP"
-                  />
-                  <ContactFormField
-                    label="Cidade"
-                    name="cidade"
-                    value={formData.cidade}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    placeholder="Preenchido automaticamente ao buscar CEP"
-                  />
-                  <ContactFormField
-                    label="UF"
-                    name="uf"
-                    value={formData.uf}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    maxLength="2"
-                    placeholder="Preenchido automaticamente ao buscar CEP"
-                  />
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-4 border-t space-y-3">
-                {isEditing && (
-                  <div className="flex gap-3">
-                    <Button
-                      onClick={handleSave}
-                      disabled={saveMutation.isPending}
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      {saveMutation.isPending ? 'Salvando...' : 'Salvar'}
-                    </Button>
-                    <Button onClick={handleCancel} variant="outline">
-                      <X className="w-4 h-4 mr-2" />
-                      Cancelar
-                    </Button>
-                  </div>
-                )}
-                {!isEditing && contactId !== 'new' && (
-                  <ContactDeleteButton 
-                    contactId={contactId}
-                    contactCreatedBy={contact?.created_by}
-                    onSuccess={() => navigate('/contact')}
-                  />
-                )}
-              </div>
-
-              {/* Metadata - only in edit mode */}
-              {!isEditing && contactId !== 'new' && (
-                <ContactMetadata contact={contact} />
-              )}
-            </div>
-          </CardContent>
-        </Card>
+          <ContactEditForm
+            formData={formData}
+            errors={errors}
+            isEditing={isEditing}
+            contactId={contactId}
+            contact={contact}
+            workspaceId={workspaceId}
+            isSaving={saveMutation.isPending}
+            onInputChange={handleInputChange}
+            onSave={handleSave}
+            onCancel={handleCancel}
+            onDelete={() => navigate('/contact')}
+          />
         )}
       </div>
     </ProtectedInternalRoute>
