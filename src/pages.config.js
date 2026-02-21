@@ -79,31 +79,11 @@ import Invoicing from './pages/Invoicing';
 import LegalProcesses from './pages/LegalProcesses';
 import LoyaltyPrograms from './pages/LoyaltyPrograms';
 import ManualPosting from './pages/ManualPosting';
-import MultiLanguageSupport from './pages/MultiLanguageSupport';
 import MyBookmarks from './pages/MyBookmarks';
 import Notifications from './pages/Notifications';
-import NotificationsCenter from './pages/NotificationsCenter';
-import OAuth2Setup from './pages/OAuth2Setup';
-import OfflineSync from './pages/OfflineSync';
-import OnboardClient from './pages/OnboardClient';
-import OverallProjectStatus from './pages/OverallProjectStatus';
-import PWASetup from './pages/PWASetup';
-import PWASetupPage from './pages/PWASetupPage';
 import Payments from './pages/Payments';
-import PerformanceBenchmark from './pages/PerformanceBenchmark';
-import PerformanceOptimization from './pages/PerformanceOptimization';
-import PerformanceScaling from './pages/PerformanceScaling';
-import PersonalizationRulesEngine from './pages/PersonalizationRulesEngine';
 import Portfolio from './pages/Portfolio';
-import PortfolioSingle from './pages/PortfolioSingle';
-import PredictiveAnalytics from './pages/PredictiveAnalytics';
 import Pricing from './pages/Pricing';
-import PrivacyDashboard from './pages/PrivacyDashboard';
-import ProfilingDashboard from './pages/ProfilingDashboard';
-import ProgressiveWebApp from './pages/ProgressiveWebApp';
-import PushNotificationCampaigns from './pages/PushNotificationCampaigns';
-import PushNotificationsPro from './pages/PushNotificationsPro';
-import QueueManagement from './pages/QueueManagement';
 import QuoteRequest from './pages/QuoteRequest';
 import Quotes from './pages/Quotes';
 import RBACManagement from './pages/RBACManagement';
@@ -213,31 +193,11 @@ export const PAGES = {
     "LegalProcesses": LegalProcesses,
     "LoyaltyPrograms": LoyaltyPrograms,
     "ManualPosting": ManualPosting,
-    "MultiLanguageSupport": MultiLanguageSupport,
     "MyBookmarks": MyBookmarks,
     "Notifications": Notifications,
-    "NotificationsCenter": NotificationsCenter,
-    "OAuth2Setup": OAuth2Setup,
-    "OfflineSync": OfflineSync,
-    "OnboardClient": OnboardClient,
-    "OverallProjectStatus": OverallProjectStatus,
-    "PWASetup": PWASetup,
-    "PWASetupPage": PWASetupPage,
     "Payments": Payments,
-    "PerformanceBenchmark": PerformanceBenchmark,
-    "PerformanceOptimization": PerformanceOptimization,
-    "PerformanceScaling": PerformanceScaling,
-    "PersonalizationRulesEngine": PersonalizationRulesEngine,
     "Portfolio": Portfolio,
-    "PortfolioSingle": PortfolioSingle,
-    "PredictiveAnalytics": PredictiveAnalytics,
     "Pricing": Pricing,
-    "PrivacyDashboard": PrivacyDashboard,
-    "ProfilingDashboard": ProfilingDashboard,
-    "ProgressiveWebApp": ProgressiveWebApp,
-    "PushNotificationCampaigns": PushNotificationCampaigns,
-    "PushNotificationsPro": PushNotificationsPro,
-    "QueueManagement": QueueManagement,
     "QuoteRequest": QuoteRequest,
     "Quotes": Quotes,
     "RBACManagement": RBACManagement,
