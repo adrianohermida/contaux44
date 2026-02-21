@@ -61,6 +61,12 @@ export default function TicketForm({ ticket, onSave, onCancel, tenantId, isOpen 
 
     if (!validateForm(formData, VALIDATION_RULES)) return;
 
+    // Validar campo client_id obrigatório
+    if (!formData.client_id || formData.client_id.trim() === '') {
+      alert('Por favor, selecione um cliente');
+      return;
+    }
+
     await submit(
       async () => {
         if (ticket?.id) {
@@ -84,8 +90,10 @@ export default function TicketForm({ ticket, onSave, onCancel, tenantId, isOpen 
     <ModalWrapper isOpen={isOpen} onClose={onCancel} title={ticket ? 'Editar Ticket' : 'Novo Ticket'} size="md">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
+          <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required />
           <FormField label="Nº Ticket" name="ticket_number" value={formData.ticket_number} onChange={handleChange} error={errors.ticket_number} required />
           <FormField label="Título" name="title" value={formData.title} onChange={handleChange} error={errors.title} required />
+          <FormField label="Descrição" type="textarea" name="description" value={formData.description} onChange={handleChange} />
           <FormField label="Categoria" type="select" name="category" value={formData.category} onChange={(v) => setFieldValue('category', v)} options={categoryOptions} />
           <FormField label="Prioridade" type="select" name="priority" value={formData.priority} onChange={(v) => setFieldValue('priority', v)} options={priorityOptions} />
           <FormField label="Atribuir a" name="assigned_to" value={formData.assigned_to} onChange={handleChange} />

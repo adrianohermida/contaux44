@@ -13,16 +13,18 @@ export default function TicketList({ tenantId, onEdit, onRefresh }) {
   const { isConnected } = useRealtimeSync('Ticket', tenantId);
   const parentRef = useRef(null);
 
-  const { data: tickets = [], isLoading: loading, refetch } = useQuery({
-    queryKey: ['Ticket-list', tenantId],
-    queryFn: async () => {
-      if (!tenantId) return [];
-      return base44.entities.Ticket.filter({ 
-        workspace_id: tenantId 
-      });
-    },
-    enabled: !!tenantId,
-    staleTime: 3 * 60 * 1000, // ✅ 3 min - dados dinâmicos mas não críticos
+  const { data: tickets = [], isLoading: loading, refetch, error } = useQuery({
+   queryKey: ['Ticket-list', tenantId],
+   queryFn: async () => {
+     if (!tenantId) return [];
+     return base44.entities.Ticket.filter({ 
+       workspace_id: tenantId 
+     });
+   },
+   enabled: !!tenantId,
+   staleTime: 3 * 60 * 1000,
+   retry: 2,
+   retryDelay: 1000
   });
 
   // Virtualização
@@ -60,6 +62,18 @@ export default function TicketList({ tenantId, onEdit, onRefresh }) {
     };
     return colors[status] || 'bg-slate-100';
   }, []);
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
+        <p className="text-red-600">Erro ao carregar tickets</p>
+        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline mt-2 text-sm">
+          Tentar novamente
+        </button>
+      </div>
+    );
+  }
 
   if (loading) return <div className="text-center py-8 text-slate-500">Carregando tickets...</div>;
 
