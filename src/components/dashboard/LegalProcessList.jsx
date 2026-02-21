@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCacheStrategy } from '../hooks/useCacheStrategy';
 import { useRealtimeSync } from '../hooks/useRealtimeSync';
 
@@ -15,13 +16,17 @@ const ProcessRow = React.memo(({ process, onEdit, onDelete, getPriorityColor }) 
         {process.priority}
       </span>
     </td>
-    <td className="px-6 py-4 text-sm">{process.status}</td>
+    <td className="px-6 py-4 text-sm">
+      <span className="px-2 py-1 bg-slate-100 rounded text-xs">
+        {process.status}
+      </span>
+    </td>
     <td className="px-6 py-4 text-right">
       <div className="flex justify-end gap-2">
         <Button variant="ghost" size="sm" onClick={() => onEdit(process)}>
           <Edit2 className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" onClick={() => onDelete(process.id)}>
+        <Button variant="ghost" size="sm" onClick={() => onDelete(process.id, process.process_number)}>
           <Trash2 className="w-4 h-4 text-red-500" />
         </Button>
       </div>
@@ -35,8 +40,8 @@ export default function LegalProcessList({ tenantId, onEdit, onRefresh }) {
   const { invalidateRelated } = useCacheStrategy();
   const { isConnected } = useRealtimeSync('LegalProcess', tenantId);
 
-  const { data: processes = [], isLoading: loading, refetch } = useQuery({
-    queryKey: ['LegalProcess-list', tenantId],
+  const { data: processes = [], isLoading: loading, refetch, error } = useQuery({
+    queryKey: ['LegalProcess-list', tenantId, onRefresh],
     queryFn: async () => {
       if (!tenantId) return [];
       return base44.entities.LegalProcess.filter({ 
@@ -45,21 +50,24 @@ export default function LegalProcessList({ tenantId, onEdit, onRefresh }) {
     },
     enabled: !!tenantId,
     staleTime: 2 * 60 * 1000,
+    retry: 2,
+    retryDelay: 1000
   });
 
   useEffect(() => {
     if (onRefresh) refetch();
   }, [onRefresh, refetch]);
 
-  const handleDelete = useCallback(async (id) => {
-    if (confirm('Tem certeza?')) {
-      try {
-        await base44.entities.LegalProcess.delete(id);
-        invalidateRelated('LegalProcess', id);
-        refetch();
-      } catch (error) {
-        console.error('Erro ao deletar:', error);
-      }
+  const handleDelete = useCallback(async (id, processNumber) => {
+    if (!confirm(`Tem certeza que deseja deletar o processo ${processNumber}? Esta ação não pode ser desfeita.`)) return;
+    try {
+      await base44.entities.LegalProcess.delete(id);
+      toast.success('Processo deletado com sucesso');
+      invalidateRelated('LegalProcess', id);
+      refetch();
+    } catch (error) {
+      console.error('Erro ao deletar:', error);
+      toast.error('Erro ao deletar processo. Tente novamente.');
     }
   }, [invalidateRelated, refetch]);
 
@@ -68,7 +76,19 @@ export default function LegalProcessList({ tenantId, onEdit, onRefresh }) {
     return colors[priority] || 'bg-slate-100';
   }, []);
 
-  if (loading) return <div className="text-center py-8">Carregando...</div>;
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
+        <p className="text-red-600 mb-4">Erro ao carregar processos</p>
+        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+          Tentar novamente
+        </button>
+      </div>
+    );
+  }
+
+  if (loading) return <div className="text-center py-8 text-slate-500">Carregando processos...</div>;
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -94,7 +114,13 @@ export default function LegalProcessList({ tenantId, onEdit, onRefresh }) {
           ))}
         </tbody>
       </table>
-      {processes.length === 0 && <div className="text-center py-8 text-slate-500">Nenhum processo cadastrado</div>}
+      {processes.length === 0 && (
+        <div className="text-center py-12">
+          <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <p className="text-slate-500 font-medium">Nenhum processo cadastrado</p>
+          <p className="text-slate-400 text-sm mt-1">Comece criando um novo processo judicial</p>
+        </div>
+      )}
     </div>
   );
 }
