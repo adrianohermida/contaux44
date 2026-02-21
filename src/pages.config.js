@@ -83,6 +83,7 @@ import BulkImportExport from './pages/BulkImportExport';
 import CRMEnhancementPlan from './pages/CRMEnhancementPlan';
 import CacheManagement from './pages/CacheManagement';
 import CachingStrategy from './pages/CachingStrategy';
+import Campaigns from './pages/Campaigns';
 import CashFlow from './pages/CashFlow';
 import CashFlowForecast from './pages/CashFlowForecast';
 import ChartOfAccounts from './pages/ChartOfAccounts';
@@ -147,6 +148,7 @@ import LegalProcesses from './pages/LegalProcesses';
 import LifetimeValuePredictor from './pages/LifetimeValuePredictor';
 import LiveStreaming from './pages/LiveStreaming';
 import LoadTestingFramework from './pages/LoadTestingFramework';
+import LoyaltyPrograms from './pages/LoyaltyPrograms';
 import LoyaltyRewards from './pages/LoyaltyRewards';
 import ManualPosting from './pages/ManualPosting';
 import Marketplace from './pages/Marketplace';
@@ -159,12 +161,12 @@ import MultiCurrency from './pages/MultiCurrency';
 import MultiLanguageSupport from './pages/MultiLanguageSupport';
 import MyBookmarks from './pages/MyBookmarks';
 import Notifications from './pages/Notifications';
+import PWASetup from './pages/PWASetup';
 import NotificationsCenter from './pages/NotificationsCenter';
 import OAuth2Setup from './pages/OAuth2Setup';
 import OfflineSync from './pages/OfflineSync';
 import OnboardClient from './pages/OnboardClient';
 import OverallProjectStatus from './pages/OverallProjectStatus';
-import PWASetup from './pages/PWASetup';
 import PWASetupPage from './pages/PWASetupPage';
 import Payments from './pages/Payments';
 import PerformanceBenchmark from './pages/PerformanceBenchmark';
@@ -254,8 +256,6 @@ import VoiceCommerce from './pages/VoiceCommerce';
 import WebhookManagement from './pages/WebhookManagement';
 import Welcome from './pages/Welcome';
 import WhiteLabel from './pages/WhiteLabel';
-import Campaigns from './pages/Campaigns';
-import LoyaltyPrograms from './pages/LoyaltyPrograms';
 import __Layout from './Layout.jsx';
 
 
@@ -296,6 +296,7 @@ export const PAGES = {
     "CRMEnhancementPlan": CRMEnhancementPlan,
     "CacheManagement": CacheManagement,
     "CachingStrategy": CachingStrategy,
+    "Campaigns": Campaigns,
     "CashFlow": CashFlow,
     "CashFlowForecast": CashFlowForecast,
     "ChartOfAccounts": ChartOfAccounts,
@@ -360,6 +361,7 @@ export const PAGES = {
     "LifetimeValuePredictor": LifetimeValuePredictor,
     "LiveStreaming": LiveStreaming,
     "LoadTestingFramework": LoadTestingFramework,
+    "LoyaltyPrograms": LoyaltyPrograms,
     "LoyaltyRewards": LoyaltyRewards,
     "ManualPosting": ManualPosting,
     "Marketplace": Marketplace,
@@ -372,12 +374,12 @@ export const PAGES = {
     "MultiLanguageSupport": MultiLanguageSupport,
     "MyBookmarks": MyBookmarks,
     "Notifications": Notifications,
+    "PWASetup": PWASetup,
     "NotificationsCenter": NotificationsCenter,
     "OAuth2Setup": OAuth2Setup,
     "OfflineSync": OfflineSync,
     "OnboardClient": OnboardClient,
     "OverallProjectStatus": OverallProjectStatus,
-    "PWASetup": PWASetup,
     "PWASetupPage": PWASetupPage,
     "Payments": Payments,
     "PerformanceBenchmark": PerformanceBenchmark,
@@ -467,8 +469,6 @@ export const PAGES = {
     "WebhookManagement": WebhookManagement,
     "Welcome": Welcome,
     "WhiteLabel": WhiteLabel,
-    "Campaigns": Campaigns,
-    "LoyaltyPrograms": LoyaltyPrograms,
 }
 
 export const pagesConfig = {

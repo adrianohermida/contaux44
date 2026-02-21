@@ -19,6 +19,7 @@ import ContactTagStatistics from '../components/dashboard/ContactTagStatistics';
 import { usePagination } from '../components/hooks/usePagination';
 import { Pagination } from '../components/ui/pagination';
 import { useDebounce } from '../components/hooks/useDebounce';
+import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../utils/contactQuery';
 
 export default function Contact() {
   const navigate = useNavigate();
@@ -36,12 +37,10 @@ export default function Contact() {
 
   // Build backend query
   const backendQuery = useMemo(() => {
-    const query = { tenant_id: workspaceId };
-    if (filters.status !== 'all') query.status = filters.status;
-    if (filters.type !== 'all') query.client_type = filters.type;
-    return query;
+    return buildContactQuery(workspaceId, filters);
   }, [workspaceId, filters]);
 
+  // Query 1: Contacts
   const { data: contacts = [], isLoading } = useQuery({
     queryKey: ['contacts', workspaceId, filters],
     queryFn: async () => {
@@ -50,37 +49,41 @@ export default function Contact() {
     },
     enabled: !!workspaceId && !authLoading,
     staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
+  // Query 2: Tags (once per workspace)
   const { data: tags = [] } = useQuery({
     queryKey: ['contact-tags', workspaceId],
     queryFn: async () => {
       return await base44.entities.ContactTag.filter({ workspace_id: workspaceId });
     },
     enabled: !!workspaceId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
   });
 
+  // Query 3: Assignments (once per workspace)
   const { data: allAssignments = [] } = useQuery({
     queryKey: ['all-contact-tag-assignments', workspaceId],
     queryFn: async () => {
       return await base44.entities.ContactTagAssignment.filter({ workspace_id: workspaceId });
     },
     enabled: !!workspaceId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
   });
 
-  // Client-side search, filter by tag, and sort
+  // Memoize normalized lookups (O(1) instead of O(n))
+  const assignmentMap = useMemo(() => normalizeAssignments(allAssignments), [allAssignments]);
+  const tagsMap = useMemo(() => createTagMap(tags), [tags]);
+
+  // Client-side search, filter by tag, and sort (optimized)
   const filteredAndSortedContacts = useMemo(() => {
     let result = contacts;
     
     // Search
-    if (debouncedSearch) {
-      result = result.filter(c => 
-        c.company_name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
-        c.email.toLowerCase().includes(debouncedSearch.toLowerCase())
-      );
-    }
+    result = filterBySearch(result, debouncedSearch);
 
     // Filter by tag
     if (filters.tag && filters.tag !== 'all') {
@@ -91,12 +94,7 @@ export default function Contact() {
     }
     
     // Sort
-    result = [...result].sort((a, b) => {
-      const aVal = a[sortBy] || '';
-      const bVal = b[sortBy] || '';
-      const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
+    result = sortContacts(result, sortBy, sortOrder);
     
     return result;
   }, [contacts, debouncedSearch, sortBy, sortOrder, filters.tag, allAssignments]);
@@ -262,10 +260,8 @@ export default function Contact() {
               </div>
             ) : (
               paginatedItems.map(contact => {
-                const contactTags = allAssignments
-                  .filter(a => a.contact_id === contact.id)
-                  .map(a => tags.find(t => t.id === a.tag_id))
-                  .filter(Boolean);
+                // O(1) lookup using normalized maps instead of O(n) filtering
+                const contactTags = getContactTags(contact.id, assignmentMap, tagsMap);
                 
                 return (
                   <div
