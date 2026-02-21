@@ -189,16 +189,56 @@ export default function ContactDetails() {
   // Save mutation
   const saveMutation = useMutation({
     mutationFn: async (data) => {
+      let result;
       if (contactId === 'new') {
-        return await base44.entities.Client.create(data);
+        result = await base44.entities.Client.create(data);
+        
+        // Create "created" activity for new contact
+        await base44.entities.ContactActivity.create({
+          workspace_id: workspaceId,
+          contact_id: result.id,
+          activity_type: 'created',
+          description: 'Contato criado',
+          metadata: { initial_status: data.status, client_type: data.client_type },
+        });
       } else {
+        // Check if status changed
+        const statusChanged = contact.status !== data.status;
+        
         await base44.entities.Client.update(contactId, data);
-        return { id: contactId, ...data };
+        result = { id: contactId, ...data };
+        
+        // Create "edit" activity
+        await base44.entities.ContactActivity.create({
+          workspace_id: workspaceId,
+          contact_id: contactId,
+          activity_type: 'edit',
+          description: 'Informações do contato editadas',
+          metadata: { 
+            fields_updated: Object.keys(data).filter(key => contact[key] !== data[key])
+          },
+        });
+        
+        // If status changed, create additional activity
+        if (statusChanged) {
+          await base44.entities.ContactActivity.create({
+            workspace_id: workspaceId,
+            contact_id: contactId,
+            activity_type: 'status_change',
+            description: `Status alterado de ${contact.status === 'active' ? 'Ativo' : 'Inativo'} para ${data.status === 'active' ? 'Ativo' : 'Inativo'}`,
+            metadata: { 
+              old_status: contact.status, 
+              new_status: data.status 
+            },
+          });
+        }
       }
+      return result;
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['contact-detail'] });
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['contact-activities'] });
       setIsEditing(false);
       setHasChanges(false);
       success('Contato salvo com sucesso!');
