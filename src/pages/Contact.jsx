@@ -149,187 +149,72 @@ export default function Contact() {
   return (
     <ProtectedInternalRoute>
       <div className="space-y-6 pb-20">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Contatos</h1>
-            <p className="text-slate-600 dark:text-slate-400 mt-1">
-              {filteredAndSortedContacts.length} de {contacts.length} contato{contacts.length !== 1 ? 's' : ''}
-            </p>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            <Button onClick={() => setShowTagStats(true)} variant="outline" size="sm" className="gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Estatísticas
-            </Button>
-            <Button onClick={() => setShowTagManager(true)} variant="outline" size="sm" className="gap-2">
-              <Tag className="w-4 h-4" />
-              Tags
-            </Button>
-            <Button onClick={() => setShowImport(true)} variant="outline" size="sm" className="gap-2">
-              <Upload className="w-4 h-4" />
-              Importar
-            </Button>
-            <ContactExportButton contacts={filteredAndSortedContacts} />
-            <Button onClick={handleNewContact} size="sm" className="gap-2">
-              <Plus className="w-5 h-5" />
-              Novo
-            </Button>
-          </div>
-        </div>
+        <ContactHeader
+          filteredCount={filteredAndSortedContacts.length}
+          totalCount={contacts.length}
+          onNewContact={handleNewContact}
+          onImportClick={() => openModal('import')}
+          onTagsClick={() => openModal('tagManager')}
+          onStatsClick={() => openModal('tagStats')}
+          contacts={filteredAndSortedContacts}
+        />
 
-        {/* Search, Filters and Sorting */}
-        <div className="flex flex-col md:flex-row gap-4">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <Input
-              type="text"
-              placeholder="Buscar por nome ou email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+        <ContactFiltersBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={filters}
+          onFiltersChange={setFilters}
+          tags={tags}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
+        />
 
-          {/* Filters and Sorting */}
-          <div className="flex gap-2">
-            <ContactListFilters onFilterChange={setFilters} tags={tags} />
-            <ContactSorting 
-              sortBy={sortBy}
-              sortOrder={sortOrder}
-              onSortChange={handleSortChange}
-            />
-          </div>
-        </div>
+        <ContactGrid
+          paginatedItems={paginatedItems}
+          isLoading={isLoading}
+          selectedIds={selectedIds}
+          onSelect={(id) => setSelectedIds(prev => 
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+          )}
+          onViewContact={handleViewContact}
+          contacts={contacts}
+          allAssignments={allAssignments}
+          tagsMap={tagsMap}
+          assignmentMap={assignmentMap}
+          getContactTags={getContactTags}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+          hasNext={hasNext}
+          hasPrev={hasPrev}
+          onNewContact={handleNewContact}
+          onImportClick={() => openModal('import')}
+        />
 
-        {/* Contacts Grid */}
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {isLoading ? (
-              Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="animate-pulse bg-white dark:bg-slate-800 rounded-xl border p-6">
-                  <div className="space-y-3">
-                    <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
-                    <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
-                    <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
-                  </div>
-                </div>
-              ))
-            ) : paginatedItems.length === 0 ? (
-              <div className="col-span-full text-center py-12">
-                <p className="text-slate-600 dark:text-slate-400 mb-4">
-                  {contacts.length === 0 ? 'Nenhum contato encontrado' : 'Nenhum contato corresponde aos filtros'}
-                </p>
-                <div className="flex gap-2 justify-center">
-                  {contacts.length === 0 && (
-                    <Button onClick={() => setShowImport(true)} variant="outline" className="gap-2">
-                      <Upload className="w-4 h-4" />
-                      Importar CSV
-                    </Button>
-                  )}
-                  <Button onClick={handleNewContact} variant="outline">
-                    {contacts.length === 0 ? 'Criar primeiro contato' : 'Limpar filtros'}
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              paginatedItems.map(contact => {
-                // O(1) lookup using normalized maps instead of O(n) filtering
-                const contactTags = getContactTags(contact.id, assignmentMap, tagsMap);
-                
-                return (
-                  <div
-                    key={contact.id}
-                    className="relative"
-                    onClick={() => handleViewContact(contact.id)}
-                  >
-                    {selectedIds.length > 0 && (
-                      <div className="absolute top-2 right-2 z-10">
-                        <input
-                          type="checkbox"
-                          checked={selectedIds.includes(contact.id)}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            toggleSelection(contact.id);
-                          }}
-                          className="w-5 h-5 rounded border-slate-300"
-                        />
-                      </div>
-                    )}
-                    <ContactCard contact={contact} tags={contactTags} onClick={() => {}} />
-                  </div>
-                );
-              })
-            )}
-          </div>
-
-          {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={goToPage}
-            hasNext={hasNext}
-            hasPrev={hasPrev}
-          />
-        </div>
-
-        {/* Bulk Actions */}
         <ContactBulkActions
           selectedIds={selectedIds}
           onClearSelection={() => setSelectedIds([])}
-          onEditTags={() => setShowBulkTagEditor(true)}
+          onEditTags={() => openModal('bulkTagEditor')}
           userRole={user?.role}
         />
 
-        {/* Bulk Tag Editor */}
         <ContactBulkTagEditor
           selectedIds={selectedIds}
           workspaceId={workspaceId}
-          open={showBulkTagEditor}
-          onClose={() => setShowBulkTagEditor(false)}
+          open={modalState.bulkTagEditor}
+          onClose={() => closeModal('bulkTagEditor')}
         />
 
-        {/* Import Modal */}
-        {showImport && (
-          <div className="fixed inset-0 z-50 bg-black/50 flex items-end">
-            <div className="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-t-xl max-h-[90vh] overflow-y-auto">
-              <ContactImportCSV 
-                workspaceId={workspaceId}
-                onClose={() => setShowImport(false)}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Tag Manager Modal */}
-        {showTagManager && (
-          <div className="fixed inset-0 z-50 bg-black/50 flex items-end">
-            <div className="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-t-xl max-h-[90vh] overflow-y-auto">
-              <ContactTagManager 
-                workspaceId={workspaceId}
-                onClose={() => setShowTagManager(false)}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Tag Stats Modal */}
-        {showTagStats && (
-          <div className="fixed inset-0 z-50 bg-black/50 flex items-end">
-            <div className="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-t-xl max-h-[90vh] overflow-y-auto">
-              <div className="p-6 space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-                    Estatísticas de Tags
-                  </h2>
-                  <Button onClick={() => setShowTagStats(false)} variant="ghost" size="sm">✕</Button>
-                </div>
-                <ContactTagStatistics workspaceId={workspaceId} />
-              </div>
-            </div>
-          </div>
-        )}
+        <ContactModals
+          showImport={modalState.import}
+          onCloseImport={() => closeModal('import')}
+          showTagManager={modalState.tagManager}
+          onCloseTagManager={() => closeModal('tagManager')}
+          showTagStats={modalState.tagStats}
+          onCloseTagStats={() => closeModal('tagStats')}
+          workspaceId={workspaceId}
+        />
       </div>
     </ProtectedInternalRoute>
   );
