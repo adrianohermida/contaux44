@@ -27,14 +27,36 @@ export default function ServicesForm({ service, tenantId, onSave, onCancel }) {
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
+
+    // Validar fields obrigatórios
+    if (!formData.service_name || formData.service_name.trim() === '') {
+      alert('Por favor, preencha o nome do serviço');
+      return;
+    }
+
+    if (!formData.hourly_rate || formData.hourly_rate <= 0) {
+      alert('Por favor, insira uma taxa horária maior que zero');
+      return;
+    }
+
     setSaving(true);
     try {
+      const dataToSave = {
+        ...formData,
+        service_name: formData.service_name.trim(),
+        hourly_rate: parseFloat(formData.hourly_rate),
+        tenant_id: tenantId
+      };
+
       if (service?.id) {
-        await base44.entities.Service.update(service.id, formData);
+        await base44.entities.Service.update(service.id, dataToSave);
       } else {
-        await base44.entities.Service.create({ ...formData, tenant_id: tenantId });
+        await base44.entities.Service.create(dataToSave);
       }
       onSave();
+    } catch (err) {
+      console.error('Erro ao salvar:', err);
+      alert('Erro ao salvar serviço. Tente novamente.');
     } finally {
       setSaving(false);
     }

@@ -3,13 +3,21 @@ import ServicesForm from '../components/dashboard/ServicesForm';
 import ServicesList from '../components/dashboard/ServicesList';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Services() {
-  const { tenantId } = useUserAndTenant();
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingService, setEditingService] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
 
   const handleSave = () => {
     setShowForm(false);
@@ -21,8 +29,6 @@ export default function Services() {
     setEditingService(service);
     setShowForm(true);
   };
-
-  if (!tenantId) return <div className="text-center py-8">Carregando...</div>;
 
   return (
     <div className="space-y-6">
@@ -41,19 +47,19 @@ export default function Services() {
       </div>
 
       {showForm && (
-        <ServicesForm
-          service={editingService}
-          tenantId={tenantId}
-          onSave={handleSave}
-          onCancel={() => { setShowForm(false); setEditingService(null); }}
-        />
-      )}
+         <ServicesForm
+           service={editingService}
+           tenantId={workspaceId}
+           onSave={handleSave}
+           onCancel={() => { setShowForm(false); setEditingService(null); }}
+         />
+       )}
 
-      <ServicesList
-        tenantId={tenantId}
-        onEdit={handleEdit}
-        onRefresh={refreshKey}
-      />
+       <ServicesList
+         tenantId={workspaceId}
+         onEdit={handleEdit}
+         onRefresh={refreshKey}
+       />
     </div>
   );
 }

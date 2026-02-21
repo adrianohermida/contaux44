@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Edit, Trash2, Loader2 } from 'lucide-react';
+import { Edit, Trash2, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
 const ServiceRow = React.memo(({ service, onEdit, onDelete }) => (
@@ -23,30 +25,43 @@ const ServiceRow = React.memo(({ service, onEdit, onDelete }) => (
 ServiceRow.displayName = 'ServiceRow';
 
 export default function ServicesList({ tenantId, onEdit, onRefresh }) {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadServices = useCallback(async () => {
-    try {
-      const data = await base44.entities.Service.filter({ tenant_id: tenantId });
-      setServices(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadServices();
-  }, [loadServices, onRefresh]);
+  const { data: services = [], isLoading: loading, refetch, error } = useQuery({
+    queryKey: ['services', tenantId, onRefresh],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      return base44.entities.Service.filter({ tenant_id: tenantId });
+    },
+    enabled: !!tenantId,
+    staleTime: 3 * 60 * 1000,
+    retry: 2,
+    retryDelay: 1000
+  });
 
   const handleDelete = useCallback(async (id) => {
-    if (confirm('Tem certeza que deseja deletar este serviço?')) {
+    if (!confirm('Tem certeza? Esta ação não pode ser desfeita. O serviço será deletado permanentemente.')) return;
+    try {
       await base44.entities.Service.delete(id);
-      setServices(prev => prev.filter(s => s.id !== id));
+      toast.success('Serviço deletado com sucesso');
+      refetch();
+    } catch (err) {
+      console.error('Erro ao deletar:', err);
+      toast.error('Erro ao deletar serviço. Tente novamente.');
     }
-  }, []);
+  }, [refetch]);
 
-  if (loading) return <div className="text-center py-8"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></div>;
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
+        <p className="text-red-600 mb-4">Erro ao carregar serviços</p>
+        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+          Tentar novamente
+        </button>
+      </div>
+    );
+  }
+
+  if (loading) return <div className="text-center py-8 text-slate-500">Carregando serviços...</div>;
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
