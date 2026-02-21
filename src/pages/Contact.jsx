@@ -20,6 +20,7 @@ import { usePagination } from '../components/hooks/usePagination';
 import { Pagination } from '../components/ui/pagination';
 import { useDebounce } from '../components/hooks/useDebounce';
 import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../components/dashboard/ContactQueryHelpers';
+import { withRateLimit } from '../components/security/RateLimiter';
 
 export default function Contact() {
   const navigate = useNavigate();
@@ -40,17 +41,25 @@ export default function Contact() {
     return buildContactQuery(workspaceId, filters);
   }, [workspaceId, filters]);
 
-  // Query 1: Contacts
-  const { data: contacts = [], isLoading } = useQuery({
-    queryKey: ['contacts', workspaceId, filters],
-    queryFn: async () => {
-      if (!workspaceId) return [];
-      return await base44.entities.Client.filter(backendQuery);
-    },
-    enabled: !!workspaceId && !authLoading,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  });
+  // Rate-limited Contact fetch
+   const limitedContactFetch = useCallback(
+     withRateLimit(
+       () => base44.entities.Client.filter(backendQuery),
+       'contacts.list',
+       15, // Allow 15 requests per minute for list
+       60000
+     ),
+     [backendQuery]
+   );
+
+   // Query 1: Contacts (with rate limiting)
+   const { data: contacts = [], isLoading } = useQuery({
+     queryKey: ['contacts', workspaceId, filters],
+     queryFn: limitedContactFetch,
+     enabled: !!workspaceId && !authLoading,
+     staleTime: 5 * 60 * 1000,
+     gcTime: 10 * 60 * 1000,
+   });
 
   // Query 2: Tags (once per workspace)
   const { data: tags = [] } = useQuery({

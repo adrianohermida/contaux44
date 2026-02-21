@@ -9,6 +9,7 @@ import ProtectedInternalRoute from './components/auth/ProtectedInternalRoute';
 import BottomNav from './components/BottomNav';
 import RouteTransition from './components/RouteTransition';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import SecurityDashboard from './components/security/SecurityDashboard';
 
 // ✅ Constante FORA do componente - criada uma única vez
 const DASHBOARD_PAGES = [
@@ -21,6 +22,9 @@ const DASHBOARD_PAGES = [
   'DocumentManagement', 'SecurityCenter', 
   'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger'
 ];
+
+// Security/Admin pages
+const SECURITY_DASHBOARD_PAGES = ['SecurityCenter', 'SettingsPage'];
 
 export default function Layout({ children, currentPageName }) {
   const setupTheme = () => {
@@ -109,6 +113,12 @@ export default function Layout({ children, currentPageName }) {
                   {children}
                 </RouteTransition>
               </ProtectedInternalRoute>
+              {/* Security Dashboard for admin pages */}
+              {SECURITY_DASHBOARD_PAGES.includes(currentPageName) && (
+                <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
+                  <SecurityDashboard />
+                </div>
+              )}
             </DashboardLayout>
             <BottomNav />
             <ReactQueryDevtools initialIsOpen={false} />
