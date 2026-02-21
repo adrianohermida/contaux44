@@ -1,37 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export default function CashFlowForecast() {
-  const { tenantId } = useUserAndTenant();
-  const [projections, setProjections] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadProjections = useCallback(async () => {
-    if (!tenantId) return;
-    
-    try {
-      const data = await base44.entities.CashFlowProjection.filter(
-        { tenant_id: tenantId },
+  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
+  const { data: projections = [], isLoading, refetch, error } = useQuery({
+    queryKey: ['cash-flow-projections', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return [];
+      return base44.entities.CashFlowProjection.filter(
+        { tenant_id: workspaceId },
         'projection_date',
         90
       );
-      setProjections(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadProjections();
-  }, [loadProjections]);
+    },
+    enabled: !!workspaceId && !authLoading,
+    staleTime: 15 * 60 * 1000,
+    retry: 2
+  });
 
   const chartData = projections.map(p => ({
     date: format(new Date(p.projection_date), 'dd/MM', { locale: ptBR }),
@@ -51,12 +44,45 @@ export default function CashFlowForecast() {
     criticalDays: projections.filter(p => p.closing_balance < 0).length
   };
 
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
+
+  if (error && !projections.length) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Previsão de Fluxo de Caixa</h1>
+          <p className="text-slate-600 mt-1">Projeção de caixa para os próximos 90 dias</p>
+        </div>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+          <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-3" />
+          <p className="text-red-600 mb-4">Erro ao carregar projeções</p>
+          <Button onClick={() => refetch()} className="gap-2">
+            <RefreshCw className="w-4 h-4" />
+            Tentar Novamente
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Previsão de Fluxo de Caixa</h1>
-            <p className="text-slate-600 mt-1">Projeção de caixa para os próximos 90 dias</p>
-          </div>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Previsão de Fluxo de Caixa</h1>
+          <p className="text-slate-600 mt-1">Projeção de caixa para os próximos 90 dias</p>
+        </div>
+        <Button onClick={() => refetch()} size="sm" variant="outline" className="gap-2">
+          <RefreshCw className="w-4 h-4" />
+          Atualizar
+        </Button>
+      </div>
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -110,7 +136,7 @@ export default function CashFlowForecast() {
               <CardTitle>Evolução do Saldo Projetado</CardTitle>
             </CardHeader>
             <CardContent>
-              {loading ? (
+              {isLoading ? (
                 <div className="text-center py-8">Carregando dados...</div>
               ) : chartData.length === 0 ? (
                 <div className="text-center py-8 text-slate-600">Nenhuma projeção disponível</div>
@@ -149,7 +175,7 @@ export default function CashFlowForecast() {
                 </ResponsiveContainer>
               ) : null}
             </CardContent>
-          </Card>
-          </div>
-          );
-          }
+        </Card>
+      </div>
+    );
+  }
