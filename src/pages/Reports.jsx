@@ -207,7 +207,7 @@ export default function Reports() {
                 <TicketAnalyticsChart tickets={analyticsData.tickets} />
               </div>
 
-              <ComparisonCard tenantId={tenantId} />
+              <ComparisonCard tenantId={workspaceId} />
 
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="bg-white rounded-lg shadow p-6">
