@@ -15,6 +15,8 @@ import ContactCEPLookup from '../components/dashboard/ContactCEPLookup';
 import ContactTagSelector from '../components/dashboard/ContactTagSelector';
 import ContactNotesList from '../components/dashboard/ContactNotesList';
 import ContactActivityTimeline from '../components/dashboard/ContactActivityTimeline';
+import ContactRelationshipManager from '../components/dashboard/ContactRelationshipManager';
+import DuplicateDetector from '../components/dashboard/DuplicateDetector';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '../components/hooks/useToast';
 import { ToastContainer } from '../components/ui/toast-notification';
@@ -373,11 +375,13 @@ export default function ContactDetails() {
         {/* Tabs Navigation */}
         {contactId !== 'new' && !isEditing && (
           <Tabs defaultValue="info" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 lg:w-auto">
-              <TabsTrigger value="info">Informações</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-6 lg:w-auto">
+              <TabsTrigger value="info">Info</TabsTrigger>
               <TabsTrigger value="notes">Notas</TabsTrigger>
               <TabsTrigger value="activity">Atividades</TabsTrigger>
               <TabsTrigger value="tags">Tags</TabsTrigger>
+              <TabsTrigger value="relationships">Relações</TabsTrigger>
+              <TabsTrigger value="duplicates">Duplicatas</TabsTrigger>
             </TabsList>
 
             <TabsContent value="info">
@@ -416,6 +420,21 @@ export default function ContactDetails() {
                   <ContactTagSelector contactId={contactId} workspaceId={workspaceId} />
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="relationships">
+              <Card className="bg-white dark:bg-slate-800">
+                <CardHeader>
+                  <CardTitle>Relacionamentos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ContactRelationshipManager contactId={contactId} workspaceId={workspaceId} />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="duplicates">
+              <DuplicateDetector workspaceId={workspaceId} contactId={contactId} />
             </TabsContent>
           </Tabs>
         )}
