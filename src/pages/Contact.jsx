@@ -19,7 +19,7 @@ import ContactTagStatistics from '../components/dashboard/ContactTagStatistics';
 import { usePagination } from '../components/hooks/usePagination';
 import { Pagination } from '../components/ui/pagination';
 import { useDebounce } from '../components/hooks/useDebounce';
-import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../utils/contactQuery';
+import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../components/dashboard/ContactQueryHelpers';
 
 export default function Contact() {
   const navigate = useNavigate();
