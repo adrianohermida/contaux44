@@ -13,6 +13,9 @@ import ContactDeleteButton from '../components/dashboard/ContactDeleteButton';
 import ContactMetadata from '../components/dashboard/ContactMetadata';
 import ContactCEPLookup from '../components/dashboard/ContactCEPLookup';
 import ContactTagSelector from '../components/dashboard/ContactTagSelector';
+import ContactNotesList from '../components/dashboard/ContactNotesList';
+import ContactActivityTimeline from '../components/dashboard/ContactActivityTimeline';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '../components/hooks/useToast';
 import { ToastContainer } from '../components/ui/toast-notification';
 import { useDebounce } from '../components/hooks/useDebounce';
@@ -24,6 +27,97 @@ import {
   formatPhone,
   formatCEP,
 } from '../components/dashboard/ContactFormValidation';
+
+function ContactInfoDisplay({ formData, contact, workspaceId, contactId }) {
+  return (
+    <div className="space-y-6">
+      {/* Basic Info */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Nome da Empresa</label>
+          <p className="text-slate-700 dark:text-slate-300">{formData.company_name}</p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Email</label>
+          <p className="text-slate-700 dark:text-slate-300">{formData.email}</p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Telefone</label>
+          <p className="text-slate-700 dark:text-slate-300">{formData.phone || '—'}</p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Tipo</label>
+          <p className="text-slate-700 dark:text-slate-300">{formData.client_type === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}</p>
+        </div>
+      </div>
+
+      {/* Document Info */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+            {formData.client_type === 'pf' ? 'CPF' : 'CNPJ'}
+          </label>
+          <p className="text-slate-700 dark:text-slate-300">
+            {formData.client_type === 'pf' ? (formData.cpf || '—') : (formData.cnpj || '—')}
+          </p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Status</label>
+          <p className="text-slate-700 dark:text-slate-300">
+            {formData.status === 'active' ? 'Ativo' : 'Inativo'}
+          </p>
+        </div>
+      </div>
+
+      {/* Address */}
+      {(formData.endereco || formData.cidade) && (
+        <div>
+          <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Endereço</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {formData.cep && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">CEP</label>
+                <p className="text-slate-700 dark:text-slate-300">{formData.cep}</p>
+              </div>
+            )}
+            {formData.endereco && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Rua</label>
+                <p className="text-slate-700 dark:text-slate-300">{formData.endereco}</p>
+              </div>
+            )}
+            {formData.numero && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Número</label>
+                <p className="text-slate-700 dark:text-slate-300">{formData.numero}</p>
+              </div>
+            )}
+            {formData.complemento && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Complemento</label>
+                <p className="text-slate-700 dark:text-slate-300">{formData.complemento}</p>
+              </div>
+            )}
+            {formData.bairro && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Bairro</label>
+                <p className="text-slate-700 dark:text-slate-300">{formData.bairro}</p>
+              </div>
+            )}
+            {formData.cidade && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Cidade</label>
+                <p className="text-slate-700 dark:text-slate-300">{formData.cidade} - {formData.uf}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      <ContactMetadata contact={contact} />
+    </div>
+  );
+}
 
 export default function ContactDetails() {
   const { contactId } = useParams();
@@ -236,17 +330,68 @@ export default function ContactDetails() {
           </div>
         </div>
 
-        {/* Form Card */}
-        <Card className="bg-white dark:bg-slate-800">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Informações do Contato</CardTitle>
-            {!isEditing && (
-              <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
-                Editar
-              </Button>
-            )}
-          </CardHeader>
-          <CardContent>
+        {/* Tabs Navigation */}
+        {contactId !== 'new' && !isEditing && (
+          <Tabs defaultValue="info" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4 lg:w-auto">
+              <TabsTrigger value="info">Informações</TabsTrigger>
+              <TabsTrigger value="notes">Notas</TabsTrigger>
+              <TabsTrigger value="activity">Atividades</TabsTrigger>
+              <TabsTrigger value="tags">Tags</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="info">
+              <Card className="bg-white dark:bg-slate-800">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Informações do Contato</CardTitle>
+                  <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+                    Editar
+                  </Button>
+                </CardHeader>
+                <CardContent>
+                  <ContactInfoDisplay 
+                    formData={formData} 
+                    contact={contact}
+                    workspaceId={workspaceId}
+                    contactId={contactId}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="notes">
+              <ContactNotesList contactId={contactId} workspaceId={workspaceId} />
+            </TabsContent>
+
+            <TabsContent value="activity">
+              <ContactActivityTimeline contactId={contactId} workspaceId={workspaceId} />
+            </TabsContent>
+
+            <TabsContent value="tags">
+              <Card className="bg-white dark:bg-slate-800">
+                <CardHeader>
+                  <CardTitle>Tags do Contato</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ContactTagSelector contactId={contactId} workspaceId={workspaceId} />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        )}
+
+        {/* Edit Form (shown when editing or creating new) */}
+        {(isEditing || contactId === 'new') && (
+          <Card className="bg-white dark:bg-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Informações do Contato</CardTitle>
+              {!isEditing && contactId !== 'new' && (
+                <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+                  Editar
+                </Button>
+              )}
+            </CardHeader>
+            <CardContent>
             <div className="space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -432,15 +577,7 @@ export default function ContactDetails() {
                 )}
               </div>
 
-              {/* Tags */}
-              {!isEditing && contactId !== 'new' && (
-                <div className="pt-4 border-t">
-                  <h3 className="font-semibold mb-3 text-slate-900 dark:text-slate-100">Tags</h3>
-                  <ContactTagSelector contactId={contactId} workspaceId={workspaceId} />
-                </div>
-              )}
-
-              {/* Metadata */}
+              {/* Metadata - only in edit mode */}
               {!isEditing && contactId !== 'new' && (
                 <ContactMetadata contact={contact} />
               )}
