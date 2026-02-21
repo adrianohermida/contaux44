@@ -24,12 +24,12 @@ export function useSidebarMenu() {
   });
 
   // Persist submenu state changes
-  React.useEffect(() => {
+  useEffect(() => {
     sessionStorage.setItem('sidebarOpenMenus', JSON.stringify(openMenus));
   }, [openMenus]);
 
   // Log query errors for debugging
-  React.useEffect(() => {
+  useEffect(() => {
     if (error) {
       console.warn('[Sidebar] Failed to load unread conversations:', error);
     }
