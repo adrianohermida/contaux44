@@ -6,10 +6,18 @@ import { Button } from '@/components/ui/button';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function Quotes() {
-  const { workspaceId } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingQuote, setEditingQuote] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
 
   const handleSave = () => {
     setShowForm(false);

@@ -58,12 +58,51 @@ export default function QuoteForm({ quote, onSave, onCancel, tenantId, isOpen = 
 
     if (!validateForm(formData, VALIDATION_RULES)) return;
 
+    // Validar client_id obrigatório
+    if (!formData.client_id || formData.client_id.trim() === '') {
+      alert('Por favor, selecione um cliente');
+      return;
+    }
+
+    // Validar items obrigatório
+    if (!formData.items || formData.items.length === 0 || 
+        formData.items.every(item => !item.description || item.unit_price === 0)) {
+      alert('Por favor, adicione pelo menos um item com descrição e preço');
+      return;
+    }
+
+    // Calcular totals
+    const totalAmount = formData.items.reduce((sum, item) => {
+      const itemTotal = item.quantity * item.unit_price;
+      const itemTax = itemTotal * (item.tax_rate || 0) / 100;
+      return sum + itemTotal + itemTax;
+    }, 0);
+
+    const taxAmount = formData.items.reduce((sum, item) => {
+      const itemTotal = item.quantity * item.unit_price;
+      return sum + (itemTotal * (item.tax_rate || 0) / 100);
+    }, 0);
+
+    // Validar datas
+    if (new Date(formData.expiry_date) <= new Date(formData.issue_date)) {
+      alert('Data de validade deve ser após data de emissão');
+      return;
+    }
+
+    const updatedFormData = {
+      ...formData,
+      workspace_id: formData.workspace_id || tenantId,
+      tenant_id: tenantId,
+      total_amount: parseFloat(totalAmount.toFixed(2)),
+      tax_amount: parseFloat(taxAmount.toFixed(2))
+    };
+
     await submit(
       async () => {
         if (quote?.id) {
-          await base44.entities.Quote.update(quote.id, formData);
+          await base44.entities.Quote.update(quote.id, updatedFormData);
         } else {
-          await base44.entities.Quote.create(formData);
+          await base44.entities.Quote.create(updatedFormData);
         }
       },
       {
@@ -81,10 +120,12 @@ export default function QuoteForm({ quote, onSave, onCancel, tenantId, isOpen = 
     <ModalWrapper isOpen={isOpen} onClose={onCancel} title={quote ? 'Editar Orçamento' : 'Novo Orçamento'} size="lg">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-3 gap-4">
+          <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required />
           <FormField label="Nº Orçamento" name="quote_number" value={formData.quote_number} onChange={handleChange} error={errors.quote_number} required />
+          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
           <FormField label="Data Emissão" type="date" name="issue_date" value={formData.issue_date} onChange={handleChange} required />
           <FormField label="Data Validade" type="date" name="expiry_date" value={formData.expiry_date} onChange={handleChange} error={errors.expiry_date} required />
-          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
+          <FormField label="Moeda" type="select" name="currency" value={formData.currency} onChange={(v) => setFieldValue('currency', v)} options={[{ value: 'BRL', label: 'BRL' }, { value: 'USD', label: 'USD' }, { value: 'EUR', label: 'EUR' }]} />
         </div>
 
         <div className="border rounded-lg p-4 space-y-2">
