@@ -128,3 +128,21 @@ export const validateContactForm = (data) => {
 
    return errors;
  };
+
+export const validateEmailUniqueness = async (base44, email, currentContactId = null, workspaceId) => {
+  if (!email || !workspaceId) return true;
+  
+  try {
+    const contacts = await base44.entities.Client.filter({ 
+      tenant_id: workspaceId,
+      email: email 
+    });
+    
+    // Check if email exists in another contact
+    const duplicate = contacts.find(c => c.id !== currentContactId);
+    return !duplicate;
+  } catch (error) {
+    console.error('Error checking email uniqueness:', error);
+    return true; // Allow save on error to avoid blocking
+  }
+};

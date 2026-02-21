@@ -1,49 +1,49 @@
-import React, { useState } from 'react';
-import { Search, Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Search, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useDebounce } from '@/components/hooks/useDebounce';
+import { useCEPCache } from '@/components/hooks/useCEPCache';
 
 export default function ContactCEPLookup({ cep, onAddressFound, disabled }) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const debouncedCEP = useDebounce(cep, 800);
+  const { lookupCEP, loading, error } = useCEPCache();
+  const [autoLookupDone, setAutoLookupDone] = useState(false);
 
-  const handleLookupCEP = async () => {
-    if (!cep || cep.replace(/\D/g, '').length !== 8) {
-      setError('CEP inválido');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const clean = cep.replace(/\D/g, '');
-      const response = await fetch(`https://viacep.com.br/ws/${clean}/json/`);
-      const data = await response.json();
-
-      if (data.erro) {
-        setError('CEP não encontrado');
-        return;
+  // Auto-lookup when CEP is complete
+  useEffect(() => {
+    const performAutoLookup = async () => {
+      if (debouncedCEP && debouncedCEP.replace(/\D/g, '').length === 8 && !autoLookupDone) {
+        const result = await lookupCEP(debouncedCEP);
+        if (result) {
+          onAddressFound(result);
+          setAutoLookupDone(true);
+        }
       }
+      if (debouncedCEP && debouncedCEP.replace(/\D/g, '').length !== 8) {
+        setAutoLookupDone(false);
+      }
+    };
 
-      onAddressFound({
-        endereco: data.logradouro,
-        bairro: data.bairro,
-        cidade: data.localidade,
-        uf: data.uf,
-      });
-    } catch (err) {
-      setError('Erro ao buscar CEP');
-    } finally {
-      setLoading(false);
+    if (!disabled) {
+      performAutoLookup();
+    }
+  }, [debouncedCEP, disabled, onAddressFound, lookupCEP, autoLookupDone]);
+
+  const handleManualLookup = async () => {
+    setAutoLookupDone(false);
+    const result = await lookupCEP(cep);
+    if (result) {
+      onAddressFound(result);
+      setAutoLookupDone(true);
     }
   };
 
   return (
     <div className="space-y-2">
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <Button
           type="button"
-          onClick={handleLookupCEP}
+          onClick={handleManualLookup}
           disabled={disabled || loading || !cep}
           variant="outline"
           size="sm"
@@ -54,6 +54,11 @@ export default function ContactCEPLookup({ cep, onAddressFound, disabled }) {
               <Loader2 className="w-4 h-4 animate-spin" />
               Buscando...
             </>
+          ) : autoLookupDone ? (
+            <>
+              <CheckCircle2 className="w-4 h-4 text-green-600" />
+              CEP Encontrado
+            </>
           ) : (
             <>
               <Search className="w-4 h-4" />
@@ -61,8 +66,9 @@ export default function ContactCEPLookup({ cep, onAddressFound, disabled }) {
             </>
           )}
         </Button>
+        {loading && <span className="text-xs text-slate-500">Consultando ViaCEP...</span>}
       </div>
-      {error && <p className="text-red-500 text-xs">{error}</p>}
+      {error && <p className="text-red-500 text-xs" role="alert">{error}</p>}
     </div>
   );
 }

@@ -14,6 +14,7 @@ import ContactMetadata from '../components/dashboard/ContactMetadata';
 import ContactCEPLookup from '../components/dashboard/ContactCEPLookup';
 import {
   validateContactForm,
+  validateEmailUniqueness,
   formatCPF,
   formatCNPJ,
   formatPhone,
@@ -109,6 +110,16 @@ export default function ContactDetails() {
       setSaveMessage({ type: 'error', text: 'Corrija os erros no formulário' });
       return;
     }
+
+    // Async email uniqueness validation
+    setSaveMessage({ type: 'info', text: 'Validando email...' });
+    const isEmailUnique = await validateEmailUniqueness(base44, formData.email, contactId, workspaceId);
+    if (!isEmailUnique) {
+      setErrors({ email: 'Este email já está em uso por outro contato' });
+      setSaveMessage({ type: 'error', text: 'Email já existe no sistema' });
+      return;
+    }
+
     setErrors({});
     try {
       await saveMutation.mutateAsync(formData);
@@ -407,7 +418,8 @@ export default function ContactDetails() {
                 )}
                 {!isEditing && contactId !== 'new' && (
                   <ContactDeleteButton 
-                    contactId={contactId} 
+                    contactId={contactId}
+                    contactCreatedBy={contact?.created_by}
                     onSuccess={() => navigate('/contact')}
                   />
                 )}
@@ -417,10 +429,10 @@ export default function ContactDetails() {
               {!isEditing && contactId !== 'new' && (
                 <ContactMetadata contact={contact} />
               )}
-              </div>
-              </CardContent>
-              </Card>
-              </div>
-              </ProtectedInternalRoute>
-              );
-              }
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </ProtectedInternalRoute>
+  );
+}
