@@ -22,6 +22,9 @@ import LoyaltyProgramWidget from '../components/dashboard/widgets/LoyaltyProgram
 import PointsTrackerWidget from '../components/dashboard/widgets/PointsTrackerWidget';
 import RedemptionDashboardWidget from '../components/dashboard/widgets/RedemptionDashboardWidget';
 import ProgramAnalyticsWidget from '../components/dashboard/widgets/ProgramAnalyticsWidget';
+import ChurnRiskWidget from '../components/dashboard/widgets/ChurnRiskWidget';
+import ChurnAnalyticsWidget from '../components/dashboard/widgets/ChurnAnalyticsWidget';
+import InterventionRecommendationWidget from '../components/dashboard/widgets/InterventionRecommendationWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -118,6 +121,17 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <RedemptionDashboardWidget workspaceId={workspaceId} />
         <ProgramAnalyticsWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 13 - Churn Risk & Analytics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ChurnRiskWidget workspaceId={workspaceId} />
+        <ChurnAnalyticsWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 14 - Intervention Recommendations */}
+      <div className="grid grid-cols-1 gap-6">
+        <InterventionRecommendationWidget workspaceId={workspaceId} />
       </div>
     </div>
   );
