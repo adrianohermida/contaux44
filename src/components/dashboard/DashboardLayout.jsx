@@ -22,6 +22,11 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
     setSidebarCollapsed(value);
   }, []);
 
+  // Persist collapse state to localStorage
+  React.useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', JSON.stringify(sidebarCollapsed));
+  }, [sidebarCollapsed]);
+
   return (
     <div className="flex min-h-screen bg-white dark:bg-slate-950 transition-colors">
       {/* Mobile Menu - sempre no topo em mobile */}
