@@ -82,44 +82,84 @@ export default function Contact() {
     navigate('/contact/new');
   }, [navigate]);
 
-  const handleViewContact = useCallback((contactId) => {
-    navigate(`/contact/${contactId}`);
-  }, [navigate]);
+  const handleViewContact = useCallback((id) => {
+    if (selectedIds.length > 0) {
+      toggleSelection(id);
+    } else {
+      navigate(`/contact/${id}`);
+    }
+  }, [navigate, selectedIds]);
+
+  const toggleSelection = (id) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleSortChange = (field, order) => {
+    setSortBy(field);
+    setSortOrder(order);
+  };
+
+  if (showImport) {
+    return (
+      <ProtectedInternalRoute>
+        <ContactImportCSV 
+          workspaceId={workspaceId}
+          onClose={() => setShowImport(false)}
+        />
+      </ProtectedInternalRoute>
+    );
+  }
 
   return (
     <ProtectedInternalRoute>
-      <div className="space-y-6">
+      <div className="space-y-6 pb-20">
         {/* Header */}
-           <div className="flex justify-between items-center">
-             <div>
-               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Contatos</h1>
-               <p className="text-slate-600 dark:text-slate-400 mt-1">{filteredContacts.length} contato{filteredContacts.length !== 1 ? 's' : ''}</p>
-             </div>
-             <div className="flex gap-2">
-               <ContactExportButton contacts={filteredContacts} />
-               <Button 
-                 onClick={handleNewContact}
-                 className="bg-blue-600 hover:bg-blue-700"
-               >
-                 <Plus className="w-5 h-5 mr-2" />
-                 Novo Contato
-               </Button>
-             </div>
-           </div>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Contatos</h1>
+            <p className="text-slate-600 dark:text-slate-400 mt-1">
+              {filteredAndSortedContacts.length} de {contacts.length} contato{contacts.length !== 1 ? 's' : ''}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={() => setShowImport(true)} variant="outline" className="gap-2">
+              <Upload className="w-4 h-4" />
+              Importar
+            </Button>
+            <ContactExportButton contacts={filteredAndSortedContacts} />
+            <Button onClick={handleNewContact} className="gap-2">
+              <Plus className="w-5 h-5" />
+              Novo
+            </Button>
+          </div>
+        </div>
 
-           {/* Search */}
-           <div className="relative">
-             <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-             <Input
-               placeholder="Buscar contato por nome ou email..."
-               value={searchTerm}
-               onChange={(e) => setSearchTerm(e.target.value)}
-               className="pl-10"
-             />
-           </div>
+        {/* Search, Filters and Sorting */}
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Input
+              type="text"
+              placeholder="Buscar por nome ou email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
 
-           {/* Filters */}
-           <ContactListFilters onFilterChange={setFilters} />
+          {/* Filters and Sorting */}
+          <div className="flex gap-2">
+            <ContactListFilters onFilterChange={setFilters} />
+            <ContactSorting 
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSortChange={handleSortChange}
+            />
+          </div>
+        </div>
 
         {/* Contacts Grid */}
         <div>
