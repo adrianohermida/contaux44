@@ -221,7 +221,7 @@ export default function Reports() {
                       <td className="px-6 py-4"><span className={`px-2 py-1 rounded text-xs font-medium ${report.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{report.status}</span></td>
                       <td className="px-6 py-4 text-right space-x-2">
                         {report.file_url && <Button variant="ghost" size="sm" onClick={() => window.open(report.file_url)}><Download className="w-4 h-4" /></Button>}
-                        <Button variant="ghost" size="sm" onClick={() => handleDelete(report.id)}><Trash2 className="w-4 h-4 text-red-500" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(report.id)}><Trash2 className="w-4 h-4 text-amber-700" /></Button>
                       </td>
                     </tr>
                   ))}
