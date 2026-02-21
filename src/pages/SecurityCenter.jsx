@@ -1,17 +1,53 @@
-import React, { useState } from 'react';
-import { Shield, Lock, Zap, AlertCircle } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { Shield, Lock, Zap, AlertCircle, Activity, TrendingUp, RefreshCw } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 import SecurityDashboard from '../components/security/SecurityDashboard';
 import { sanitizeInput, isValidEmail, isValidURL } from '../components/security/InputValidator';
 import { useCSRFToken } from '../components/security/CSRFProtection';
 import { useRateLimit } from '../components/security/RateLimiter';
 
 export default function SecurityCenter() {
+  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
   const [activeTab, setActiveTab] = useState('overview');
   const [testInput, setTestInput] = useState('');
   const [inputType, setInputType] = useState('email');
   const { token } = useCSRFToken();
   const { remaining } = useRateLimit();
+
+  // Fetch audit logs
+  const { data: auditLogs = [], isLoading: logsLoading, refetch: refetchLogs } = useQuery({
+    queryKey: ['security-audit-logs', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return [];
+      return base44.entities.AuditLog.filter({ tenant_id: workspaceId }, '-created_date', 50);
+    },
+    enabled: !!workspaceId && !authLoading,
+    staleTime: 5 * 60 * 1000,
+    retry: 1
+  });
+
+  // Calculate security metrics
+  const securityMetrics = useMemo(() => {
+    const today = new Date();
+    const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    
+    const recentLogs = auditLogs.filter(log => new Date(log.created_date) >= sevenDaysAgo);
+    const failedLogs = recentLogs.filter(log => log.status === 'failed');
+    const suspiciousLogs = recentLogs.filter(log => log.action === 'failed_login' || log.action === 'unauthorized_access');
+
+    return {
+      totalLogs: auditLogs.length,
+      recentEvents: recentLogs.length,
+      failedAttempts: failedLogs.length,
+      suspiciousActivities: suspiciousLogs.length,
+      avgRiskScore: failedLogs.length > 0 ? Math.round((failedLogs.length / recentLogs.length) * 100) : 0
+    };
+  }, [auditLogs]);
 
   const validateInput = (value, type) => {
     if (!value) return false;
