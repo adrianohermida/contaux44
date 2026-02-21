@@ -116,27 +116,32 @@ export default function Contact() {
     hasPrev 
   } = usePagination(filteredAndSortedContacts, 20);
 
+  // Handlers
   const handleNewContact = useCallback(() => {
-    setShowCreateModal(true);
-  }, []);
+    navigate('/contact/new');
+  }, [navigate]);
 
   const handleViewContact = useCallback((id) => {
     if (selectedIds.length > 0) {
-      toggleSelection(id);
+      setSelectedIds(prev => 
+        prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+      );
     } else {
       navigate(`/contact/${id}`);
     }
   }, [navigate, selectedIds]);
 
-  const toggleSelection = (id) => {
-    setSelectedIds(prev => 
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    );
-  };
-
   const handleSortChange = (field, order) => {
     setSortBy(field);
     setSortOrder(order);
+  };
+
+  const openModal = (modalName) => {
+    setModalState(prev => ({ ...prev, [modalName]: true }));
+  };
+
+  const closeModal = (modalName) => {
+    setModalState(prev => ({ ...prev, [modalName]: false }));
   };
 
 
