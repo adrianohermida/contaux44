@@ -255,6 +255,7 @@ import WebhookManagement from './pages/WebhookManagement';
 import Welcome from './pages/Welcome';
 import WhiteLabel from './pages/WhiteLabel';
 import Campaigns from './pages/Campaigns';
+import LoyaltyPrograms from './pages/LoyaltyPrograms';
 import __Layout from './Layout.jsx';
 
 
@@ -467,6 +468,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "WhiteLabel": WhiteLabel,
     "Campaigns": Campaigns,
+    "LoyaltyPrograms": LoyaltyPrograms,
 }
 
 export const pagesConfig = {

@@ -18,6 +18,10 @@ import RetentionRiskWidget from '../components/dashboard/widgets/RetentionRiskWi
 import CustomerJourneyWidget from '../components/dashboard/widgets/CustomerJourneyWidget';
 import CampaignManagerWidget from '../components/dashboard/widgets/CampaignManagerWidget';
 import CampaignAnalyticsWidget from '../components/dashboard/widgets/CampaignAnalyticsWidget';
+import LoyaltyProgramWidget from '../components/dashboard/widgets/LoyaltyProgramWidget';
+import PointsTrackerWidget from '../components/dashboard/widgets/PointsTrackerWidget';
+import RedemptionDashboardWidget from '../components/dashboard/widgets/RedemptionDashboardWidget';
+import ProgramAnalyticsWidget from '../components/dashboard/widgets/ProgramAnalyticsWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -102,6 +106,18 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <CampaignManagerWidget workspaceId={workspaceId} />
         <CampaignAnalyticsWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 11 - Loyalty Programs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <LoyaltyProgramWidget workspaceId={workspaceId} />
+        <PointsTrackerWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 12 - Redemptions & Analytics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <RedemptionDashboardWidget workspaceId={workspaceId} />
+        <ProgramAnalyticsWidget workspaceId={workspaceId} />
       </div>
     </div>
   );
