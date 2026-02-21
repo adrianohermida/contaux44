@@ -1,24 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { useUserAndTenantOptimized } from '../components/hooks/useUserAndTenantOptimized';
 import BankReconciliationForm from '../components/dashboard/BankReconciliationForm';
 import BankReconciliationList from '../components/dashboard/BankReconciliationList';
 import { Button } from '@/components/ui/button';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function BankReconciliation() {
-  const { tenantId } = useUserAndTenantOptimized();
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingRecon, setEditingRecon] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
 
   const handleSave = () => {
     setShowForm(false);
     setEditingRecon(null);
     setRefreshKey(prev => prev + 1);
   };
-
-  if (!tenantId) return <div className="text-center py-8">Carregando...</div>;
 
   return (
     <div className="space-y-6">
@@ -38,14 +43,15 @@ export default function BankReconciliation() {
 
           {showForm && (
             <BankReconciliationForm
-              tenantId={tenantId}
+              recon={editingRecon}
+              tenantId={workspaceId}
               onSave={handleSave}
               onCancel={() => { setShowForm(false); setEditingRecon(null); }}
             />
           )}
 
           <BankReconciliationList
-            tenantId={tenantId}
+            tenantId={workspaceId}
             onEdit={(recon) => { setEditingRecon(recon); setShowForm(true); }}
             onRefresh={refreshKey}
           />
