@@ -202,10 +202,9 @@ export default function ContactDetails() {
   // Save mutation
    const saveMutation = useMutation({
      mutationFn: async (data) => {
-       // Security: Verify CSRF token before save
        if (!token) throw new Error('CSRF token missing');
+       if (!workspaceId) throw new Error('Workspace ID required');
 
-       // Security: Final sanitization before save
        const sanitizedData = {
          ...data,
          company_name: sanitizeInput(data.company_name, 'text'),
@@ -215,8 +214,7 @@ export default function ContactDetails() {
        let result;
        if (contactId === 'new') {
          result = await base44.entities.Client.create(sanitizedData);
-        
-        // Create "created" activity for new contact
+
         await base44.entities.ContactActivity.create({
           workspace_id: workspaceId,
           contact_id: result.id,
@@ -225,13 +223,11 @@ export default function ContactDetails() {
           metadata: { initial_status: data.status, client_type: data.client_type },
         });
       } else {
-        // Check if status changed
         const statusChanged = contact.status !== data.status;
 
         await base44.entities.Client.update(contactId, sanitizedData);
         result = { id: contactId, ...data };
-        
-        // Create "edit" activity
+
         await base44.entities.ContactActivity.create({
           workspace_id: workspaceId,
           contact_id: contactId,
@@ -241,8 +237,7 @@ export default function ContactDetails() {
             fields_updated: Object.keys(sanitizedData).filter(key => contact[key] !== sanitizedData[key])
           },
         });
-        
-        // If status changed, create additional activity
+
         if (statusChanged) {
           await base44.entities.ContactActivity.create({
             workspace_id: workspaceId,
@@ -259,9 +254,9 @@ export default function ContactDetails() {
       return result;
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['contact-detail'] });
-      queryClient.invalidateQueries({ queryKey: ['contacts'] });
-      queryClient.invalidateQueries({ queryKey: ['contact-activities'] });
+      queryClient.invalidateQueries({ queryKey: ['contact-detail', contactId, workspaceId] });
+      queryClient.invalidateQueries({ queryKey: ['contacts', workspaceId] });
+      queryClient.invalidateQueries({ queryKey: ['contact-activities', contactId, workspaceId] });
       setIsEditing(false);
       setHasChanges(false);
       success('Contato salvo com sucesso!');
@@ -282,14 +277,13 @@ export default function ContactDetails() {
       return;
     }
 
-    // Async email validation with timeout (5s max)
     info('Validando email...');
     try {
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('timeout')), 5000)
       );
       const validationPromise = validateEmailUniqueness(base44, formData.email, contactId, workspaceId);
-      
+
       const isEmailUnique = await Promise.race([validationPromise, timeoutPromise]);
       if (!isEmailUnique) {
         setErrors({ email: 'Este email já está em uso por outro contato' });
@@ -298,7 +292,6 @@ export default function ContactDetails() {
       }
     } catch (validationErr) {
       if (validationErr.message === 'timeout') {
-        // Timeout - continue anyway with warning
         info('Não foi possível validar email, continuando...');
       } else {
         throw validationErr;
@@ -306,6 +299,9 @@ export default function ContactDetails() {
     }
 
     setErrors({});
+    // Prevent double-submit
+    if (saveMutation.isPending) return;
+
     try {
       await saveMutation.mutateAsync(formData);
     } catch (err) {
