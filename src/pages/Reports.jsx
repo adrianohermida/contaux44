@@ -127,10 +127,14 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline">Dashboard</span>
+          </TabsTrigger>
+          <TabsTrigger value="predictive" className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            <span className="hidden sm:inline">Previsões</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -140,13 +144,13 @@ export default function Reports() {
             <BarChart3 className="w-4 h-4" />
             <span className="hidden sm:inline">Avançado</span>
           </TabsTrigger>
+          <TabsTrigger value="scheduled" className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            <span className="hidden sm:inline">Agendados</span>
+          </TabsTrigger>
           <TabsTrigger value="saved" className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
             <span className="hidden sm:inline">Salvos</span>
-          </TabsTrigger>
-          <TabsTrigger value="historic" className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            <span className="hidden sm:inline">Histórico</span>
           </TabsTrigger>
         </TabsList>
 
