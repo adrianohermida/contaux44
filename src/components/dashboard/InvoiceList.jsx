@@ -12,7 +12,7 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
   const { isConnected } = useRealtimeSync('Invoice', tenantId);
   const parentRef = useRef(null);
 
-  const { data: invoices = [], isLoading: loading, refetch } = useQuery({
+  const { data: invoices = [], isLoading: loading, error, refetch } = useQuery({
     queryKey: ['Invoice-list', tenantId],
     queryFn: async () => {
       if (!tenantId) return [];
@@ -21,7 +21,9 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
       });
     },
     enabled: !!tenantId,
-    staleTime: 5 * 60 * 1000, // ✅ 5 min - dados financeiros mudam moderadamente
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
+    retryDelay: 1000
   });
 
   // Virtualização
@@ -37,13 +39,14 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
   }, [onRefresh, refetch]);
 
   const handleDelete = useCallback(async (id) => {
-    if (confirm('Tem certeza?')) {
+    if (confirm('Tem certeza? Esta ação não pode ser desfeita.')) {
       try {
         await base44.entities.Invoice.delete(id);
         invalidateRelated('Invoice', id);
         refetch();
       } catch (error) {
         console.error('Erro ao deletar:', error);
+        alert('Erro ao deletar fatura. Tente novamente.');
       }
     }
   }, [invalidateRelated, refetch]);
@@ -52,6 +55,17 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
     const colors = { draft: 'bg-slate-100 text-slate-800', sent: 'bg-blue-100 text-blue-800', paid: 'bg-green-100 text-green-800', overdue: 'bg-red-100 text-red-800' };
     return colors[status] || 'bg-slate-100';
   }, []);
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <p className="text-red-600 mb-4">Erro ao carregar faturas</p>
+        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+          Tentar novamente
+        </button>
+      </div>
+    );
+  }
 
   if (loading) return <div className="text-center py-8">Carregando...</div>;
 

@@ -57,18 +57,49 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpe
 
     if (!validateForm(formData, VALIDATION_RULES)) return;
 
+    // Validar campos obrigatórios
+    if (!formData.client_id || formData.client_id.trim() === '') {
+      alert('Por favor, selecione um cliente');
+      return;
+    }
+
+    if (!formData.items || formData.items.length === 0 || formData.items.every(item => !item.description || item.unit_price === 0)) {
+      alert('Por favor, adicione pelo menos um item com descrição e preço');
+      return;
+    }
+
+    // Calcular totais automaticamente
+    const totalAmount = formData.items.reduce((sum, item) => {
+      const itemTotal = item.quantity * item.unit_price;
+      const itemTax = itemTotal * (item.tax_rate || 0) / 100;
+      return sum + itemTotal + itemTax;
+    }, 0);
+
+    const taxAmount = formData.items.reduce((sum, item) => {
+      const itemTotal = item.quantity * item.unit_price;
+      return sum + (itemTotal * (item.tax_rate || 0) / 100);
+    }, 0);
+
+    const updatedFormData = {
+      ...formData,
+      total_amount: Math.round(totalAmount * 100) / 100,
+      tax_amount: Math.round(taxAmount * 100) / 100,
+      workspace_id: formData.workspace_id || tenantId,
+      tenant_id: tenantId
+    };
+
     await submit(
       async () => {
         if (invoice?.id) {
-          await base44.entities.Invoice.update(invoice.id, formData);
+          await base44.entities.Invoice.update(invoice.id, updatedFormData);
         } else {
-          await base44.entities.Invoice.create(formData);
+          await base44.entities.Invoice.create(updatedFormData);
         }
       },
       {
         onSuccess: () => { reset(); onSave(); },
         successMessage: invoice ? 'Fatura atualizada!' : 'Fatura criada!',
-        errorMessage: 'Erro ao salvar fatura.',
+        errorMessage: 'Erro ao salvar fatura. Verifique se todos os campos obrigatórios foram preenchidos.',
         tenantId,
         entityType: 'Invoice',
         action: invoice ? 'update' : 'create'
@@ -80,11 +111,13 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpe
     <ModalWrapper isOpen={isOpen} onClose={onCancel} title={invoice ? 'Editar Fatura' : 'Nova Fatura'} size="lg">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-3 gap-4">
-          <FormField label="Nº Fatura" name="invoice_number" value={formData.invoice_number} onChange={handleChange} error={errors.invoice_number} required />
-          <FormField label="Data Emissão" type="date" name="issue_date" value={formData.issue_date} onChange={handleChange} required />
-          <FormField label="Data Vencimento" type="date" name="due_date" value={formData.due_date} onChange={handleChange} error={errors.due_date} required />
-          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
-        </div>
+            <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required />
+            <FormField label="Nº Fatura" name="invoice_number" value={formData.invoice_number} onChange={handleChange} error={errors.invoice_number} required />
+            <FormField label="Data Emissão" type="date" name="issue_date" value={formData.issue_date} onChange={handleChange} required />
+            <FormField label="Data Vencimento" type="date" name="due_date" value={formData.due_date} onChange={handleChange} error={errors.due_date} required />
+            <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
+            <FormField label="Moeda" type="select" name="currency" value={formData.currency} onChange={(v) => setFieldValue('currency', v)} options={[{ value: 'BRL', label: 'Real (BRL)' }, { value: 'USD', label: 'Dólar (USD)' }, { value: 'EUR', label: 'Euro (EUR)' }]} />
+          </div>
 
         <div className="border rounded-lg p-4 space-y-2">
           <h3 className="font-semibold">Itens da Fatura</h3>
