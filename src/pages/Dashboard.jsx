@@ -7,6 +7,9 @@ import DuplicateAlertsWidget from '../components/dashboard/widgets/DuplicateAler
 import DataQualityWidget from '../components/dashboard/widgets/DataQualityWidget';
 import ContactGrowthWidget from '../components/dashboard/widgets/ContactGrowthWidget';
 import TagPerformanceWidget from '../components/dashboard/widgets/TagPerformanceWidget';
+import SalesPipelineWidget from '../components/dashboard/widgets/SalesPipelineWidget';
+import LeadScoringWidget from '../components/dashboard/widgets/LeadScoringWidget';
+import RevenueForecastWidget from '../components/dashboard/widgets/RevenueForecastWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -50,6 +53,19 @@ export default function Dashboard() {
       {/* Row 3 - Full width growth chart */}
       <div className="grid grid-cols-1 gap-6">
         <ContactGrowthWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 4 - Sales Pipeline & Forecasting */}
+      <div className="grid grid-cols-1 gap-6">
+        <SalesPipelineWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 5 - Lead Scoring & Revenue Forecast */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <LeadScoringWidget workspaceId={workspaceId} />
+        <div className="md:col-span-2">
+          <RevenueForecastWidget workspaceId={workspaceId} />
+        </div>
       </div>
     </div>
   );
