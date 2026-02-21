@@ -92,16 +92,6 @@ import Sales from './pages/Sales';
 import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
 import SettingsPage from './pages/SettingsPage';
-import Sprint10Completion from './pages/Sprint10Completion';
-import Sprint10Tracker from './pages/Sprint10Tracker';
-import Sprint10Validation from './pages/Sprint10Validation';
-import Sprint11Completion from './pages/Sprint11Completion';
-import Sprint11FullReview from './pages/Sprint11FullReview';
-import Sprint11Tracker from './pages/Sprint11Tracker';
-import Sprint12Completion from './pages/Sprint12Completion';
-import Sprint12Planning from './pages/Sprint12Planning';
-import Sprint12Tracker from './pages/Sprint12Tracker';
-import Sprint13Completion from './pages/Sprint13Completion';
 import Sprint13Planning from './pages/Sprint13Planning';
 import Sprint13Review from './pages/Sprint13Review';
 import Sprint14Completion from './pages/Sprint14Completion';
@@ -121,22 +111,12 @@ import Sprint8Tracker from './pages/Sprint8Tracker';
 import Sprint9Completion from './pages/Sprint9Completion';
 import Sprint9Tracker from './pages/Sprint9Tracker';
 import SprintReview from './pages/SprintReview';
-import SupplyChain from './pages/SupplyChain';
-import SustainabilityTracking from './pages/SustainabilityTracking';
 import TaxCalculation from './pages/TaxCalculation';
 import TaxInvoices from './pages/TaxInvoices';
 import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
-import TwoFactorAuth from './pages/TwoFactorAuth';
-import UserActivityTimeline from './pages/UserActivityTimeline';
-import UserOnboarding from './pages/UserOnboarding';
-import UserSegmentation from './pages/UserSegmentation';
-import VideoContentManagement from './pages/VideoContentManagement';
 import VirtualCounter from './pages/VirtualCounter';
-import VoiceCommerce from './pages/VoiceCommerce';
-import WebhookManagement from './pages/WebhookManagement';
 import Welcome from './pages/Welcome';
-import WhiteLabel from './pages/WhiteLabel';
 import __Layout from './Layout.jsx';
 
 
@@ -186,16 +166,6 @@ export const PAGES = {
     "SecurityCenter": SecurityCenter,
     "Services": Services,
     "SettingsPage": SettingsPage,
-    "Sprint10Completion": Sprint10Completion,
-    "Sprint10Tracker": Sprint10Tracker,
-    "Sprint10Validation": Sprint10Validation,
-    "Sprint11Completion": Sprint11Completion,
-    "Sprint11FullReview": Sprint11FullReview,
-    "Sprint11Tracker": Sprint11Tracker,
-    "Sprint12Completion": Sprint12Completion,
-    "Sprint12Planning": Sprint12Planning,
-    "Sprint12Tracker": Sprint12Tracker,
-    "Sprint13Completion": Sprint13Completion,
     "Sprint13Planning": Sprint13Planning,
     "Sprint13Review": Sprint13Review,
     "Sprint14Completion": Sprint14Completion,
@@ -215,22 +185,12 @@ export const PAGES = {
     "Sprint9Completion": Sprint9Completion,
     "Sprint9Tracker": Sprint9Tracker,
     "SprintReview": SprintReview,
-    "SupplyChain": SupplyChain,
-    "SustainabilityTracking": SustainabilityTracking,
     "TaxCalculation": TaxCalculation,
     "TaxInvoices": TaxInvoices,
     "Tickets": Tickets,
     "Transactions": Transactions,
-    "TwoFactorAuth": TwoFactorAuth,
-    "UserActivityTimeline": UserActivityTimeline,
-    "UserOnboarding": UserOnboarding,
-    "UserSegmentation": UserSegmentation,
-    "VideoContentManagement": VideoContentManagement,
     "VirtualCounter": VirtualCounter,
-    "VoiceCommerce": VoiceCommerce,
-    "WebhookManagement": WebhookManagement,
     "Welcome": Welcome,
-    "WhiteLabel": WhiteLabel,
 }
 
 export const pagesConfig = {
