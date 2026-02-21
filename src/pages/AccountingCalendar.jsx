@@ -1,35 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
 import AccountingCalendarList from '../components/dashboard/AccountingCalendarList';
 import AccountingCalendarForm from '../components/dashboard/AccountingCalendarForm';
 import { Button } from '@/components/ui/button';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 
 export default function AccountingCalendar() {
-  const [tenantId, setTenantId] = useState(null);
+  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const [editingEvent, setEditingEvent] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
-    const getCurrentTenant = async () => {
-      try {
-        const user = await base44.auth.me();
-        setTenantId(user.email.split('@')[0]);
-      } catch (error) {
-        console.error('Erro ao obter tenant:', error);
-      }
-    };
-    getCurrentTenant();
-  }, []);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
 
   const handleSave = () => {
     setShowForm(false);
+    setEditingEvent(null);
     setRefreshKey(prev => prev + 1);
   };
-
-  if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
   return (
     <div className="space-y-6">
@@ -46,15 +40,16 @@ export default function AccountingCalendar() {
 
       {showForm && (
         <AccountingCalendarForm
-          tenantId={tenantId}
+          event={editingEvent}
+          tenantId={workspaceId}
           onSave={handleSave}
-          onCancel={() => setShowForm(false)}
+          onCancel={() => { setShowForm(false); setEditingEvent(null); }}
         />
       )}
 
       <AccountingCalendarList
-        tenantId={tenantId}
-        onEdit={() => {}}
+        tenantId={workspaceId}
+        onEdit={(event) => { setEditingEvent(event); setShowForm(true); }}
         onRefresh={refreshKey}
       />
     </div>
