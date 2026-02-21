@@ -34,7 +34,11 @@ import StripeIntegration from '@/components/dashboard/integrations/StripeIntegra
 import GoogleWorkspaceSync from '@/components/dashboard/integrations/GoogleWorkspaceSync';
 import BundleOptimizer from '@/components/dashboard/performance/BundleOptimizer';
 import UsageAnalytics from '@/components/dashboard/monitoring/UsageAnalytics';
-import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, Zap as ZapIcon } from 'lucide-react';
+import CIPipelineManager from '@/components/dashboard/devops/CIPipelineManager';
+import InfrastructureManager from '@/components/dashboard/devops/InfrastructureManager';
+import AlertingManager from '@/components/dashboard/devops/AlertingManager';
+import APIDocumentation from '@/components/dashboard/documentation/APIDocumentation';
+import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, GitBranch, Server, Bell, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Reports() {
@@ -148,7 +152,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-27 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-31 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dashboard</span>
@@ -240,6 +244,22 @@ export default function Reports() {
           <TabsTrigger value="usage" className="flex items-center gap-2">
             <Activity className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Uso</span>
+          </TabsTrigger>
+          <TabsTrigger value="cicd" className="flex items-center gap-2">
+            <GitBranch className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">CI/CD</span>
+          </TabsTrigger>
+          <TabsTrigger value="infra" className="flex items-center gap-2">
+            <Server className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Infra</span>
+          </TabsTrigger>
+          <TabsTrigger value="alerting" className="flex items-center gap-2">
+            <Bell className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Alertas</span>
+          </TabsTrigger>
+          <TabsTrigger value="docs" className="flex items-center gap-2">
+            <BookOpen className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Docs</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -446,6 +466,26 @@ export default function Reports() {
         {/* Usage Analytics */}
         <TabsContent value="usage" className="mt-6">
           {workspaceId && <UsageAnalytics workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* CI/CD Pipeline */}
+        <TabsContent value="cicd" className="mt-6">
+          {workspaceId && <CIPipelineManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Infrastructure */}
+        <TabsContent value="infra" className="mt-6">
+          {workspaceId && <InfrastructureManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Alerting */}
+        <TabsContent value="alerting" className="mt-6">
+          {workspaceId && <AlertingManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* API Documentation */}
+        <TabsContent value="docs" className="mt-6">
+          <APIDocumentation />
         </TabsContent>
 
         {/* Report Builder */}
