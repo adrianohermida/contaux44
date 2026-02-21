@@ -54,15 +54,9 @@ import App from './pages/App';
 import AuditLogs from './pages/AuditLogs';
 import Automations from './pages/Automations';
 import BankReconciliation from './pages/BankReconciliation';
-import BatchProcessing from './pages/BatchProcessing';
-import BehavioralAnalytics from './pages/BehavioralAnalytics';
 import Blog from './pages/Blog';
 import BlogManager from './pages/BlogManager';
 import BlogSingle from './pages/BlogSingle';
-import BulkImportExport from './pages/BulkImportExport';
-import CRMEnhancementPlan from './pages/CRMEnhancementPlan';
-import CacheManagement from './pages/CacheManagement';
-import CachingStrategy from './pages/CachingStrategy';
 import Campaigns from './pages/Campaigns';
 import CashFlow from './pages/CashFlow';
 import CashFlowForecast from './pages/CashFlowForecast';
@@ -70,27 +64,13 @@ import ChartOfAccounts from './pages/ChartOfAccounts';
 import ClientPanel from './pages/ClientPanel';
 import ClientPortal from './pages/ClientPortal';
 import Clients from './pages/Clients';
-import CohortAnalysisTool from './pages/CohortAnalysisTool';
-import CommentThreading from './pages/CommentThreading';
 import Communication from './pages/Communication';
-import CompetitiveIntelligence from './pages/CompetitiveIntelligence';
-import ComplianceReporting from './pages/ComplianceReporting';
-import ComplianceReports from './pages/ComplianceReports';
 import Contact from './pages/Contact';
 import ContactDetails from './pages/ContactDetails';
 import ContractManagement from './pages/ContractManagement';
 import ConversionRateOptimizer from './pages/ConversionRateOptimizer';
 import ConversionTracking from './pages/ConversionTracking';
-import CustomBusinessRules from './pages/CustomBusinessRules';
-import CustomReportBuilder from './pages/CustomReportBuilder';
-import CustomReports from './pages/CustomReports';
-import CustomUserSegments from './pages/CustomUserSegments';
-import CustomWebhooks from './pages/CustomWebhooks';
-import CustomWorkflowBuilder from './pages/CustomWorkflowBuilder';
-import CustomerJourney from './pages/CustomerJourney';
-import CustomerJourneyMapping from './pages/CustomerJourneyMapping';
 import DDoSProtection from './pages/DDoSProtection';
-import DarkMode from './pages/DarkMode';
 import Dashboard from './pages/Dashboard';
 import DataAnonymization from './pages/DataAnonymization';
 import DataBackup from './pages/DataBackup';
@@ -248,15 +228,9 @@ export const PAGES = {
     "AuditLogs": AuditLogs,
     "Automations": Automations,
     "BankReconciliation": BankReconciliation,
-    "BatchProcessing": BatchProcessing,
-    "BehavioralAnalytics": BehavioralAnalytics,
     "Blog": Blog,
     "BlogManager": BlogManager,
     "BlogSingle": BlogSingle,
-    "BulkImportExport": BulkImportExport,
-    "CRMEnhancementPlan": CRMEnhancementPlan,
-    "CacheManagement": CacheManagement,
-    "CachingStrategy": CachingStrategy,
     "Campaigns": Campaigns,
     "CashFlow": CashFlow,
     "CashFlowForecast": CashFlowForecast,
@@ -264,27 +238,13 @@ export const PAGES = {
     "ClientPanel": ClientPanel,
     "ClientPortal": ClientPortal,
     "Clients": Clients,
-    "CohortAnalysisTool": CohortAnalysisTool,
-    "CommentThreading": CommentThreading,
     "Communication": Communication,
-    "CompetitiveIntelligence": CompetitiveIntelligence,
-    "ComplianceReporting": ComplianceReporting,
-    "ComplianceReports": ComplianceReports,
     "Contact": Contact,
     "ContactDetails": ContactDetails,
     "ContractManagement": ContractManagement,
     "ConversionRateOptimizer": ConversionRateOptimizer,
     "ConversionTracking": ConversionTracking,
-    "CustomBusinessRules": CustomBusinessRules,
-    "CustomReportBuilder": CustomReportBuilder,
-    "CustomReports": CustomReports,
-    "CustomUserSegments": CustomUserSegments,
-    "CustomWebhooks": CustomWebhooks,
-    "CustomWorkflowBuilder": CustomWorkflowBuilder,
-    "CustomerJourney": CustomerJourney,
-    "CustomerJourneyMapping": CustomerJourneyMapping,
     "DDoSProtection": DDoSProtection,
-    "DarkMode": DarkMode,
     "Dashboard": Dashboard,
     "DataAnonymization": DataAnonymization,
     "DataBackup": DataBackup,
