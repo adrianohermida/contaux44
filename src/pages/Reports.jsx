@@ -46,6 +46,11 @@ import AutoScalingManager from '@/components/dashboard/scalability/AutoScalingMa
 import TenantIsolationManager from '@/components/dashboard/scalability/TenantIsolationManager';
 import DistributedCacheManager from '@/components/dashboard/scalability/DistributedCacheManager';
 import GlobalReplicationManager from '@/components/dashboard/scalability/GlobalReplicationManager';
+import ProductionOptimizationManager from '@/components/dashboard/production/ProductionOptimizationManager';
+import RateLimitingEngine from '@/components/dashboard/production/RateLimitingEngine';
+import DatabaseConnectionPool from '@/components/dashboard/production/DatabaseConnectionPool';
+import CDNEdgeCachingManager from '@/components/dashboard/production/CDNEdgeCachingManager';
+import CircuitBreakerManager from '@/components/dashboard/production/CircuitBreakerManager';
 import { FileText, Download, Trash2, BarChart3, TrendingUp, AlertCircle, CheckCircle, Clock, RefreshCw, Sparkles, Brain, Users, Package, Activity, Zap, Shield, Lock, Lightbulb, MessageSquare, CreditCard, Mail, GitBranch, Server, Bell, BookOpen, Eye, Database, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -160,7 +165,7 @@ export default function Reports() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-39 overflow-x-auto">
+        <TabsList className="grid w-full grid-cols-44 overflow-x-auto">
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Dashboard</span>
@@ -300,6 +305,26 @@ export default function Reports() {
           <TabsTrigger value="replicate" className="flex items-center gap-2">
             <Globe className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Replicate</span>
+          </TabsTrigger>
+          <TabsTrigger value="production" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Prod</span>
+          </TabsTrigger>
+          <TabsTrigger value="ratelimit" className="flex items-center gap-2">
+            <Lock className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Rate</span>
+          </TabsTrigger>
+          <TabsTrigger value="dbpool" className="flex items-center gap-2">
+            <Database className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Pool</span>
+          </TabsTrigger>
+          <TabsTrigger value="cdn" className="flex items-center gap-2">
+            <Globe className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">CDN</span>
+          </TabsTrigger>
+          <TabsTrigger value="circuitbreaker" className="flex items-center gap-2">
+            <Shield className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">CB</span>
           </TabsTrigger>
           <TabsTrigger value="builder" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
@@ -566,6 +591,31 @@ export default function Reports() {
         {/* Global Replication Manager */}
         <TabsContent value="replicate" className="mt-6">
           {workspaceId && <GlobalReplicationManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Production Optimization Manager */}
+        <TabsContent value="production" className="mt-6">
+          {workspaceId && <ProductionOptimizationManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Rate Limiting Engine */}
+        <TabsContent value="ratelimit" className="mt-6">
+          {workspaceId && <RateLimitingEngine workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Database Connection Pool */}
+        <TabsContent value="dbpool" className="mt-6">
+          {workspaceId && <DatabaseConnectionPool workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* CDN Edge Caching Manager */}
+        <TabsContent value="cdn" className="mt-6">
+          {workspaceId && <CDNEdgeCachingManager workspaceId={workspaceId} />}
+        </TabsContent>
+
+        {/* Circuit Breaker Manager */}
+        <TabsContent value="circuitbreaker" className="mt-6">
+          {workspaceId && <CircuitBreakerManager workspaceId={workspaceId} />}
         </TabsContent>
 
         {/* Report Builder */}
