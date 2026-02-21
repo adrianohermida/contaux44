@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { Plus } from 'lucide-react';
 import AutomationsList from '../components/dashboard/AutomationsList';
 import AutomationsForm from '../components/dashboard/AutomationsForm';
@@ -23,6 +24,7 @@ export default function Automations() {
     setShowForm(false);
     setEditingWorkflow(null);
     setRefreshKey(prev => prev + 1);
+    toast.success('Automação salva com sucesso');
   };
 
   return (

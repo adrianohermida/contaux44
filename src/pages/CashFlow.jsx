@@ -1,29 +1,23 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
-import { TrendingDown, TrendingUp } from 'lucide-react';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { Button } from '@/components/ui/button';
+import { TrendingDown, TrendingUp, AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function CashFlow() {
-  const { tenantId } = useUserAndTenant();
-  const [payments, setPayments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
 
-  const loadData = useCallback(async () => {
-    if (!tenantId) return;
-    
-    try {
-      const data = await base44.entities.Payment.filter({ tenant_id: tenantId });
-      setPayments(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  const { data: payments = [], isLoading, refetch, error } = useQuery({
+    queryKey: ['Payment-list', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return [];
+      return base44.entities.Payment.filter({ tenant_id: workspaceId }, '-payment_date', 100);
+    },
+    enabled: !!workspaceId && !authLoading,
+    staleTime: 10 * 60 * 1000,
+    retry: 2
+  });
 
   const { inflow, outflow } = useMemo(() => ({
     inflow: payments.filter(p => p.status === 'confirmed').reduce((sum, p) => sum + p.amount, 0),
@@ -35,14 +29,37 @@ export default function CashFlow() {
     [payments]
   );
 
-  if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+  if (authLoading) {
+    return <div className="flex items-center justify-center h-96 text-slate-500">Carregando...</div>;
+  }
+
+  if (error && !payments.length) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold text-slate-900">Fluxo de Caixa</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
+          <p className="text-red-600 mb-4">Erro ao carregar fluxo de caixa</p>
+          <Button onClick={() => refetch()} className="gap-2">
+            <RefreshCw className="w-4 h-4" />
+            Tentar Novamente
+          </Button>
+        </div>
+        </div>
+        );
+        }
 
   return (
     <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Fluxo de Caixa</h1>
-            <p className="text-slate-600 mt-1">Entradas e saídas de caixa</p>
-          </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Fluxo de Caixa</h1>
+          <p className="text-slate-600 mt-1">Entradas e saídas de caixa</p>
+        </div>
+        <Button onClick={() => refetch()} variant="outline" size="sm" className="gap-2" disabled={isLoading}>
+          <RefreshCw className="w-4 h-4" />
+        </Button>
+      </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-green-50 rounded-lg shadow p-6 border-l-4 border-green-500">

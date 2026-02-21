@@ -1,29 +1,23 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import ProtectedRoute from '../components/dashboard/ProtectedRoute';
-import { TrendingUp } from 'lucide-react';
-import { useUserAndTenant } from '../components/hooks/useUserAndTenant';
+import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { Button } from '@/components/ui/button';
+import { TrendingUp, AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function Sales() {
-  const { tenantId } = useUserAndTenant();
-  const [invoices, setInvoices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
 
-  const loadData = useCallback(async () => {
-    if (!tenantId) return;
-    
-    try {
-      const data = await base44.entities.Invoice.filter({ tenant_id: tenantId });
-      setInvoices(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  const { data: invoices = [], isLoading, refetch, error } = useQuery({
+    queryKey: ['Invoice-list', workspaceId],
+    queryFn: async () => {
+      if (!workspaceId) return [];
+      return base44.entities.Invoice.filter({ tenant_id: workspaceId }, '-issue_date', 100);
+    },
+    enabled: !!workspaceId && !authLoading,
+    staleTime: 10 * 60 * 1000,
+    retry: 2
+  });
 
   const { totalRevenue, paidInvoices, conversionRate } = useMemo(() => {
     const total = invoices.reduce((sum, inv) => sum + inv.total_amount, 0);
@@ -37,16 +31,37 @@ export default function Sales() {
     [invoices]
   );
 
-  if (loading) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+  if (authLoading) {
+    return <div className="flex items-center justify-center h-96 text-slate-500">Carregando...</div>;
+  }
+
+  if (error && !invoices.length) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold text-slate-900">Vendas</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
+          <p className="text-red-600 mb-4">Erro ao carregar vendas</p>
+          <Button onClick={() => refetch()} className="gap-2">
+            <RefreshCw className="w-4 h-4" />
+            Tentar Novamente
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Vendas</h1>
-            <p className="text-slate-600 mt-1">Análise de faturamento e vendas</p>
-          </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Vendas</h1>
+          <p className="text-slate-600 mt-1">Análise de faturamento e vendas</p>
+        </div>
+        <Button onClick={() => refetch()} variant="outline" size="sm" className="gap-2" disabled={isLoading}>
+          <RefreshCw className="w-4 h-4" />
+        </Button>
+      </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white rounded-lg shadow p-6">
@@ -107,9 +122,8 @@ export default function Sales() {
                 </table>
               </div>
             )}
-          </div>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
+      </div>
+    </div>
   );
 }
