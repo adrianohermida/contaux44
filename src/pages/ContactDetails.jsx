@@ -40,7 +40,7 @@ export default function ContactDetails() {
    const debouncedFormData = useDebounce(formData, 500);
 
    // Fetch contact if not new
-   const { data: contact, isLoading, error } = useQuery({
+   const { data: contact, isLoading, error: queryError } = useQuery({
      queryKey: ['contact-detail', contactId, workspaceId],
      queryFn: async () => {
        if (!contactId || contactId === 'new' || !workspaceId) return null;
@@ -201,7 +201,7 @@ export default function ContactDetails() {
     );
   }
 
-  if (error && contactId !== 'new') {
+  if (queryError && contactId !== 'new') {
     return (
       <ProtectedInternalRoute>
         <div className="text-center py-12">
