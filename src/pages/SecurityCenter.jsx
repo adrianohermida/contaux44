@@ -63,15 +63,68 @@ export default function SecurityCenter() {
 
 
 
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-slate-500">Carregando...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">Centro de Segurança</h1>
-        <p className="text-slate-600 mt-1">Gerenciar proteções e monitorar ameaças</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Centro de Segurança</h1>
+          <p className="text-slate-600 mt-1">Gerenciar proteções e monitorar ameaças</p>
+        </div>
+        <Button onClick={() => refetchLogs()} variant="outline" size="sm" className="gap-2" disabled={logsLoading}>
+          <RefreshCw className="w-4 h-4" />
+        </Button>
+      </div>
+
+      {/* Security Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-slate-600 text-sm">Total de Eventos</p>
+              <p className="text-3xl font-bold mt-1">{securityMetrics.totalLogs}</p>
+            </div>
+            <Activity className="w-8 h-8 text-blue-500 opacity-20" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-slate-600 text-sm">Últimos 7 Dias</p>
+              <p className="text-3xl font-bold mt-1">{securityMetrics.recentEvents}</p>
+            </div>
+            <TrendingUp className="w-8 h-8 text-green-500 opacity-20" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-amber-500">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-slate-600 text-sm">Tentativas Falhas</p>
+              <p className="text-3xl font-bold mt-1">{securityMetrics.failedAttempts}</p>
+            </div>
+            <AlertCircle className="w-8 h-8 text-amber-500 opacity-20" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-slate-600 text-sm">Atividades Suspeitas</p>
+              <p className="text-3xl font-bold mt-1">{securityMetrics.suspiciousActivities}</p>
+            </div>
+            <Shield className="w-8 h-8 text-red-500 opacity-20" />
+          </div>
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <Shield className="w-4 h-4" />
             <span className="hidden sm:inline">Visão Geral</span>
