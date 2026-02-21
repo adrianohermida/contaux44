@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
@@ -18,6 +18,7 @@ import { withRateLimit } from '../components/security/RateLimiter';
 
 export default function Contact() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { workspaceId, user, loading: authLoading } = useMultitenantAuthOptimized('internal');
   // State
   const [searchTerm, setSearchTerm] = useState('');
