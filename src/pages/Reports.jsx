@@ -248,6 +248,11 @@ export default function Reports() {
           {workspaceId && <AdvancedReportBuilder tenantId={workspaceId} onSuccess={() => refetchReports()} />}
         </TabsContent>
 
+        {/* Scheduled Reports */}
+        <TabsContent value="scheduled" className="mt-6">
+          {workspaceId && <ScheduledReportsManager workspaceId={workspaceId} />}
+        </TabsContent>
+
         {/* Saved Reports */}
         <TabsContent value="saved" className="mt-6">
           {reports.length === 0 ? (
