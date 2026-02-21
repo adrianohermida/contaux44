@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { AlertTriangle, Users, Loader2 } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
 import ContactMergeDialog from './ContactMergeDialog';
+import DuplicateStats from './duplicates/DuplicateStats';
+import DuplicateResults from './duplicates/DuplicateResults';
 
 export default function DuplicateDetector({ workspaceId, contactId = null }) {
   const [isScanning, setIsScanning] = useState(false);
   const [duplicates, setDuplicates] = useState(null);
   const [selectedPair, setSelectedPair] = useState(null);
 
-  const handleScan = async () => {
+  const handleScan = useCallback(async () => {
     setIsScanning(true);
     try {
       const response = await base44.functions.invoke('detectDuplicates', {
@@ -25,26 +27,18 @@ export default function DuplicateDetector({ workspaceId, contactId = null }) {
     } finally {
       setIsScanning(false);
     }
-  };
+  }, [workspaceId, contactId]);
 
-  const handleMerge = (primary, secondary) => {
+  const handleMerge = useCallback((primary, secondary) => {
     setSelectedPair({ primary, secondary });
-  };
+  }, []);
 
   return (
     <div className="space-y-4">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Detecção de Duplicatas
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-            Identifique contatos duplicados baseado em email, documento e nome similar.
-          </p>
-          <Button onClick={handleScan} disabled={isScanning} className="gap-2">
+        <CardContent className="pt-6">
+          <DuplicateStats />
+          <Button onClick={handleScan} disabled={isScanning} className="gap-2 mt-4">
             {isScanning ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -61,96 +55,10 @@ export default function DuplicateDetector({ workspaceId, contactId = null }) {
       </Card>
 
       {duplicates && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Resultados da Verificação</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
-                <div>
-                  <p className="text-sm font-medium">Total de Contatos</p>
-                  <p className="text-2xl font-bold">{duplicates.total_contacts}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Duplicatas Encontradas</p>
-                  <p className="text-2xl font-bold text-red-600">{duplicates.duplicates_found}</p>
-                </div>
-              </div>
-
-              {duplicates.duplicates_found === 0 ? (
-                <p className="text-center text-slate-600 dark:text-slate-400 py-8">
-                  ✅ Nenhuma duplicata encontrada!
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {duplicates.duplicates.map((dup, idx) => (
-                    <Card key={idx} className="border-orange-200">
-                      <CardContent className="pt-4">
-                        <div className="space-y-3">
-                          <div>
-                            <p className="font-medium text-slate-900 dark:text-slate-100">
-                              {dup.company_name}
-                            </p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400">
-                              {dup.email}
-                            </p>
-                          </div>
-
-                          <div className="space-y-2">
-                            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                              Possíveis duplicatas:
-                            </p>
-                            {dup.matches.map((match, mIdx) => (
-                              <div
-                                key={mIdx}
-                                className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg"
-                              >
-                                <div className="flex-1">
-                                  <p className="text-sm font-medium">{match.company_name}</p>
-                                  <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    {match.email}
-                                  </p>
-                                  <div className="flex gap-1 mt-1">
-                                    {match.match_reasons.map((reason, rIdx) => (
-                                      <span
-                                        key={rIdx}
-                                        className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700"
-                                      >
-                                        {reason}
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                  <span className="text-sm font-bold text-orange-600">
-                                    {Math.round(match.match_score * 100)}%
-                                  </span>
-                                  <Button
-                                    onClick={() =>
-                                      handleMerge(
-                                        { id: dup.contact_id, company_name: dup.company_name, email: dup.email },
-                                        { id: match.contact_id, company_name: match.company_name, email: match.email }
-                                      )
-                                    }
-                                    size="sm"
-                                    variant="outline"
-                                  >
-                                    Mesclar
-                                  </Button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        <DuplicateResults
+          duplicates={duplicates}
+          onMerge={handleMerge}
+        />
       )}
 
       {selectedPair && (
@@ -161,7 +69,7 @@ export default function DuplicateDetector({ workspaceId, contactId = null }) {
           onClose={() => setSelectedPair(null)}
           onSuccess={() => {
             setSelectedPair(null);
-            handleScan(); // Re-scan after merge
+            handleScan();
           }}
         />
       )}
