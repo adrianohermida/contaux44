@@ -47,7 +47,7 @@ export default function ContactDetails() {
        return {
          company_name: '', email: '', phone: '', client_type: 'pj', status: 'active',
          cnpj: '', cpf: '', endereco: '', numero: '', complemento: '', bairro: '',
-         cidade: '', uf: '', cep: '', tenant_id: workspaceId,
+         cidade: '', uf: '', cep: '', currency: 'BRL', tenant_id: workspaceId,
        };
      }
      return null;
@@ -78,12 +78,15 @@ export default function ContactDetails() {
     mutationFn: async (data) => {
       if (!token) throw new Error('CSRF token missing');
       if (!workspaceId) throw new Error('Workspace ID required');
+      if (!data.company_name?.trim()) throw new Error('Nome/Empresa é obrigatório');
+      if (!data.email?.trim()) throw new Error('Email é obrigatório');
 
       const sanitizedData = {
         ...data,
         company_name: sanitizeInput(data.company_name, 'text'),
         email: sanitizeInput(data.email, 'email'),
         phone: sanitizeInput(data.phone, 'phone'),
+        tenant_id: workspaceId,
       };
 
       if (contactId === 'new') {
