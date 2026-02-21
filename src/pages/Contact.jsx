@@ -18,16 +18,21 @@ import { withRateLimit } from '../components/security/RateLimiter';
 export default function Contact() {
   const navigate = useNavigate();
   const { workspaceId, user, loading: authLoading } = useMultitenantAuthOptimized('internal');
+  // State
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({ status: 'all', type: 'all' });
   const [selectedIds, setSelectedIds] = useState([]);
-  const [showImport, setShowImport] = useState(false);
-  const [showTagManager, setShowTagManager] = useState(false);
-  const [showTagStats, setShowTagStats] = useState(false);
-  const [showBulkTagEditor, setShowBulkTagEditor] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [sortBy, setSortBy] = useState('created_date');
   const [sortOrder, setSortOrder] = useState('desc');
+  
+  // Modal state
+  const [modalState, setModalState] = useState({
+    import: false,
+    tagManager: false,
+    tagStats: false,
+    bulkTagEditor: false
+  });
+  
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   // Build backend query
