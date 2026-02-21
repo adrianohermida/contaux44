@@ -17,6 +17,7 @@ import ContactNotesList from '../components/dashboard/ContactNotesList';
 import ContactActivityTimeline from '../components/dashboard/ContactActivityTimeline';
 import ContactRelationshipManager from '../components/dashboard/ContactRelationshipManager';
 import DuplicateDetector from '../components/dashboard/DuplicateDetector';
+import ContactAttachments from '../components/dashboard/ContactAttachments';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '../components/hooks/useToast';
 import { ToastContainer } from '../components/ui/toast-notification';
@@ -375,12 +376,13 @@ export default function ContactDetails() {
         {/* Tabs Navigation */}
         {contactId !== 'new' && !isEditing && (
           <Tabs defaultValue="info" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6 lg:w-auto">
+            <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:grid-cols-none">
               <TabsTrigger value="info">Info</TabsTrigger>
               <TabsTrigger value="notes">Notas</TabsTrigger>
               <TabsTrigger value="activity">Atividades</TabsTrigger>
               <TabsTrigger value="tags">Tags</TabsTrigger>
               <TabsTrigger value="relationships">Relações</TabsTrigger>
+              <TabsTrigger value="files">Arquivos</TabsTrigger>
               <TabsTrigger value="duplicates">Duplicatas</TabsTrigger>
             </TabsList>
 
@@ -429,6 +431,17 @@ export default function ContactDetails() {
                 </CardHeader>
                 <CardContent>
                   <ContactRelationshipManager contactId={contactId} workspaceId={workspaceId} />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="files">
+              <Card className="bg-white dark:bg-slate-800">
+                <CardHeader>
+                  <CardTitle>Arquivos Anexados</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ContactAttachments contactId={contactId} workspaceId={workspaceId} />
                 </CardContent>
               </Card>
             </TabsContent>
