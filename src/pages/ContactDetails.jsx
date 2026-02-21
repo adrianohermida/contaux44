@@ -74,22 +74,20 @@ export default function ContactDetails() {
      return () => window.removeEventListener('beforeunload', handleBeforeUnload);
    }, [hasChanges]);
 
-  // Save mutation
-   const saveMutation = useMutation({
-     mutationFn: async (data) => {
-       if (!token) throw new Error('CSRF token missing');
-       if (!workspaceId) throw new Error('Workspace ID required');
+  const saveMutation = useMutation({
+    mutationFn: async (data) => {
+      if (!token) throw new Error('CSRF token missing');
+      if (!workspaceId) throw new Error('Workspace ID required');
 
-       const sanitizedData = {
-         ...data,
-         company_name: sanitizeInput(data.company_name, 'text'),
-         email: sanitizeInput(data.email, 'email'),
-         phone: sanitizeInput(data.phone, 'phone'),
-       };
-       let result;
-       if (contactId === 'new') {
-         result = await base44.entities.Client.create(sanitizedData);
+      const sanitizedData = {
+        ...data,
+        company_name: sanitizeInput(data.company_name, 'text'),
+        email: sanitizeInput(data.email, 'email'),
+        phone: sanitizeInput(data.phone, 'phone'),
+      };
 
+      if (contactId === 'new') {
+        const result = await base44.entities.Client.create(sanitizedData);
         await base44.entities.ContactActivity.create({
           workspace_id: workspaceId,
           contact_id: result.id,
@@ -97,20 +95,17 @@ export default function ContactDetails() {
           description: 'Contato criado',
           metadata: { initial_status: data.status, client_type: data.client_type },
         });
+        return result;
       } else {
         const statusChanged = contact.status !== data.status;
-
         await base44.entities.Client.update(contactId, sanitizedData);
-        result = { id: contactId, ...data };
 
         await base44.entities.ContactActivity.create({
           workspace_id: workspaceId,
           contact_id: contactId,
           activity_type: 'edit',
           description: 'Informações do contato editadas',
-          metadata: { 
-            fields_updated: Object.keys(sanitizedData).filter(key => contact[key] !== sanitizedData[key])
-          },
+          metadata: { fields_updated: Object.keys(sanitizedData).filter(key => contact[key] !== sanitizedData[key]) },
         });
 
         if (statusChanged) {
@@ -119,64 +114,26 @@ export default function ContactDetails() {
             contact_id: contactId,
             activity_type: 'status_change',
             description: `Status alterado de ${contact.status === 'active' ? 'Ativo' : 'Inativo'} para ${data.status === 'active' ? 'Ativo' : 'Inativo'}`,
-            metadata: { 
-              old_status: contact.status, 
-              new_status: data.status 
-            },
+            metadata: { old_status: contact.status, new_status: data.status },
           });
         }
+        return { id: contactId, ...data };
       }
-      return result;
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['contact-detail', contactId, workspaceId] });
       queryClient.invalidateQueries({ queryKey: ['contacts', workspaceId] });
       queryClient.invalidateQueries({ queryKey: ['contact-activities', contactId, workspaceId] });
       setIsEditing(false);
-      setHasChanges(false);
       success('Contato salvo com sucesso!');
-      if (contactId === 'new') {
-        navigate(`/contact/${result.id}`);
-      }
+      if (contactId === 'new') navigate(`/contact/${result.id}`);
     },
-    onError: (err) => {
-      error(err.message || 'Erro ao salvar contato');
-    },
+    onError: (err) => error(err.message || 'Erro ao salvar contato'),
   });
 
   const handleSave = async () => {
-    const formErrors = validateContactForm(formData);
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      error('Corrija os erros no formulário');
-      return;
-    }
-
-    info('Validando email...');
-    try {
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('timeout')), 5000)
-      );
-      const validationPromise = validateEmailUniqueness(base44, formData.email, contactId, workspaceId);
-
-      const isEmailUnique = await Promise.race([validationPromise, timeoutPromise]);
-      if (!isEmailUnique) {
-        setErrors({ email: 'Este email já está em uso por outro contato' });
-        error('Email já existe no sistema');
-        return;
-      }
-    } catch (validationErr) {
-      if (validationErr.message === 'timeout') {
-        info('Não foi possível validar email, continuando...');
-      } else {
-        throw validationErr;
-      }
-    }
-
-    setErrors({});
-    // Prevent double-submit
+    if (!(await validateForm())) return;
     if (saveMutation.isPending) return;
-
     try {
       await saveMutation.mutateAsync(formData);
     } catch (err) {
@@ -188,64 +145,10 @@ export default function ContactDetails() {
     if (contactId === 'new') {
       navigate('/contact');
     } else {
-      setFormData(contact);
+      reset(contact);
       setIsEditing(false);
-      setHasChanges(false);
     }
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    if (hasSecurityRisk(value)) {
-      console.warn(`Security risk detected in field: ${name}`);
-      setErrors(prev => ({ ...prev, [name]: 'Entrada contém caracteres suspeitos' }));
-      return;
-    }
-
-    const fieldType = name === 'email' ? 'email' : name === 'phone' ? 'phone' : 'text';
-    let newValue = sanitizeInput(value, fieldType);
-
-    // Validação de negócio: PF com CPF, PJ com CNPJ
-    if (name === 'client_type' && formData.client_type !== newValue) {
-      setFormData(prev => ({ 
-        ...prev, 
-        [name]: newValue,
-        cpf: '',
-        cnpj: ''
-      }));
-      setErrors(prev => ({
-        ...prev,
-        [name]: null,
-        cpf: null,
-        cnpj: null
-      }));
-    } else if (name === 'cpf' && formData.client_type === 'pj') {
-      setErrors(prev => ({ ...prev, [name]: 'CPF não é permitido para Pessoa Jurídica' }));
-      return;
-    } else if (name === 'cnpj' && formData.client_type === 'pf') {
-      setErrors(prev => ({ ...prev, [name]: 'CNPJ não é permitido para Pessoa Física' }));
-      return;
-    } else {
-      setFormData(prev => ({ ...prev, [name]: newValue }));
-      if (errors[name]) {
-        setErrors(prev => ({ ...prev, [name]: null }));
-      }
-    }
-    setHasChanges(true);
-  };
-
-  const handleBeforeUnload = React.useCallback((e) => {
-    if (hasChanges) {
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  }, [hasChanges]);
-
-  React.useEffect(() => {
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [handleBeforeUnload]);
 
   if (isLoading) {
     return (
