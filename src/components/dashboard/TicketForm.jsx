@@ -67,12 +67,25 @@ export default function TicketForm({ ticket, onSave, onCancel, tenantId, isOpen 
       return;
     }
 
+    // Validar descrição
+    if (!formData.description || formData.description.trim() === '') {
+      alert('Por favor, preencha a descrição do ticket');
+      return;
+    }
+
+    const updatedFormData = {
+      ...formData,
+      workspace_id: formData.workspace_id || tenantId,
+      tenant_id: tenantId,
+      description: formData.description.trim()
+    };
+
     await submit(
       async () => {
         if (ticket?.id) {
-          await base44.entities.Ticket.update(ticket.id, formData);
+          await base44.entities.Ticket.update(ticket.id, updatedFormData);
         } else {
-          await base44.entities.Ticket.create(formData);
+          await base44.entities.Ticket.create(updatedFormData);
         }
       },
       {
@@ -93,12 +106,14 @@ export default function TicketForm({ ticket, onSave, onCancel, tenantId, isOpen 
           <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required />
           <FormField label="Nº Ticket" name="ticket_number" value={formData.ticket_number} onChange={handleChange} error={errors.ticket_number} required />
           <FormField label="Título" name="title" value={formData.title} onChange={handleChange} error={errors.title} required />
-          <FormField label="Descrição" type="textarea" name="description" value={formData.description} onChange={handleChange} />
-          <FormField label="Categoria" type="select" name="category" value={formData.category} onChange={(v) => setFieldValue('category', v)} options={categoryOptions} />
+          <FormField label="Categoria" type="select" name="category" value={formData.category} onChange={(v) => setFieldValue('category', v)} options={categoryOptions} required />
           <FormField label="Prioridade" type="select" name="priority" value={formData.priority} onChange={(v) => setFieldValue('priority', v)} options={priorityOptions} />
+          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
           <FormField label="Atribuir a" name="assigned_to" value={formData.assigned_to} onChange={handleChange} />
           <FormField label="Data de Vencimento" type="date" name="due_date" value={formData.due_date} onChange={handleChange} />
-          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
+          <div className="col-span-2">
+            <FormField label="Descrição" type="textarea" name="description" value={formData.description} onChange={handleChange} placeholder="Descreva o problema/solicitação" required rows={4} />
+          </div>
         </div>
         <FormActions onCancel={onCancel} onSubmit={handleSubmit} loading={loading} submitLabel={ticket ? 'Atualizar' : 'Criar'} isDirty={isDirty} />
       </form>
