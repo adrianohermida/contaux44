@@ -48,7 +48,7 @@ export default function VirtualCounterChat({ conversationId, onClose }) {
   }, [messages]);
 
   const handleSendMessage = useCallback(async () => {
-    if (!input.trim() || !conversationId) return;
+    if (!input.trim() || !conversationId || !workspaceId) return;
 
     setSending(true);
     try {
@@ -56,24 +56,45 @@ export default function VirtualCounterChat({ conversationId, onClose }) {
       await base44.entities.VirtualCounterMessage.create({
         conversation_id: conversationId,
         sender_type: 'visitor',
-        sender_name: 'Você',
-        content: input
+        sender_name: user?.full_name || 'Você',
+        content: input,
+        is_read: false
       });
 
       setInput('');
 
-      // Chamar agente de IA
-      const conversation = await base44.agents.getConversation(conversationId);
-      await base44.agents.addMessage(conversation, {
-        role: 'user',
-        content: input
+      // Obter conversa atual
+      const conversation = await base44.entities.VirtualCounterConversation.filter({
+        id: conversationId,
+        workspace_id: workspaceId
       });
+
+      // Chamar agente de IA
+      if (conversation && conversation.length > 0) {
+        try {
+          const agent = await base44.agents.createConversation({
+            agent_name: 'virtualCounterSecretary',
+            metadata: {
+              conversation_id: conversationId,
+              workspace_id: workspaceId
+            }
+          });
+
+          await base44.agents.addMessage(agent, {
+            role: 'user',
+            content: input
+          });
+        } catch (agentError) {
+          console.warn('Erro ao chamar agente IA (não crítico):', agentError);
+          // Não falhar o envio se agente falhar
+        }
+      }
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
     } finally {
       setSending(false);
     }
-  }, [input, conversationId]);
+  }, [input, conversationId, workspaceId, user]);
 
   if (loading) {
     return (
