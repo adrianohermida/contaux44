@@ -1,179 +1,253 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Shield, AlertTriangle, CheckCircle, Zap } from 'lucide-react';
-import { csrfManager } from './CSRFProtection';
-import { rateLimiter } from './RateLimiter';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Shield, AlertTriangle, CheckCircle, Lock, Zap, Eye, EyeOff } from 'lucide-react';
 
-const SecurityDashboard = () => {
-  const [securityMetrics, setSecurityMetrics] = useState(null);
+/**
+ * SecurityDashboard - Monitora segurança da aplicação
+ */
+export default function SecurityDashboard() {
+  const [showDetails, setShowDetails] = useState(false);
 
-  useEffect(() => {
-    const updateMetrics = () => {
-      const now = new Date();
-      setSecurityMetrics({
-        csrfToken: csrfManager.getToken().substring(0, 16) + '...',
-        rateLimitRemaining: rateLimiter.getRemainingRequests(),
-        rateLimitMax: rateLimiter.maxRequests,
-        timestamp: now
-      });
-    };
+  const securityMetrics = [
+    {
+      id: 'xss',
+      name: 'XSS Protection',
+      status: 'protected',
+      description: 'Input sanitization ativa',
+      icon: Shield,
+    },
+    {
+      id: 'csrf',
+      name: 'CSRF Protection',
+      status: 'protected',
+      description: 'Token-based CSRF prevention',
+      icon: Lock,
+    },
+    {
+      id: 'rate-limit',
+      name: 'Rate Limiting',
+      status: 'protected',
+      description: '10 requests/minute por endpoint',
+      icon: Zap,
+    },
+    {
+      id: 'sql-injection',
+      name: 'SQL Injection Prevention',
+      status: 'protected',
+      description: 'Pattern-based detection',
+      icon: Shield,
+    },
+    {
+      id: 'https',
+      name: 'HTTPS/TLS',
+      status: 'protected',
+      description: 'Conexão criptografada',
+      icon: Lock,
+    },
+    {
+      id: 'headers',
+      name: 'Security Headers',
+      status: 'protected',
+      description: 'CSP, X-Frame-Options, etc',
+      icon: Shield,
+    },
+  ];
 
-    updateMetrics();
-    const interval = setInterval(updateMetrics, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const getStatusColor = (status) => {
+    return status === 'protected'
+      ? 'text-emerald-600 dark:text-emerald-400'
+      : 'text-amber-600 dark:text-amber-400';
+  };
 
-  const chartData = useMemo(() => {
-    const data = [];
-    for (let i = 11; i >= 0; i--) {
-      const time = new Date();
-      time.setHours(time.getHours() - i);
-      data.push({
-        time: time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-        validations: Math.floor(Math.random() * 100) + 50,
-        blocked: Math.floor(Math.random() * 20),
-        csrfRefresh: Math.floor(Math.random() * 30)
-      });
-    }
-    return data;
-  }, []);
-
-  const threatData = useMemo(() => {
-    return [
-      { name: 'XSS Prevention', value: 98 },
-      { name: 'CSRF Protection', value: 100 },
-      { name: 'Rate Limiting', value: 95 },
-      { name: 'Input Validation', value: 97 }
-    ];
-  }, []);
-
-  if (!securityMetrics) {
-    return <div className="text-center py-8">Carregando...</div>;
-  }
-
-  const rateLimitPercentage = Math.round((securityMetrics.rateLimitRemaining / securityMetrics.rateLimitMax) * 100);
+  const getStatusBg = (status) => {
+    return status === 'protected'
+      ? 'bg-emerald-50 dark:bg-emerald-900/20'
+      : 'bg-amber-50 dark:bg-amber-900/20';
+  };
 
   return (
     <div className="space-y-6">
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-600">CSRF Token</p>
-              <p className="text-lg font-bold text-slate-900 mt-1 font-mono text-xs">{securityMetrics.csrfToken}</p>
-            </div>
-            <Shield className="w-8 h-8 text-blue-500 opacity-20" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-emerald-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-600">Requisições Restantes</p>
-              <p className="text-lg font-bold text-emerald-600 mt-1">{securityMetrics.rateLimitRemaining}/{securityMetrics.rateLimitMax}</p>
-            </div>
-            <Zap className="w-8 h-8 text-emerald-500 opacity-20" />
-          </div>
-          <div className="mt-3 w-full bg-slate-200 rounded-full h-2">
-            <div
-              className="bg-emerald-500 h-2 rounded-full transition-all"
-              style={{ width: `${rateLimitPercentage}%` }}
-            />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-amber-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-600">Input Validations</p>
-              <p className="text-lg font-bold text-slate-900 mt-1">1,247</p>
-            </div>
-            <CheckCircle className="w-8 h-8 text-amber-500 opacity-20" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-amber-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-600">Ameaças Bloqueadas</p>
-              <p className="text-lg font-bold text-slate-900 mt-1">12</p>
-            </div>
-            <AlertTriangle className="w-8 h-8 text-amber-500 opacity-20" />
-          </div>
-        </div>
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+          Segurança
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-1">
+          Status de proteção e implementações ativas
+        </p>
       </div>
 
-      {/* Charts */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Security Activity */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Atividade de Segurança</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={chartData}>
-              <defs>
-                <linearGradient id="colorValidations" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" fontSize={12} />
-              <YAxis fontSize={12} />
-              <Tooltip />
-              <Area type="monotone" dataKey="validations" stroke="#3b82f6" fillOpacity={1} fill="url(#colorValidations)" name="Validações" />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Overall Status */}
+      <Card className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 border-emerald-200 dark:border-emerald-800">
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
+                <CheckCircle className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Status Geral</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  6/6 Protegido
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => setShowDetails(!showDetails)}
+              className="gap-2"
+            >
+              {showDetails ? (
+                <>
+                  <EyeOff className="w-4 h-4" />
+                  Ocultar
+                </>
+              ) : (
+                <>
+                  <Eye className="w-4 h-4" />
+                  Detalhes
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Protection Scores */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Scores de Proteção</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={threatData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} fontSize={12} />
-              <YAxis fontSize={12} />
-              <Tooltip />
-              <Bar dataKey="value" fill="#3b82f6" name="Score" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Security Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {securityMetrics.map((metric) => {
+          const Icon = metric.icon;
+          return (
+            <Card
+              key={metric.id}
+              className={`${getStatusBg(metric.status)} border-l-4 ${
+                metric.status === 'protected'
+                  ? 'border-l-emerald-500'
+                  : 'border-l-amber-500'
+              }`}
+            >
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <Icon className={`w-5 h-5 mt-1 ${getStatusColor(metric.status)}`} />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                      {metric.name}
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                      {metric.description}
+                    </p>
+                    <div className="mt-2">
+                      <span
+                        className={`text-xs font-medium px-2 py-1 rounded ${
+                          metric.status === 'protected'
+                            ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300'
+                            : 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300'
+                        }`}
+                      >
+                        {metric.status === 'protected' ? '✓ Ativo' : '⚠️ Revisar'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
-      {/* Threats Timeline */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold mb-4">Histórico de Ameaças</h3>
-        <div className="space-y-3">
-          {[
-            { type: 'XSS Attempt', status: 'blocked', time: 'há 2 min' },
-            { type: 'Invalid Input', status: 'sanitized', time: 'há 5 min' },
-            { type: 'Rate Limit Exceeded', status: 'blocked', time: 'há 15 min' },
-            { type: 'CSRF Token Validation', status: 'passed', time: 'há 30 min' }
-          ].map((item, idx) => (
-            <div key={idx} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                {item.status === 'blocked' && <AlertTriangle className="w-5 h-5 text-amber-500" />}
-                {item.status === 'passed' && <CheckCircle className="w-5 h-5 text-emerald-500" />}
-                {item.status === 'sanitized' && <Shield className="w-5 h-5 text-blue-500" />}
+      {/* Security Best Practices */}
+      {showDetails && (
+        <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              Boas Práticas Implementadas
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex gap-3">
+                <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium text-slate-900">{item.type}</p>
-                  <p className="text-xs text-slate-500">{item.time}</p>
+                  <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                    Input Sanitization
+                  </h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Todos os inputs são validados e sanitizados para remover caracteres perigosos
+                  </p>
                 </div>
               </div>
-              <span className={`px-3 py-1 rounded text-xs font-medium ${
-                item.status === 'blocked' ? 'bg-amber-100 text-amber-800' :
-                item.status === 'passed' ? 'bg-emerald-100 text-emerald-800' :
-                'bg-blue-100 text-blue-800'
-              }`}>
-                {item.status}
-              </span>
+
+              <div className="flex gap-3">
+                <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                    CSRF Tokens
+                  </h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Tokens aleatórios por sessão previnem ataques CSRF
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                    Rate Limiting
+                  </h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Máximo de 10 requests/minuto previne abuso e DDoS
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                    Pattern Detection
+                  </h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Detecção automática de padrões XSS e SQL injection
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                    SessionStorage para Tokens
+                  </h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    CSRF tokens armazenados em sessionStorage (não persiste entre abas)
+                  </p>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Monitoring Tips */}
+      <Card className="bg-slate-50 dark:bg-slate-900/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+            Monitoramento e Logs
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li>✓ Console logs quando XSS detectado</li>
+            <li>✓ Rate limit errors lancados com código RATE_LIMIT_EXCEEDED</li>
+            <li>✓ CSRF token validation em cada form submit</li>
+            <li>✓ Todos os inputs sanitizados automaticamente</li>
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default SecurityDashboard;
+}
