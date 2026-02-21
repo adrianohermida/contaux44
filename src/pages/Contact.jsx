@@ -119,8 +119,8 @@ export default function Contact() {
   } = usePagination(filteredAndSortedContacts, 20);
 
   const handleNewContact = useCallback(() => {
-    navigate('/contact/new');
-  }, [navigate]);
+    setShowCreateModal(true);
+  }, []);
 
   const handleViewContact = useCallback((id) => {
     if (selectedIds.length > 0) {
