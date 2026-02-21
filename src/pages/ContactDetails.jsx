@@ -128,16 +128,18 @@ function ContactInfoDisplay({ formData, contact, workspaceId, contactId }) {
 }
 
 export default function ContactDetails() {
-  const { contactId } = useParams();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
-  const { toasts, removeToast, success, error, info } = useToast();
+   const { contactId } = useParams();
+   const navigate = useNavigate();
+   const queryClient = useQueryClient();
+   const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
+   const { toasts, removeToast, success, error, info } = useToast();
 
-   const [formData, setFormData] = useState(null);
-   const [isEditing, setIsEditing] = useState(contactId === 'new');
-   const [errors, setErrors] = useState({});
-   const [hasChanges, setHasChanges] = useState(false);
+    const [formData, setFormData] = useState(null);
+    const [isEditing, setIsEditing] = useState(contactId === 'new');
+    const [errors, setErrors] = useState({});
+    const [hasChanges, setHasChanges] = useState(false);
+    const [activeTab, setActiveTab] = useState('info');
+    const [loadedTabs, setLoadedTabs] = useState(new Set(['info']));
 
    // Real-time validation with debounce
    const debouncedFormData = useDebounce(formData, 500);
@@ -381,21 +383,21 @@ export default function ContactDetails() {
     );
   }
 
-  // Route validation and error handling
-  const routeError = (
-    <ProtectedInternalRoute>
-      <ContactRouteValidator 
-        contactId={contactId}
-        isLoading={isLoading}
-        error={queryError}
-        contact={contact}
-        onNavigateBack={() => navigate('/contact')}
-      />
-    </ProtectedInternalRoute>
-  );
+  // Route validation - check for error/not found
+  const routeErrorElement = ContactRouteValidator({ 
+    contactId,
+    isLoading,
+    error: queryError,
+    contact,
+    onNavigateBack: () => navigate('/contact')
+  });
 
-  if (routeError.props.children) {
-    return routeError;
+  if (routeErrorElement) {
+    return (
+      <ProtectedInternalRoute>
+        {routeErrorElement}
+      </ProtectedInternalRoute>
+    );
   }
 
   if (!formData) return null;
@@ -422,83 +424,92 @@ export default function ContactDetails() {
         </div>
 
         {/* Tabs Navigation with Lazy Loading */}
-        {contactId !== 'new' && !isEditing && contact && (
-          <Tabs defaultValue="info" className="space-y-6" onValueChange={(value) => {/* Tab tracking */}}>
-            <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:grid-cols-none">
-              <TabsTrigger value="info">Info</TabsTrigger>
-              <TabsTrigger value="notes">Notas</TabsTrigger>
-              <TabsTrigger value="activity">Atividades</TabsTrigger>
-              <TabsTrigger value="tags">Tags</TabsTrigger>
-              <TabsTrigger value="relationships">Relações</TabsTrigger>
-              <TabsTrigger value="files">Arquivos</TabsTrigger>
-              <TabsTrigger value="duplicates">Duplicatas</TabsTrigger>
-            </TabsList>
+         {contactId !== 'new' && !isEditing && contact && (
+           <Tabs value={activeTab} onValueChange={(value) => {
+             setActiveTab(value);
+             setLoadedTabs(prev => new Set([...prev, value]));
+           }} className="space-y-6">
+             <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:grid-cols-none">
+               <TabsTrigger value="info">Info</TabsTrigger>
+               <TabsTrigger value="notes">Notas</TabsTrigger>
+               <TabsTrigger value="activity">Atividades</TabsTrigger>
+               <TabsTrigger value="tags">Tags</TabsTrigger>
+               <TabsTrigger value="relationships">Relações</TabsTrigger>
+               <TabsTrigger value="files">Arquivos</TabsTrigger>
+               <TabsTrigger value="duplicates">Duplicatas</TabsTrigger>
+             </TabsList>
 
-            <TabsContent value="info">
-              <Card className="bg-white dark:bg-slate-800">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Informações do Contato</CardTitle>
-                  <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
-                    Editar
-                  </Button>
-                </CardHeader>
-                <CardContent>
-                  <ContactInfoDisplay 
-                    formData={formData} 
-                    contact={contact}
-                    workspaceId={workspaceId}
-                    contactId={contactId}
-                  />
-                </CardContent>
-              </Card>
-            </TabsContent>
+             <LazyTabContent value="info" activeTab={activeTab}>
+               <Card className="bg-white dark:bg-slate-800">
+                 <CardHeader className="flex flex-row items-center justify-between">
+                   <CardTitle>Informações do Contato</CardTitle>
+                   <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+                     Editar
+                   </Button>
+                 </CardHeader>
+                 <CardContent>
+                   <ContactInfoDisplay 
+                     formData={formData} 
+                     contact={contact}
+                     workspaceId={workspaceId}
+                     contactId={contactId}
+                   />
+                 </CardContent>
+               </Card>
+             </LazyTabContent>
 
-            <TabsContent value="notes">
-              <ContactNotesList contactId={contactId} workspaceId={workspaceId} />
-            </TabsContent>
+             <LazyTabContent value="notes" activeTab={activeTab} loading={!loadedTabs.has('notes')}>
+               {loadedTabs.has('notes') && <ContactNotesList contactId={contactId} workspaceId={workspaceId} />}
+             </LazyTabContent>
 
-            <TabsContent value="activity">
-              <ContactActivityTimeline contactId={contactId} workspaceId={workspaceId} />
-            </TabsContent>
+             <LazyTabContent value="activity" activeTab={activeTab} loading={!loadedTabs.has('activity')}>
+               {loadedTabs.has('activity') && <ContactActivityTimeline contactId={contactId} workspaceId={workspaceId} />}
+             </LazyTabContent>
 
-            <TabsContent value="tags">
-              <Card className="bg-white dark:bg-slate-800">
-                <CardHeader>
-                  <CardTitle>Tags do Contato</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ContactTagSelector contactId={contactId} workspaceId={workspaceId} />
-                </CardContent>
-              </Card>
-            </TabsContent>
+             <LazyTabContent value="tags" activeTab={activeTab} loading={!loadedTabs.has('tags')}>
+               {loadedTabs.has('tags') && (
+                 <Card className="bg-white dark:bg-slate-800">
+                   <CardHeader>
+                     <CardTitle>Tags do Contato</CardTitle>
+                   </CardHeader>
+                   <CardContent>
+                     <ContactTagSelector contactId={contactId} workspaceId={workspaceId} />
+                   </CardContent>
+                 </Card>
+               )}
+             </LazyTabContent>
 
-            <TabsContent value="relationships">
-              <Card className="bg-white dark:bg-slate-800">
-                <CardHeader>
-                  <CardTitle>Relacionamentos</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ContactRelationshipManager contactId={contactId} workspaceId={workspaceId} />
-                </CardContent>
-              </Card>
-            </TabsContent>
+             <LazyTabContent value="relationships" activeTab={activeTab} loading={!loadedTabs.has('relationships')}>
+               {loadedTabs.has('relationships') && (
+                 <Card className="bg-white dark:bg-slate-800">
+                   <CardHeader>
+                     <CardTitle>Relacionamentos</CardTitle>
+                   </CardHeader>
+                   <CardContent>
+                     <ContactRelationshipManager contactId={contactId} workspaceId={workspaceId} />
+                   </CardContent>
+                 </Card>
+               )}
+             </LazyTabContent>
 
-            <TabsContent value="files">
-              <Card className="bg-white dark:bg-slate-800">
-                <CardHeader>
-                  <CardTitle>Arquivos Anexados</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ContactAttachments contactId={contactId} workspaceId={workspaceId} />
-                </CardContent>
-              </Card>
-            </TabsContent>
+             <LazyTabContent value="files" activeTab={activeTab} loading={!loadedTabs.has('files')}>
+               {loadedTabs.has('files') && (
+                 <Card className="bg-white dark:bg-slate-800">
+                   <CardHeader>
+                     <CardTitle>Arquivos Anexados</CardTitle>
+                   </CardHeader>
+                   <CardContent>
+                     <ContactAttachments contactId={contactId} workspaceId={workspaceId} />
+                   </CardContent>
+                 </Card>
+               )}
+             </LazyTabContent>
 
-            <TabsContent value="duplicates">
-              <DuplicateDetector workspaceId={workspaceId} contactId={contactId} />
-            </TabsContent>
-          </Tabs>
-        )}
+             <LazyTabContent value="duplicates" activeTab={activeTab} loading={!loadedTabs.has('duplicates')}>
+               {loadedTabs.has('duplicates') && <DuplicateDetector workspaceId={workspaceId} contactId={contactId} />}
+             </LazyTabContent>
+           </Tabs>
+         )}
 
         {/* Edit Form (shown when editing or creating new) */}
         {(isEditing || contactId === 'new') && (
