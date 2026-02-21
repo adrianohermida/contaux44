@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '@/lib/utils';
 import ContactCard from '../ContactCard';
 
 export default function ContactGridItem({
@@ -9,10 +10,21 @@ export default function ContactGridItem({
   onView,
   showCheckbox
 }) {
+  const handleClick = () => {
+    if (showCheckbox) {
+      onSelect(contact.id);
+    } else {
+      onView(contact.id);
+    }
+  };
+
   return (
     <div
-      className="relative"
-      onClick={() => onView(contact.id)}
+      className={cn(
+        "relative cursor-pointer transition-opacity",
+        showCheckbox && isSelected && "opacity-75 ring-2 ring-blue-500 rounded-xl"
+      )}
+      onClick={handleClick}
     >
       {showCheckbox && (
         <div className="absolute top-2 right-2 z-10">
@@ -23,7 +35,7 @@ export default function ContactGridItem({
               e.stopPropagation();
               onSelect(contact.id);
             }}
-            className="w-5 h-5 rounded border-slate-300"
+            className="w-5 h-5 rounded border-slate-300 cursor-pointer"
           />
         </div>
       )}
