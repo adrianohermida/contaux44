@@ -31,6 +31,8 @@ import {
   formatPhone,
   formatCEP,
 } from '../components/dashboard/ContactFormValidation';
+import LazyTabContent from '../components/dashboard/LazyTabContent';
+import ContactRouteValidator from '../components/dashboard/ContactRouteValidator';
 
 function ContactInfoDisplay({ formData, contact, workspaceId, contactId }) {
   return (
@@ -263,13 +265,27 @@ export default function ContactDetails() {
       return;
     }
 
-    // Async email uniqueness validation
+    // Async email validation with timeout (5s max)
     info('Validando email...');
-    const isEmailUnique = await validateEmailUniqueness(base44, formData.email, contactId, workspaceId);
-    if (!isEmailUnique) {
-      setErrors({ email: 'Este email já está em uso por outro contato' });
-      error('Email já existe no sistema');
-      return;
+    try {
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('timeout')), 5000)
+      );
+      const validationPromise = validateEmailUniqueness(base44, formData.email, contactId, workspaceId);
+      
+      const isEmailUnique = await Promise.race([validationPromise, timeoutPromise]);
+      if (!isEmailUnique) {
+        setErrors({ email: 'Este email já está em uso por outro contato' });
+        error('Email já existe no sistema');
+        return;
+      }
+    } catch (validationErr) {
+      if (validationErr.message === 'timeout') {
+        // Timeout - continue anyway with warning
+        info('Não foi possível validar email, continuando...');
+      } else {
+        throw validationErr;
+      }
     }
 
     setErrors({});
@@ -340,15 +356,21 @@ export default function ContactDetails() {
     );
   }
 
-  if (queryError && contactId !== 'new') {
-    return (
-      <ProtectedInternalRoute>
-        <div className="text-center py-12">
-          <p className="text-slate-600 dark:text-slate-400 mb-4">Erro ao carregar contato</p>
-          <Button onClick={() => navigate('/contact')}>Voltar para Contatos</Button>
-        </div>
-      </ProtectedInternalRoute>
-    );
+  // Route validation and error handling
+  const routeError = (
+    <ProtectedInternalRoute>
+      <ContactRouteValidator 
+        contactId={contactId}
+        isLoading={isLoading}
+        error={queryError}
+        contact={contact}
+        onNavigateBack={() => navigate('/contact')}
+      />
+    </ProtectedInternalRoute>
+  );
+
+  if (routeError.props.children) {
+    return routeError;
   }
 
   if (!formData) return null;
@@ -374,9 +396,9 @@ export default function ContactDetails() {
           </div>
         </div>
 
-        {/* Tabs Navigation */}
-        {contactId !== 'new' && !isEditing && (
-          <Tabs defaultValue="info" className="space-y-6">
+        {/* Tabs Navigation with Lazy Loading */}
+        {contactId !== 'new' && !isEditing && contact && (
+          <Tabs defaultValue="info" className="space-y-6" onValueChange={(value) => {/* Tab tracking */}}>
             <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:grid-cols-none">
               <TabsTrigger value="info">Info</TabsTrigger>
               <TabsTrigger value="notes">Notas</TabsTrigger>
