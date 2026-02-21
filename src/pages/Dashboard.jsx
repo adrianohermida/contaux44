@@ -13,6 +13,9 @@ import RevenueForecastWidget from '../components/dashboard/widgets/RevenueForeca
 import PipelinePerformanceWidget from '../components/dashboard/widgets/PipelinePerformanceWidget';
 import AIInsightsWidget from '../components/dashboard/widgets/AIInsightsWidget';
 import EnrichmentSuggestionsWidget from '../components/dashboard/widgets/EnrichmentSuggestionsWidget';
+import CustomerHealthWidget from '../components/dashboard/widgets/CustomerHealthWidget';
+import RetentionRiskWidget from '../components/dashboard/widgets/RetentionRiskWidget';
+import CustomerJourneyWidget from '../components/dashboard/widgets/CustomerJourneyWidget';
 
 export default function Dashboard() {
   const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
@@ -80,6 +83,17 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <AIInsightsWidget workspaceId={workspaceId} />
         <EnrichmentSuggestionsWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 8 - Customer Health & Retention Risk */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CustomerHealthWidget workspaceId={workspaceId} />
+        <RetentionRiskWidget workspaceId={workspaceId} />
+      </div>
+
+      {/* Row 9 - Customer Journey Timeline */}
+      <div className="grid grid-cols-1 gap-6">
+        <CustomerJourneyWidget workspaceId={workspaceId} />
       </div>
     </div>
   );
