@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, Plus, Zap, Users } from 'lucide-react';
+import { AlertCircle, Plus, Zap, Users, TrendingUp } from 'lucide-react';
 
 const SUGGESTION_ICONS = {
   missing_field: Plus,
