@@ -233,6 +233,11 @@ export default function Reports() {
           )}
         </TabsContent>
 
+        {/* Predictive Analytics */}
+        <TabsContent value="predictive" className="mt-6">
+          {analyticsData && <PredictiveAnalyticsDashboard invoices={analyticsData.invoices} />}
+        </TabsContent>
+
         {/* Report Builder */}
         <TabsContent value="builder" className="mt-6">
           {workspaceId && <ReportBuilder tenantId={workspaceId} onSuccess={() => refetchReports()} />}
