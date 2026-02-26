@@ -14,7 +14,12 @@ export function useRealtimeSync(entityName, workspaceId) {
     if (!workspaceId) return;
 
     // Conectar ao WebSocket
-    wsService.connect(workspaceId);
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    
+    wsService.connect(wsUrl).catch(() => {
+      // WebSocket connection failed, continue without real-time sync
+    });
 
     // Subscribe a eventos da entidade
     const unsubscribe = wsService.subscribe(`entity:${entityName}`, (payload) => {
