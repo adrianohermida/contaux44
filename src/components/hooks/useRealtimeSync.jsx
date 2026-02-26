@@ -25,7 +25,7 @@ export function useRealtimeSync(entityName, workspaceId) {
   }, [entityName, workspaceId]);
 
   return {
-    isConnected: wsService.isConnected,
-    syncEntity
+    isConnected: false,
+    syncEntity: () => {}
   };
 }
