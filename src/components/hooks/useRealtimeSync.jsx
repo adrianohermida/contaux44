@@ -17,7 +17,7 @@ export function useRealtimeSync(entityName, workspaceId) {
     wsService.connect(workspaceId);
 
     // Subscribe a eventos da entidade
-    const unsubscribe = wsService.on(`entity:${entityName}`, (payload) => {
+    const unsubscribe = wsService.subscribe(`entity:${entityName}`, (payload) => {
       const { action, data, entity_id } = payload;
 
       if (action === 'created') {
