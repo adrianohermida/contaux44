@@ -30,14 +30,16 @@ export default function ContactEditForm({
   if (!formData) return null;
 
   return (
-    <Card className="bg-white dark:bg-slate-800">
-      <CardHeader className="flex flex-row items-center justify-between">
+    <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <CardTitle>Informações do Contato</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4 sm:px-6">
         <div className="space-y-6">
           {/* Basic Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <fieldset className="space-y-4 border-0">
+            <legend className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-4">Informações Básicas</legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <ContactFormField
               label="Nome da Empresa"
               name="company_name"
@@ -65,22 +67,29 @@ export default function ContactEditForm({
               formatFn={formatPhone}
             />
             <div>
-              <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Tipo</label>
+              <label htmlFor="client_type" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+                Tipo
+              </label>
               <select
+                id="client_type"
                 name="client_type"
                 value={formData.client_type}
                 onChange={onInputChange}
                 disabled={!isEditing}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
+                className="w-full min-h-[44px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Tipo de cliente"
               >
                 <option value="pf">Pessoa Física</option>
                 <option value="pj">Pessoa Jurídica</option>
               </select>
             </div>
-          </div>
+            </div>
+          </fieldset>
 
           {/* Document Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <fieldset className="space-y-4 border-0">
+            <legend className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-4">Documentação</legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {formData.client_type === 'pf' ? (
               <ContactFormField
                 label="CPF"
@@ -103,19 +112,24 @@ export default function ContactEditForm({
               />
             )}
             <div>
-              <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">Status</label>
+              <label htmlFor="status" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+                Status
+              </label>
               <select
+                id="status"
                 name="status"
                 value={formData.status}
                 onChange={onInputChange}
                 disabled={!isEditing}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60"
+                className="w-full min-h-[44px] px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Status do cliente"
               >
                 <option value="active">Ativo</option>
                 <option value="inactive">Inativo</option>
               </select>
             </div>
-          </div>
+            </div>
+          </fieldset>
 
           {/* Custom Fields */}
           <ContactCustomFields 
@@ -125,9 +139,9 @@ export default function ContactEditForm({
           />
 
           {/* Address Info */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100">Endereço</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <fieldset className="space-y-4 border-0">
+            <legend className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-4">Endereço</legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <ContactFormField
                   label="CEP"
@@ -200,25 +214,29 @@ export default function ContactEditForm({
                 placeholder="Preenchido automaticamente ao buscar CEP"
               />
             </div>
-          </div>
+          </fieldset>
 
           {/* Action Buttons */}
-          <div className="pt-4 border-t space-y-3">
+          <div className="pt-6 sm:pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3 sm:space-y-0 sm:flex sm:gap-3">
             {isEditing && (
-              <div className="flex gap-3">
+              <>
                 <Button
                   onClick={onSave}
                   disabled={isSaving}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 min-h-[44px]"
                 >
-                  <Save className="w-4 h-4 mr-2" />
+                  <Save className="w-4 h-4 mr-2 flex-shrink-0" aria-hidden="true" />
                   {isSaving ? 'Salvando...' : 'Salvar'}
                 </Button>
-                <Button onClick={onCancel} variant="outline">
-                  <X className="w-4 h-4 mr-2" />
+                <Button 
+                  onClick={onCancel} 
+                  variant="outline"
+                  className="w-full sm:w-auto min-h-[44px]"
+                >
+                  <X className="w-4 h-4 mr-2 flex-shrink-0" aria-hidden="true" />
                   Cancelar
                 </Button>
-              </div>
+              </>
             )}
             {!isEditing && contactId !== 'new' && onDelete && (
               <ContactDeleteButton 

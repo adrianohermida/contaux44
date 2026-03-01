@@ -156,9 +156,9 @@ export default function ContactDetails() {
   if (isLoading) {
     return (
       <ProtectedInternalRoute>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin mr-2" />
-          <span>Carregando contato...</span>
+        <div className="flex items-center justify-center py-12 px-4" role="status" aria-live="polite" aria-label="Carregando contato">
+          <Loader2 className="w-6 h-6 animate-spin mr-2 flex-shrink-0" aria-hidden="true" />
+          <span className="text-slate-600 dark:text-slate-400">Carregando contato...</span>
         </div>
       </ProtectedInternalRoute>
     );
