@@ -8,7 +8,7 @@ import UnifiedHeader from '../components/shared/UnifiedHeader';
 import UnifiedFiltersBar from '../components/shared/UnifiedFiltersBar';
 import UnifiedGrid from '../components/shared/UnifiedGrid';
 import ContactGridItem from '../components/dashboard/contact/ContactGridItem';
-import { Tag, TrendingUp } from 'lucide-react';
+import { Tag, TrendingUp, SearchCheck } from 'lucide-react';
 import ContactExportButton from '../components/dashboard/ContactExportButton';
 import ContactModals from '../components/dashboard/contact/ContactModals';
 import UnifiedContactForm from '../components/contact/shared/UnifiedContactForm';
@@ -18,6 +18,7 @@ import ContactExportCSV from '../components/dashboard/contact/ContactExportCSV';
 import ContactImportCSVDialog from '../components/dashboard/contact/ContactImportCSVDialog';
 import ContactTagManagerDialog from '../components/dashboard/contact/ContactTagManagerDialog';
 import ContactRelationshipManagerDialog from '../components/dashboard/contact/ContactRelationshipManagerDialog';
+import ContactDeduplicationDialog from '../components/dashboard/contact/ContactDeduplicationDialog';
 import { usePagination } from '../components/hooks/usePagination';
 import { useDebounce } from '../components/hooks/useDebounce';
 import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../components/dashboard/ContactQueryHelpers';
@@ -45,6 +46,7 @@ export default function Contact() {
     tagManagerNew: false,
     relationshipManager: false,
     relationshipContactId: null,
+    deduplication: false,
   });
   
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -202,6 +204,7 @@ export default function Contact() {
           onNewItem={handleNewContact}
           onImportClick={() => openModal('importCSV')}
           actionButtons={[
+            { label: 'Duplicatas', icon: SearchCheck, onClick: () => openModal('deduplication') },
             { label: 'Estatísticas', icon: TrendingUp, onClick: () => openModal('tagStats') },
             { label: 'Tags', icon: Tag, onClick: () => openModal('tagManagerNew') },
             { label: 'Exportar', component: () => <ContactExportCSV contacts={filteredAndSortedContacts} workspaceId={workspaceId} /> }
@@ -316,6 +319,12 @@ export default function Contact() {
             setModalState(prev => ({ ...prev, relationshipManager: false, relationshipContactId: null }));
           }}
           contactId={modalState.relationshipContactId}
+          workspaceId={workspaceId}
+        />
+
+        <ContactDeduplicationDialog
+          open={modalState.deduplication}
+          onClose={() => closeModal('deduplication')}
           workspaceId={workspaceId}
         />
       </div>
