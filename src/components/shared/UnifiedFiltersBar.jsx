@@ -116,17 +116,19 @@ export default function UnifiedFiltersBar({
               Limpar
             </Button>
           )}
-          <Button
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            variant={showAdvanced ? 'default' : 'outline'}
-            size="sm"
-            className="min-h-[44px] text-xs sm:text-sm"
-            aria-expanded={showAdvanced}
-            aria-label="Alternar entre filtros básicos e avançados"
-          >
-            <Filter className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-            <span className="hidden sm:inline ml-1">Filtros</span>
-          </Button>
+          {additionalFilters.length > 2 && (
+            <Button
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              variant={showAdvanced ? 'default' : 'outline'}
+              size="sm"
+              className="min-h-[44px] text-xs sm:text-sm"
+              aria-expanded={showAdvanced}
+              aria-label="Alternar entre filtros básicos e avançados"
+            >
+              <Filter className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+              <span className="hidden sm:inline ml-1">Filtros</span>
+            </Button>
+          )}
         </div>
       </div>
 
