@@ -86,7 +86,7 @@ export default function Header() {
                    role="menu"
                    onKeyDown={(e) => {
                      if (e.key === 'Escape') setDropdownOpen(false);
-                   }}
+                   }}>
                      <Link
                        to={createPageUrl('Dashboard')}
                        className={`block w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors ${
