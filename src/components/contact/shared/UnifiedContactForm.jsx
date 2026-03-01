@@ -217,100 +217,122 @@ export default function UnifiedContactForm({
 
       {/* Extended address fields for full form */}
       {type === 'full' && (
-        <>
+        <fieldset className="space-y-4 border-0">
+          <legend className="text-sm font-semibold text-slate-900 dark:text-slate-100">Endereço</legend>
           <div>
-            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+            <label htmlFor="cep" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
               CEP
             </label>
             <Input
+              id="cep"
               name="cep"
               value={formData.cep}
               onChange={handleChange}
               placeholder="12345-678"
               disabled={isLoading}
+              aria-label="CEP"
+              className="min-h-[44px]"
             />
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-2">
-              <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              <label htmlFor="endereco" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
                 Endereço
               </label>
               <Input
+                id="endereco"
                 name="endereco"
                 value={formData.endereco}
                 onChange={handleChange}
                 placeholder="Rua/Avenida"
                 disabled={isLoading}
+                aria-label="Endereço"
+                className="min-h-[44px]"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              <label htmlFor="numero" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
                 Número
               </label>
               <Input
+                id="numero"
                 name="numero"
                 value={formData.numero}
                 onChange={handleChange}
                 placeholder="123"
                 disabled={isLoading}
+                aria-label="Número"
+                className="min-h-[44px]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+            <label htmlFor="complemento" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
               Complemento
             </label>
             <Input
+              id="complemento"
               name="complemento"
               value={formData.complemento}
               onChange={handleChange}
               placeholder="Apto, Sala, etc"
               disabled={isLoading}
+              aria-label="Complemento"
+              className="min-h-[44px]"
             />
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              <label htmlFor="bairro" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
                 Bairro
               </label>
               <Input
+                id="bairro"
                 name="bairro"
                 value={formData.bairro}
                 onChange={handleChange}
                 placeholder="Bairro"
                 disabled={isLoading}
+                aria-label="Bairro"
+                className="min-h-[44px]"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              <label htmlFor="cidade" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
                 Cidade
               </label>
               <Input
+                id="cidade"
                 name="cidade"
                 value={formData.cidade}
                 onChange={handleChange}
                 placeholder="Cidade"
                 disabled={isLoading}
+                aria-label="Cidade"
+                className="min-h-[44px]"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              <label htmlFor="uf" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
                 UF
               </label>
               <Input
+                id="uf"
                 name="uf"
                 value={formData.uf}
                 onChange={handleChange}
                 placeholder="SP"
                 maxLength="2"
                 disabled={isLoading}
+                aria-label="Unidade Federativa"
+                className="min-h-[44px]"
               />
             </div>
           </div>
-        </>
+        </fieldset>
       )}
 
       {error && (
