@@ -97,6 +97,7 @@ import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
+import ReportsAnalytics from './pages/ReportsAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -151,6 +152,7 @@ export const PAGES = {
     "Transactions": Transactions,
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
+    "ReportsAnalytics": ReportsAnalytics,
 }
 
 export const pagesConfig = {
