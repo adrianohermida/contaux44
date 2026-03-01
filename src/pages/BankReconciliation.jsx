@@ -3,10 +3,10 @@ import { Plus } from 'lucide-react';
 import BankReconciliationForm from '../components/dashboard/BankReconciliationForm';
 import BankReconciliationList from '../components/dashboard/BankReconciliationList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 
 export default function BankReconciliation() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useGlobalAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingRecon, setEditingRecon] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);

@@ -3,10 +3,10 @@ import { Plus } from 'lucide-react';
 import ChartOfAccountsForm from '../components/dashboard/ChartOfAccountsForm';
 import ChartOfAccountsList from '../components/dashboard/ChartOfAccountsList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 
 export default function ChartOfAccounts() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useGlobalAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
