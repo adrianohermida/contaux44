@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { MessageCircle, Plus, Trash2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuthOptimized } from '@/components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 import VirtualCounterChat from '../components/virtualCounter/VirtualCounterChat';
 
 export default function VirtualCounter() {
-  const { workspaceId } = useMultitenantAuthOptimized('internal');
+  const { workspaceId } = useGlobalAuth('internal');
   const [conversations, setConversations] = useState([]);
   const [selectedConv, setSelectedConv] = useState(null);
   const [loading, setLoading] = useState(true);
