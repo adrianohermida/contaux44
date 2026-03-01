@@ -98,6 +98,8 @@ import Transactions from './pages/Transactions';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
 import ReportsAnalytics from './pages/ReportsAnalytics';
+import ReportsAdvanced from './pages/ReportsAdvanced';
+import ReportsOperations from './pages/ReportsOperations';
 import __Layout from './Layout.jsx';
 
 
@@ -153,6 +155,8 @@ export const PAGES = {
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
     "ReportsAnalytics": ReportsAnalytics,
+    "ReportsAdvanced": ReportsAdvanced,
+    "ReportsOperations": ReportsOperations,
 }
 
 export const pagesConfig = {
