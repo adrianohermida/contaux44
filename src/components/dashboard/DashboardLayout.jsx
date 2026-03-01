@@ -28,24 +28,32 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
   }, [sidebarCollapsed]);
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-slate-950 transition-colors">
+    <div className="flex min-h-screen bg-white dark:bg-slate-950 transition-colors" role="application" aria-label="Dashboard principal">
       {/* Mobile Menu - sempre no topo em mobile */}
       <MobileMenu />
 
       {/* Sidebar - hidden on mobile, visible on desktop, FIXED position */}
-      <aside className={`hidden md:block md:fixed md:left-0 md:top-0 md:h-screen md:z-30 transition-all duration-300 ${sidebarCollapsed ? 'md:w-16' : 'md:w-64'}`}>
+      <aside 
+        className={`hidden md:block md:fixed md:left-0 md:top-0 md:h-screen md:z-30 transition-all duration-300 ${sidebarCollapsed ? 'md:w-16' : 'md:w-64'}`}
+        role="complementary"
+        aria-label="Navegação lateral"
+      >
         <Sidebar collapsed={sidebarCollapsed} setCollapsed={handleSetCollapsed} />
       </aside>
       
       {/* Main Content - com margem para compensar sidebar fixo */}
       <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
         {/* Mobile padding para menu */}
-        <div className="h-16 md:h-0" />
+        <div className="h-16 md:h-0 aria-hidden={true}" />
         
         {/* Header - sempre visível e consistente */}
         <DashboardHeader />
         
-        <main className="flex-1 p-4 sm:p-6 md:p-8 bg-white dark:bg-slate-950 pb-24 md:pb-8 overflow-y-auto">
+        <main 
+          className="flex-1 p-4 sm:p-6 md:p-8 bg-white dark:bg-slate-950 pb-24 md:pb-8 overflow-y-auto safe-area-inset"
+          role="main"
+          aria-label="Conteúdo principal"
+        >
           {children}
         </main>
       </div>
