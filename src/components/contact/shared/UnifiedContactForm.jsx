@@ -105,19 +105,23 @@ export default function UnifiedContactForm({
   const title = type === 'simple' ? 'Novo Cliente' : 'Novo Contato';
 
   const formFields = (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
-            Tipo *
-          </label>
-          <select
-            name="client_type"
-            value={formData.client_type}
-            onChange={handleChange}
-            disabled={isLoading}
-            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100"
-          >
+    <form onSubmit={handleSubmit} className="space-y-4" role="form" aria-label={`Formulário de ${title.toLowerCase()}`}>
+      <fieldset className="space-y-4 border-0">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="client_type" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+              Tipo *
+            </label>
+            <select
+              id="client_type"
+              name="client_type"
+              value={formData.client_type}
+              onChange={handleChange}
+              disabled={isLoading}
+              aria-label="Tipo de cliente"
+              aria-required="true"
+              className="w-full px-3 py-3 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
             <option value="pf">Pessoa Física</option>
             <option value="pj">Pessoa Jurídica</option>
           </select>
