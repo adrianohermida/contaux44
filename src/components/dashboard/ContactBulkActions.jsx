@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, CheckCircle, XCircle, Tag } from 'lucide-react';
+import { Trash2, CheckCircle, XCircle, Tag, Edit2, GitMerge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -13,10 +13,14 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import ContactBulkRenameDialog from './ContactBulkRenameDialog';
+import ContactBulkMergeDialog from './ContactBulkMergeDialog';
 
-export default function ContactBulkActions({ selectedIds, onClearSelection, onEditTags, userRole }) {
+export default function ContactBulkActions({ selectedIds, onClearSelection, onEditTags, userRole, workspaceId }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
+  const [showRenameDialog, setShowRenameDialog] = useState(false);
+  const [showMergeDialog, setShowMergeDialog] = useState(false);
   const [targetStatus, setTargetStatus] = useState(null);
   const queryClient = useQueryClient();
 
@@ -69,51 +73,81 @@ export default function ContactBulkActions({ selectedIds, onClearSelection, onEd
 
   return (
     <>
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white dark:bg-slate-800 rounded-full shadow-xl border border-slate-200 dark:border-slate-700 px-6 py-3 flex items-center gap-4">
+      <div className="fixed bottom-4 sm:bottom-6 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 z-50 bg-white dark:bg-slate-800 rounded-lg sm:rounded-full shadow-xl border border-slate-200 dark:border-slate-700 p-4 sm:px-6 sm:py-3 flex flex-col sm:flex-row sm:items-center gap-4">
         <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
           {selectedIds.length} selecionado{selectedIds.length > 1 ? 's' : ''}
         </span>
         
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             size="sm"
             variant="outline"
             onClick={onEditTags}
-            className="gap-2"
+            className="gap-2 min-h-[44px]"
+            aria-label="Editar tags dos contatos selecionados"
           >
-            <Tag className="w-4 h-4" />
-            Tags
+            <Tag className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Tags</span>
           </Button>
 
           <Button
             size="sm"
             variant="outline"
             onClick={() => handleBulkStatus('active')}
-            className="gap-2"
+            className="gap-2 min-h-[44px]"
+            aria-label="Ativar contatos selecionados"
           >
-            <CheckCircle className="w-4 h-4" />
-            Ativar
+            <CheckCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Ativar</span>
           </Button>
           
           <Button
             size="sm"
             variant="outline"
             onClick={() => handleBulkStatus('inactive')}
-            className="gap-2"
+            className="gap-2 min-h-[44px]"
+            aria-label="Desativar contatos selecionados"
           >
-            <XCircle className="w-4 h-4" />
-            Desativar
+            <XCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Desativar</span>
           </Button>
+
+          {selectedIds.length >= 2 && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowRenameDialog(true)}
+              className="gap-2 min-h-[44px]"
+              aria-label="Renomear contatos selecionados"
+            >
+              <Edit2 className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+              <span className="hidden sm:inline">Renomear</span>
+            </Button>
+          )}
+
+          {selectedIds.length >= 2 && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowMergeDialog(true)}
+              className="gap-2 min-h-[44px]"
+              aria-label="Mesclar contatos selecionados"
+            >
+              <GitMerge className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+              <span className="hidden sm:inline">Mesclar</span>
+            </Button>
+          )}
           
           {userRole === 'admin' && (
             <Button
               size="sm"
               variant="destructive"
               onClick={handleBulkDelete}
-              className="gap-2"
+              className="gap-2 min-h-[44px]"
+              aria-label="Deletar contatos selecionados"
             >
-              <Trash2 className="w-4 h-4" />
-              Deletar
+              <Trash2 className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+              <span className="hidden sm:inline">Deletar</span>
             </Button>
           )}
         </div>
@@ -122,6 +156,8 @@ export default function ContactBulkActions({ selectedIds, onClearSelection, onEd
           size="sm"
           variant="ghost"
           onClick={onClearSelection}
+          className="min-h-[44px]"
+          aria-label="Cancelar seleção"
         >
           Cancelar
         </Button>
@@ -166,6 +202,20 @@ export default function ContactBulkActions({ selectedIds, onClearSelection, onEd
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ContactBulkRenameDialog
+        open={showRenameDialog}
+        onClose={() => setShowRenameDialog(false)}
+        selectedIds={selectedIds}
+        workspaceId={workspaceId}
+      />
+
+      <ContactBulkMergeDialog
+        open={showMergeDialog}
+        onClose={() => setShowMergeDialog(false)}
+        selectedIds={selectedIds}
+        workspaceId={workspaceId}
+      />
     </>
   );
 }
