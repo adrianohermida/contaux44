@@ -3,10 +3,10 @@ import { Plus } from 'lucide-react';
 import JournalEntryForm from '../components/dashboard/JournalEntryForm';
 import JournalEntryList from '../components/dashboard/JournalEntryList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 
 export default function Entries() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useGlobalAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);

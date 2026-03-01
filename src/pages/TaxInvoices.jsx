@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 import TaxInvoicesTable from '../components/dashboard/TaxInvoicesTable';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function TaxInvoices() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useGlobalAuth('internal');
   const [refreshKey, setRefreshKey] = useState(0);
 
   if (loading) {
