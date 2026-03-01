@@ -347,18 +347,21 @@ export default function UnifiedContactForm({
           variant="outline"
           onClick={onClose}
           disabled={isLoading}
+          className="min-h-[44px]"
+          aria-label="Cancelar formulário"
         >
-          <X className="w-4 h-4 mr-2" />
+          <X className="w-4 h-4 mr-2" aria-hidden="true" />
           Cancelar
         </Button>
         <Button
           type="submit"
           disabled={isLoading}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 min-h-[44px]"
+          aria-label={isLoading ? `Criando ${title.toLowerCase()}...` : `Criar ${title.toLowerCase()}`}
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" />
               Criando...
             </>
           ) : (
@@ -366,6 +369,7 @@ export default function UnifiedContactForm({
           )}
         </Button>
       </div>
+      </fieldset>
     </form>
   );
 
