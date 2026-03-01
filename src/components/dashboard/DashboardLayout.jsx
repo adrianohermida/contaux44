@@ -58,9 +58,11 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
         <DashboardHeader />
         
         <main 
-          className="flex-1 p-4 sm:p-6 md:p-8 bg-white dark:bg-slate-950 pb-24 md:pb-8 overflow-y-auto safe-area-inset"
+          id="main-content"
+          className="flex-1 p-4 sm:p-6 md:p-8 bg-white dark:bg-slate-950 pb-24 md:pb-8 overflow-y-auto safe-area-inset focus:outline-none"
           role="main"
           aria-label="Conteúdo principal"
+          tabIndex={-1}
         >
           {children}
         </main>
