@@ -128,15 +128,17 @@ export default function UnifiedContactForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+          <label htmlFor="status" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
             Status
           </label>
           <select
+            id="status"
             name="status"
             value={formData.status}
             onChange={handleChange}
             disabled={isLoading}
-            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100"
+            aria-label="Status do cliente"
+            className="w-full px-3 py-3 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="active">Ativo</option>
             <option value="inactive">Inativo</option>
