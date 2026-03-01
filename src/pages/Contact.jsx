@@ -185,7 +185,7 @@ export default function Contact() {
 
   return (
     <ProtectedInternalRoute>
-      <div className="space-y-6 pb-20 min-h-screen" role="region" aria-label="Gerenciador de contatos">
+      <div className="space-y-6 pb-20 min-h-screen" role="main" aria-label="Gerenciador de contatos">
         <UnifiedHeader
           title="Contatos"
           filteredCount={filteredAndSortedContacts.length}
