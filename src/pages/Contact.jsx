@@ -169,9 +169,13 @@ export default function Contact() {
   if (contactsError) {
     return (
       <ProtectedInternalRoute>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <p className="text-red-600 mb-4">Erro ao carregar contatos</p>
-          <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center" role="alert" aria-live="polite">
+          <p className="text-red-600 dark:text-red-400 mb-4">Erro ao carregar contatos</p>
+          <button 
+            onClick={() => refetch()} 
+            className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline focus:outline-none focus:ring-2 focus:ring-red-500 rounded px-2 py-1"
+            aria-label="Tentar carregar contatos novamente"
+          >
             Tentar novamente
           </button>
         </div>

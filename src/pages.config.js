@@ -87,6 +87,9 @@ import QuoteRequest from './pages/QuoteRequest';
 import Quotes from './pages/Quotes';
 import RLSDebugger from './pages/RLSDebugger';
 import Reports from './pages/Reports';
+import ReportsAdvanced from './pages/ReportsAdvanced';
+import ReportsAnalytics from './pages/ReportsAnalytics';
+import ReportsOperations from './pages/ReportsOperations';
 import Sales from './pages/Sales';
 import SecurityCenter from './pages/SecurityCenter';
 import Services from './pages/Services';
@@ -97,9 +100,6 @@ import Tickets from './pages/Tickets';
 import Transactions from './pages/Transactions';
 import VirtualCounter from './pages/VirtualCounter';
 import Welcome from './pages/Welcome';
-import ReportsAnalytics from './pages/ReportsAnalytics';
-import ReportsAdvanced from './pages/ReportsAdvanced';
-import ReportsOperations from './pages/ReportsOperations';
 import __Layout from './Layout.jsx';
 
 
@@ -144,6 +144,9 @@ export const PAGES = {
     "Quotes": Quotes,
     "RLSDebugger": RLSDebugger,
     "Reports": Reports,
+    "ReportsAdvanced": ReportsAdvanced,
+    "ReportsAnalytics": ReportsAnalytics,
+    "ReportsOperations": ReportsOperations,
     "Sales": Sales,
     "SecurityCenter": SecurityCenter,
     "Services": Services,
@@ -154,9 +157,6 @@ export const PAGES = {
     "Transactions": Transactions,
     "VirtualCounter": VirtualCounter,
     "Welcome": Welcome,
-    "ReportsAnalytics": ReportsAnalytics,
-    "ReportsAdvanced": ReportsAdvanced,
-    "ReportsOperations": ReportsOperations,
 }
 
 export const pagesConfig = {
