@@ -1,11 +1,12 @@
 /**
  * UNIFIED FILTERS BAR
- * Shared filters and search for Contact and Clients pages
+ * Advanced search and filters with full-text and faceted navigation
  */
 
-import React from 'react';
-import { Search, Filter, ArrowUpDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Filter, ArrowUpDown, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function UnifiedFiltersBar({
   searchTerm,
@@ -17,21 +18,32 @@ export default function UnifiedFiltersBar({
   onSortChange,
   additionalFilters = [] // Array of {key, label, options}
 }) {
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const activeFiltersCount = Object.values(filters).filter(v => v && v !== 'all').length;
+
+  const handleClearFilters = () => {
+    onSearchChange('');
+    onFiltersChange(Object.keys(filters).reduce((acc, key) => ({ ...acc, [key]: 'all' }), {}));
+  };
+
   return (
-    <div className="space-y-4" role="search" aria-label="Filtros e busca">
+    <div className="space-y-4" role="search" aria-label="Filtros e busca avançada">
+      {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" aria-hidden="true" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none flex-shrink-0" aria-hidden="true" />
         <Input
           type="text"
-          placeholder="Buscar por nome ou email..."
+          placeholder="Buscar por nome, email, telefone..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 min-h-[44px]"
-          aria-label="Campo de busca por nome ou email"
+          className="pl-10 pr-4 min-h-[44px] text-base sm:text-sm"
+          aria-label="Campo de busca por nome, email ou telefone"
+          autoComplete="off"
         />
       </div>
 
-      <div className="flex gap-3 flex-wrap">
+      {/* Filter Controls */}
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         {/* Status Filter */}
         <fieldset className="flex items-center gap-2 border-0">
           <legend className="sr-only">Filtrar por status</legend>
