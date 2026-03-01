@@ -147,15 +147,19 @@ export default function UnifiedContactForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+        <label htmlFor="company_name" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
           Nome {formData.client_type === 'pf' ? 'da Pessoa' : 'da Empresa'} *
         </label>
         <Input
+          id="company_name"
           name="company_name"
           value={formData.company_name}
           onChange={handleChange}
           placeholder={formData.client_type === 'pf' ? 'Seu nome completo' : 'Nome da empresa'}
           disabled={isLoading}
+          aria-label="Nome completo"
+          aria-required="true"
+          className="min-h-[44px]"
         />
       </div>
 
