@@ -15,6 +15,8 @@ import ContactRouteValidator from '../components/dashboard/ContactRouteValidator
 import ContactDetailsHeader from '../components/dashboard/contactdetails/ContactDetailsHeader';
 import ContactDetailsTabs from '../components/dashboard/contactdetails/ContactDetailsTabs';
 import ContactEditForm from '../components/dashboard/contactdetails/ContactEditForm';
+import ContactTagManagerDialog from '../components/dashboard/contact/ContactTagManagerDialog';
+import ContactRelationshipManagerDialog from '../components/dashboard/contact/ContactRelationshipManagerDialog';
 import { useContactForm } from '../components/dashboard/contactdetails/useContactForm';
 
 export default function ContactDetails() {
@@ -26,6 +28,8 @@ export default function ContactDetails() {
    const { token } = useCSRFToken();
 
    const [isEditing, setIsEditing] = useState(contactId === 'new');
+   const [showTagManager, setShowTagManager] = useState(false);
+   const [showRelationshipManager, setShowRelationshipManager] = useState(false);
 
    // Fetch contact if not new
    const { data: contact, isLoading, error: queryError } = useQuery({
@@ -180,6 +184,8 @@ export default function ContactDetails() {
           contactId={contactId} 
           formData={formData}
           onBack={() => navigate('/contact')}
+          onOpenTagManager={() => setShowTagManager(true)}
+          onOpenRelationshipManager={() => setShowRelationshipManager(true)}
         />
 
         {contactId !== 'new' && !isEditing && contact && (
@@ -206,6 +212,23 @@ export default function ContactDetails() {
             onCancel={handleCancel}
             onDelete={() => navigate('/contact')}
           />
+        )}
+
+        {contactId !== 'new' && (
+          <>
+            <ContactTagManagerDialog
+              open={showTagManager}
+              onClose={() => setShowTagManager(false)}
+              workspaceId={workspaceId}
+            />
+
+            <ContactRelationshipManagerDialog
+              open={showRelationshipManager}
+              onClose={() => setShowRelationshipManager(false)}
+              contactId={contactId}
+              workspaceId={workspaceId}
+            />
+          </>
         )}
       </div>
     </ProtectedInternalRoute>
