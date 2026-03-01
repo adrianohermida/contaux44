@@ -3,15 +3,20 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
-import ClientsHeader from '../components/dashboard/clients/ClientsHeader';
-import ClientsFiltersBar from '../components/dashboard/clients/ClientsFiltersBar';
-import ClientsGrid from '../components/dashboard/clients/ClientsGrid';
+import UnifiedHeader from '../components/shared/UnifiedHeader';
+import UnifiedFiltersBar from '../components/shared/UnifiedFiltersBar';
+import UnifiedGrid from '../components/shared/UnifiedGrid';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Mail, Phone } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import ClientsModals from '../components/dashboard/clients/ClientsModals';
 import UnifiedContactForm from '../components/contact/shared/UnifiedContactForm';
 import { useDebounce } from '../components/hooks/useDebounce';
 import { usePagination } from '../components/hooks/usePagination';
 
 export default function Clients() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { workspaceId, loading: authLoading } = useGlobalAuth('internal');
   
@@ -71,14 +76,16 @@ export default function Clients() {
   return (
     <ProtectedInternalRoute>
       <div className="space-y-6 pb-20">
-        <ClientsHeader
-          totalCount={clients.length}
+        <UnifiedHeader
+          title="Clientes"
           filteredCount={filteredAndSortedClients.length}
-          onNewClient={() => openModal('createClient')}
+          totalCount={clients.length}
+          itemName="cliente"
+          onNewItem={() => openModal('createClient')}
           onImportClick={() => openModal('import')}
         />
 
-        <ClientsFiltersBar
+        <UnifiedFiltersBar
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           filters={filters}
@@ -89,11 +96,62 @@ export default function Clients() {
             setSortBy(field);
             setSortOrder(order);
           }}
+          additionalFilters={[
+            {
+              key: 'type',
+              label: 'Todos os Tipos',
+              options: [
+                { value: 'pf', label: 'Pessoa Física' },
+                { value: 'pj', label: 'Pessoa Jurídica' }
+              ]
+            }
+          ]}
         />
 
-        <ClientsGrid
-          clients={paginatedItems}
+        <UnifiedGrid
+          items={paginatedItems}
           isLoading={isLoading}
+          renderItem={(client) => (
+            <Card
+              key={client.id}
+              className="p-4 hover:shadow-lg transition-shadow cursor-pointer"
+              onClick={() => navigate(`/contact/${client.id}`)}
+            >
+              <div className="space-y-3">
+                <div className="flex justify-between items-start gap-2">
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100 line-clamp-2">
+                    {client.company_name}
+                  </h3>
+                  <Badge className={client.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800'}>
+                    {client.status === 'active' ? 'Ativo' : 'Inativo'}
+                  </Badge>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <Mail className="w-4 h-4" />
+                  <a href={`mailto:${client.email}`} className="hover:text-blue-600 truncate">
+                    {client.email}
+                  </a>
+                </div>
+
+                {client.phone && (
+                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                    <Phone className="w-4 h-4" />
+                    {client.phone}
+                  </div>
+                )}
+
+                <div className="flex gap-2 pt-2">
+                  <Badge variant="outline" className="text-xs">
+                    {client.client_type === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}
+                  </Badge>
+                </div>
+              </div>
+            </Card>
+          )}
+          emptyMessage="Nenhum cliente encontrado"
+          onNewItem={() => openModal('createClient')}
+          onImportClick={() => openModal('import')}
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={goToPage}

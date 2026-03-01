@@ -4,9 +4,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
-import ContactHeader from '../components/dashboard/contact/ContactHeader';
-import ContactFiltersBar from '../components/dashboard/contact/ContactFiltersBar';
-import ContactGrid from '../components/dashboard/contact/ContactGrid';
+import UnifiedHeader from '../components/shared/UnifiedHeader';
+import UnifiedFiltersBar from '../components/shared/UnifiedFiltersBar';
+import UnifiedGrid from '../components/shared/UnifiedGrid';
+import ContactGridItem from '../components/dashboard/contact/ContactGridItem';
+import { Tag, TrendingUp } from 'lucide-react';
+import ContactExportButton from '../components/dashboard/ContactExportButton';
 import ContactModals from '../components/dashboard/contact/ContactModals';
 import UnifiedContactForm from '../components/contact/shared/UnifiedContactForm';
 import ContactBulkActions from '../components/dashboard/ContactBulkActions';
@@ -179,47 +182,57 @@ export default function Contact() {
   return (
     <ProtectedInternalRoute>
       <div className="space-y-6 pb-20">
-        <ContactHeader
+        <UnifiedHeader
+          title="Contatos"
           filteredCount={filteredAndSortedContacts.length}
           totalCount={contacts.length}
-          onNewContact={handleNewContact}
+          itemName="contato"
+          onNewItem={handleNewContact}
           onImportClick={() => openModal('import')}
-          onTagsClick={() => openModal('tagManager')}
-          onStatsClick={() => openModal('tagStats')}
-          contacts={filteredAndSortedContacts}
+          actionButtons={[
+            { label: 'Estatísticas', icon: TrendingUp, onClick: () => openModal('tagStats') },
+            { label: 'Tags', icon: Tag, onClick: () => openModal('tagManager') },
+            { label: 'Exportar', icon: null, component: () => <ContactExportButton contacts={filteredAndSortedContacts} /> }
+          ]}
         />
 
-        <ContactFiltersBar
+        <UnifiedFiltersBar
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           filters={filters}
           onFiltersChange={setFilters}
-          tags={tags}
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSortChange={handleSortChange}
         />
 
-        <ContactGrid
-          paginatedItems={paginatedItems}
+        <UnifiedGrid
+          items={paginatedItems}
           isLoading={isLoading}
-          selectedIds={selectedIds}
-          onSelect={(id) => setSelectedIds(prev => 
-            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-          )}
-          onViewContact={handleViewContact}
-          contacts={contacts}
-          allAssignments={allAssignments}
-          tagsMap={tagsMap}
-          assignmentMap={assignmentMap}
-          getContactTags={getContactTags}
+          renderItem={(contact) => {
+            const contactTags = getContactTags(contact.id, assignmentMap, tagsMap);
+            return (
+              <ContactGridItem
+                key={contact.id}
+                contact={contact}
+                tags={contactTags}
+                isSelected={selectedIds.includes(contact.id)}
+                onSelect={(id) => setSelectedIds(prev => 
+                  prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+                )}
+                onView={handleViewContact}
+                showCheckbox={selectedIds.length > 0}
+              />
+            );
+          }}
+          emptyMessage={contacts.length === 0 ? 'Nenhum contato encontrado' : 'Nenhum contato corresponde aos filtros'}
+          onNewItem={handleNewContact}
+          onImportClick={() => openModal('import')}
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={goToPage}
           hasNext={hasNext}
           hasPrev={hasPrev}
-          onNewContact={handleNewContact}
-          onImportClick={() => openModal('import')}
         />
 
         <ContactBulkActions
