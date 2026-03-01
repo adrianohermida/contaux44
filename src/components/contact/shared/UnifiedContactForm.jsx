@@ -165,29 +165,36 @@ export default function UnifiedContactForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+          <label htmlFor="document" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
             {formData.client_type === 'pf' ? 'CPF' : 'CNPJ'}
           </label>
           <Input
+            id="document"
             name={formData.client_type === 'pf' ? 'cpf' : 'cnpj'}
             value={formData.client_type === 'pf' ? formData.cpf : formData.cnpj}
             onChange={handleChange}
             placeholder={formData.client_type === 'pf' ? '123.456.789-00' : '12.345.678/0001-90'}
             disabled={isLoading}
+            aria-label={formData.client_type === 'pf' ? 'CPF' : 'CNPJ'}
+            className="min-h-[44px]"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+          <label htmlFor="email" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
             Email *
           </label>
           <Input
+            id="email"
             name="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="email@example.com"
             disabled={isLoading}
+            aria-label="Email"
+            aria-required="true"
+            className="min-h-[44px]"
           />
         </div>
       </div>
