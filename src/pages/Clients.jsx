@@ -114,7 +114,7 @@ export default function Clients() {
           renderItem={(client) => (
             <Card
               key={client.id}
-              className="p-4 hover:shadow-lg transition-shadow cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+              className="p-4 sm:p-5 hover:shadow-lg transition-shadow cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded min-h-[120px] flex flex-col justify-between"
               onClick={() => navigate(`/contact/${client.id}`)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
