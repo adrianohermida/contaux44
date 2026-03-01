@@ -259,6 +259,7 @@ export default function Contact() {
           onClearSelection={() => setSelectedIds([])}
           onEditTags={() => openModal('bulkTagEditor')}
           userRole={user?.role}
+          workspaceId={workspaceId}
         />
 
         <ContactBulkTagEditor
