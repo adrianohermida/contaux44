@@ -3,10 +3,10 @@ import { Plus } from 'lucide-react';
 import TicketForm from '../components/dashboard/TicketForm';
 import TicketList from '../components/dashboard/TicketList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 
 export default function Tickets() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useGlobalAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingTicket, setEditingTicket] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);

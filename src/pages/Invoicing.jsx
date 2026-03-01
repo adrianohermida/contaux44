@@ -4,10 +4,10 @@ import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import InvoiceForm from '../components/dashboard/InvoiceForm';
 import InvoiceList from '../components/dashboard/InvoiceList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 
 export default function Invoicing() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useGlobalAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
