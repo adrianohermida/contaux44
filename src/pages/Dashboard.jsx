@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 import DashboardStatsRow from '../components/dashboard/DashboardStatsRow';
 import DashboardActivityRow from '../components/dashboard/DashboardActivityRow';
 import DashboardSalesRow from '../components/dashboard/DashboardSalesRow';
@@ -7,7 +7,7 @@ import DashboardInsightsRow from '../components/dashboard/DashboardInsightsRow';
 import DashboardCampaignRow from '../components/dashboard/DashboardCampaignRow';
 
 export default function Dashboard() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useGlobalAuth('internal');
 
   if (loading) {
     return (

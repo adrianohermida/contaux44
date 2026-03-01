@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import ClientsHeader from '../components/dashboard/clients/ClientsHeader';
 import ClientsFiltersBar from '../components/dashboard/clients/ClientsFiltersBar';
@@ -13,7 +13,7 @@ import { usePagination } from '../components/hooks/usePagination';
 
 export default function Clients() {
   const queryClient = useQueryClient();
-  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading: authLoading } = useGlobalAuth('internal');
   
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({ status: 'all', type: 'all' });
