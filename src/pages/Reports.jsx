@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { useGlobalAuth } from '@/components/auth/useGlobalAuth';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { BarChart3, Zap, Shield, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+// Lazy load report modules
+const ReportsAnalytics = lazy(() => import('./ReportsAnalytics'));
+const ReportsAdvanced = lazy(() => import('./ReportsAdvanced'));
+const ReportsOperations = lazy(() => import('./ReportsOperations'));
 
 /**
  * REPORTS - NAVIGATION HUB
