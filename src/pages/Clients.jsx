@@ -7,7 +7,7 @@ import ClientsHeader from '../components/dashboard/clients/ClientsHeader';
 import ClientsFiltersBar from '../components/dashboard/clients/ClientsFiltersBar';
 import ClientsGrid from '../components/dashboard/clients/ClientsGrid';
 import ClientsModals from '../components/dashboard/clients/ClientsModals';
-import ClientCreateModal from '../components/dashboard/clients/ClientCreateModal';
+import UnifiedContactForm from '../components/contact/shared/UnifiedContactForm';
 import { useDebounce } from '../components/hooks/useDebounce';
 import { usePagination } from '../components/hooks/usePagination';
 
@@ -101,7 +101,7 @@ export default function Clients() {
           hasPrev={hasPrev}
         />
 
-        <ClientCreateModal
+        <UnifiedContactForm
           open={modalState.createClient}
           onClose={() => closeModal('createClient')}
           workspaceId={workspaceId}
@@ -109,6 +109,8 @@ export default function Clients() {
             queryClient.invalidateQueries({ queryKey: ['clients', workspaceId] });
             closeModal('createClient');
           }}
+          type="simple"
+          modalType="dialog"
         />
 
         <ClientsModals

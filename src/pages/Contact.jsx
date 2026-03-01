@@ -8,7 +8,7 @@ import ContactHeader from '../components/dashboard/contact/ContactHeader';
 import ContactFiltersBar from '../components/dashboard/contact/ContactFiltersBar';
 import ContactGrid from '../components/dashboard/contact/ContactGrid';
 import ContactModals from '../components/dashboard/contact/ContactModals';
-import ContactCreateModal from '../components/dashboard/contact/ContactCreateModal';
+import UnifiedContactForm from '../components/contact/shared/UnifiedContactForm';
 import ContactBulkActions from '../components/dashboard/ContactBulkActions';
 import ContactBulkTagEditor from '../components/dashboard/ContactBulkTagEditor';
 import { usePagination } from '../components/hooks/usePagination';
@@ -236,13 +236,15 @@ export default function Contact() {
           onClose={() => closeModal('bulkTagEditor')}
         />
 
-        <ContactCreateModal
+        <UnifiedContactForm
           open={modalState.createContact}
           onClose={() => closeModal('createContact')}
           workspaceId={workspaceId}
           onSuccess={() => {
             queryClient.invalidateQueries({ queryKey: ['contacts', workspaceId] });
           }}
+          type="full"
+          modalType="custom"
         />
 
         <ContactModals
