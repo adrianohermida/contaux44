@@ -25,7 +25,7 @@ export default function Contact() {
   const { workspaceId, user, loading: authLoading } = useGlobalAuth('internal');
   // State
   const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({ status: 'all', type: 'all' });
+  const [filters, setFilters] = useState({ status: 'all', type: 'all', tag: 'all' });
   const [selectedIds, setSelectedIds] = useState([]);
   const [sortBy, setSortBy] = useState('created_date');
   const [sortOrder, setSortOrder] = useState('desc');
@@ -208,6 +208,21 @@ export default function Contact() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSortChange={handleSortChange}
+          additionalFilters={[
+            {
+              key: 'type',
+              label: 'Tipo',
+              options: [
+                { value: 'pf', label: 'Pessoa Física' },
+                { value: 'pj', label: 'Pessoa Jurídica' }
+              ]
+            },
+            {
+              key: 'tag',
+              label: 'Tags',
+              options: tags.map(tag => ({ value: tag.id, label: tag.name }))
+            }
+          ]}
         />
 
         <UnifiedGrid
