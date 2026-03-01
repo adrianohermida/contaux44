@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 import { Button } from '@/components/ui/button';
 import { TrendingDown, TrendingUp, AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function CashFlow() {
-  const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading: authLoading } = useGlobalAuth('internal');
 
   const { data: payments = [], isLoading, refetch, error } = useQuery({
     queryKey: ['Payment-list', workspaceId],

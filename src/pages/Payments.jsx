@@ -4,11 +4,11 @@ import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import PaymentForm from '../components/dashboard/PaymentForm';
 import PaymentList from '../components/dashboard/PaymentList';
 import { Button } from '@/components/ui/button';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
+import { useGlobalAuth } from '../components/auth/useGlobalAuth';
 import { base44 } from '@/api/base44Client';
 
 export default function Payments() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
+  const { workspaceId, loading } = useGlobalAuth('internal');
   const [showForm, setShowForm] = useState(false);
   const [editingPayment, setEditingPayment] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
