@@ -47,28 +47,26 @@ export default function UnifiedFiltersBar({
         {/* Status Filter */}
         <fieldset className="flex items-center gap-2 border-0">
           <legend className="sr-only">Filtrar por status</legend>
-          <Filter className="w-4 h-4 text-slate-500 flex-shrink-0" aria-hidden="true" />
           <select
             value={filters.status || 'all'}
             onChange={(e) => onFiltersChange({ ...filters, status: e.target.value })}
-            className="px-3 py-2 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Filtrar por status"
           >
-            <option value="all">Todos os Status</option>
+            <option value="all">Status</option>
             <option value="active">Ativo</option>
             <option value="inactive">Inativo</option>
           </select>
         </fieldset>
 
         {/* Additional Filters */}
-        {additionalFilters.map(filter => (
+        {additionalFilters.slice(0, 2).map(filter => (
           <fieldset key={filter.key} className="flex items-center gap-2 border-0">
             <legend className="sr-only">Filtrar por {filter.label}</legend>
-            <Filter className="w-4 h-4 text-slate-500 flex-shrink-0" aria-hidden="true" />
             <select
               value={filters[filter.key] || 'all'}
               onChange={(e) => onFiltersChange({ ...filters, [filter.key]: e.target.value })}
-              className="px-3 py-2 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               aria-label={`Filtrar por ${filter.label}`}
             >
               <option value="all">{filter.label}</option>
@@ -79,32 +77,83 @@ export default function UnifiedFiltersBar({
           </fieldset>
         ))}
 
-        {/* Sort By */}
-        <fieldset className="flex items-center gap-2 border-0">
-          <legend className="sr-only">Ordenar por</legend>
-          <ArrowUpDown className="w-4 h-4 text-slate-500 flex-shrink-0" aria-hidden="true" />
+        {/* Sort Controls - Hide on mobile, show on desktop */}
+        <fieldset className="hidden sm:flex items-center gap-2 border-0">
+          <legend className="sr-only">Ordenar</legend>
           <select
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value, sortOrder)}
             className="px-3 py-2 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Campo de ordenação"
+            aria-label="Ordenar por"
           >
-            <option value="created_date">Data de Criação</option>
+            <option value="created_date">Data</option>
             <option value="company_name">Nome</option>
             <option value="status">Status</option>
           </select>
+
+          <button
+            onClick={() => onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc')}
+            className="px-2 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md text-sm hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label={`Ordem: ${sortOrder === 'asc' ? 'ascendente' : 'descendente'}`}
+            aria-pressed={sortOrder === 'desc'}
+            title={sortOrder === 'asc' ? 'Clique para descendente' : 'Clique para ascendente'}
+          >
+            <ArrowUpDown className="w-4 h-4" aria-hidden="true" />
+          </button>
         </fieldset>
 
-        {/* Sort Order Toggle */}
-        <button
-          onClick={() => onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc')}
-          className="px-3 py-2 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-          aria-label={`Ordem de classificação: ${sortOrder === 'asc' ? 'Ascendente, clique para descendente' : 'Descendente, clique para ascendente'}`}
-          aria-pressed={sortOrder === 'desc'}
-        >
-          {sortOrder === 'asc' ? '↑' : '↓'}
-        </button>
+        {/* Advanced Filters Toggle & Clear */}
+        <div className="flex gap-2 ml-auto">
+          {activeFiltersCount > 0 && (
+            <Button
+              onClick={handleClearFilters}
+              variant="outline"
+              size="sm"
+              className="min-h-[44px] text-xs sm:text-sm"
+              aria-label={`Limpar ${activeFiltersCount} filtro${activeFiltersCount > 1 ? 's' : ''} ativo${activeFiltersCount > 1 ? 's' : ''}`}
+            >
+              <X className="w-4 h-4 mr-1 flex-shrink-0" aria-hidden="true" />
+              Limpar
+            </Button>
+          )}
+          <Button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            variant={showAdvanced ? 'default' : 'outline'}
+            size="sm"
+            className="min-h-[44px] text-xs sm:text-sm"
+            aria-expanded={showAdvanced}
+            aria-label="Alternar entre filtros básicos e avançados"
+          >
+            <Filter className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline ml-1">Filtros</span>
+          </Button>
+        </div>
       </div>
+
+      {/* Advanced Filters Panel */}
+      {showAdvanced && additionalFilters.length > 2 && (
+        <div className="p-4 bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700 rounded-lg space-y-3">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Filtros Avançados</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {additionalFilters.slice(2).map(filter => (
+              <fieldset key={filter.key} className="flex flex-col gap-2 border-0">
+                <legend className="text-xs font-medium text-slate-700 dark:text-slate-300">{filter.label}</legend>
+                <select
+                  value={filters[filter.key] || 'all'}
+                  onChange={(e) => onFiltersChange({ ...filters, [filter.key]: e.target.value })}
+                  className="px-3 py-2 min-h-[44px] border border-slate-300 dark:border-slate-600 rounded-md dark:bg-slate-700 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  aria-label={`Filtrar por ${filter.label}`}
+                >
+                  <option value="all">Todos</option>
+                  {filter.options.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </fieldset>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
