@@ -200,15 +200,18 @@ export default function UnifiedContactForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
+        <label htmlFor="phone" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
           Telefone
         </label>
         <Input
+          id="phone"
           name="phone"
           value={formData.phone}
           onChange={handleChange}
           placeholder="(11) 98765-4321"
           disabled={isLoading}
+          aria-label="Telefone"
+          className="min-h-[44px]"
         />
       </div>
 
