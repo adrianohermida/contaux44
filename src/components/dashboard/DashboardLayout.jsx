@@ -29,6 +29,14 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-slate-950 transition-colors" role="application" aria-label="Dashboard principal">
+      {/* Skip Link - keyboard navigation */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-blue-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-md"
+      >
+        Pular para conteúdo principal
+      </a>
+
       {/* Mobile Menu - sempre no topo em mobile */}
       <MobileMenu />
 
@@ -44,7 +52,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
       {/* Main Content - com margem para compensar sidebar fixo */}
       <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
         {/* Mobile padding para menu */}
-        <div className="h-16 md:h-0 aria-hidden={true}" />
+        <div className="h-16 md:h-0" aria-hidden="true" />
         
         {/* Header - sempre visível e consistente */}
         <DashboardHeader />
