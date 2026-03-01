@@ -10,6 +10,9 @@ import BottomNav from './components/BottomNav';
 import RouteTransition from './components/RouteTransition';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import SecurityDashboard from './components/security/SecurityDashboard';
+import OfflineIndicator from './components/pwa/OfflineIndicator';
+import PWAInstallPrompt from './components/pwa/PWAInstallPrompt';
+import { SyncStatus } from './components/pwa/SyncManager';
 
 // ✅ Constante FORA do componente - criada uma única vez
 const DASHBOARD_PAGES = [
@@ -88,14 +91,19 @@ export default function Layout({ children, currentPageName }) {
     };
     darkModeQuery.addEventListener('change', handleThemeChange);
     
+    // Register Service Worker for PWA offline support
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').catch(() => {
+        // Service worker registration failed - offline features limited
+      });
+    }
+    
     const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
     link.rel = 'icon';
     link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/d48cce015_favicon.png';
     if (!document.querySelector("link[rel~='icon']")) {
       document.head.appendChild(link);
     }
-
-    // Remove old style - it's now in setupMobileEnhancements
 
     return () => {
       darkModeQuery.removeEventListener('change', handleThemeChange);
@@ -132,6 +140,9 @@ export default function Layout({ children, currentPageName }) {
     <AuthProvider>
       <CacheProvider>
         <ThemeProvider>
+          <OfflineIndicator />
+          <PWAInstallPrompt />
+          <SyncStatus />
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow">
