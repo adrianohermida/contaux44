@@ -14,6 +14,8 @@ import ContactModals from '../components/dashboard/contact/ContactModals';
 import UnifiedContactForm from '../components/contact/shared/UnifiedContactForm';
 import ContactBulkActions from '../components/dashboard/ContactBulkActions';
 import ContactBulkTagEditor from '../components/dashboard/ContactBulkTagEditor';
+import ContactExportCSV from '../components/dashboard/contact/ContactExportCSV';
+import ContactImportCSVDialog from '../components/dashboard/contact/ContactImportCSVDialog';
 import { usePagination } from '../components/hooks/usePagination';
 import { useDebounce } from '../components/hooks/useDebounce';
 import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../components/dashboard/ContactQueryHelpers';
@@ -34,6 +36,7 @@ export default function Contact() {
   const [modalState, setModalState] = useState({
     createContact: false,
     import: false,
+    importCSV: false,
     tagManager: false,
     tagStats: false,
     bulkTagEditor: false
@@ -192,11 +195,11 @@ export default function Contact() {
           totalCount={contacts.length}
           itemName="contato"
           onNewItem={handleNewContact}
-          onImportClick={() => openModal('import')}
+          onImportClick={() => openModal('importCSV')}
           actionButtons={[
             { label: 'Estatísticas', icon: TrendingUp, onClick: () => openModal('tagStats') },
             { label: 'Tags', icon: Tag, onClick: () => openModal('tagManager') },
-            { label: 'Exportar', icon: null, component: () => <ContactExportButton contacts={filteredAndSortedContacts} /> }
+            { label: 'Exportar', component: () => <ContactExportCSV contacts={filteredAndSortedContacts} workspaceId={workspaceId} /> }
           ]}
         />
 
@@ -246,7 +249,7 @@ export default function Contact() {
           }}
           emptyMessage={contacts.length === 0 ? 'Nenhum contato encontrado' : 'Nenhum contato corresponde aos filtros'}
           onNewItem={handleNewContact}
-          onImportClick={() => openModal('import')}
+          onImportClick={() => openModal('importCSV')}
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={goToPage}
@@ -281,12 +284,18 @@ export default function Contact() {
         />
 
         <ContactModals
-          showImport={modalState.import}
-          onCloseImport={() => closeModal('import')}
+          showImport={false}
+          onCloseImport={() => {}}
           showTagManager={modalState.tagManager}
           onCloseTagManager={() => closeModal('tagManager')}
           showTagStats={modalState.tagStats}
           onCloseTagStats={() => closeModal('tagStats')}
+          workspaceId={workspaceId}
+        />
+
+        <ContactImportCSVDialog
+          open={modalState.importCSV}
+          onClose={() => closeModal('importCSV')}
           workspaceId={workspaceId}
         />
       </div>
