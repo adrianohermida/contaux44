@@ -17,6 +17,7 @@ import ContactDetailsTabs from '../components/dashboard/contactdetails/ContactDe
 import ContactEditForm from '../components/dashboard/contactdetails/ContactEditForm';
 import ContactTagManagerDialog from '../components/dashboard/contact/ContactTagManagerDialog';
 import ContactRelationshipManagerDialog from '../components/dashboard/contact/ContactRelationshipManagerDialog';
+import ContactAttachmentsDialog from '../components/dashboard/contact/ContactAttachmentsDialog';
 import { useContactForm } from '../components/dashboard/contactdetails/useContactForm';
 
 export default function ContactDetails() {
@@ -30,6 +31,7 @@ export default function ContactDetails() {
    const [isEditing, setIsEditing] = useState(contactId === 'new');
    const [showTagManager, setShowTagManager] = useState(false);
    const [showRelationshipManager, setShowRelationshipManager] = useState(false);
+   const [showAttachments, setShowAttachments] = useState(false);
 
    // Fetch contact if not new
    const { data: contact, isLoading, error: queryError } = useQuery({
@@ -186,6 +188,7 @@ export default function ContactDetails() {
           onBack={() => navigate('/contact')}
           onOpenTagManager={() => setShowTagManager(true)}
           onOpenRelationshipManager={() => setShowRelationshipManager(true)}
+          onOpenAttachments={() => setShowAttachments(true)}
         />
 
         {contactId !== 'new' && !isEditing && contact && (
@@ -225,6 +228,13 @@ export default function ContactDetails() {
             <ContactRelationshipManagerDialog
               open={showRelationshipManager}
               onClose={() => setShowRelationshipManager(false)}
+              contactId={contactId}
+              workspaceId={workspaceId}
+            />
+
+            <ContactAttachmentsDialog
+              open={showAttachments}
+              onClose={() => setShowAttachments(false)}
               contactId={contactId}
               workspaceId={workspaceId}
             />

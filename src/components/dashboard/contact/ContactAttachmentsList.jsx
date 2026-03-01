@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { formatBytes, getFileIcon } from '@/lib/fileUtils';
+import { formatBytes } from '@/components/utils/fileUtils';
 
 const CATEGORY_LABELS = {
   contrato: 'Contrato',
