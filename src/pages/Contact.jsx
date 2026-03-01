@@ -16,6 +16,8 @@ import ContactBulkActions from '../components/dashboard/ContactBulkActions';
 import ContactBulkTagEditor from '../components/dashboard/ContactBulkTagEditor';
 import ContactExportCSV from '../components/dashboard/contact/ContactExportCSV';
 import ContactImportCSVDialog from '../components/dashboard/contact/ContactImportCSVDialog';
+import ContactTagManagerDialog from '../components/dashboard/contact/ContactTagManagerDialog';
+import ContactRelationshipManagerDialog from '../components/dashboard/contact/ContactRelationshipManagerDialog';
 import { usePagination } from '../components/hooks/usePagination';
 import { useDebounce } from '../components/hooks/useDebounce';
 import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../components/dashboard/ContactQueryHelpers';
@@ -39,7 +41,10 @@ export default function Contact() {
     importCSV: false,
     tagManager: false,
     tagStats: false,
-    bulkTagEditor: false
+    bulkTagEditor: false,
+    tagManagerNew: false,
+    relationshipManager: false,
+    relationshipContactId: null,
   });
   
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -198,7 +203,7 @@ export default function Contact() {
           onImportClick={() => openModal('importCSV')}
           actionButtons={[
             { label: 'Estatísticas', icon: TrendingUp, onClick: () => openModal('tagStats') },
-            { label: 'Tags', icon: Tag, onClick: () => openModal('tagManager') },
+            { label: 'Tags', icon: Tag, onClick: () => openModal('tagManagerNew') },
             { label: 'Exportar', component: () => <ContactExportCSV contacts={filteredAndSortedContacts} workspaceId={workspaceId} /> }
           ]}
         />
@@ -296,6 +301,21 @@ export default function Contact() {
         <ContactImportCSVDialog
           open={modalState.importCSV}
           onClose={() => closeModal('importCSV')}
+          workspaceId={workspaceId}
+        />
+
+        <ContactTagManagerDialog
+          open={modalState.tagManagerNew}
+          onClose={() => closeModal('tagManagerNew')}
+          workspaceId={workspaceId}
+        />
+
+        <ContactRelationshipManagerDialog
+          open={modalState.relationshipManager}
+          onClose={() => {
+            setModalState(prev => ({ ...prev, relationshipManager: false, relationshipContactId: null }));
+          }}
+          contactId={modalState.relationshipContactId}
           workspaceId={workspaceId}
         />
       </div>
