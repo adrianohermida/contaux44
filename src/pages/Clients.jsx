@@ -127,31 +127,38 @@ export default function Clients() {
               aria-label={`Ver detalhes do cliente ${client.company_name}`}
             >
               <div className="space-y-3">
-                <div className="flex justify-between items-start gap-2">
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100 line-clamp-2">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100 line-clamp-2 flex-1">
                     {client.company_name}
                   </h3>
-                  <Badge className={client.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800'}>
+                  <Badge 
+                    className={`whitespace-nowrap ${client.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300'}`}
+                    aria-label={`Status: ${client.status === 'active' ? 'Ativo' : 'Inativo'}`}
+                  >
                     {client.status === 'active' ? 'Ativo' : 'Inativo'}
                   </Badge>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                  <Mail className="w-4 h-4" />
-                  <a href={`mailto:${client.email}`} className="hover:text-blue-600 truncate">
+                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 min-h-[28px]">
+                  <Mail className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                  <a href={`mailto:${client.email}`} className="hover:text-blue-600 dark:hover:text-blue-400 truncate focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-1">
                     {client.email}
                   </a>
                 </div>
 
                 {client.phone && (
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                    <Phone className="w-4 h-4" />
-                    {client.phone}
+                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 min-h-[28px]">
+                    <Phone className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                    <span className="break-all">{client.phone}</span>
                   </div>
                 )}
 
-                <div className="flex gap-2 pt-2">
-                  <Badge variant="outline" className="text-xs">
+                <div className="flex gap-2 pt-2 flex-wrap">
+                  <Badge 
+                    variant="outline" 
+                    className="text-xs bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-600 min-h-[28px] flex items-center"
+                    aria-label={`Tipo: ${client.client_type === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}`}
+                  >
                     {client.client_type === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}
                   </Badge>
                 </div>
