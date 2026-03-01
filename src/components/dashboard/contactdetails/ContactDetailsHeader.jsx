@@ -1,8 +1,8 @@
 import React from 'react';
-import { ArrowLeft, Tag, Link2 } from 'lucide-react';
+import { ArrowLeft, Tag, Link2, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function ContactDetailsHeader({ isEditing, contactId, formData, onBack, onOpenTagManager, onOpenRelationshipManager }) {
+export default function ContactDetailsHeader({ isEditing, contactId, formData, onBack, onOpenTagManager, onOpenRelationshipManager, onOpenAttachments }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -51,6 +51,16 @@ export default function ContactDetailsHeader({ isEditing, contactId, formData, o
           >
             <Link2 className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
             <span className="hidden sm:inline">Relacionamentos</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onOpenAttachments}
+            className="gap-2 min-h-[44px]"
+            aria-label="Gerenciar anexos do contato"
+          >
+            <Paperclip className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Anexos</span>
           </Button>
         </div>
       )}
