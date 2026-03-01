@@ -1,121 +1,170 @@
-import React, { useState, useEffect } from 'react';
-import { Bell, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-
 /**
- * Push Notification Manager - Gerencia inscrições e envio de notificações
+ * Push Notification Manager
+ * Handle Web Push subscriptions for PWA
  */
+
+import React, { useState, useEffect } from 'react';
+import { Bell, Check, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+
 export default function PushNotificationManager() {
   const [isSupported, setIsSupported] = useState(false);
-  const [subscription, setSubscription] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [error, setError] = useState(null);
 
+  // Check if push notifications are supported
   useEffect(() => {
     const supported =
-      'serviceWorker' in navigator && 'PushManager' in window &&
+      'serviceWorker' in navigator &&
+      'PushManager' in window &&
       'Notification' in window;
     setIsSupported(supported);
 
     if (supported) {
-      checkSubscription();
+      checkSubscriptionStatus();
     }
   }, []);
 
-  const checkSubscription = async () => {
+  const checkSubscriptionStatus = async () => {
     try {
       const registration = await navigator.serviceWorker.ready;
-      const sub = await registration.pushManager.getSubscription();
-      setSubscription(sub);
-    } catch (error) {
-      console.error('Erro ao verificar inscrição:', error);
+      const subscription = await registration.pushManager.getSubscription();
+      setIsSubscribed(!!subscription);
+    } catch (err) {
+      console.warn('Failed to check subscription:', err);
     }
   };
 
-  const requestNotificationPermission = async () => {
-    if (Notification.permission === 'default') {
-      const permission = await Notification.requestPermission();
-      return permission === 'granted';
-    }
-    return Notification.permission === 'granted';
-  };
-
-  const handleSubscribe = async () => {
-    setLoading(true);
+  const subscribe = async () => {
     try {
-      const hasPermission = await requestNotificationPermission();
-      if (!hasPermission) {
-        alert('Permissão de notificação recusada');
+      const permission = await Notification.requestPermission();
+
+      if (permission !== 'granted') {
+        setError('Permissão de notificação foi negada');
         return;
       }
 
       const registration = await navigator.serviceWorker.ready;
-      const sub = await registration.pushManager.subscribe({
+
+      const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: process.env.REACT_APP_VAPID_PUBLIC_KEY,
       });
 
-      setSubscription(sub);
-      // Enviar subscription para servidor
-      await saveSubscription(sub);
-    } catch (error) {
-      console.error('Erro ao inscrever:', error);
-    } finally {
-      setLoading(false);
+      setIsSubscribed(true);
+      setShowPrompt(false);
+      setError(null);
+
+      // Send subscription to backend
+      // await base44.functions.invoke('savePushSubscription', { subscription });
+    } catch (err) {
+      console.error('Push subscription failed:', err);
+      setError('Falha ao habilitar notificações push');
     }
   };
 
-  const handleUnsubscribe = async () => {
-    setLoading(true);
+  const unsubscribe = async () => {
     try {
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+
       if (subscription) {
         await subscription.unsubscribe();
-        setSubscription(null);
+        setIsSubscribed(false);
+        setError(null);
       }
-    } catch (error) {
-      console.error('Erro ao desinscrever:', error);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.error('Unsubscribe failed:', err);
+      setError('Falha ao desabilitar notificações');
     }
   };
 
-  const saveSubscription = async (sub) => {
-    // Enviar para backend
-    console.log('Inscrição salva:', sub);
-  };
-
-  if (!isSupported) {
-    return (
-      <Card className="p-4 border-red-200 bg-red-50">
-        <div className="flex items-center gap-2 text-red-700">
-          <AlertCircle className="w-5 h-5" />
-          <span>Seu navegador não suporta notificações push</span>
-        </div>
-      </Card>
-    );
-  }
+  if (!isSupported) return null;
 
   return (
-    <Card className="p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Bell className="w-5 h-5 text-blue-600" />
-          <div>
-            <p className="font-medium">Notificações Push</p>
-            <p className="text-xs text-gray-600">
-              {subscription ? 'Inscrito' : 'Não inscrito'}
-            </p>
-          </div>
+    <>
+      {error && (
+        <div className="p-3 mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex gap-2">
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" aria-hidden="true" />
+          <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
         </div>
-        <Button
-          onClick={subscription ? handleUnsubscribe : handleSubscribe}
-          disabled={loading}
-          variant={subscription ? 'destructive' : 'default'}
-          size="sm"
-        >
-          {loading ? 'Processando...' : subscription ? 'Desinscrever' : 'Inscrever'}
-        </Button>
+      )}
+
+      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex gap-3">
+            <Bell className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" aria-hidden="true" />
+            <div>
+              <p className="font-medium text-sm text-blue-900 dark:text-blue-300">
+                Notificações Push
+              </p>
+              <p className="text-xs text-blue-700 dark:text-blue-400 mt-1">
+                {isSubscribed
+                  ? 'Você está recebendo notificações push'
+                  : 'Habilite notificações para receber atualizações'}
+              </p>
+            </div>
+          </div>
+
+          {isSubscribed ? (
+            <div className="flex gap-2">
+              <Check className="w-5 h-5 text-green-600" aria-hidden="true" />
+              <Button
+                onClick={() => setShowPrompt(true)}
+                variant="outline"
+                size="sm"
+                className="text-xs min-h-[36px]"
+              >
+                Desabilitar
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={() => setShowPrompt(true)}
+              size="sm"
+              className="text-xs min-h-[36px]"
+            >
+              Habilitar
+            </Button>
+          )}
+        </div>
       </div>
-    </Card>
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={showPrompt} onOpenChange={setShowPrompt}>
+        <AlertDialogContent className="max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {isSubscribed ? 'Desabilitar Notificações?' : 'Habilitar Notificações?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {isSubscribed
+                ? 'Você não receberá mais notificações push'
+                : 'Você receberá notificações importantes sobre seus contatos e atividades'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={isSubscribed ? unsubscribe : subscribe}
+              className={isSubscribed ? 'bg-red-600 hover:bg-red-700' : ''}
+            >
+              {isSubscribed ? 'Desabilitar' : 'Habilitar'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
