@@ -18,16 +18,27 @@ export default function ContactGridItem({
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  };
+
   return (
     <div
       className={cn(
-        "relative cursor-pointer transition-opacity",
-        showCheckbox && isSelected && "opacity-75 ring-2 ring-blue-500 rounded-xl"
+        "relative cursor-pointer transition-all rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950 min-h-[200px]",
+        showCheckbox && isSelected && "opacity-75 ring-2 ring-blue-500"
       )}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role={showCheckbox ? undefined : "button"}
+      tabIndex={showCheckbox ? -1 : 0}
+      aria-label={`Contato ${contact.company_name}`}
     >
       {showCheckbox && (
-        <div className="absolute top-2 right-2 z-10">
+        <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10">
           <input
             type="checkbox"
             checked={isSelected}
@@ -35,7 +46,8 @@ export default function ContactGridItem({
               e.stopPropagation();
               onSelect(contact.id);
             }}
-            className="w-5 h-5 rounded border-slate-300 cursor-pointer"
+            className="w-5 h-5 sm:w-6 sm:h-6 rounded border-slate-300 dark:border-slate-600 cursor-pointer"
+            aria-label={`Selecionar ${contact.company_name}`}
           />
         </div>
       )}

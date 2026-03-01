@@ -22,11 +22,11 @@ export default function UnifiedGrid({
   hasNext,
   hasPrev,
   skeletonCount = 6,
-  columns = 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+  columns = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
 }) {
   return (
-    <div>
-      <div className={`grid ${columns} gap-4`}>
+    <div role="region" aria-label="Lista de itens" aria-live="polite">
+      <div className={`grid ${columns} gap-3 sm:gap-4`}>
         {isLoading ? (
           Array.from({ length: skeletonCount }).map((_, i) => (
             <div key={i} className="animate-pulse bg-white dark:bg-slate-800 rounded-xl border p-6">
@@ -38,14 +38,24 @@ export default function UnifiedGrid({
             </div>
           ))
         ) : items.length === 0 ? (
-          <div className="col-span-full text-center py-12">
-            <p className="text-slate-600 dark:text-slate-400 mb-4">{emptyMessage}</p>
-            <div className="flex gap-2 justify-center flex-wrap">
-              <Button onClick={onImportClick} variant="outline" className="gap-2">
-                <Upload className="w-4 h-4" />
+          <div className="col-span-full text-center py-12 px-4">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mb-6">{emptyMessage}</p>
+            <div className="flex gap-3 justify-center flex-wrap">
+              <Button 
+                onClick={onImportClick} 
+                variant="outline" 
+                className="gap-2 min-h-[44px]"
+                aria-label="Importar itens"
+              >
+                <Upload className="w-4 h-4" aria-hidden="true" />
                 Importar
               </Button>
-              <Button onClick={onNewItem} variant="outline">
+              <Button 
+                onClick={onNewItem} 
+                variant="outline"
+                className="min-h-[44px]"
+                aria-label="Criar novo item"
+              >
                 Criar novo
               </Button>
             </div>
@@ -56,13 +66,15 @@ export default function UnifiedGrid({
       </div>
 
       {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
-          hasNext={hasNext}
-          hasPrev={hasPrev}
-        />
+        <nav aria-label="Paginação" className="mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            hasNext={hasNext}
+            hasPrev={hasPrev}
+          />
+        </nav>
       )}
     </div>
   );

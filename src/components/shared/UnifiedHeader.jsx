@@ -18,15 +18,17 @@ export default function UnifiedHeader({
   actionButtons = [] // Array of {label, icon: Component, onClick}
 }) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">{title}</h1>
-        <p className="text-slate-600 dark:text-slate-400 mt-1">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
+      <div className="flex-1">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 break-words">
+          {title}
+        </h1>
+        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-1">
           {filteredCount} de {totalCount} {itemName}{totalCount !== 1 ? 's' : ''}
         </p>
       </div>
       
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap sm:flex-nowrap sm:justify-end">
         {/* Custom Action Buttons */}
         {actionButtons.map((btn, idx) => {
           const Icon = btn.icon;
@@ -36,24 +38,36 @@ export default function UnifiedHeader({
               onClick={btn.onClick}
               variant="outline"
               size="sm"
-              className="gap-2"
+              className="gap-2 min-h-[44px]"
+              aria-label={btn.label}
             >
-              <Icon className="w-4 h-4" />
-              {btn.label}
+              <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+              <span className="hidden sm:inline">{btn.label}</span>
             </Button>
           );
         })}
         
         {/* Import Button */}
-        <Button onClick={onImportClick} variant="outline" size="sm" className="gap-2">
-          <Upload className="w-4 h-4" />
-          Importar
+        <Button 
+          onClick={onImportClick} 
+          variant="outline" 
+          size="sm" 
+          className="gap-2 min-h-[44px]"
+          aria-label="Importar itens"
+        >
+          <Upload className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+          <span className="hidden sm:inline">Importar</span>
         </Button>
         
         {/* New Item Button */}
-        <Button onClick={onNewItem} size="sm" className="gap-2">
-          <Plus className="w-5 h-5" />
-          Novo
+        <Button 
+          onClick={onNewItem} 
+          size="sm" 
+          className="gap-2 min-h-[44px]"
+          aria-label={`Criar novo ${itemName}`}
+        >
+          <Plus className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+          <span className="hidden sm:inline">Novo</span>
         </Button>
       </div>
     </div>
