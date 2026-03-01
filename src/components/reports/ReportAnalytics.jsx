@@ -7,7 +7,6 @@ import React, { useMemo } from 'react';
 import { Loader2, TrendingUp, Users, Tag, Activity } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { StatCard } from '../dashboard/StatCard';
 
 export default function ReportAnalytics({ workspaceId }) {
   // Fetch contacts
@@ -74,30 +73,44 @@ export default function ReportAnalytics({ workspaceId }) {
 
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          icon={Users}
-          label="Total de Contatos"
-          value={metrics.totalContacts}
-          trend={null}
-        />
-        <StatCard
-          icon={TrendingUp}
-          label="Contatos Ativos"
-          value={metrics.activeContacts}
-          trend={`${metrics.activePercentage}% do total`}
-        />
-        <StatCard
-          icon={Activity}
-          label="Pessoa Jurídica"
-          value={metrics.pjContacts}
-          trend={`${metrics.pfContacts} PF`}
-        />
-        <StatCard
-          icon={Tag}
-          label="Tags Cadastradas"
-          value={metrics.totalTags}
-          trend={`${metrics.avgTagsPerContact} por contato`}
-        />
+        {/* Total Contacts */}
+        <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm text-slate-600 dark:text-slate-400">Total de Contatos</p>
+            <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{metrics.totalContacts}</p>
+        </div>
+
+        {/* Active Contacts */}
+        <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm text-slate-600 dark:text-slate-400">Contatos Ativos</p>
+            <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{metrics.activeContacts}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{metrics.activePercentage}% do total</p>
+        </div>
+
+        {/* PJ Contacts */}
+        <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm text-slate-600 dark:text-slate-400">Pessoa Jurídica</p>
+            <Activity className="w-5 h-5 text-orange-600 dark:text-orange-400" aria-hidden="true" />
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{metrics.pjContacts}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{metrics.pfContacts} PF</p>
+        </div>
+
+        {/* Tags */}
+        <div className="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm text-slate-600 dark:text-slate-400">Tags Cadastradas</p>
+            <Tag className="w-5 h-5 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+          </div>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{metrics.totalTags}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{metrics.avgTagsPerContact} por contato</p>
+        </div>
       </div>
 
       {/* Breakdown */}
