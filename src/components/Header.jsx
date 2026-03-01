@@ -52,7 +52,7 @@ export default function Header() {
           <Logo />
 
           {/* Desktop Menu */}
-          <ul className="hidden md:flex items-center gap-6 lg:gap-8">
+          <ul className="hidden md:flex items-center gap-6 lg:gap-8" role="navigation" aria-label="Menu principal">
             <li><Link to={createPageUrl('About')} className={`text-sm lg:text-base hover:text-blue-600 transition-colors duration-200 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>Sobre</Link></li>
             <li><a href="#servicos" className={`text-sm lg:text-base hover:text-blue-600 transition-colors duration-200 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>Serviços</a></li>
             <li><Link to={createPageUrl('Blog')} className={`text-sm lg:text-base hover:text-blue-600 transition-colors duration-200 ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>Blog</Link></li>
@@ -65,7 +65,10 @@ export default function Header() {
               <div className="relative">
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-colors text-sm lg:text-base ${
+                  aria-haspopup="menu"
+                  aria-expanded={dropdownOpen}
+                  aria-label={`Menu do usuário: ${user.full_name || user.email}`}
+                  className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-colors text-sm lg:text-base min-h-[44px] ${
                     theme === 'dark'
                       ? 'text-slate-300 hover:bg-slate-700'
                       : 'text-slate-700 hover:bg-slate-100'
@@ -79,7 +82,11 @@ export default function Header() {
                      theme === 'dark'
                        ? 'bg-slate-700 border-slate-600'
                        : 'bg-white border-slate-200'
-                   }`}>
+                   }`}
+                   role="menu"
+                   onKeyDown={(e) => {
+                     if (e.key === 'Escape') setDropdownOpen(false);
+                   }}
                      <Link
                        to={createPageUrl('Dashboard')}
                        className={`block w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors ${
@@ -130,7 +137,12 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 -mr-2">
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)} 
+            aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={menuOpen}
+            className="md:hidden p-2 -mr-2 min-h-[44px] min-w-[44px]"
+          >
             {menuOpen ? <X size={24} className={theme === 'dark' ? 'text-slate-300' : 'text-slate-700'} /> : <Menu size={24} className={theme === 'dark' ? 'text-slate-300' : 'text-slate-700'} />}
           </button>
         </nav>
@@ -149,11 +161,11 @@ export default function Header() {
             }`}>
               <div className="px-4 py-4">
                 {/* Navigation Links */}
-                  <ul className="space-y-1 mb-6">
-                    <li><Link to={createPageUrl('About')} className={`block px-3 py-2 text-base rounded transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'}`} onClick={closeMobileMenu}>Sobre</Link></li>
-                    <li><a href="#servicos" className={`block px-3 py-2 text-base rounded transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'}`} onClick={closeMobileMenu}>Serviços</a></li>
-                    <li><Link to={createPageUrl('Blog')} className={`block px-3 py-2 text-base rounded transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'}`} onClick={closeMobileMenu}>Blog</Link></li>
-                    <li><Link to={createPageUrl('Contact')} className={`block px-3 py-2 text-base rounded transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'}`} onClick={closeMobileMenu}>Contato</Link></li>
+                  <ul className="space-y-1 mb-6" role="navigation" aria-label="Menu principal mobile">
+                    <li><Link to={createPageUrl('About')} className={`block px-3 py-2 text-base rounded transition-colors min-h-[44px] flex items-center ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'}`} onClick={closeMobileMenu}>Sobre</Link></li>
+                    <li><a href="#servicos" className={`block px-3 py-2 text-base rounded transition-colors min-h-[44px] flex items-center ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'}`} onClick={closeMobileMenu}>Serviços</a></li>
+                    <li><Link to={createPageUrl('Blog')} className={`block px-3 py-2 text-base rounded transition-colors min-h-[44px] flex items-center ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'}`} onClick={closeMobileMenu}>Blog</Link></li>
+                    <li><Link to={createPageUrl('Contact')} className={`block px-3 py-2 text-base rounded transition-colors min-h-[44px] flex items-center ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'}`} onClick={closeMobileMenu}>Contato</Link></li>
                   </ul>
 
                   {/* Auth Section */}
