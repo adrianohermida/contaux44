@@ -114,8 +114,17 @@ export default function Clients() {
           renderItem={(client) => (
             <Card
               key={client.id}
-              className="p-4 hover:shadow-lg transition-shadow cursor-pointer"
+              className="p-4 hover:shadow-lg transition-shadow cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
               onClick={() => navigate(`/contact/${client.id}`)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  navigate(`/contact/${client.id}`);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label={`Ver detalhes do cliente ${client.company_name}`}
             >
               <div className="space-y-3">
                 <div className="flex justify-between items-start gap-2">
