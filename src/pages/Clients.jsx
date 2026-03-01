@@ -75,7 +75,7 @@ export default function Clients() {
 
   return (
     <ProtectedInternalRoute>
-      <div className="space-y-6 pb-20 min-h-screen" role="region" aria-label="Gerenciador de clientes">
+      <div className="space-y-6 pb-20 min-h-screen" role="main" aria-label="Gerenciador de clientes">
         <UnifiedHeader
           title="Clientes"
           filteredCount={filteredAndSortedClients.length}
