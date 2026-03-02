@@ -63,20 +63,24 @@ export default function ServicesForm({ service, tenantId, onSave, onCancel }) {
   }, [service, formData, tenantId, onSave]);
 
   return (
-    <div className="bg-white rounded-lg shadow p-6 mb-6">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow border border-slate-100 dark:border-slate-700 p-6 mb-6 transition-colors">
+      <form onSubmit={handleSubmit} className="space-y-4" role="form" aria-label="Formulário de serviço">
         <Input
           placeholder="Nome do serviço"
           name="service_name"
           value={formData.service_name}
           onChange={handleChange}
           required
+          aria-label="Nome do serviço"
+          className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 dark:placeholder-slate-400"
         />
         <Input
           placeholder="Descrição"
           name="description"
           value={formData.description}
           onChange={handleChange}
+          aria-label="Descrição do serviço"
+          className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 dark:placeholder-slate-400"
         />
         <Input
           placeholder="Taxa horária (R$)"
@@ -86,10 +90,12 @@ export default function ServicesForm({ service, tenantId, onSave, onCancel }) {
           onChange={handleChange}
           step="0.01"
           required
+          aria-label="Taxa horária em reais"
+          className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 dark:placeholder-slate-400"
         />
         <Select value={formData.category} onValueChange={(val) => handleSelectChange('category', val)}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
+          <SelectTrigger className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200" aria-label="Categoria do serviço"><SelectValue /></SelectTrigger>
+          <SelectContent className="dark:bg-slate-700 dark:border-slate-600">
             <SelectItem value="legal">Legal</SelectItem>
             <SelectItem value="accounting">Contabilidade</SelectItem>
             <SelectItem value="tax">Fiscal</SelectItem>
@@ -98,17 +104,17 @@ export default function ServicesForm({ service, tenantId, onSave, onCancel }) {
           </SelectContent>
         </Select>
         <Select value={formData.status} onValueChange={(val) => handleSelectChange('status', val)}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
+          <SelectTrigger className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200" aria-label="Status do serviço"><SelectValue /></SelectTrigger>
+          <SelectContent className="dark:bg-slate-700 dark:border-slate-600">
             <SelectItem value="active">Ativo</SelectItem>
             <SelectItem value="inactive">Inativo</SelectItem>
           </SelectContent>
         </Select>
-        <div className="flex gap-3">
-          <Button type="submit" disabled={saving} className="bg-blue-600 hover:bg-blue-700">
+        <div className="flex gap-3 pt-2">
+          <Button type="submit" disabled={saving} className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600" aria-label="Salvar serviço">
             {saving ? 'Salvando...' : 'Salvar'}
           </Button>
-          <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
+          <Button type="button" variant="outline" onClick={onCancel} className="dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" aria-label="Cancelar formulário">Cancelar</Button>
         </div>
       </form>
     </div>
