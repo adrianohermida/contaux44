@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { base44 } from '@/api/base44Client';
+import { useSortAndFilter } from '../hooks/useSortAndFilter';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Download } from 'lucide-react';
 import { useCacheStrategy } from '../hooks/useCacheStrategy';

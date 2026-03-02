@@ -6,6 +6,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import { useSortAndFilter } from '../hooks/useSortAndFilter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Edit2, Trash2, FileText } from 'lucide-react';
@@ -22,19 +23,22 @@ const STATUS_COLORS = {
 
 export default function PaymentList({ tenantId, onEdit, onRefresh = 0 }) {
   // Fetch payments
-  const { data: payments = [], isLoading, error, refetch } = useQuery({
+  const { data: paymentsRaw = [], isLoading, error, refetch } = useQuery({
     queryKey: ['payments', tenantId, onRefresh],
-    queryFn: () => base44.entities.Payment.filter({ tenant_id: tenantId }),
+    queryFn: () => base44.entities.Payment.filter({ workspace_id: tenantId }),
     enabled: !!tenantId,
     staleTime: 5 * 60 * 1000,
     gcTime: 15 * 60 * 1000,
   });
 
+  // Use unified sort/filter hook
+  const { data: payments } = useSortAndFilter(paymentsRaw, 'payment_date', 'desc');
+
   // Fetch invoices for display
   const { data: invoices = {} } = useQuery({
     queryKey: ['invoices-for-payments', tenantId],
     queryFn: async () => {
-      const invs = await base44.entities.Invoice.filter({ tenant_id: tenantId });
+      const invs = await base44.entities.Invoice.filter({ workspace_id: tenantId });
       return Object.fromEntries(invs.map(inv => [inv.id, inv]));
     },
     enabled: !!tenantId,
