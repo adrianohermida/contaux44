@@ -78,14 +78,14 @@ const DashboardHeader = memo(function DashboardHeader() {
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="relative p-1 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+              <button className="relative p-1 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" aria-label={`Notificações${unreadCount > 0 ? ` (${unreadCount} não lidas)` : ''}`} aria-pressed={unreadCount > 0}>
                 {notificationsLoading ? (
-                   <Loader2 className="w-4 sm:w-5 h-4 sm:h-5 text-slate-600 dark:text-slate-400 animate-spin" />
+                   <Loader2 className="w-4 sm:w-5 h-4 sm:h-5 text-slate-600 dark:text-slate-400 animate-spin" aria-hidden="true" />
                  ) : (
                    <>
-                     <Bell className="w-4 sm:w-5 h-4 sm:h-5 text-slate-600 dark:text-slate-400" />
+                     <Bell className="w-4 sm:w-5 h-4 sm:h-5 text-slate-600 dark:text-slate-400" aria-hidden="true" />
                     {unreadCount > 0 && (
-                      <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{unreadCount}</span>
+                      <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-semibold" aria-label={`${unreadCount} notificações não lidas`}>{unreadCount}</span>
                     )}
                   </>
                 )}
