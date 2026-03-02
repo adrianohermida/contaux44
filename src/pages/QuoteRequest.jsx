@@ -56,36 +56,36 @@ export default function QuoteRequest() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50 py-[var(--spacing-lg)] px-[var(--spacing-md)] max-w-7xl mx-auto">
       {/* Breadcrumb */}
-      <div className="max-w-2xl mx-auto mb-8">
-        <Link to={createPageUrl('Pricing')} className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold">
+      <div className="mb-[var(--spacing-xl)]">
+        <Link to={createPageUrl('Pricing')} className="flex items-center gap-[var(--spacing-sm)] text-[var(--color-interactive-default)] hover:text-[var(--color-interactive-hover)] font-semibold">
           <ArrowLeft className="w-4 h-4" />
           Voltar aos Planos
         </Link>
       </div>
 
       {/* Form Container */}
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Solicitar Orçamento</h1>
-          <p className="text-slate-600 mb-8">
+      <div className="max-w-2xl">
+        <div className="bg-[var(--color-background-primary)] rounded-lg shadow-lg p-[var(--spacing-xl)]">
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)] mb-[var(--spacing-xs)]">Solicitar Orçamento</h1>
+          <p className="text-[var(--color-foreground-secondary)] mb-[var(--spacing-xl)]">
             Preencha o formulário abaixo com suas informações. Nossa equipe analisará sua solicitação e entrará em contato com uma proposta personalizada.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {feedback && (
-              <FormFeedback
-                type={feedback.type}
-                message={feedback.message}
-                onClose={() => setFeedback(null)}
-              />
-            )}
+          <form onSubmit={handleSubmit} className="space-y-[var(--spacing-lg)]">
+             {feedback && (
+               <FormFeedback
+                 type={feedback.type}
+                 message={feedback.message}
+                 onClose={() => setFeedback(null)}
+               />
+             )}
 
-            {/* Empresa */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
+             {/* Empresa */}
+             <div className="grid md:grid-cols-2 gap-[var(--spacing-md)]">
+               <div>
+                 <label className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-sm)]">
                   Nome da Empresa/Escritório *
                 </label>
                 <input
@@ -95,12 +95,12 @@ export default function QuoteRequest() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100"
+                  className="w-full px-[var(--spacing-md)] py-[var(--spacing-sm)] border border-[var(--color-border-default)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] disabled:bg-[var(--color-background-secondary)]"
                   placeholder="Ex: Silva & Associados"
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
+                </div>
+                <div>
+                <label className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-sm)]">
                   Tipo de Empresa *
                 </label>
                 <select
@@ -108,7 +108,7 @@ export default function QuoteRequest() {
                   value={formData.company_type}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100"
+                  className="w-full px-[var(--spacing-md)] py-[var(--spacing-sm)] border border-[var(--color-border-default)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] disabled:bg-[var(--color-background-secondary)]"
                 >
                   <option value="Simples Nacional">Simples Nacional</option>
                   <option value="Contabilidade">Empresa de Contabilidade</option>
@@ -118,9 +118,9 @@ export default function QuoteRequest() {
             </div>
 
             {/* Contato */}
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-[var(--spacing-md)]">
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
+                <label className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-sm)]">
                   Nome do Contato *
                 </label>
                 <input
@@ -130,12 +130,12 @@ export default function QuoteRequest() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100"
+                  className="w-full px-[var(--spacing-md)] py-[var(--spacing-sm)] border border-[var(--color-border-default)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] disabled:bg-[var(--color-background-secondary)]"
                   placeholder="Seu nome completo"
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
+                </div>
+                <div>
+                <label className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-sm)]">
                   Email *
                 </label>
                 <input
@@ -145,16 +145,16 @@ export default function QuoteRequest() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100"
+                  className="w-full px-[var(--spacing-md)] py-[var(--spacing-sm)] border border-[var(--color-border-default)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] disabled:bg-[var(--color-background-secondary)]"
                   placeholder="seu@email.com"
                 />
-              </div>
-            </div>
+                </div>
+                </div>
 
-            {/* Telefone e Plano */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
+                {/* Telefone e Plano */}
+                <div className="grid md:grid-cols-2 gap-[var(--spacing-md)]">
+                <div>
+                <label className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-sm)]">
                   Telefone *
                 </label>
                 <input
@@ -164,12 +164,12 @@ export default function QuoteRequest() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100"
+                  className="w-full px-[var(--spacing-md)] py-[var(--spacing-sm)] border border-[var(--color-border-default)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] disabled:bg-[var(--color-background-secondary)]"
                   placeholder="(11) 99999-9999"
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">
+                </div>
+                <div>
+                <label className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-sm)]">
                   Plano de Interesse *
                 </label>
                 <select
@@ -177,7 +177,7 @@ export default function QuoteRequest() {
                   value={formData.plan_type}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100"
+                  className="w-full px-[var(--spacing-md)] py-[var(--spacing-sm)] border border-[var(--color-border-default)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] disabled:bg-[var(--color-background-secondary)]"
                 >
                   <option value="Simples">Plano Simples</option>
                   <option value="Profissional">Plano Profissional</option>
@@ -188,7 +188,7 @@ export default function QuoteRequest() {
 
             {/* Descrição */}
             <div>
-              <label className="block text-sm font-semibold text-slate-900 mb-2">
+              <label className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-sm)]">
                 Descreva suas necessidades e escopo do projeto *
               </label>
               <textarea
@@ -198,33 +198,33 @@ export default function QuoteRequest() {
                 required
                 disabled={isSubmitting}
                 rows="5"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100"
+                className="w-full px-[var(--spacing-md)] py-[var(--spacing-sm)] border border-[var(--color-border-default)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] disabled:bg-[var(--color-background-secondary)]"
                 placeholder="Ex: Precisamos de uma solução para gerenciar 50 processos por mês com integrações customizadas..."
               />
-            </div>
+              </div>
 
-            {/* Submit Button */}
-            <button
+              {/* Submit Button */}
+              <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full px-6 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-            >
+              className="w-full px-[var(--spacing-lg)] py-[var(--spacing-md)] bg-[var(--color-interactive-default)] text-white font-semibold rounded-lg hover:bg-[var(--color-interactive-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-[var(--spacing-sm)]"
+              >
               <CheckCircle2 className="w-5 h-5" />
               {isSubmitting ? 'Enviando...' : 'Solicitar Orçamento'}
             </button>
 
-            <p className="text-xs text-slate-600 text-center">
+            <p className="text-[var(--font-size-xs)] text-[var(--color-foreground-secondary)] text-center">
               * Campos obrigatórios. Sua privacidade é importante para nós.
             </p>
           </form>
         </div>
 
         {/* Info Box */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="font-semibold text-slate-900 mb-3">Próximas Etapas</h3>
-          <ul className="space-y-2 text-sm text-slate-600">
-            <li className="flex gap-3">
-              <span className="text-blue-600 font-bold">1.</span>
+        <div className="mt-[var(--spacing-xl)] bg-blue-50 border border-blue-200 rounded-lg p-[var(--spacing-lg)]">
+          <h3 className="font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-md)]">Próximas Etapas</h3>
+          <ul className="space-y-[var(--spacing-sm)] text-[var(--font-size-sm)] text-[var(--color-foreground-secondary)]">
+            <li className="flex gap-[var(--spacing-sm)]">
+              <span className="text-[var(--color-interactive-default)] font-bold">1.</span>
               <span>Você receberá um email de confirmação do recebimento</span>
             </li>
             <li className="flex gap-3">

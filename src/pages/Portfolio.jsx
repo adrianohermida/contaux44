@@ -14,57 +14,57 @@ export default function Portfolio() {
   const [activeFilter, setActiveFilter] = useState('all');
 
   const categories = ['all', 'branding', 'marketing', 'web', 'graphic'];
-  
+
   const filtered = activeFilter === 'all' 
     ? portfolioItems 
     : portfolioItems.filter(item => item.category === activeFilter);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--color-background-primary)]">
       {/* Breadcrumbs */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">Portfolio</h1>
-          <p className="text-blue-100 mb-6">Business plan draws on a wide range of knowledge from different business disciplines.</p>
-          <div className="flex gap-2 text-sm">
-            <a href="/" className="hover:underline">Home</a>
-            <span>/</span>
-            <span>Portfolio</span>
-          </div>
-        </div>
-      </section>
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-[var(--spacing-2xl)] px-[var(--spacing-md)] sm:px-[var(--spacing-lg)] max-w-7xl mx-auto">
+        <div>
+          <h1 className="text-[var(--font-size-4xl)] font-bold mb-[var(--spacing-md)]">Portfolio</h1>
+          <p className="text-blue-100 mb-[var(--spacing-lg)]">Business plan draws on a wide range of knowledge from different business disciplines.</p>
+          <div className="flex gap-[var(--spacing-sm)] text-[var(--font-size-sm)]">
+             <a href="/" className="hover:underline">Home</a>
+             <span>/</span>
+             <span>Portfolio</span>
+           </div>
+         </div>
+       </section>
 
-      {/* Portfolio Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            {/* Left Content */}
-            <div>
-              <span className="text-blue-600 font-semibold">Latest Cases</span>
-              <h2 className="text-4xl font-bold mt-2 mb-4">Our projects</h2>
-              <p className="text-gray-600">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration.</p>
-            </div>
+       {/* Portfolio Section */}
+       <section className="py-[var(--spacing-2xl)] px-[var(--spacing-md)] sm:px-[var(--spacing-lg)] max-w-7xl mx-auto">
+         <div>
+           <div className="grid lg:grid-cols-2 gap-[var(--spacing-2xl)] mb-[var(--spacing-2xl)]">
+             {/* Left Content */}
+             <div>
+               <span className="text-[var(--color-interactive-default)] font-semibold">Latest Cases</span>
+               <h2 className="text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)] mb-[var(--spacing-md)] text-[var(--color-foreground-primary)]">Our projects</h2>
+               <p className="text-[var(--color-foreground-secondary)]">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration.</p>
+             </div>
 
-            {/* Filters */}
-            <div className="flex flex-wrap gap-3 items-end">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveFilter(cat)}
-                  className={`px-4 py-2 rounded transition-colors capitalize ${
-                    activeFilter === cat
-                      ? 'bg-blue-600 text-white'
-                      : 'border border-gray-300 text-gray-700 hover:border-blue-600'
-                  }`}
-                >
-                  {cat === 'all' ? 'All' : cat}
-                </button>
-              ))}
-            </div>
-          </div>
+             {/* Filters */}
+             <div className="flex flex-wrap gap-[var(--spacing-sm)] items-end">
+               {categories.map((cat) => (
+                 <button
+                   key={cat}
+                   onClick={() => setActiveFilter(cat)}
+                   className={`px-[var(--spacing-md)] py-[var(--spacing-xs)] rounded transition-colors capitalize ${
+                     activeFilter === cat
+                       ? 'bg-[var(--color-interactive-default)] text-white'
+                       : 'border border-[var(--color-border-default)] text-[var(--color-foreground-primary)] hover:border-[var(--color-interactive-default)]'
+                   }`}
+                 >
+                   {cat === 'all' ? 'All' : cat}
+                 </button>
+               ))}
+             </div>
+           </div>
 
-          {/* Portfolio Grid */}
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+           {/* Portfolio Grid */}
+           <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-[var(--spacing-xl)]">
             {filtered.map((item) => (
               <div
                 key={item.id}
@@ -88,21 +88,21 @@ export default function Portfolio() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
+      <section className="py-[var(--spacing-2xl)] bg-[var(--color-background-secondary)] px-[var(--spacing-md)] sm:px-[var(--spacing-lg)] max-w-7xl mx-auto">
+        <div>
+          <div className="grid lg:grid-cols-2 gap-[var(--spacing-2xl)]">
             <div>
-              <h3 className="text-2xl font-bold mb-4">Inscreva-se na Newsletter</h3>
-              <p className="text-gray-600 mb-6">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
-              <form className="flex gap-2">
-                <input type="email" placeholder="Seu endereço de e-mail" className="flex-1 px-4 py-3 border border-gray-300 rounded-lg" />
-                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Registre-se</button>
+              <h3 className="text-[var(--font-size-2xl)] font-bold mb-[var(--spacing-md)] text-[var(--color-foreground-primary)]">Inscreva-se na Newsletter</h3>
+              <p className="text-[var(--color-foreground-secondary)] mb-[var(--spacing-lg)]">Registre-se e receba conteúdo exclusivo sobre contabilidade de empresas</p>
+              <form className="flex gap-[var(--spacing-sm)]">
+                <input type="email" placeholder="Seu endereço de e-mail" className="flex-1 px-[var(--spacing-md)] py-[var(--spacing-sm)] border border-[var(--color-border-default)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)]" />
+                <button className="px-[var(--spacing-lg)] py-[var(--spacing-sm)] bg-[var(--color-interactive-default)] text-white rounded-lg hover:bg-[var(--color-interactive-hover)]">Registre-se</button>
               </form>
             </div>
-            <div className="bg-white p-8 rounded-lg border border-gray-200">
-              <h4 className="text-2xl font-bold mb-3">Quer abrir sua empresa grátis?</h4>
-              <p className="text-gray-600 mb-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Fale com um especialista</button>
+            <div className="bg-[var(--color-background-primary)] p-[var(--spacing-xl)] rounded-lg border border-[var(--color-border-default)]">
+              <h4 className="text-[var(--font-size-2xl)] font-bold mb-[var(--spacing-sm)] text-[var(--color-foreground-primary)]">Quer abrir sua empresa grátis?</h4>
+              <p className="text-[var(--color-foreground-secondary)] mb-[var(--spacing-lg)]">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+              <button className="px-[var(--spacing-lg)] py-[var(--spacing-sm)] bg-[var(--color-interactive-default)] text-white rounded-lg hover:bg-[var(--color-interactive-hover)]">Fale com um especialista</button>
             </div>
           </div>
         </div>

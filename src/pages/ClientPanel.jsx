@@ -34,40 +34,40 @@ export default function ClientPanel() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-interactive-default)]"></div>
       </div>
     );
   }
 
   return (
     <ProtectedClientRoute>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-900">Meu Painel</h1>
-            <p className="text-slate-600 mt-2">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-[var(--spacing-lg)]">
+         <div className="max-w-7xl mx-auto">
+           {/* Header */}
+           <div className="mb-[var(--spacing-xl)]">
+             <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Meu Painel</h1>
+             <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-sm)]">
               Bem-vindo, {user?.full_name || 'Cliente'}
             </p>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--spacing-md)] mb-[var(--spacing-xl)]">
+            <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-600 text-sm font-medium">Total de Faturas</p>
-                  <p className="text-3xl font-bold text-slate-900 mt-2">{invoices.length}</p>
+                  <p className="text-[var(--color-foreground-secondary)] text-[var(--font-size-sm)] font-medium">Total de Faturas</p>
+                  <p className="text-[var(--font-size-4xl)] font-bold text-[var(--color-foreground-primary)] mt-[var(--spacing-sm)]">{invoices.length}</p>
                 </div>
-                <FileText className="w-10 h-10 text-blue-600 opacity-10" />
+                <FileText className="w-10 h-10 text-[var(--color-interactive-default)] opacity-10" />
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-600 text-sm font-medium">Pendentes</p>
-                  <p className="text-3xl font-bold text-slate-900 mt-2">
+                  <p className="text-[var(--color-foreground-secondary)] text-[var(--font-size-sm)] font-medium">Pendentes</p>
+                  <p className="text-[var(--font-size-4xl)] font-bold text-[var(--color-foreground-primary)] mt-[var(--spacing-sm)]">
                     {invoices.filter(i => i.status !== 'paid').length}
                   </p>
                 </div>
@@ -75,11 +75,11 @@ export default function ClientPanel() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-600 text-sm font-medium">Pagas</p>
-                  <p className="text-3xl font-bold text-slate-900 mt-2">
+                  <p className="text-[var(--color-foreground-secondary)] text-[var(--font-size-sm)] font-medium">Pagas</p>
+                  <p className="text-[var(--font-size-4xl)] font-bold text-[var(--color-foreground-primary)] mt-[var(--spacing-sm)]">
                     {invoices.filter(i => i.status === 'paid').length}
                   </p>
                 </div>
@@ -89,25 +89,25 @@ export default function ClientPanel() {
           </div>
 
           {/* Invoices Table */}
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="p-6 border-b border-slate-200">
-              <h2 className="text-xl font-bold text-slate-900">Minhas Faturas</h2>
+          <div className="bg-[var(--color-background-primary)] rounded-lg shadow overflow-hidden">
+            <div className="p-[var(--spacing-lg)] border-b border-[var(--color-border-default)]">
+              <h2 className="text-[var(--font-size-xl)] font-bold text-[var(--color-foreground-primary)]">Minhas Faturas</h2>
             </div>
 
             {dataLoading ? (
-              <div className="p-6 text-center text-slate-500">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <div className="p-[var(--spacing-lg)] text-center text-[var(--color-foreground-secondary)]">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-interactive-default)] mx-auto"></div>
               </div>
             ) : invoices.length === 0 ? (
-              <div className="p-6 text-center text-slate-500">
+              <div className="p-[var(--spacing-lg)] text-center text-[var(--color-foreground-secondary)]">
                 Nenhuma fatura encontrada
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-slate-50 border-b border-slate-200">
+                  <thead className="bg-[var(--color-background-secondary)] border-b border-[var(--color-border-default)]">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">
+                      <th className="px-[var(--spacing-lg)] py-[var(--spacing-sm)] text-left text-[var(--font-size-xs)] font-medium text-[var(--color-foreground-secondary)] uppercase">
                         Fatura
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">
@@ -124,20 +124,20 @@ export default function ClientPanel() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200">
+                  <tbody className="divide-y divide-[var(--color-border-default)]">
                     {invoices.map(invoice => (
-                      <tr key={invoice.id} className="hover:bg-slate-50">
-                        <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                      <tr key={invoice.id} className="hover:bg-[var(--color-background-secondary)]">
+                        <td className="px-[var(--spacing-lg)] py-[var(--spacing-md)] text-[var(--font-size-sm)] font-medium text-[var(--color-foreground-primary)]">
                           {invoice.invoice_number}
                         </td>
-                        <td className="px-6 py-4 text-sm text-slate-600">
+                        <td className="px-[var(--spacing-lg)] py-[var(--spacing-md)] text-[var(--font-size-sm)] text-[var(--color-foreground-secondary)]">
                           {new Date(invoice.issue_date).toLocaleDateString('pt-BR')}
                         </td>
-                        <td className="px-6 py-4 text-sm font-semibold text-slate-900">
+                        <td className="px-[var(--spacing-lg)] py-[var(--spacing-md)] text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)]">
                           R$ {invoice.total_amount?.toFixed(2) || '0.00'}
                         </td>
-                        <td className="px-6 py-4 text-sm">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        <td className="px-[var(--spacing-lg)] py-[var(--spacing-md)] text-[var(--font-size-sm)]">
+                          <span className={`px-[var(--spacing-sm)] py-[var(--spacing-xs)] rounded-full text-[var(--font-size-xs)] font-medium ${
                             invoice.status === 'paid' 
                               ? 'bg-green-100 text-green-800'
                               : 'bg-amber-100 text-amber-800'
@@ -145,8 +145,8 @@ export default function ClientPanel() {
                             {invoice.status === 'paid' ? 'Paga' : 'Pendente'}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm">
-                          <button className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
+                        <td className="px-[var(--spacing-lg)] py-[var(--spacing-md)] text-[var(--font-size-sm)]">
+                          <button className="text-[var(--color-interactive-default)] hover:text-[var(--color-interactive-hover)] flex items-center gap-[var(--spacing-sm)]">
                             <Download className="w-4 h-4" />
                             Download
                           </button>
