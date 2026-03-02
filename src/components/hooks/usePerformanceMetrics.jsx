@@ -1,44 +1,70 @@
 /**
  * usePerformanceMetrics Hook
- * Monitor component performance metrics
+ * Track page performance metrics and send to analytics
  */
 
 import { useEffect, useRef } from 'react';
+import { base44 } from '@/api/base44Client';
 
-export function usePerformanceMetrics(componentName) {
-  const renderTimeRef = useRef(null);
+export function usePerformanceMetrics(pageName) {
   const metricsRef = useRef({
-    renders: 0,
-    avgRenderTime: 0,
-    lastRenderTime: 0,
+    pageLoadTime: 0,
+    dataFetchTime: 0,
+    renderTime: 0,
+    memoryUsed: 0,
   });
 
   useEffect(() => {
-    // Record render time
-    const now = performance.now();
-    
-    if (renderTimeRef.current) {
-      const renderTime = now - renderTimeRef.current;
-      metricsRef.current.renders++;
-      metricsRef.current.lastRenderTime = renderTime;
-      
-      // Calculate average
-      metricsRef.current.avgRenderTime = 
-        (metricsRef.current.avgRenderTime * (metricsRef.current.renders - 1) + renderTime) /
-        metricsRef.current.renders;
+    // Measure page load
+    const navigationStart = performance.timing.navigationStart;
+    const navigationEnd = performance.timing.loadEventEnd;
+    metricsRef.current.pageLoadTime = navigationEnd - navigationStart;
 
-      // Log in development
-      if (process.env.NODE_ENV === 'development') {
-        console.debug(`[${componentName}] Render #${metricsRef.current.renders}: ${renderTime.toFixed(2)}ms`);
-      }
+    // Measure memory
+    if (performance.memory) {
+      metricsRef.current.memoryUsed = performance.memory.usedJSHeapSize;
     }
-    
-    renderTimeRef.current = now;
 
-    return () => {
-      renderTimeRef.current = null;
-    };
-  });
+    // Measure First Contentful Paint
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (entry.name === 'first-contentful-paint') {
+          metricsRef.current.renderTime = entry.startTime;
+        }
+      }
+    });
 
-  return metricsRef.current;
+    observer.observe({ entryTypes: ['paint', 'measure'] });
+
+    // Send metrics after load
+    const timeout = setTimeout(() => {
+      sendMetrics();
+      observer.disconnect();
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, [pageName]);
+
+  const sendMetrics = async () => {
+    try {
+      await base44.analytics.track({
+        eventName: 'page_performance',
+        properties: {
+          page: pageName,
+          loadTime: Math.round(metricsRef.current.pageLoadTime),
+          renderTime: Math.round(metricsRef.current.renderTime),
+          memoryUsed: Math.round(metricsRef.current.memoryUsed / 1024 / 1024), // MB
+        },
+      });
+    } catch (error) {
+      console.error('Failed to send performance metrics:', error);
+    }
+  };
+
+  return {
+    metrics: metricsRef.current,
+    sendMetrics,
+  };
 }
+
+export default usePerformanceMetrics;
