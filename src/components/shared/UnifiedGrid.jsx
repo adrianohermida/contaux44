@@ -26,21 +26,21 @@ export default function UnifiedGrid({
 }) {
   return (
     <div role="region" aria-label="Lista de itens" aria-live="polite">
-      <div className={`grid ${columns} gap-3 sm:gap-4`}>
-        {isLoading ? (
-          Array.from({ length: skeletonCount }).map((_, i) => (
-            <div key={i} className="animate-pulse bg-white dark:bg-slate-800 rounded-xl border p-6">
-              <div className="space-y-3">
-                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
-                <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
-                <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
+      <div className={`grid ${columns} gap-[var(--spacing-sm)] sm:gap-[var(--spacing-md)]`}>
+         {isLoading ? (
+           Array.from({ length: skeletonCount }).map((_, i) => (
+             <div key={i} className="animate-pulse bg-[var(--color-background-primary)] rounded-xl border p-[var(--spacing-lg)]">
+               <div className="space-y-[var(--spacing-sm)]">
+                 <div className="h-4 bg-[var(--color-background-secondary)] rounded w-3/4"></div>
+                 <div className="h-3 bg-[var(--color-background-secondary)] rounded w-full"></div>
+                 <div className="h-3 bg-[var(--color-background-secondary)] rounded w-2/3"></div>
               </div>
             </div>
           ))
         ) : items.length === 0 ? (
-          <div className="col-span-full text-center py-12 px-4">
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mb-6">{emptyMessage}</p>
-            <div className="flex gap-3 justify-center flex-wrap">
+          <div className="col-span-full text-center py-[var(--spacing-2xl)] px-[var(--spacing-md)]">
+            <p className="text-[var(--font-size-sm)] sm:text-[var(--font-size-base)] text-[var(--color-foreground-secondary)] mb-[var(--spacing-lg)]">{emptyMessage}</p>
+            <div className="flex gap-[var(--spacing-sm)] justify-center flex-wrap">
               <Button 
                 onClick={onImportClick} 
                 variant="outline" 
@@ -66,7 +66,7 @@ export default function UnifiedGrid({
       </div>
 
       {totalPages > 1 && (
-        <nav aria-label="Paginação" className="mt-6">
+        <nav aria-label="Paginação" className="mt-[var(--spacing-lg)]">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

@@ -18,17 +18,17 @@ export default function UnifiedHeader({
   actionButtons = [] // Array of {label, icon: Component, onClick, component}
 }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[var(--spacing-md)] sm:gap-[var(--spacing-lg)]">
       <div className="flex-1">
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 break-words">
+        <h1 className="text-[var(--font-size-2xl)] sm:text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)] break-words">
           {title}
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-1">
+        <p className="text-[var(--font-size-sm)] sm:text-[var(--font-size-base)] text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">
           {filteredCount} de {totalCount} {itemName}{totalCount !== 1 ? 's' : ''}
         </p>
       </div>
       
-      <div className="flex gap-2 flex-wrap sm:flex-nowrap sm:justify-end">
+      <div className="flex gap-[var(--spacing-sm)] flex-wrap sm:flex-nowrap sm:justify-end">
         {/* Custom Action Buttons */}
         {actionButtons.map((btn, idx) => {
           // If component is provided, render it directly
