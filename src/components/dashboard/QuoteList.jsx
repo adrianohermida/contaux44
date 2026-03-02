@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { base44 } from '@/api/base44Client';
 import { useSortAndFilter } from '../hooks/useSortAndFilter';
+import { getCacheConfig } from '../hooks/useQueryCacheConfig';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -38,19 +39,20 @@ const STATUS_COLORS = {
 export default function QuoteList({ tenantId, onEdit, onRefresh }) {
   const queryClient = useQueryClient();
 
-  // Fetch quotes
+  // Fetch quotes (critical data)
   const { data: quotes = [], isLoading, error } = useQuery({
     queryKey: ['quotes', tenantId],
     queryFn: () => base44.entities.Quote.filter({ workspace_id: tenantId }, '-created_date', 100),
     enabled: !!tenantId,
-    staleTime: 60000,
+    ...getCacheConfig('critical')
   });
 
-  // Fetch clients for name mapping
+  // Fetch clients (static data)
   const { data: clients = [] } = useQuery({
     queryKey: ['clients', tenantId],
     queryFn: () => base44.entities.Client.filter({ workspace_id: tenantId }, null, 200),
     enabled: !!tenantId,
+    ...getCacheConfig('long')
   });
 
   // Use unified sort/filter hook
