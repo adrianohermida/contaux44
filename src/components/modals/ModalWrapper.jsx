@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 /**
  * ModalWrapper - Componente padrão para todos os modais
  * Garante consistência visual, acessibilidade e UX
+ * ✅ Focus trap, Escape key, dark mode, backdrop click
  */
 export default function ModalWrapper({ 
   isOpen, 
@@ -25,16 +26,51 @@ export default function ModalWrapper({
     xl: 'max-w-6xl'
   };
 
+  // Focus trap - gerenciar foco dentro do modal
+  const handleFocusTrap = useCallback((e) => {
+    if (!modalRef.current) return;
+    
+    const focusableElements = modalRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    // Shift + Tab em primeiro elemento → último elemento
+    if (e.shiftKey && document.activeElement === firstElement) {
+      e.preventDefault();
+      lastElement.focus();
+    }
+    // Tab em último elemento → primeiro elemento
+    else if (!e.shiftKey && document.activeElement === lastElement) {
+      e.preventDefault();
+      firstElement.focus();
+    }
+  }, []);
+
   useEffect(() => {
     if (!isOpen) return;
 
     // Salvar elemento com foco anterior
     previousFocusRef.current = document.activeElement;
 
-    // Focar no modal
-    if (modalRef.current) {
-      modalRef.current.focus();
-    }
+    // Focar no primeiro elemento focável ou no modal
+    const focusFirstElement = () => {
+      const focusableElement = modalRef.current?.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableElement) {
+        focusableElement.focus();
+      } else if (modalRef.current) {
+        modalRef.current.focus();
+      }
+    };
+
+    // Pequeno delay para garantir renderização
+    setTimeout(focusFirstElement, 50);
 
     // Prevenir scroll do body
     document.body.style.overflow = 'hidden';
@@ -53,30 +89,39 @@ export default function ModalWrapper({
       }
     };
 
+    // Handler para Tab (focus trap)
+    const handleTab = (e) => {
+      if (e.key === 'Tab') {
+        handleFocusTrap(e);
+      }
+    };
+
     document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleTab);
     if (showBackdrop) {
       modalRef.current?.parentElement?.addEventListener('click', handleBackdropClick);
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleTab);
       if (showBackdrop) {
         modalRef.current?.parentElement?.removeEventListener('click', handleBackdropClick);
       }
       document.body.style.overflow = 'unset';
       // Retornar foco ao elemento anterior
-      if (previousFocusRef.current) {
+      if (previousFocusRef.current && previousFocusRef.current.focus) {
         previousFocusRef.current.focus();
       }
     };
-  }, [isOpen, onClose, showBackdrop]);
+  }, [isOpen, onClose, showBackdrop, handleFocusTrap]);
 
   if (!isOpen) return null;
 
   return (
     <div 
       className={`fixed inset-0 z-50 flex items-center justify-center ${
-        showBackdrop ? 'bg-black/50' : ''
+        showBackdrop ? 'bg-black/50 dark:bg-black/60' : ''
       }`}
       role="presentation"
     >
@@ -86,22 +131,22 @@ export default function ModalWrapper({
         aria-modal="true"
         aria-labelledby="modal-title"
         tabIndex={-1}
-        className={`bg-white rounded-lg shadow-lg w-full ${sizeClasses[size]} p-6 max-h-[90vh] overflow-y-auto`}
+        className={`bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full ${sizeClasses[size]} p-6 max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-700 transition-colors`}
       >
         {/* Header */}
-        <div className="flex justify-between items-center mb-6 pb-4 border-b">
+        <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
           <h2 
             id="modal-title"
-            className="text-xl font-semibold text-slate-900"
+            className="text-xl font-semibold text-slate-900 dark:text-slate-100"
           >
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-slate-100 rounded transition-colors"
-            aria-label="Fechar modal"
+            className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors"
+            aria-label="Fechar modal (Esc)"
           >
-            <X className="w-5 h-5 text-slate-500" />
+            <X className="w-5 h-5 text-slate-500 dark:text-slate-400" aria-hidden="true" />
           </button>
         </div>
 
