@@ -23,26 +23,25 @@ export function Pagination({ currentPage, totalPages, onPageChange, hasPrev, has
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-6">
+    <div className="flex items-center justify-center gap-[var(--spacing-sm)] mt-[var(--spacing-lg)]">
       <Button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!hasPrev}
         variant="outline"
         size="sm"
-        className="gap-1"
+        className="gap-[var(--spacing-xs)]"
       >
         <ChevronLeft className="w-4 h-4" />
         Anterior
       </Button>
 
-      <div className="flex gap-1">
+      <div className="flex gap-[var(--spacing-xs)]">
         {getPageNumbers().map((page) => (
           <Button
             key={page}
             onClick={() => onPageChange(page)}
             variant={page === currentPage ? 'default' : 'outline'}
             size="sm"
-            className={page === currentPage ? 'bg-blue-600 hover:bg-blue-700' : ''}
           >
             {page}
           </Button>
@@ -54,7 +53,7 @@ export function Pagination({ currentPage, totalPages, onPageChange, hasPrev, has
         disabled={!hasNext}
         variant="outline"
         size="sm"
-        className="gap-1"
+        className="gap-[var(--spacing-xs)]"
       >
         Próxima
         <ChevronRight className="w-4 h-4" />
