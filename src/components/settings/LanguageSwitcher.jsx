@@ -1,6 +1,6 @@
 /**
  * Language Switcher
- * Dropdown to switch application language
+ * Dropdown to switch app language (pt-BR, en-US, es-ES)
  */
 
 import React from 'react';
