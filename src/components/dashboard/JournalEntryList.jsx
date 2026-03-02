@@ -58,42 +58,42 @@ export default function JournalEntryList({ tenantId, onEdit, onRefresh }) {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-        <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-        <p className="text-red-600 mb-4">Erro ao carregar lançamentos</p>
-        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center transition-colors">
+        <AlertCircle className="w-8 h-8 text-red-400 dark:text-red-500 mx-auto mb-2" aria-hidden="true" />
+        <p className="text-red-600 dark:text-red-300 mb-4">Erro ao carregar lançamentos</p>
+        <button onClick={() => refetch()} className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 underline" aria-label="Tentar novamente">
           Tentar novamente
         </button>
       </div>
     );
   }
 
-  if (loading) return <div className="text-center py-8 text-slate-500">Carregando lançamentos...</div>;
+  if (loading) return <div className="text-center py-8 text-slate-500 dark:text-slate-400" role="status" aria-live="polite">Carregando lançamentos...</div>;
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <table className="w-full">
-        <thead className="bg-slate-50 border-b border-slate-200">
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
+      <table className="w-full" role="table" aria-label="Lista de lançamentos contábeis">
+        <thead className="bg-slate-50 dark:bg-slate-700/30 border-b border-slate-200 dark:border-slate-700">
           <tr>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Data</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Referência</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Descrição</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Linhas</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-            <th className="px-6 py-3 text-right text-sm font-semibold">Ações</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Data</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Referência</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Descrição</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Linhas</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Status</th>
+            <th className="px-6 py-3 text-right text-sm font-semibold text-slate-900 dark:text-slate-100">Ações</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-200">
+        <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
           {entries.map((entry) => (
             <EntryRow key={entry.id} entry={entry} onEdit={onEdit} onDelete={handleDelete} />
           ))}
         </tbody>
       </table>
       {entries.length === 0 && (
-        <div className="text-center py-12">
-          <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500 font-medium">Nenhum lançamento cadastrado</p>
-          <p className="text-slate-400 text-sm mt-1">Comece criando um novo lançamento contábil</p>
+        <div className="text-center py-12 bg-slate-50 dark:bg-slate-700/30">
+          <AlertCircle className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" aria-hidden="true" />
+          <p className="text-slate-500 dark:text-slate-400 font-medium">Nenhum lançamento cadastrado</p>
+          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">Comece criando um novo lançamento contábil</p>
         </div>
       )}
     </div>
