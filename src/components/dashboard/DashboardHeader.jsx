@@ -65,11 +65,13 @@ const DashboardHeader = memo(function DashboardHeader() {
             onClick={toggleTheme}
             className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
             title={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
+            aria-label={`Alternar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
+            aria-pressed={theme === 'dark'}
           >
             {theme === 'dark' ? (
-              <Sun className="w-5 h-5 text-slate-400" />
+              <Sun className="w-5 h-5 text-slate-400" aria-hidden="true" />
             ) : (
-              <Moon className="w-5 h-5 text-slate-600" />
+              <Moon className="w-5 h-5 text-slate-600" aria-hidden="true" />
             )}
           </button>
 
