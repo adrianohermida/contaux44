@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { t, getLanguage, setLanguage, LANGUAGES } from '@/lib/i18n';
+import { t, getLanguage, setLanguage, LANGUAGES } from '@/components/i18n/translations';
 
 export function useTranslation() {
   const [language, setLang] = useState(getLanguage);

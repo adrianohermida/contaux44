@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/components/hooks/useTranslation';
-import { LANGUAGES } from '@/lib/i18n';
+import { LANGUAGES } from '@/components/i18n/translations';
 
 export default function LanguageSwitcher({ compact = false }) {
   const { language, changeLanguage } = useTranslation();
