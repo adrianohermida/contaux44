@@ -42,19 +42,20 @@ export default function Tickets() {
 
   return (
     <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">Helpdesk - Tickets</h1>
-              <p className="text-slate-600 mt-1">Gerenciar solicitações de suporte</p>
-            </div>
-            <Button 
-              onClick={handleNewTicket}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Novo Ticket
-            </Button>
-          </div>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Helpdesk - Tickets</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1">Gerenciar solicitações de suporte</p>
+        </div>
+        <Button
+          onClick={handleNewTicket}
+          className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
+          aria-label="Criar novo ticket"
+        >
+          <Plus className="w-5 h-5 mr-2" aria-hidden="true" />
+          Novo Ticket
+        </Button>
+      </div>
 
           {showForm && (
             <TicketForm
