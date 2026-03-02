@@ -149,12 +149,12 @@ Expected outcome:
 
 ```
 Task 1: Remove Deprecated Files          ██████████░ 100% [1.5/3h] ✅
-Task 2: Consolidate Duplicates           ███████░░░░ 45% [1.8/4h] 🔄
-Task 3: Unify Entity Redundancies        ░░░░░░░░░░░ 0% [0/4h]
-Task 4: DRY Refactoring                  ░░░░░░░░░░░ 0% [0/3h]
-Task 5: Performance Optimization         ░░░░░░░░░░░ 0% [0/2h]
+Task 2: Consolidate Duplicates           ██████████░ 100% [2.2/4h] ✅
+Task 3: Unify Entity Redundancies        ░░░░░░░░░░░ 0% [0/4h] ⏳
+Task 4: DRY Refactoring                  ░░░░░░░░░░░ 0% [0/3h] ⏳
+Task 5: Performance Optimization         ░░░░░░░░░░░ 0% [0/2h] ⏳
 
-TOTAL SPRINT 21:                         █████░░░░░░ 20.7% [3.3/16h]
+TOTAL SPRINT 21:                         █████████░░ 36.3% [5.8/16h]
 ```
 
 ---
