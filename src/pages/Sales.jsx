@@ -32,13 +32,20 @@ export default function Sales() {
   );
 
   if (authLoading) {
-    return <div className="flex items-center justify-center h-96 text-slate-500">Carregando...</div>;
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-slate-500 dark:text-slate-400">Carregando...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error && !invoices.length) {
     return (
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-900">Vendas</h1>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Vendas</h1>
         <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
           <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
           <p className="text-red-600 mb-4">Erro ao carregar vendas</p>
