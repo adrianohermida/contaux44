@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useFormState } from '@/components/modals/useFormState';
 import { useFormValidation } from '@/components/hooks/useFormValidation';
@@ -8,7 +8,7 @@ import FormField from '@/components/modals/FormField';
 import FormActions from '@/components/modals/FormActions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, AlertCircle } from 'lucide-react';
 
 const VALIDATION_RULES = {
   invoice_number: { label: 'Nº Fatura', required: true },
@@ -16,8 +16,12 @@ const VALIDATION_RULES = {
 };
 
 export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpen = true }) {
+  const [clients, setClients] = useState([]);
+  const [loadingClients, setLoadingClients] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+
   const initialData = useMemo(() => invoice || {
-    workspace_id: tenantId,
+    tenant_id: tenantId,
     client_id: '',
     invoice_number: '',
     status: 'draft',
@@ -35,6 +39,29 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpe
   const { errors, validateForm, clearErrors } = useFormValidation();
   const { loading, submit } = useFormSubmit();
 
+  // Carregar clientes ao abrir o formulário
+  useEffect(() => {
+    if (!isOpen || !tenantId) return;
+    
+    const loadClients = async () => {
+      setLoadingClients(true);
+      try {
+        const data = await base44.entities.Client.filter({ 
+          tenant_id: tenantId,
+          status: 'active'
+        });
+        setClients(data || []);
+      } catch (error) {
+        console.error('Erro ao carregar clientes:', error);
+        setClients([]);
+      } finally {
+        setLoadingClients(false);
+      }
+    };
+
+    loadClients();
+  }, [isOpen, tenantId]);
+
   const statusOptions = [
     { value: 'draft', label: 'Rascunho' },
     { value: 'sent', label: 'Enviada' },
@@ -51,22 +78,36 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpe
     setFieldValue('items', newItems);
   };
 
+  const validateInvoice = () => {
+    const newErrors = {};
+
+    // Validar cliente
+    if (!formData.client_id || formData.client_id.trim() === '') {
+      newErrors.client_id = 'Selecione um cliente';
+    }
+
+    // Validar datas
+    if (new Date(formData.due_date) <= new Date(formData.issue_date)) {
+      newErrors.due_date = 'Data de vencimento deve ser posterior à emissão';
+    }
+
+    // Validar items
+    if (!formData.items || formData.items.length === 0) {
+      newErrors.items = 'Adicione pelo menos um item';
+    } else if (formData.items.every(item => !item.description || item.unit_price === 0)) {
+      newErrors.items = 'Todos os items devem ter descrição e preço';
+    }
+
+    setValidationErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     clearErrors();
 
     if (!validateForm(formData, VALIDATION_RULES)) return;
-
-    // Validar campos obrigatórios
-    if (!formData.client_id || formData.client_id.trim() === '') {
-      alert('Por favor, selecione um cliente');
-      return;
-    }
-
-    if (!formData.items || formData.items.length === 0 || formData.items.every(item => !item.description || item.unit_price === 0)) {
-      alert('Por favor, adicione pelo menos um item com descrição e preço');
-      return;
-    }
+    if (!validateInvoice()) return;
 
     // Calcular totais automaticamente
     const totalAmount = formData.items.reduce((sum, item) => {
@@ -84,7 +125,6 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpe
       ...formData,
       total_amount: Math.round(totalAmount * 100) / 100,
       tax_amount: Math.round(taxAmount * 100) / 100,
-      workspace_id: formData.workspace_id || tenantId,
       tenant_id: tenantId
     };
 
@@ -99,7 +139,7 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpe
       {
         onSuccess: () => { reset(); onSave(); },
         successMessage: invoice ? 'Fatura atualizada!' : 'Fatura criada!',
-        errorMessage: 'Erro ao salvar fatura. Verifique se todos os campos obrigatórios foram preenchidos.',
+        errorMessage: 'Erro ao salvar fatura. Tente novamente.',
         tenantId,
         entityType: 'Invoice',
         action: invoice ? 'update' : 'create'
@@ -110,8 +150,32 @@ export default function InvoiceForm({ invoice, onSave, onCancel, tenantId, isOpe
   return (
     <ModalWrapper isOpen={isOpen} onClose={onCancel} title={invoice ? 'Editar Fatura' : 'Nova Fatura'} size="lg">
       <form onSubmit={handleSubmit} className="space-y-4 bg-white dark:bg-slate-800 rounded-lg" role="form" aria-label={invoice ? 'Formulário de edição de fatura' : 'Formulário de nova fatura'}>
+        {Object.keys(validationErrors).length > 0 && (
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <div className="flex-1">
+              <h4 className="font-semibold text-red-900 dark:text-red-200">Erros na validação:</h4>
+              <ul className="mt-2 space-y-1 text-sm text-red-700 dark:text-red-300">
+                {Object.entries(validationErrors).map(([key, msg]) => (
+                  <li key={key}>• {msg}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required aria-label="Campo de cliente" />
+            <FormField 
+              label="Cliente" 
+              type="select"
+              name="client_id" 
+              value={formData.client_id} 
+              onChange={(v) => setFieldValue('client_id', v)}
+              options={clients.map(c => ({ value: c.id, label: c.company_name }))}
+              required 
+              aria-label="Selecionar cliente"
+              disabled={loadingClients}
+            />
             <FormField label="Nº Fatura" name="invoice_number" value={formData.invoice_number} onChange={handleChange} error={errors.invoice_number} required aria-label="Número da fatura" />
             <FormField label="Data Emissão" type="date" name="issue_date" value={formData.issue_date} onChange={handleChange} required aria-label="Data de emissão da fatura" />
             <FormField label="Data Vencimento" type="date" name="due_date" value={formData.due_date} onChange={handleChange} error={errors.due_date} required aria-label="Data de vencimento da fatura" />
