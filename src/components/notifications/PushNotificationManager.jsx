@@ -1,170 +1,104 @@
 /**
- * Push Notification Manager
- * Handle Web Push subscriptions for PWA
+ * Push Notification Manager Component
+ * Centralized notification management
  */
 
-import React, { useState, useEffect } from 'react';
-import { Bell, Check, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import React, { useEffect, useState } from 'react';
+import { usePushNotification } from '../hooks/usePushNotification';
+import { useNotificationPermission } from '../hooks/useNotificationPermission';
+import NotificationPermissionRequest from './NotificationPermissionRequest';
 
 export default function PushNotificationManager() {
-  const [isSupported, setIsSupported] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [error, setError] = useState(null);
+  const { notify, error: notifyError } = usePushNotification();
+  const { permission, canNotify } = useNotificationPermission();
+  const [notificationHistory, setNotificationHistory] = useState([]);
 
-  // Check if push notifications are supported
+  // Listen for notification events
   useEffect(() => {
-    const supported =
-      'serviceWorker' in navigator &&
-      'PushManager' in window &&
-      'Notification' in window;
-    setIsSupported(supported);
+    if (!canNotify()) return;
 
-    if (supported) {
-      checkSubscriptionStatus();
-    }
-  }, []);
-
-  const checkSubscriptionStatus = async () => {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-      setIsSubscribed(!!subscription);
-    } catch (err) {
-      console.warn('Failed to check subscription:', err);
-    }
-  };
-
-  const subscribe = async () => {
-    try {
-      const permission = await Notification.requestPermission();
-
-      if (permission !== 'granted') {
-        setError('Permissão de notificação foi negada');
-        return;
+    const handleNotificationClick = (event) => {
+      event.notification.close();
+      if (event.notification.data?.url) {
+        window.location.href = event.notification.data.url;
       }
+    };
 
-      const registration = await navigator.serviceWorker.ready;
+    navigator.serviceWorker?.addEventListener('notificationclick', handleNotificationClick);
 
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: process.env.REACT_APP_VAPID_PUBLIC_KEY,
-      });
+    return () => {
+      navigator.serviceWorker?.removeEventListener('notificationclick', handleNotificationClick);
+    };
+  }, [canNotify]);
 
-      setIsSubscribed(true);
-      setShowPrompt(false);
-      setError(null);
-
-      // Send subscription to backend
-      // await base44.functions.invoke('savePushSubscription', { subscription });
-    } catch (err) {
-      console.error('Push subscription failed:', err);
-      setError('Falha ao habilitar notificações push');
+  // Track sent notifications
+  const sendNotification = React.useCallback(async (options) => {
+    const result = await notify(options);
+    if (result) {
+      setNotificationHistory(prev => [
+        ...prev,
+        { ...options, timestamp: new Date(), id: Math.random() }
+      ]);
     }
-  };
-
-  const unsubscribe = async () => {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-
-      if (subscription) {
-        await subscription.unsubscribe();
-        setIsSubscribed(false);
-        setError(null);
-      }
-    } catch (err) {
-      console.error('Unsubscribe failed:', err);
-      setError('Falha ao desabilitar notificações');
-    }
-  };
-
-  if (!isSupported) return null;
+    return result;
+  }, [notify]);
 
   return (
-    <>
-      {error && (
-        <div className="p-3 mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex gap-2">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" aria-hidden="true" />
-          <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+    <div className="space-y-4">
+      {/* Permission Request */}
+      {permission !== 'granted' && (
+        <NotificationPermissionRequest
+          onPermissionGranted={() => {
+            // Permission granted, can now send notifications
+          }}
+        />
+      )}
+
+      {/* Error Display */}
+      {notifyError && (
+        <div className="p-3 rounded bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+          Notification error: {notifyError}
         </div>
       )}
 
-      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex gap-3">
-            <Bell className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" aria-hidden="true" />
-            <div>
-              <p className="font-medium text-sm text-blue-900 dark:text-blue-300">
-                Notificações Push
-              </p>
-              <p className="text-xs text-blue-700 dark:text-blue-400 mt-1">
-                {isSubscribed
-                  ? 'Você está recebendo notificações push'
-                  : 'Habilite notificações para receber atualizações'}
-              </p>
-            </div>
-          </div>
-
-          {isSubscribed ? (
-            <div className="flex gap-2">
-              <Check className="w-5 h-5 text-green-600" aria-hidden="true" />
-              <Button
-                onClick={() => setShowPrompt(true)}
-                variant="outline"
-                size="sm"
-                className="text-xs min-h-[36px]"
+      {/* Notification History (optional) */}
+      {notificationHistory.length > 0 && (
+        <div className="p-3 rounded bg-slate-50 dark:bg-slate-900/20 space-y-2">
+          <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+            Recent Notifications
+          </p>
+          <div className="space-y-1 max-h-32 overflow-y-auto">
+            {notificationHistory.slice(-3).map(notification => (
+              <div
+                key={notification.id}
+                className="text-xs text-slate-600 dark:text-slate-400 p-2 rounded bg-white dark:bg-slate-800"
               >
-                Desabilitar
-              </Button>
-            </div>
-          ) : (
-            <Button
-              onClick={() => setShowPrompt(true)}
-              size="sm"
-              className="text-xs min-h-[36px]"
-            >
-              Habilitar
-            </Button>
-          )}
+                <div className="font-medium">{notification.title}</div>
+                <div>{notification.body}</div>
+                <div className="text-xs text-slate-500">
+                  {notification.timestamp.toLocaleTimeString()}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* Confirmation Dialog */}
-      <AlertDialog open={showPrompt} onOpenChange={setShowPrompt}>
-        <AlertDialogContent className="max-w-sm">
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {isSubscribed ? 'Desabilitar Notificações?' : 'Habilitar Notificações?'}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {isSubscribed
-                ? 'Você não receberá mais notificações push'
-                : 'Você receberá notificações importantes sobre seus contatos e atividades'}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={isSubscribed ? unsubscribe : subscribe}
-              className={isSubscribed ? 'bg-red-600 hover:bg-red-700' : ''}
-            >
-              {isSubscribed ? 'Desabilitar' : 'Habilitar'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+      )}
+    </div>
   );
+}
+
+// Export hook for external use
+export function usePushNotificationManager() {
+  const { notify } = usePushNotification();
+  const { canNotify } = useNotificationPermission();
+
+  const sendNotification = React.useCallback(async (options) => {
+    if (!canNotify()) {
+      console.warn('Notifications not enabled');
+      return false;
+    }
+    return notify(options);
+  }, [notify, canNotify]);
+
+  return { sendNotification, canNotify };
 }
