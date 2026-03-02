@@ -1,157 +1,119 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+/**
+ * Analytics Dashboard Widget
+ * Compact analytics for the main dashboard
+ */
+
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Users, TrendingUp, DollarSign, Target, BarChart2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Users, DollarSign, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from 'recharts';
+import { subDays, format, startOfMonth } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
-const StatBox = React.memo(({ icon: Icon, label, value, trend, color }) => (
-  <div className="bg-white rounded-lg shadow p-6 border-l-4" style={{ borderColor: color }}>
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-slate-600 text-sm">{label}</p>
-        <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
-        {trend && <p className="text-xs text-green-600 mt-2">↑ {trend}%</p>}
-      </div>
-      <Icon className="w-8 h-8" style={{ color }} />
-    </div>
-  </div>
-));
+export default function AnalyticsDashboard({ workspaceId }) {
+  const { data: contacts = [] } = useQuery({
+    queryKey: ['dash-analytics-contacts', workspaceId],
+    queryFn: () => base44.entities.Client.filter({ workspace_id: workspaceId }),
+    enabled: !!workspaceId,
+    staleTime: 2 * 60 * 1000,
+  });
 
-StatBox.displayName = 'StatBox';
+  const { data: opportunities = [] } = useQuery({
+    queryKey: ['dash-analytics-ops', workspaceId],
+    queryFn: () => base44.entities.SalesOpportunity.filter({ workspace_id: workspaceId }),
+    enabled: !!workspaceId,
+    staleTime: 2 * 60 * 1000,
+  });
 
-export default function AnalyticsDashboard({ tenantId }) {
-  const [invoices, setInvoices] = useState([]);
-  const [payments, setPayments] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [dateRange, setDateRange] = useState('month');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const now = new Date();
+  const monthStart = startOfMonth(now);
+  const newThisMonth = contacts.filter(c => new Date(c.created_date) >= monthStart).length;
+  const activeContacts = contacts.filter(c => c.status === 'active').length;
+  const pipelineValue = opportunities
+    .filter(o => !['won', 'lost'].includes(o.pipeline_stage))
+    .reduce((sum, o) => sum + (o.deal_value || 0), 0);
+  const wonOps = opportunities.filter(o => o.pipeline_stage === 'won');
+  const convRate = opportunities.length > 0
+    ? ((wonOps.length / opportunities.length) * 100).toFixed(1)
+    : '0.0';
 
-  const loadData = useCallback(async () => {
-    if (!tenantId) return;
-    
-    try {
-      const [invData, payData, clientData] = await Promise.all([
-        base44.entities.Invoice.filter({ tenant_id: tenantId }),
-        base44.entities.Payment.filter({ tenant_id: tenantId }),
-        base44.entities.Client.filter({ tenant_id: tenantId })
-      ]);
-      
-      setInvoices(invData);
-      setPayments(payData);
-      setClients(clientData);
-    } finally {
-      setLoading(false);
-    }
-  }, [tenantId]);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const stats = useMemo(() => {
-    const filtered = statusFilter === 'all' ? invoices : invoices.filter(i => i.status === statusFilter);
-    const totalRevenue = filtered.reduce((sum, inv) => sum + (inv.total_amount || 0), 0);
-    const totalPaid = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
-    const totalClients = clients.length;
-    const activeClients = clients.filter(c => c.status === 'active').length;
-    const pendingInvoices = filtered.filter(i => i.status === 'pending' || i.status === 'sent').length;
-    
-    return {
-      totalRevenue,
-      totalPaid,
-      pending: totalRevenue - totalPaid,
-      totalClients,
-      activeClients,
-      pendingInvoices,
-      conversionRate: totalRevenue > 0 ? ((totalPaid / totalRevenue) * 100).toFixed(1) : 0
-    };
-  }, [invoices, payments, clients, statusFilter]);
-
-  const monthlyData = useMemo(() => {
-    const data = {};
-    invoices.forEach(inv => {
-      const date = new Date(inv.issue_date);
-      const key = `${date.getMonth() + 1}/${date.getFullYear()}`;
-      if (!data[key]) data[key] = { month: key, revenue: 0, paid: 0 };
-      data[key].revenue += inv.total_amount;
-    });
-    
-    payments.forEach(pay => {
-      const date = new Date(pay.payment_date);
-      const key = `${date.getMonth() + 1}/${date.getFullYear()}`;
-      if (data[key]) data[key].paid += pay.amount;
-    });
-    
-    return Object.values(data).sort((a, b) => a.month.localeCompare(b.month)).slice(-6);
-  }, [invoices, payments]);
-
-  const statusData = useMemo(() => [
-    { name: 'Pago', value: invoices.filter(i => i.status === 'paid').length, fill: '#10b981' },
-    { name: 'Pendente', value: invoices.filter(i => i.status === 'pending').length, fill: '#f59e0b' },
-    { name: 'Enviado', value: invoices.filter(i => i.status === 'sent').length, fill: '#3b82f6' },
-    { name: 'Cancelado', value: invoices.filter(i => i.status === 'cancelled').length, fill: '#ef4444' }
-  ].filter(d => d.value > 0), [invoices]);
-
-  if (loading) return <div className="text-center py-12">Carregando análises...</div>;
+  // Mini chart data
+  const chartData = Array.from({ length: 6 }, (_, i) => {
+    const date = subDays(now, (5 - i) * 30);
+    const count = contacts.filter(c => {
+      const d = new Date(c.created_date);
+      return d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear();
+    }).length;
+    return { mes: format(date, 'MMM', { locale: ptBR }), contatos: count };
+  });
 
   return (
-    <div className="space-y-6">
-      {/* Filtros */}
-      <div className="flex gap-2">
-        <button onClick={() => setStatusFilter('all')} className={`px-4 py-2 rounded ${statusFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-slate-200'}`}>Todas</button>
-        <button onClick={() => setStatusFilter('paid')} className={`px-4 py-2 rounded ${statusFilter === 'paid' ? 'bg-green-600 text-white' : 'bg-slate-200'}`}>Pagas</button>
-        <button onClick={() => setStatusFilter('pending')} className={`px-4 py-2 rounded ${statusFilter === 'pending' ? 'bg-yellow-600 text-white' : 'bg-slate-200'}`}>Pendentes</button>
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <BarChart2 className="w-4 h-4 text-blue-600" aria-hidden="true" />
+          Analytics Resumido
+        </h3>
+        <Link
+          to={createPageUrl('ReportsAnalytics')}
+          className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
+        >
+          Ver tudo →
+        </Link>
       </div>
 
-      {/* Estatísticas Principais */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatBox icon={DollarSign} label="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`} color="#3b82f6" />
-        <StatBox icon={DollarSign} label="Valor Recebido" value={`R$ ${stats.totalPaid.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`} trend={(stats.conversionRate)} color="#10b981" />
-        <StatBox icon={Clock} label="Pendências" value={`R$ ${stats.pending.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`} color="#f59e0b" />
-        <StatBox icon={Users} label="Clientes Ativos" value={stats.activeClients} trend={(stats.activeClients > 0 ? 5 : 0)} color="#8b5cf6" />
+      {/* Mini KPIs */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="text-center p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <Users className="w-4 h-4 text-blue-600 dark:text-blue-400 mx-auto mb-1" aria-hidden="true" />
+          <p className="text-lg font-bold text-blue-900 dark:text-blue-200">{contacts.length}</p>
+          <p className="text-xs text-blue-600 dark:text-blue-400">Contatos</p>
+        </div>
+        <div className="text-center p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400 mx-auto mb-1" aria-hidden="true" />
+          <p className="text-lg font-bold text-green-900 dark:text-green-200">+{newThisMonth}</p>
+          <p className="text-xs text-green-600 dark:text-green-400">Novos/mês</p>
+        </div>
+        <div className="text-center p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+          <DollarSign className="w-4 h-4 text-orange-600 dark:text-orange-400 mx-auto mb-1" aria-hidden="true" />
+          <p className="text-lg font-bold text-orange-900 dark:text-orange-200">
+            {(pipelineValue / 1000).toFixed(0)}K
+          </p>
+          <p className="text-xs text-orange-600 dark:text-orange-400">Pipeline</p>
+        </div>
+        <div className="text-center p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+          <Target className="w-4 h-4 text-purple-600 dark:text-purple-400 mx-auto mb-1" aria-hidden="true" />
+          <p className="text-lg font-bold text-purple-900 dark:text-purple-200">{convRate}%</p>
+          <p className="text-xs text-purple-600 dark:text-purple-400">Conversão</p>
+        </div>
       </div>
 
-      {/* Gráficos */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Receita Mensal */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Receita Mensal</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip formatter={(value) => `R$ ${value.toLocaleString('pt-BR')}`} />
-                <Legend />
-                <Bar dataKey="revenue" name="Receita" fill="#3b82f6" />
-                <Bar dataKey="paid" name="Recebido" fill="#10b981" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Status de Faturas */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Status das Faturas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie data={statusData} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name}: ${value}`} outerRadius={80} dataKey="value">
-                  {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Mini chart */}
+      {contacts.length > 0 && (
+        <div className="h-24">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: -30 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
+              <XAxis dataKey="mes" tick={{ fontSize: 10 }} />
+              <YAxis tick={{ fontSize: 10 }} />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="contatos"
+                stroke="#3b82f6"
+                fill="rgba(59,130,246,0.12)"
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   );
 }
