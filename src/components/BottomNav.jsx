@@ -15,7 +15,7 @@ export default function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-[var(--color-background-primary)] border-t border-[var(--color-border-default)] z-40 select-none"
          style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 0px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
          aria-label="Navegação principal mobile">
-       <div className="flex justify-around items-center h-16">
+       <div className="flex justify-around items-center h-[var(--spacing-2xl)]">
          {navItems.map(({ icon: Icon, label, page }) => (
            <Link
              key={page}

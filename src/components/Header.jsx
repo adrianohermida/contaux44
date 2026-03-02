@@ -42,7 +42,7 @@ export default function Header() {
   return (
     <header className="bg-[var(--color-background-primary)] border-b border-[var(--color-border-default)] shadow-sm sticky top-0 z-50 transition-colors"
     style={{ paddingTop: 'max(env(safe-area-inset-top), 12px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-[var(--spacing-md)] sm:px-[var(--spacing-lg)]">
         <nav className="flex items-center justify-between py-[var(--spacing-sm)] sm:py-[var(--spacing-md)]">
           {/* Logo */}
           <Logo />
@@ -70,7 +70,7 @@ export default function Header() {
                   <span className="hidden lg:inline">{user.full_name || user.email}</span>
                 </button>
                 {dropdownOpen && (
-                   <div className="absolute right-0 mt-[var(--spacing-sm)] w-48 border rounded-lg shadow-lg z-10 bg-[var(--color-background-secondary)] border-[var(--color-border-default)]"
+                   <div className="absolute right-0 mt-[var(--spacing-sm)] w-48 rounded-lg shadow-lg z-10 bg-[var(--color-background-secondary)] border border-[var(--color-border-default)]"
                    role="menu"
                    onKeyDown={(e) => {
                      if (e.key === 'Escape') setDropdownOpen(false);
@@ -91,7 +91,7 @@ export default function Header() {
                        <User className="w-4 h-4" />
                        Meu Perfil
                      </Link>
-                     <hr className="my-2 border-[var(--color-border-default)]" />
+                     <hr className="my-[var(--spacing-sm)] border-[var(--color-border-default)]" />
                      <button
                        onClick={() => { handleLogout(); setDropdownOpen(false); }}
                        className="w-full text-left px-[var(--spacing-md)] py-[var(--spacing-sm)] text-[var(--font-size-sm)] flex items-center gap-[var(--spacing-sm)] transition-colors text-[var(--color-error)] hover:bg-[var(--color-background-tertiary)]"
@@ -117,7 +117,7 @@ export default function Header() {
             onClick={() => setMenuOpen(!menuOpen)} 
             aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={menuOpen}
-            className="md:hidden p-2 -mr-2 min-h-[44px] min-w-[44px]"
+            className="md:hidden p-[var(--spacing-sm)] -mr-[var(--spacing-sm)] min-h-[44px] min-w-[44px]"
           >
             {menuOpen ? <X size={24} className="text-[var(--color-foreground-primary)]" /> : <Menu size={24} className="text-[var(--color-foreground-primary)]" />}
           </button>
@@ -131,7 +131,7 @@ export default function Header() {
 
             {/* Mobile Menu */}
             <div className="fixed left-0 right-0 top-16 bottom-0 overflow-y-auto z-40 md:hidden transition-colors bg-[var(--color-background-primary)]">
-              <div className="px-4 py-4">
+             <div className="px-[var(--spacing-md)] py-[var(--spacing-md)]">
                 {/* Navigation Links */}
                   <ul className="space-y-[var(--spacing-xs)] mb-[var(--spacing-lg)]" role="navigation" aria-label="Menu principal mobile">
                       <li><Link to={createPageUrl('About')} className="block px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-base)] rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Sobre</Link></li>

@@ -15,7 +15,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[var(--color-background-footer)] text-white transition-colors">
-      <div className="container mx-auto px-[var(--spacing-md)] py-[var(--spacing-lg)] md:py-[var(--spacing-xl)]">
+      <div className="mx-auto px-[var(--spacing-md)] py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] max-w-7xl">
          {/* Desktop Grid - Hidden on Mobile */}
           <div className="hidden md:grid md:grid-cols-4 gap-[var(--spacing-xl)] mb-[var(--spacing-lg)] border-b pb-[var(--spacing-lg)] border-[var(--color-border-default)]">
           {/* About */}
@@ -24,7 +24,7 @@ export default function Footer() {
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/aaa0f7f85_contaux_blue.png" 
                 alt="Contaux" 
-                className="h-12 brightness-0 invert"
+                className="h-[var(--spacing-xl)] brightness-0 invert"
               />
             </div>
             <p className="text-[var(--color-foreground-muted)] text-[var(--font-size-sm)] mb-[var(--spacing-md)]">Aberto das 9 às 17h, seg. à sexta, horário de Brasília.</p>
@@ -87,7 +87,7 @@ export default function Footer() {
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/698ff672740bf3d542ac6481/aaa0f7f85_contaux_blue.png" 
                   alt="Contaux" 
-                  className="h-10 brightness-0 invert"
+                  className="h-[var(--spacing-lg)] brightness-0 invert"
                 />
               </div>
               <p className="text-[var(--color-foreground-muted)] text-[var(--font-size-xs)] mb-[var(--spacing-sm)]">Aberto das 9 às 17h, seg. à sexta.</p>
