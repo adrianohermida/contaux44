@@ -78,38 +78,38 @@ export default function AuditLogs() {
   };
 
   if (authLoading) {
-    return <div className="flex items-center justify-center h-96 text-slate-500">Carregando...</div>;
-  }
+     return <div className="flex items-center justify-center h-96 text-[var(--color-foreground-secondary)]">Carregando...</div>;
+   }
 
-  if (error && !logs.length) {
-    return (
-      <div className="space-y-6 p-6">
-        <h1 className="text-3xl font-bold">Log de Auditoria</h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
-          <p className="text-red-600 mb-4">Erro ao carregar logs</p>
-          <Button onClick={() => refetch()} className="gap-2">
-            <RefreshCw className="w-4 h-4" />
-            Tentar Novamente
-          </Button>
-        </div>
-      </div>
-    );
-  }
+   if (error && !logs.length) {
+     return (
+       <div className="space-y-[var(--spacing-lg)] p-[var(--spacing-lg)]">
+         <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Log de Auditoria</h1>
+         <div className="bg-red-50 border border-red-200 rounded-lg p-[var(--spacing-2xl)] text-center">
+           <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-[var(--spacing-md)]" />
+           <p className="text-red-600 mb-[var(--spacing-md)]">Erro ao carregar logs</p>
+           <Button onClick={() => refetch()} className="gap-[var(--spacing-sm)]">
+             <RefreshCw className="w-4 h-4" />
+             Tentar Novamente
+           </Button>
+         </div>
+       </div>
+     );
+   }
 
-  return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Log de Auditoria</h1>
-          <p className="text-slate-600 dark:text-slate-400">Registre todas as ações e alterações do sistema</p>
-        </div>
-        <div className="flex gap-2">
+   return (
+     <div className="space-y-[var(--spacing-lg)] p-[var(--spacing-lg)]">
+       <div className="flex items-center justify-between">
+         <div>
+           <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Log de Auditoria</h1>
+           <p className="text-[var(--color-foreground-secondary)]">Registre todas as ações e alterações do sistema</p>
+         </div>
+        <div className="flex gap-[var(--spacing-sm)]">
           <Button 
             onClick={() => refetch()} 
             variant="outline" 
             size="sm" 
-            className="gap-2"
+            className="gap-[var(--spacing-sm)]"
             disabled={isLoading}
           >
             <RefreshCw className="h-4 w-4" />
@@ -118,7 +118,7 @@ export default function AuditLogs() {
             onClick={downloadLogs} 
             variant="outline" 
             size="sm" 
-            className="gap-2"
+            className="gap-[var(--spacing-sm)]"
             disabled={logs.length === 0}
           >
             <Download className="h-4 w-4" />
@@ -153,21 +153,21 @@ export default function AuditLogs() {
 
       {/* Loading */}
       {isLoading && !logs.length && (
-        <div className="text-center py-12 text-slate-500">Carregando logs...</div>
+        <div className="text-center py-12 text-[var(--color-foreground-secondary)]">Carregando logs...</div>
       )}
 
       {/* Logs */}
       {filteredLogs.length === 0 ? (
         <div className="text-center py-12">
-          <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500 font-medium">Nenhum log encontrado</p>
-          <p className="text-slate-400 text-sm mt-1">Tente ajustar seus filtros de busca</p>
+          <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-[var(--spacing-md)]" />
+          <p className="text-[var(--color-foreground-secondary)] font-medium">Nenhum log encontrado</p>
+          <p className="text-[var(--color-foreground-secondary)] text-sm mt-[var(--spacing-xs)]">Tente ajustar seus filtros de busca</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-[var(--spacing-sm)]">
           {filteredLogs.map(log => (
             <Card key={log.id}>
-              <CardContent className="p-4">
+              <CardContent className="p-[var(--spacing-md)]">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-grow">
                     <div className="flex items-center gap-3 mb-2">
@@ -204,7 +204,7 @@ export default function AuditLogs() {
         <CardHeader>
           <CardTitle>Estatísticas</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-[var(--spacing-md)]">
           <div className="text-center">
             <p className="text-2xl font-bold">{stats.total}</p>
             <p className="text-xs text-slate-600">Total</p>

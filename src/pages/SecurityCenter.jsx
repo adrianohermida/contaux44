@@ -66,17 +66,17 @@ export default function SecurityCenter() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
+        <div className="text-[var(--color-foreground-secondary)]">Carregando...</div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Centro de Segurança</h1>
-          <p className="text-slate-600 mt-1">Gerenciar proteções e monitorar ameaças</p>
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Centro de Segurança</h1>
+          <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Gerenciar proteções e monitorar ameaças</p>
         </div>
         <Button onClick={() => refetchLogs()} variant="outline" size="sm" className="gap-2" disabled={logsLoading}>
           <RefreshCw className="w-4 h-4" />
@@ -84,39 +84,39 @@ export default function SecurityCenter() {
       </div>
 
       {/* Security Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-[var(--spacing-md)]">
+        <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)] border-l-4 border-blue-500">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-slate-600 text-sm">Total de Eventos</p>
-              <p className="text-3xl font-bold mt-1">{securityMetrics.totalLogs}</p>
-            </div>
-            <Activity className="w-8 h-8 text-blue-500 opacity-20" />
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-slate-600 text-sm">Últimos 7 Dias</p>
-              <p className="text-3xl font-bold mt-1">{securityMetrics.recentEvents}</p>
-            </div>
-            <TrendingUp className="w-8 h-8 text-green-500 opacity-20" />
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-amber-500">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-slate-600 text-sm">Tentativas Falhas</p>
-              <p className="text-3xl font-bold mt-1">{securityMetrics.failedAttempts}</p>
-            </div>
-            <AlertCircle className="w-8 h-8 text-amber-500 opacity-20" />
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-slate-600 text-sm">Atividades Suspeitas</p>
-              <p className="text-3xl font-bold mt-1">{securityMetrics.suspiciousActivities}</p>
+              <p className="text-[var(--color-foreground-secondary)] text-sm">Total de Eventos</p>
+              <p className="text-[var(--font-size-3xl)] font-bold mt-[var(--spacing-xs)]">{securityMetrics.totalLogs}</p>
+              </div>
+              <Activity className="w-8 h-8 text-blue-500 opacity-20" />
+              </div>
+              </div>
+              <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)] border-l-4 border-green-500">
+              <div className="flex justify-between items-start">
+              <div>
+                <p className="text-[var(--color-foreground-secondary)] text-sm">Últimos 7 Dias</p>
+                <p className="text-[var(--font-size-3xl)] font-bold mt-[var(--spacing-xs)]">{securityMetrics.recentEvents}</p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-green-500 opacity-20" />
+              </div>
+              </div>
+              <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)] border-l-4 border-amber-500">
+              <div className="flex justify-between items-start">
+              <div>
+                <p className="text-[var(--color-foreground-secondary)] text-sm">Tentativas Falhas</p>
+                <p className="text-[var(--font-size-3xl)] font-bold mt-[var(--spacing-xs)]">{securityMetrics.failedAttempts}</p>
+              </div>
+              <AlertCircle className="w-8 h-8 text-amber-500 opacity-20" />
+              </div>
+              </div>
+              <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)] border-l-4 border-red-500">
+              <div className="flex justify-between items-start">
+              <div>
+                <p className="text-[var(--color-foreground-secondary)] text-sm">Atividades Suspeitas</p>
+                <p className="text-[var(--font-size-3xl)] font-bold mt-[var(--spacing-xs)]">{securityMetrics.suspiciousActivities}</p>
             </div>
             <Shield className="w-8 h-8 text-red-500 opacity-20" />
           </div>
@@ -124,7 +124,7 @@ export default function SecurityCenter() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-4 gap-[var(--spacing-sm)]">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <Shield className="w-4 h-4" />
             <span className="hidden sm:inline">Visão Geral</span>

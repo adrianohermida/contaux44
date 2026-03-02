@@ -67,19 +67,19 @@ export default function Transactions() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
+        <div className="text-[var(--color-foreground-secondary)]">Carregando...</div>
       </div>
     );
   }
 
   if (error && !transactions.length) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-900">Transações Bancárias</h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
-          <p className="text-red-600 mb-4">Erro ao carregar transações</p>
-          <Button onClick={() => refetch()} className="gap-2">
+      <div className="space-y-[var(--spacing-lg)]">
+        <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Transações Bancárias</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-[var(--spacing-2xl)] text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-[var(--spacing-md)]" />
+          <p className="text-red-600 mb-[var(--spacing-md)]">Erro ao carregar transações</p>
+          <Button onClick={() => refetch()} className="gap-[var(--spacing-sm)]">
             <RefreshCw className="w-4 h-4" />
             Tentar Novamente
           </Button>
@@ -89,18 +89,18 @@ export default function Transactions() {
   }
 
   return (
-      <div className="space-y-6">
+      <div className="space-y-[var(--spacing-lg)]">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Transações Bancárias</h1>
-            <p className="text-slate-600 mt-1">Histórico de movimentações e reconciliação</p>
+            <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Transações Bancárias</h1>
+            <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Histórico de movimentações e reconciliação</p>
           </div>
-          <div className="flex gap-2">
-            <Button onClick={() => refetch()} variant="outline" size="sm" className="gap-2">
+          <div className="flex gap-[var(--spacing-sm)]">
+            <Button onClick={() => refetch()} variant="outline" size="sm" className="gap-[var(--spacing-sm)]">
               <RefreshCw className="w-4 h-4" />
               Atualizar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
+            <Button className="bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)] gap-[var(--spacing-sm)]">
               <Plus className="w-4 h-4" />
               Nova Transação
             </Button>
@@ -108,7 +108,7 @@ export default function Transactions() {
         </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-[var(--spacing-md)]">
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
@@ -155,7 +155,7 @@ export default function Transactions() {
               <CardTitle>Filtros</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex gap-4 flex-wrap">
+              <div className="flex gap-[var(--spacing-md)] flex-wrap">
                 <div className="flex-1 min-w-[250px]">
                   <div className="relative">
                     <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
@@ -198,47 +198,47 @@ export default function Transactions() {
 
           {/* Transações */}
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-[var(--spacing-lg)]">
               {loading ? (
-                <div className="text-center py-8 text-slate-500">Carregando transações...</div>
+                <div className="text-center py-[var(--spacing-lg)] text-[var(--color-foreground-secondary)]">Carregando transações...</div>
               ) : filteredTransactions.length === 0 ? (
                 <div className="text-center py-12">
-                  <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                  <p className="text-slate-500 font-medium">Nenhuma transação encontrada</p>
-                  <p className="text-slate-400 text-sm mt-1">Tente ajustar seus filtros de busca</p>
+                  <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-[var(--spacing-md)]" />
+                  <p className="text-[var(--color-foreground-secondary)] font-medium">Nenhuma transação encontrada</p>
+                  <p className="text-[var(--color-foreground-secondary)] text-sm mt-[var(--spacing-xs)]">Tente ajustar seus filtros de busca</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="border-b border-slate-200">
+                    <thead className="border-b border-[var(--color-border-default)]">
                       <tr>
-                        <th className="text-left p-3">Data</th>
-                        <th className="text-left p-3">Descrição</th>
-                        <th className="text-left p-3">Beneficiário</th>
-                        <th className="text-left p-3">Tipo</th>
-                        <th className="text-right p-3">Valor</th>
-                        <th className="text-left p-3">Status</th>
+                        <th className="text-left p-[var(--spacing-md)]">Data</th>
+                        <th className="text-left p-[var(--spacing-md)]">Descrição</th>
+                        <th className="text-left p-[var(--spacing-md)]">Beneficiário</th>
+                        <th className="text-left p-[var(--spacing-md)]">Tipo</th>
+                        <th className="text-right p-[var(--spacing-md)]">Valor</th>
+                        <th className="text-left p-[var(--spacing-md)]">Status</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredTransactions.map((txn) => (
-                        <tr key={txn.id} className="border-b border-slate-100 hover:bg-slate-50">
-                          <td className="p-3 text-xs text-slate-600">
+                        <tr key={txn.id} className="border-b border-[var(--color-border-default)] hover:bg-[var(--color-background-secondary)]">
+                          <td className="p-[var(--spacing-md)] text-xs text-[var(--color-foreground-secondary)]">
                             {format(new Date(txn.transaction_date), 'dd/MM/yyyy', { locale: ptBR })}
                           </td>
-                          <td className="p-3 font-medium">{txn.description}</td>
-                          <td className="p-3 text-slate-600">{txn.counterparty}</td>
-                          <td className="p-3">
+                          <td className="p-[var(--spacing-md)] font-medium">{txn.description}</td>
+                          <td className="p-[var(--spacing-md)] text-[var(--color-foreground-secondary)]">{txn.counterparty}</td>
+                          <td className="p-[var(--spacing-md)]">
                             <span className={`px-2 py-1 rounded text-xs font-medium ${
                               txn.transaction_type === 'credit' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                             }`}>
                               {txn.transaction_type === 'credit' ? 'Crédito' : 'Débito'}
                             </span>
                           </td>
-                          <td className="p-3 text-right font-medium">
+                          <td className="p-[var(--spacing-md)] text-right font-medium">
                             R$ {txn.amount.toFixed(2)}
                           </td>
-                          <td className="p-3">
+                          <td className="p-[var(--spacing-md)]">
                             <span className={`px-2 py-1 rounded text-xs font-medium ${
                               txn.status === 'reconciled' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'
                             }`}>

@@ -86,19 +86,19 @@ export default function DocumentManagement() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
+        <div className="text-[var(--color-foreground-secondary)]">Carregando...</div>
       </div>
     );
   }
 
   if (error && !templates.length) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-900">Gerenciamento de Documentos</h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
-          <p className="text-red-600 mb-4">Erro ao carregar modelos</p>
-          <Button onClick={() => refetch()} className="gap-2">
+      <div className="space-y-[var(--spacing-lg)]">
+        <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Gerenciamento de Documentos</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-[var(--spacing-2xl)] text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-[var(--spacing-md)]" />
+          <p className="text-red-600 mb-[var(--spacing-md)]">Erro ao carregar modelos</p>
+          <Button onClick={() => refetch()} className="gap-[var(--spacing-sm)]">
             <RefreshCw className="w-4 h-4" />
             Tentar Novamente
           </Button>
@@ -124,17 +124,17 @@ export default function DocumentManagement() {
           }}
         />
       )}
-      <div className="space-y-6">
+      <div className="space-y-[var(--spacing-lg)]">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Gerenciamento de Documentos</h1>
-            <p className="text-slate-600 mt-1">Crie e gerencie modelos de documentos</p>
+            <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Gerenciamento de Documentos</h1>
+            <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Crie e gerencie modelos de documentos</p>
           </div>
-          <div className="flex gap-2">
-            <Button onClick={() => refetch()} variant="outline" size="sm" className="gap-2" disabled={isLoading}>
+          <div className="flex gap-[var(--spacing-sm)]">
+            <Button onClick={() => refetch()} variant="outline" size="sm" className="gap-[var(--spacing-sm)]" disabled={isLoading}>
               <RefreshCw className="w-4 h-4" />
             </Button>
-            <Button onClick={() => setShowForm(true)} className="bg-blue-600 hover:bg-blue-700 gap-2">
+            <Button onClick={() => setShowForm(true)} className="bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)] gap-[var(--spacing-sm)]">
               <Plus className="w-4 h-4" />
               Novo Modelo
             </Button>
@@ -147,7 +147,7 @@ export default function DocumentManagement() {
             <CardTitle>Filtros</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-4">
+            <div className="flex gap-[var(--spacing-md)]">
               <Select value={filterType} onValueChange={setFilterType}>
                 <SelectTrigger className="w-[250px]">
                   <SelectValue placeholder="Tipo de Documento" />
@@ -168,21 +168,21 @@ export default function DocumentManagement() {
 
         {/* Lista de Modelos */}
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-[var(--spacing-lg)]">
             {isLoading ? (
-              <div className="text-center py-8 text-slate-500">Carregando modelos...</div>
+              <div className="text-center py-[var(--spacing-lg)] text-[var(--color-foreground-secondary)]">Carregando modelos...</div>
             ) : filteredTemplates.length === 0 ? (
               <div className="text-center py-12">
-                <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500 font-medium">Nenhum modelo encontrado</p>
-                <p className="text-slate-400 text-sm mt-1">Tente ajustar seus filtros de busca</p>
+                <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-[var(--spacing-md)]" />
+                <p className="text-[var(--color-foreground-secondary)] font-medium">Nenhum modelo encontrado</p>
+                <p className="text-[var(--color-foreground-secondary)] text-sm mt-[var(--spacing-xs)]">Tente ajustar seus filtros de busca</p>
               </div>
             ) : (
                 <div className="space-y-4">
                   {filteredTemplates.map((template) => (
                     <div key={template.id} className="p-4 border border-slate-200 rounded-lg hover:border-slate-300 transition-colors">
                       <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-3 flex-1">
+                        <div className="flex items-start gap-[var(--spacing-md)] flex-1">
                           <FileText className="w-5 h-5 text-blue-500 mt-1" />
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
@@ -193,8 +193,8 @@ export default function DocumentManagement() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm text-slate-600 mt-1">{template.description}</p>
-                            <div className="flex gap-2 mt-2">
+                            <p className="text-sm text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">{template.description}</p>
+                            <div className="flex gap-[var(--spacing-sm)] mt-[var(--spacing-sm)]">
                               <span className="text-xs px-2 py-1 bg-slate-100 text-slate-700 rounded font-medium">
                                 {template.template_type}
                               </span>
@@ -211,7 +211,7 @@ export default function DocumentManagement() {
                             )}
                           </div>
                         </div>
-                        <div className="flex gap-2 ml-4">
+                        <div className="flex gap-[var(--spacing-sm)] ml-[var(--spacing-md)]">
                            <Button 
                              variant="outline" 
                              size="sm"
