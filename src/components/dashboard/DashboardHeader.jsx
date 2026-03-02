@@ -95,26 +95,26 @@ const DashboardHeader = memo(function DashboardHeader() {
               <div className="p-4 dark:text-slate-200">
                 <h3 className="font-semibold mb-3">Notificações</h3>
                 {notificationsLoading ? (
-                  <div className="flex justify-center py-4">
-                    <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
-                  </div>
-                ) : notifications.length === 0 ? (
-                  <p className="text-sm text-slate-500 text-center py-4">Nenhuma notificação</p>
-                ) : (
-                  <div className="space-y-2 max-h-80 overflow-y-auto">
-                    {notifications.map((notif) => (
-                      <div key={notif.id} className={`p-3 rounded-lg text-sm border-l-4 ${
-                        notif.type === 'success' ? 'bg-emerald-50 border-emerald-500' :
-                        notif.type === 'error' ? 'bg-amber-50 border-amber-500' :
-                        notif.type === 'warning' ? 'bg-yellow-50 border-yellow-500' :
-                        'bg-blue-50 border-blue-500'
-                      } ${!notif.is_read ? 'font-medium' : ''}`}>
-                        <p>{notif.title}</p>
-                        <p className="text-xs text-slate-600 mt-1">{notif.message}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                   <div className="flex justify-center py-4">
+                     <Loader2 className="w-5 h-5 animate-spin text-slate-400" aria-label="Carregando notificações" />
+                   </div>
+                 ) : notifications.length === 0 ? (
+                   <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">Nenhuma notificação</p>
+                 ) : (
+                   <div className="space-y-2 max-h-80 overflow-y-auto">
+                     {notifications.map((notif) => (
+                       <div key={notif.id} className={`p-3 rounded-lg text-sm border-l-4 transition-colors ${
+                         notif.type === 'success' ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-500 dark:border-emerald-500 text-emerald-900 dark:text-emerald-200' :
+                         notif.type === 'error' ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-500 dark:border-amber-500 text-amber-900 dark:text-amber-200' :
+                         notif.type === 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-500 dark:border-yellow-500 text-yellow-900 dark:text-yellow-200' :
+                         'bg-blue-50 dark:bg-blue-900/20 border-blue-500 dark:border-blue-500 text-blue-900 dark:text-blue-200'
+                       } ${!notif.is_read ? 'font-medium' : ''}`} role="article" aria-label={notif.title}>
+                         <p>{notif.title}</p>
+                         <p className="text-xs opacity-75 mt-1">{notif.message}</p>
+                       </div>
+                     ))}
+                   </div>
+                 )}
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
