@@ -125,18 +125,18 @@ export default function PaymentForm({ payment, onSave, onCancel, tenantId, isOpe
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={onCancel} title={payment ? 'Editar Pagamento' : 'Novo Pagamento'} size="md">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-            <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required />
-            <FormField label="Fatura" type="select" name="invoice_id" value={formData.invoice_id} onChange={(v) => setFieldValue('invoice_id', v)} options={invoiceOptions} required />
-            <FormField label="Nº Pagamento" name="payment_number" value={formData.payment_number} onChange={handleChange} error={errors.payment_number} required />
-            <FormField label="Valor" type="number" step="0.01" name="amount" value={formData.amount} onChange={handleChange} error={errors.amount} required />
-            <FormField label="Data do Pagamento" type="date" name="payment_date" value={formData.payment_date} onChange={handleChange} required />
-            <FormField label="Método" type="select" name="payment_method" value={formData.payment_method} onChange={(v) => setFieldValue('payment_method', v)} options={paymentMethodOptions} />
-            <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
-            <FormField label="ID da Transação" name="transaction_id" value={formData.transaction_id} onChange={handleChange} />
+      <form onSubmit={handleSubmit} className="space-y-4 bg-white dark:bg-slate-800 rounded-lg" role="form" aria-label={payment ? 'Formulário de edição de pagamento' : 'Formulário de novo pagamento'}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required aria-label="Campo de cliente" />
+            <FormField label="Fatura" type="select" name="invoice_id" value={formData.invoice_id} onChange={(v) => setFieldValue('invoice_id', v)} options={invoiceOptions} required aria-label="Seleção de fatura" />
+            <FormField label="Nº Pagamento" name="payment_number" value={formData.payment_number} onChange={handleChange} error={errors.payment_number} required aria-label="Número do pagamento" />
+            <FormField label="Valor" type="number" step="0.01" name="amount" value={formData.amount} onChange={handleChange} error={errors.amount} required aria-label="Valor do pagamento" />
+            <FormField label="Data do Pagamento" type="date" name="payment_date" value={formData.payment_date} onChange={handleChange} required aria-label="Data do pagamento" />
+            <FormField label="Método" type="select" name="payment_method" value={formData.payment_method} onChange={(v) => setFieldValue('payment_method', v)} options={paymentMethodOptions} aria-label="Método de pagamento" />
+            <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} aria-label="Status do pagamento" />
+            <FormField label="ID da Transação" name="transaction_id" value={formData.transaction_id} onChange={handleChange} aria-label="ID da transação" />
           </div>
-        <FormField label="Notas" type="textarea" name="notes" value={formData.notes} onChange={handleChange} rows={2} />
+        <FormField label="Notas" type="textarea" name="notes" value={formData.notes} onChange={handleChange} rows={2} aria-label="Notas do pagamento" />
         <FormActions onCancel={onCancel} onSubmit={handleSubmit} loading={loading} submitLabel={payment ? 'Atualizar' : 'Criar'} isDirty={isDirty} />
       </form>
     </ModalWrapper>
