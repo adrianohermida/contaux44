@@ -17,9 +17,9 @@ export default function FormField({
   required = false,
   disabled = false,
   placeholder,
-  options, // para select
-  rows, // para textarea
-  ...props
+  options,
+  rows,
+  ...props,
 }) {
   const errorId = error ? `${name}-error` : undefined;
   // Indicador de campo obrigatório
