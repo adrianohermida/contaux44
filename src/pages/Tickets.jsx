@@ -57,20 +57,20 @@ export default function Tickets() {
         </Button>
       </div>
 
-          {showForm && (
-            <TicketForm
-              ticket={editingTicket}
-              tenantId={workspaceId}
-              onSave={handleSave}
-              onCancel={handleCancel}
-            />
-          )}
+      {showForm && (
+        <TicketForm
+          ticket={editingTicket}
+          tenantId={workspaceId}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      )}
 
-          <TicketList
-            tenantId={workspaceId}
-            onEdit={handleEdit}
-            onRefresh={refreshKey}
-          />
-          </div>
-          );
-          }
+      <TicketList
+        tenantId={workspaceId}
+        onEdit={handleEdit}
+        onRefresh={refreshKey}
+      />
+    </div>
+  );
+}
