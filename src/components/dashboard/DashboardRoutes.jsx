@@ -31,7 +31,9 @@ import {
   LazyTransactions,
   LazyCashFlowForecast,
   LazyDocumentManagement,
-  LazyRLSDebugger
+  LazyRLSDebugger,
+  LazyAdvancedReports,
+  LazyReportsOperations
 } from './LazyPages';
 
 // Public pages (não precisam de LazyPageWrapper)
@@ -242,6 +244,18 @@ export default function DashboardRoutes() {
       <Route path="/rlsdebugger" element={
         <LazyPageWrapper>
           <LazyRLSDebugger />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/reportsadvanced" element={
+        <LazyPageWrapper>
+          <LazyAdvancedReports />
+        </LazyPageWrapper>
+      } />
+      
+      <Route path="/reportsoperations" element={
+        <LazyPageWrapper>
+          <LazyReportsOperations />
         </LazyPageWrapper>
       } />
     </Routes>
