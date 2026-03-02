@@ -23,22 +23,21 @@ export default function FormField({
   ...props
 }) {
   const errorId = error ? `${name}-error` : undefined;
-  // Indicador de campo obrigatório
-  const requiredIndicator = required ? <span className="text-red-500 dark:text-red-400 ml-1" aria-label="obrigatório">*</span> : null;
+  const requiredIndicator = required ? <span className="text-[var(--color-error)] ml-1" aria-label="obrigatório">*</span> : null;
 
   // Select
   if (type === 'select' && options) {
     return (
-      <div className="flex flex-col gap-2">
-        <label htmlFor={name} className="text-sm font-medium text-slate-700 dark:text-slate-300">
+      <div className="flex flex-col gap-[var(--spacing-sm)]">
+        <label htmlFor={name} className="text-[var(--font-size-sm)] font-[var(--font-weight-medium)] text-[var(--color-foreground-secondary)]">
           {label}
           {requiredIndicator}
         </label>
         <Select value={value} onValueChange={onChange} disabled={disabled}>
-          <SelectTrigger id={name} className={`dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 ${error ? 'border-red-500 dark:border-red-500' : ''}`} aria-describedby={errorId} aria-invalid={!!error}>
+          <SelectTrigger id={name} className={`bg-[var(--color-background-primary)] border-[var(--color-border-default)] text-[var(--color-foreground-primary)] ${error ? 'border-[var(--color-error)]' : ''}`} aria-describedby={errorId} aria-invalid={!!error}>
             <SelectValue placeholder={placeholder || `Selecione ${label.toLowerCase()}`} />
           </SelectTrigger>
-          <SelectContent className="dark:bg-slate-700 dark:border-slate-600">
+          <SelectContent className="bg-[var(--color-background-primary)] border-[var(--color-border-default)]">
             {options.map(opt => (
               <SelectItem key={opt.value} value={opt.value}>
                 {opt.label}
@@ -46,7 +45,7 @@ export default function FormField({
             ))}
           </SelectContent>
         </Select>
-        {error && <span id={errorId} className="text-xs text-red-500 dark:text-red-400">{error}</span>}
+        {error && <span id={errorId} className="text-xs text-[var(--color-error)]">{error}</span>}
       </div>
     );
   }
@@ -54,8 +53,8 @@ export default function FormField({
   // Textarea
   if (type === 'textarea') {
     return (
-      <div className="flex flex-col gap-2">
-        <label htmlFor={name} className="text-sm font-medium text-slate-700 dark:text-slate-300">
+      <div className="flex flex-col gap-[var(--spacing-sm)]">
+        <label htmlFor={name} className="text-[var(--font-size-sm)] font-[var(--font-weight-medium)] text-[var(--color-foreground-secondary)]">
           {label}
           {requiredIndicator}
         </label>
@@ -67,20 +66,20 @@ export default function FormField({
           placeholder={placeholder}
           rows={rows || 3}
           disabled={disabled}
-          className={`dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 dark:placeholder-slate-500 ${error ? 'border-red-500 dark:border-red-500' : ''}`}
+          className={`bg-[var(--color-background-primary)] border-[var(--color-border-default)] text-[var(--color-foreground-primary)] placeholder:text-[var(--color-foreground-disabled)] ${error ? 'border-[var(--color-error)]' : ''}`}
           aria-describedby={errorId}
           aria-invalid={!!error}
           {...props}
         />
-        {error && <span id={errorId} className="text-xs text-red-500 dark:text-red-400">{error}</span>}
+        {error && <span id={errorId} className="text-xs text-[var(--color-error)]">{error}</span>}
       </div>
     );
   }
 
   // Input padrão
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="text-sm font-medium text-slate-700 dark:text-slate-300">
+    <div className="flex flex-col gap-[var(--spacing-sm)]">
+      <label htmlFor={name} className="text-[var(--font-size-sm)] font-[var(--font-weight-medium)] text-[var(--color-foreground-secondary)]">
         {label}
         {requiredIndicator}
       </label>
@@ -92,12 +91,12 @@ export default function FormField({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        className={`dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 dark:placeholder-slate-500 ${error ? 'border-red-500 dark:border-red-500' : ''}`}
+        className={`bg-[var(--color-background-primary)] border-[var(--color-border-default)] text-[var(--color-foreground-primary)] placeholder:text-[var(--color-foreground-disabled)] ${error ? 'border-[var(--color-error)]' : ''}`}
         aria-describedby={errorId}
         aria-invalid={!!error}
         {...props}
       />
-      {error && <span id={errorId} className="text-xs text-red-500 dark:text-red-400">{error}</span>}
+      {error && <span id={errorId} className="text-xs text-[var(--color-error)]">{error}</span>}
     </div>
   );
 }

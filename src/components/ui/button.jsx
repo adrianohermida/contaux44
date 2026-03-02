@@ -10,15 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary dark:bg-slate-700 text-primary-foreground dark:text-slate-100 shadow hover:bg-primary/90 dark:hover:bg-slate-600",
+          "bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)] active:bg-[var(--color-interactive-active)] text-white shadow transition-colors",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "bg-[var(--color-error)] text-white shadow-sm hover:opacity-90",
         outline:
-          "border border-input dark:border-slate-600 bg-background dark:bg-slate-800 dark:text-slate-100 shadow-sm hover:bg-accent dark:hover:bg-slate-700 hover:text-accent-foreground dark:hover:text-slate-200",
+          "border border-[var(--color-border-default)] bg-[var(--color-background-primary)] text-[var(--color-foreground-primary)] shadow-sm hover:bg-[var(--color-background-secondary)] hover:border-[var(--color-border-focus)]",
         secondary:
-          "bg-secondary dark:bg-slate-700 text-secondary-foreground dark:text-slate-100 shadow-sm hover:bg-secondary/80 dark:hover:bg-slate-600",
-        ghost: "hover:bg-accent dark:hover:bg-slate-700 hover:text-accent-foreground dark:hover:text-slate-200",
-        link: "text-primary dark:text-blue-400 underline-offset-4 hover:underline",
+          "bg-[var(--color-background-secondary)] text-[var(--color-foreground-primary)] shadow-sm hover:bg-[var(--color-background-tertiary)]",
+        ghost: "hover:bg-[var(--color-background-secondary)] text-[var(--color-foreground-primary)]",
+        link: "text-[var(--color-interactive-default)] underline-offset-4 hover:text-[var(--color-interactive-hover)]",
       },
       size: {
         default: "h-9 px-4 py-2",
