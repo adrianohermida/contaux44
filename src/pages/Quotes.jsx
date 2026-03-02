@@ -13,8 +13,11 @@ export default function Quotes() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
+      <div className="flex items-center justify-center h-96 bg-white dark:bg-slate-900">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-slate-500 dark:text-slate-400">Carregando...</p>
+        </div>
       </div>
     );
   }
@@ -31,35 +34,37 @@ export default function Quotes() {
   };
 
   return (
-    <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">Orçamentos</h1>
-              <p className="text-slate-600 mt-1">Gerenciar orçamentos e propostas</p>
-            </div>
-            <Button 
-              onClick={() => { setEditingQuote(null); setShowForm(true); }}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Novo Orçamento
-            </Button>
-          </div>
+    <div className="space-y-6 bg-white dark:bg-slate-900 pb-20 transition-colors">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Orçamentos</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1">Gerenciar orçamentos e propostas</p>
+        </div>
+        <Button 
+          onClick={() => { setEditingQuote(null); setShowForm(true); }}
+          className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 gap-2"
+          aria-label="Criar novo orçamento"
+        >
+          <Plus className="w-5 h-5" aria-hidden="true" />
+          <span className="hidden sm:inline">Novo Orçamento</span>
+          <span className="sm:hidden">Novo</span>
+        </Button>
+      </div>
 
-          {showForm && (
-            <QuoteForm
-              quote={editingQuote}
-              tenantId={workspaceId}
-              onSave={handleSave}
-              onCancel={() => { setShowForm(false); setEditingQuote(null); }}
-            />
-          )}
+      {showForm && (
+        <QuoteForm
+          quote={editingQuote}
+          tenantId={workspaceId}
+          onSave={handleSave}
+          onCancel={() => { setShowForm(false); setEditingQuote(null); }}
+        />
+      )}
 
-          <QuoteList
-            tenantId={workspaceId}
-            onEdit={handleEdit}
-            onRefresh={refreshKey}
-          />
-          </div>
-          );
-          }
+      <QuoteList
+        tenantId={workspaceId}
+        onEdit={handleEdit}
+        onRefresh={refreshKey}
+      />
+    </div>
+  );
+}
