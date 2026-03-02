@@ -20,7 +20,7 @@ const DropdownMenuSubTrigger = React.forwardRef(({ className, inset, children, .
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default gap-[var(--spacing-sm)] select-none items-center rounded-sm px-[var(--spacing-sm)] py-[var(--spacing-xs)] text-sm outline-none focus:bg-[var(--color-background-secondary)] data-[state=open]:bg-[var(--color-background-secondary)] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+      "flex cursor-default gap-[var(--spacing-sm)] select-none items-center rounded-sm px-[var(--spacing-sm)] py-[var(--spacing-xs)] text-[var(--font-size-sm)] outline-none focus:bg-[var(--color-background-secondary)] data-[state=open]:bg-[var(--color-background-secondary)] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
       inset && "pl-[var(--spacing-lg)]",
       className
     )}
@@ -63,7 +63,7 @@ const DropdownMenuItem = React.forwardRef(({ className, inset, ...props }, ref) 
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center gap-[var(--spacing-sm)] rounded-sm px-[var(--spacing-sm)] py-[var(--spacing-xs)] text-sm outline-none transition-colors focus:bg-[var(--color-background-secondary)] focus:text-[var(--color-foreground-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0",
+      "relative flex cursor-default select-none items-center gap-[var(--spacing-sm)] rounded-sm px-[var(--spacing-sm)] py-[var(--spacing-xs)] text-[var(--font-size-sm)] outline-none transition-colors focus:bg-[var(--color-background-secondary)] focus:text-[var(--color-foreground-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0",
       inset && "pl-[var(--spacing-lg)]",
       className
     )}
@@ -75,7 +75,7 @@ const DropdownMenuCheckboxItem = React.forwardRef(({ className, children, checke
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-[var(--spacing-xs)] pl-[var(--spacing-lg)] pr-[var(--spacing-sm)] text-sm outline-none transition-colors focus:bg-[var(--color-background-secondary)] focus:text-[var(--color-foreground-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm py-[var(--spacing-xs)] pl-[var(--spacing-lg)] pr-[var(--spacing-sm)] text-[var(--font-size-sm)] outline-none transition-colors focus:bg-[var(--color-background-secondary)] focus:text-[var(--color-foreground-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     checked={checked}
@@ -95,7 +95,7 @@ const DropdownMenuRadioItem = React.forwardRef(({ className, children, ...props 
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-[var(--spacing-xs)] pl-[var(--spacing-lg)] pr-[var(--spacing-sm)] text-sm outline-none transition-colors focus:bg-[var(--color-background-secondary)] focus:text-[var(--color-foreground-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm py-[var(--spacing-xs)] pl-[var(--spacing-lg)] pr-[var(--spacing-sm)] text-[var(--font-size-sm)] outline-none transition-colors focus:bg-[var(--color-background-secondary)] focus:text-[var(--color-foreground-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}>
@@ -112,7 +112,7 @@ DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName
 const DropdownMenuLabel = React.forwardRef(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
     ref={ref}
-    className={cn("px-[var(--spacing-sm)] py-[var(--spacing-xs)] text-sm font-semibold", inset && "pl-[var(--spacing-lg)]", className)}
+    className={cn("px-[var(--spacing-sm)] py-[var(--spacing-xs)] text-[var(--font-size-sm)] font-semibold", inset && "pl-[var(--spacing-lg)]", className)}
     {...props} />
 ))
 DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName
@@ -131,7 +131,7 @@ const DropdownMenuShortcut = ({
 }) => {
   return (
     (<span
-      className={cn("ml-auto text-xs tracking-widest opacity-60", className)}
+      className={cn("ml-auto text-[var(--font-size-xs)] tracking-widest opacity-60", className)}
       {...props} />)
   );
 }
