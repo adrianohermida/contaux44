@@ -117,6 +117,7 @@ export default function ModalWrapper({
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('keydown', handleTab);
+      document.removeEventListener('keydown', handleEnter);
       if (showBackdrop) {
         modalRef.current?.parentElement?.removeEventListener('click', handleBackdropClick);
       }
