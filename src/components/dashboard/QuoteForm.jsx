@@ -118,35 +118,35 @@ export default function QuoteForm({ quote, onSave, onCancel, tenantId, isOpen = 
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={onCancel} title={quote ? 'Editar Orçamento' : 'Novo Orçamento'} size="lg">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-3 gap-4">
-          <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required />
-          <FormField label="Nº Orçamento" name="quote_number" value={formData.quote_number} onChange={handleChange} error={errors.quote_number} required />
-          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
-          <FormField label="Data Emissão" type="date" name="issue_date" value={formData.issue_date} onChange={handleChange} required />
-          <FormField label="Data Validade" type="date" name="expiry_date" value={formData.expiry_date} onChange={handleChange} error={errors.expiry_date} required />
-          <FormField label="Moeda" type="select" name="currency" value={formData.currency} onChange={(v) => setFieldValue('currency', v)} options={[{ value: 'BRL', label: 'BRL' }, { value: 'USD', label: 'USD' }, { value: 'EUR', label: 'EUR' }]} />
+      <form onSubmit={handleSubmit} className="space-y-4 bg-white dark:bg-slate-800 rounded-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required aria-label="Campo de cliente" />
+          <FormField label="Nº Orçamento" name="quote_number" value={formData.quote_number} onChange={handleChange} error={errors.quote_number} required aria-label="Número do orçamento" />
+          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} aria-label="Status do orçamento" />
+          <FormField label="Data Emissão" type="date" name="issue_date" value={formData.issue_date} onChange={handleChange} required aria-label="Data de emissão do orçamento" />
+          <FormField label="Data Validade" type="date" name="expiry_date" value={formData.expiry_date} onChange={handleChange} error={errors.expiry_date} required aria-label="Data de validade do orçamento" />
+          <FormField label="Moeda" type="select" name="currency" value={formData.currency} onChange={(v) => setFieldValue('currency', v)} options={[{ value: 'BRL', label: 'BRL' }, { value: 'USD', label: 'USD' }, { value: 'EUR', label: 'EUR' }]} aria-label="Moeda do orçamento" />
         </div>
 
-        <div className="border rounded-lg p-4 space-y-2">
-          <h3 className="font-semibold">Itens do Orçamento</h3>
+        <div className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-2 bg-slate-50 dark:bg-slate-700/30">
+          <h3 className="font-semibold text-slate-900 dark:text-slate-100">Itens do Orçamento</h3>
           {formData.items.map((item, idx) => (
-            <div key={idx} className="grid grid-cols-5 gap-2">
-              <Input placeholder="Descrição" value={item.description} onChange={(e) => handleItemChange(idx, 'description', e.target.value)} />
-              <Input placeholder="Qtd" type="number" value={item.quantity} onChange={(e) => handleItemChange(idx, 'quantity', e.target.value)} />
-              <Input placeholder="Preço" type="number" step="0.01" value={item.unit_price} onChange={(e) => handleItemChange(idx, 'unit_price', e.target.value)} />
-              <Input placeholder="Imposto %" type="number" step="0.01" value={item.tax_rate} onChange={(e) => handleItemChange(idx, 'tax_rate', e.target.value)} />
-              <Button variant="ghost" size="icon" onClick={() => setFieldValue('items', formData.items.filter((_, i) => i !== idx))}>
-                <Trash2 className="w-4 h-4 text-red-500" />
+            <div key={idx} className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+              <Input placeholder="Descrição" value={item.description} onChange={(e) => handleItemChange(idx, 'description', e.target.value)} aria-label={`Descrição do item ${idx + 1}`} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200" />
+              <Input placeholder="Qtd" type="number" value={item.quantity} onChange={(e) => handleItemChange(idx, 'quantity', e.target.value)} aria-label={`Quantidade do item ${idx + 1}`} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200" />
+              <Input placeholder="Preço" type="number" step="0.01" value={item.unit_price} onChange={(e) => handleItemChange(idx, 'unit_price', e.target.value)} aria-label={`Preço unitário do item ${idx + 1}`} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200" />
+              <Input placeholder="Imposto %" type="number" step="0.01" value={item.tax_rate} onChange={(e) => handleItemChange(idx, 'tax_rate', e.target.value)} aria-label={`Taxa de imposto do item ${idx + 1}`} className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200" />
+              <Button variant="ghost" size="icon" onClick={() => setFieldValue('items', formData.items.filter((_, i) => i !== idx))} aria-label={`Remover item ${idx + 1}`} className="dark:hover:bg-slate-600">
+                <Trash2 className="w-4 h-4 text-red-500 dark:text-red-400" aria-hidden="true" />
               </Button>
             </div>
           ))}
-          <Button type="button" variant="outline" onClick={() => setFieldValue('items', [...formData.items, { description: '', quantity: 1, unit_price: 0, tax_rate: 0 }])} className="mt-2">
-            <Plus className="w-4 h-4 mr-2" /> Adicionar Item
+          <Button type="button" variant="outline" onClick={() => setFieldValue('items', [...formData.items, { description: '', quantity: 1, unit_price: 0, tax_rate: 0 }])} className="mt-2 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" aria-label="Adicionar novo item ao orçamento">
+            <Plus className="w-4 h-4 mr-2" aria-hidden="true" /> Adicionar Item
           </Button>
         </div>
 
-        <FormField label="Termos e Condições" type="textarea" name="notes" value={formData.notes} onChange={handleChange} rows={2} />
+        <FormField label="Termos e Condições" type="textarea" name="notes" value={formData.notes} onChange={handleChange} rows={2} aria-label="Termos e condições do orçamento" />
         <FormActions onCancel={onCancel} onSubmit={handleSubmit} loading={loading} submitLabel={quote ? 'Atualizar' : 'Criar'} isDirty={isDirty} />
       </form>
     </ModalWrapper>
