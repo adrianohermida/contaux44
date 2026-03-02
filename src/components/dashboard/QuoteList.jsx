@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { base44 } from '@/api/base44Client';
+import { useSortAndFilter } from '../../hooks/useSortAndFilter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -36,21 +37,11 @@ const STATUS_COLORS = {
 
 export default function QuoteList({ tenantId, onEdit, onRefresh }) {
   const queryClient = useQueryClient();
-  const [filters, setFilters] = React.useState({
-    search: '',
-    status: 'all',
-  });
 
   // Fetch quotes
   const { data: quotes = [], isLoading, error } = useQuery({
-    queryKey: ['quotes', tenantId, filters],
-    queryFn: () => {
-      const query = { tenant_id: tenantId };
-      if (filters.status !== 'all') {
-        query.status = filters.status;
-      }
-      return base44.entities.Quote.filter(query, '-quote_date', 100);
-    },
+    queryKey: ['quotes', tenantId],
+    queryFn: () => base44.entities.Quote.filter({ workspace_id: tenantId }, '-created_date', 100),
     enabled: !!tenantId,
     staleTime: 60000,
   });
@@ -58,9 +49,22 @@ export default function QuoteList({ tenantId, onEdit, onRefresh }) {
   // Fetch clients for name mapping
   const { data: clients = [] } = useQuery({
     queryKey: ['clients', tenantId],
-    queryFn: () => base44.entities.Client.filter({ tenant_id: tenantId }, null, 200),
+    queryFn: () => base44.entities.Client.filter({ workspace_id: tenantId }, null, 200),
     enabled: !!tenantId,
   });
+
+  // Use unified sort/filter hook
+  const { 
+    data: filteredQuotes, 
+    searchText, 
+    setFilter: setStatusFilter,
+    configureSearch
+  } = useSortAndFilter(quotes, 'created_date', 'desc');
+
+  // Configure search on mount
+  React.useEffect(() => {
+    configureSearch('', ['quote_number']);
+  }, []);
 
   // Delete mutation
   const deleteMutation = useMutation({
@@ -70,18 +74,6 @@ export default function QuoteList({ tenantId, onEdit, onRefresh }) {
       onRefresh?.();
     },
   });
-
-  // Filter quotes by search
-  const filteredQuotes = useMemo(() => {
-    return quotes.filter(quote => {
-      const client = clients.find(c => c.id === quote.client_id);
-      const searchLower = filters.search.toLowerCase();
-      return (
-        quote.quote_number?.toLowerCase().includes(searchLower) ||
-        client?.company_name?.toLowerCase().includes(searchLower)
-      );
-    });
-  }, [quotes, clients, filters.search]);
 
   // Virtual scrolling
   const parentRef = React.useRef(null);
@@ -118,14 +110,14 @@ export default function QuoteList({ tenantId, onEdit, onRefresh }) {
       {/* Filters */}
       <div className="flex gap-4 flex-wrap">
         <Input
-          placeholder="Buscar por nº ou cliente..."
-          value={filters.search}
-          onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+          placeholder="Buscar por nº..."
+          value={searchText}
+          onChange={(e) => configureSearch(e.target.value, ['quote_number'])}
           className="flex-1 min-w-48 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
         />
-        <Select value={filters.status} onValueChange={(value) => setFilters({ ...filters, status: value })}>
+        <Select onValueChange={(value) => setStatusFilter('status', value === 'all' ? undefined : value)}>
           <SelectTrigger className="w-40 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
-            <SelectValue />
+            <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent className="dark:bg-slate-800 dark:border-slate-700">
             <SelectItem value="all">Todos Status</SelectItem>
