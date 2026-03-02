@@ -1,5 +1,5 @@
 import React from 'react';
-import ContactImportCSV from '../ContactImportCSV';
+import ContactImportCSVDialog from './ContactImportCSVDialog';
 import ContactTagManager from '../ContactTagManager';
 import ContactTagStatistics from '../ContactTagStatistics';
 import ContactModal from './ContactModal';
@@ -20,9 +20,10 @@ export default function ContactModals({
         onClose={onCloseImport}
         title="Importar Contatos"
       >
-        <ContactImportCSV 
-          workspaceId={workspaceId}
+        <ContactImportCSVDialog 
+          open={showImport}
           onClose={onCloseImport}
+          workspaceId={workspaceId}
         />
       </ContactModal>
 

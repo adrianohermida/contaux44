@@ -2,7 +2,7 @@ import React from 'react';
 import { Save, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import ContactFormField from '../ContactFormField';
+import FormField from '../../modals/FormField';
 import ContactDeleteButton from '../ContactDeleteButton';
 import ContactMetadata from '../ContactMetadata';
 import ContactCEPLookup from '../ContactCEPLookup';
@@ -40,15 +40,16 @@ export default function ContactEditForm({
           <fieldset className="space-y-4 border-0">
             <legend className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-4">Informações Básicas</legend>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <ContactFormField
+            <FormField
               label="Nome da Empresa"
               name="company_name"
+              type="text"
               value={formData.company_name}
               onChange={onInputChange}
               disabled={!isEditing}
               error={errors.company_name}
             />
-            <ContactFormField
+            <FormField
               label="Email"
               name="email"
               type="email"
@@ -57,14 +58,14 @@ export default function ContactEditForm({
               disabled={!isEditing}
               error={errors.email}
             />
-            <ContactFormField
+            <FormField
               label="Telefone"
               name="phone"
+              type="text"
               value={formData.phone}
               onChange={onInputChange}
               disabled={!isEditing}
               error={errors.phone}
-              formatFn={formatPhone}
             />
             <div>
               <label htmlFor="client_type" className="block text-sm font-medium mb-2 text-slate-900 dark:text-slate-100">
@@ -91,24 +92,24 @@ export default function ContactEditForm({
             <legend className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-4">Documentação</legend>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {formData.client_type === 'pf' ? (
-              <ContactFormField
+              <FormField
                 label="CPF"
                 name="cpf"
+                type="text"
                 value={formData.cpf}
                 onChange={onInputChange}
                 disabled={!isEditing}
                 error={errors.cpf}
-                formatFn={formatCPF}
               />
             ) : (
-              <ContactFormField
+              <FormField
                 label="CNPJ"
                 name="cnpj"
+                type="text"
                 value={formData.cnpj}
                 onChange={onInputChange}
                 disabled={!isEditing}
                 error={errors.cnpj}
-                formatFn={formatCNPJ}
               />
             )}
             <div>
@@ -143,14 +144,14 @@ export default function ContactEditForm({
             <legend className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-4">Endereço</legend>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <ContactFormField
+                <FormField
                   label="CEP"
                   name="cep"
+                  type="text"
                   value={formData.cep}
                   onChange={onInputChange}
                   disabled={!isEditing}
                   error={errors.cep}
-                  formatFn={formatCEP}
                 />
                 {isEditing && formData.cep && (
                   <div className="mt-2">
@@ -166,47 +167,53 @@ export default function ContactEditForm({
                   </div>
                 )}
               </div>
-              <ContactFormField
+              <FormField
                 label="Rua"
                 name="endereco"
+                type="text"
                 value={formData.endereco}
                 onChange={onInputChange}
                 disabled={!isEditing}
                 placeholder="Preenchido automaticamente ao buscar CEP"
               />
-              <ContactFormField
+              <FormField
                 label="Número"
                 name="numero"
+                type="text"
                 value={formData.numero}
                 onChange={onInputChange}
                 disabled={!isEditing}
               />
-              <ContactFormField
+              <FormField
                 label="Complemento"
                 name="complemento"
+                type="text"
                 value={formData.complemento}
                 onChange={onInputChange}
                 disabled={!isEditing}
               />
-              <ContactFormField
+              <FormField
                 label="Bairro"
                 name="bairro"
+                type="text"
                 value={formData.bairro}
                 onChange={onInputChange}
                 disabled={!isEditing}
                 placeholder="Preenchido automaticamente ao buscar CEP"
               />
-              <ContactFormField
+              <FormField
                 label="Cidade"
                 name="cidade"
+                type="text"
                 value={formData.cidade}
                 onChange={onInputChange}
                 disabled={!isEditing}
                 placeholder="Preenchido automaticamente ao buscar CEP"
               />
-              <ContactFormField
+              <FormField
                 label="UF"
                 name="uf"
+                type="text"
                 value={formData.uf}
                 onChange={onInputChange}
                 disabled={!isEditing}
