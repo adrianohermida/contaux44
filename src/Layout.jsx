@@ -23,7 +23,8 @@ const DASHBOARD_PAGES = [
   'AccountingCalendar', 'Automations', 'Reports', 'Communication', 
   'ClientPortal', 'SettingsPage', 'AuditLogs', 
   'DocumentManagement', 'SecurityCenter', 
-  'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger'
+  'CashFlowForecast', 'Transactions', 'BlogManager', 'RLSDebugger',
+  'ReportsAnalytics', 'ReportsAdvanced', 'ReportsOperations'
 ];
 
 // Security/Admin pages
