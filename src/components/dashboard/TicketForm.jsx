@@ -101,18 +101,18 @@ export default function TicketForm({ ticket, onSave, onCancel, tenantId, isOpen 
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={onCancel} title={ticket ? 'Editar Ticket' : 'Novo Ticket'} size="md">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required />
-          <FormField label="Nº Ticket" name="ticket_number" value={formData.ticket_number} onChange={handleChange} error={errors.ticket_number} required />
-          <FormField label="Título" name="title" value={formData.title} onChange={handleChange} error={errors.title} required />
-          <FormField label="Categoria" type="select" name="category" value={formData.category} onChange={(v) => setFieldValue('category', v)} options={categoryOptions} required />
-          <FormField label="Prioridade" type="select" name="priority" value={formData.priority} onChange={(v) => setFieldValue('priority', v)} options={priorityOptions} />
-          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} />
-          <FormField label="Atribuir a" name="assigned_to" value={formData.assigned_to} onChange={handleChange} />
-          <FormField label="Data de Vencimento" type="date" name="due_date" value={formData.due_date} onChange={handleChange} />
-          <div className="col-span-2">
-            <FormField label="Descrição" type="textarea" name="description" value={formData.description} onChange={handleChange} placeholder="Descreva o problema/solicitação" required rows={4} />
+      <form onSubmit={handleSubmit} className="space-y-4 bg-white dark:bg-slate-800 rounded-lg" role="form" aria-label={ticket ? 'Formulário de edição de ticket' : 'Formulário de novo ticket'}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormField label="Cliente" name="client_id" value={formData.client_id} onChange={handleChange} placeholder="ID ou nome do cliente" required aria-label="Campo de cliente" />
+          <FormField label="Nº Ticket" name="ticket_number" value={formData.ticket_number} onChange={handleChange} error={errors.ticket_number} required aria-label="Número do ticket" />
+          <FormField label="Título" name="title" value={formData.title} onChange={handleChange} error={errors.title} required aria-label="Título do ticket" />
+          <FormField label="Categoria" type="select" name="category" value={formData.category} onChange={(v) => setFieldValue('category', v)} options={categoryOptions} required aria-label="Categoria do ticket" />
+          <FormField label="Prioridade" type="select" name="priority" value={formData.priority} onChange={(v) => setFieldValue('priority', v)} options={priorityOptions} aria-label="Prioridade do ticket" />
+          <FormField label="Status" type="select" name="status" value={formData.status} onChange={(v) => setFieldValue('status', v)} options={statusOptions} aria-label="Status do ticket" />
+          <FormField label="Atribuir a" name="assigned_to" value={formData.assigned_to} onChange={handleChange} aria-label="Atribuir ticket a usuário" />
+          <FormField label="Data de Vencimento" type="date" name="due_date" value={formData.due_date} onChange={handleChange} aria-label="Data de vencimento do ticket" />
+          <div className="col-span-1 sm:col-span-2">
+            <FormField label="Descrição" type="textarea" name="description" value={formData.description} onChange={handleChange} placeholder="Descreva o problema/solicitação" required rows={4} aria-label="Descrição do ticket" />
           </div>
         </div>
         <FormActions onCancel={onCancel} onSubmit={handleSubmit} loading={loading} submitLabel={ticket ? 'Atualizar' : 'Criar'} isDirty={isDirty} />
