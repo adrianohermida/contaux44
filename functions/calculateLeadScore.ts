@@ -1,14 +1,10 @@
+/**
+ * Calculate Lead Score
+ * Calculates comprehensive lead score based on multiple factors
+ */
+
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-/**
- * Calculate lead score (0-100) based on multiple factors
- * Scoring breakdown:
- * - 20% Profile Completeness
- * - 15% Activity Level
- * - 15% Engagement
- * - 20% Deal Value
- * - 30% Recency
- */
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -18,91 +14,142 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { workspace_id, opportunity_id } = await req.json();
+    const { opportunity_id, workspace_id } = await req.json();
 
-    if (!workspace_id || !opportunity_id) {
-      return Response.json(
-        { error: 'workspace_id and opportunity_id required' },
-        { status: 400 }
-      );
+    if (!opportunity_id || !workspace_id) {
+      return Response.json({ error: 'Missing opportunity_id or workspace_id' }, { status: 400 });
     }
 
     // Fetch opportunity
-    const opp = await base44.entities.SalesOpportunity.list();
-    const opportunity = opp?.find(o => o.id === opportunity_id && o.workspace_id === workspace_id);
+    const opportunities = await base44.entities.SalesOpportunity.filter({
+      id: opportunity_id,
+      workspace_id: workspace_id,
+    });
 
-    if (!opportunity) {
+    if (!opportunities.length) {
       return Response.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
-    // Fetch contact
-    const contacts = await base44.entities.Client.list();
-    const contact = contacts?.find(c => c.id === opportunity.contact_id);
+    const opportunity = opportunities[0];
 
-    if (!contact) {
-      return Response.json({ error: 'Contact not found' }, { status: 404 });
+    // Calculate lead score
+    let score = 0;
+    const breakdown = {
+      deal_value_score: 0,
+      activity_score: 0,
+      pipeline_score: 0,
+      probability_score: 0,
+      engagement_score: 0,
+    };
+
+    // 1. Deal Value Score (0-20 points)
+    if (opportunity.deal_value > 0) {
+      // Scale: 10k = 20 points, 50k = 20 points max
+      breakdown.deal_value_score = Math.min(20, (opportunity.deal_value / 10000) * 20);
+      score += breakdown.deal_value_score;
     }
 
-    // 1. Profile Completeness (20%)
-    const requiredFields = ['company_name', 'email', 'phone', 'cep'];
-    const completedFields = requiredFields.filter(f => contact[f] && contact[f].toString().trim()).length;
-    const completenessScore = (completedFields / requiredFields.length) * 100;
+    // 2. Pipeline Stage Score (0-30 points)
+    const stageScores = {
+      prospect: 5,
+      qualified: 15,
+      proposal: 20,
+      negotiation: 25,
+      won: 30,
+      lost: 0,
+    };
+    breakdown.pipeline_score = stageScores[opportunity.pipeline_stage] || 0;
+    score += breakdown.pipeline_score;
 
-    // 2. Activity Level (15%) - based on last activity recency
-    const lastActivity = opportunity.last_activity_date;
-    let activityScore = 0;
-    if (lastActivity) {
-      const daysAgo = Math.floor((Date.now() - new Date(lastActivity).getTime()) / (1000 * 60 * 60 * 24));
-      if (daysAgo <= 7) activityScore = 100;
-      else if (daysAgo <= 14) activityScore = 80;
-      else if (daysAgo <= 30) activityScore = 60;
-      else if (daysAgo <= 60) activityScore = 40;
-      else activityScore = 20;
+    // 3. Conversion Probability Score (0-20 points)
+    breakdown.probability_score = (opportunity.conversion_probability || 0) / 5; // 100% = 20 points
+    score += breakdown.probability_score;
+
+    // 4. Activity Recency Score (0-20 points)
+    if (opportunity.last_activity_date) {
+      const daysSinceActivity = Math.floor(
+        (new Date() - new Date(opportunity.last_activity_date)) / (1000 * 60 * 60 * 24)
+      );
+
+      if (daysSinceActivity <= 7) {
+        breakdown.activity_score = 20; // Very recent
+      } else if (daysSinceActivity <= 30) {
+        breakdown.activity_score = 15; // Recent
+      } else if (daysSinceActivity <= 60) {
+        breakdown.activity_score = 10; // Somewhat recent
+      } else if (daysSinceActivity <= 90) {
+        breakdown.activity_score = 5; // Old
+      } else {
+        breakdown.activity_score = 0; // Very old
+      }
+    }
+    score += breakdown.activity_score;
+
+    // 5. Expected Close Date Score (0-10 points)
+    if (opportunity.expected_close_date) {
+      const daysToClose = Math.floor(
+        (new Date(opportunity.expected_close_date) - new Date()) / (1000 * 60 * 60 * 24)
+      );
+
+      if (daysToClose <= 30) {
+        breakdown.engagement_score = 10; // Very soon
+      } else if (daysToClose <= 60) {
+        breakdown.engagement_score = 8; // Soon
+      } else if (daysToClose <= 90) {
+        breakdown.engagement_score = 6; // Medium term
+      } else if (daysToClose <= 180) {
+        breakdown.engagement_score = 3; // Long term
+      } else {
+        breakdown.engagement_score = 1; // Very long term
+      }
+    }
+    score += breakdown.engagement_score;
+
+    // Cap score at 100
+    const finalScore = Math.min(100, Math.round(score));
+
+    // Determine category
+    let category;
+    if (finalScore >= 70) {
+      category = 'hot'; // Ready to close
+    } else if (finalScore >= 30) {
+      category = 'warm'; // Actively engaged
     } else {
-      activityScore = 10;
+      category = 'cold'; // Needs nurturing
     }
 
-    // 3. Engagement (15%) - based on activities and notes
-    const activities = await base44.entities.ContactActivity.filter({ contact_id: opportunity.contact_id });
-    const notes = await base44.entities.ContactNote.filter({ contact_id: opportunity.contact_id });
-    const engagementScore = Math.min(100, ((activities?.length || 0) + (notes?.length || 0)) * 5);
+    // Round breakdown scores
+    Object.keys(breakdown).forEach(key => {
+      breakdown[key] = Math.round(breakdown[key] * 10) / 10;
+    });
 
-    // 4. Deal Value (20%) - normalized
-    const dealValueNormalized = Math.min(100, (opportunity.deal_value / 100000) * 100);
-
-    // 5. Recency (30%) - days since creation
-    const createdDate = opportunity.created_date || new Date().toISOString();
-    const daysOld = Math.floor((Date.now() - new Date(createdDate).getTime()) / (1000 * 60 * 60 * 24));
-    let recencyScore = 100;
-    if (daysOld > 30) recencyScore = Math.max(20, 100 - (daysOld * 2));
-
-    // Calculate weighted score
-    const score = Math.round(
-      (completenessScore * 0.20) +
-      (activityScore * 0.15) +
-      (engagementScore * 0.15) +
-      (dealValueNormalized * 0.20) +
-      (recencyScore * 0.30)
-    );
-
-    // Update opportunity with score
+    // Update opportunity with new score
     await base44.entities.SalesOpportunity.update(opportunity_id, {
-      lead_score: Math.min(100, Math.max(0, score))
+      lead_score: finalScore,
     });
 
     return Response.json({
-      opportunity_id,
-      score: Math.min(100, Math.max(0, score)),
-      factors: {
-        completeness: Math.round(completenessScore),
-        activity: Math.round(activityScore),
-        engagement: Math.round(engagementScore),
-        deal_value: Math.round(dealValueNormalized),
-        recency: Math.round(recencyScore)
-      }
+      success: true,
+      opportunity_id: opportunity_id,
+      lead_score: finalScore,
+      category: category,
+      score_breakdown: breakdown,
+      summary: {
+        total_available_points: 100,
+        points_earned: finalScore,
+        category_description:
+          category === 'hot'
+            ? 'Oportunidade quente - pronta para ser fechada'
+            : category === 'warm'
+            ? 'Oportunidade morna - requer engajamento'
+            : 'Oportunidade fria - necessita de nutricao',
+      },
     });
   } catch (error) {
-    console.error('Lead score calculation error:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('calculateLeadScore error:', error);
+    return Response.json(
+      { error: error.message || 'Failed to calculate lead score' },
+      { status: 500 }
+    );
   }
 });
