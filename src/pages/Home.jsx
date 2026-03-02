@@ -6,7 +6,7 @@ import FloatingChatWidget from '../components/chat/FloatingChatWidget';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Hero Section */}
       <section id="home" className="bg-gradient-to-br from-blue-50 to-slate-50 py-12 sm:py-20">
         <div className="container mx-auto px-4">

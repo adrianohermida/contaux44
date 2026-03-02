@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { FileText, Download, AlertCircle, RefreshCw } from 'lucide-react';
+import { FileText, Download, AlertCircle, RefreshCw, User, Globe } from 'lucide-react';
 
 export default function AuditLogs() {
   const { workspaceId, loading: authLoading } = useMultitenantAuthOptimized('internal');
