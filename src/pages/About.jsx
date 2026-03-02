@@ -22,13 +22,13 @@ export default function About() {
   const [activeTab, setActiveTab] = useState('missao');
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--color-background-primary)]">
       {/* Breadcrumbs */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">Sobre Contaux</h1>
-          <p className="text-blue-100 mb-6">Escritório especializado em contabilidade judicial, custas processuais e cálculos especializados para advocacia.</p>
-          <div className="flex gap-2 text-sm">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-[var(--font-size-3xl)] md:text-[var(--font-size-4xl)] font-bold mb-[var(--spacing-md)]">Sobre Contaux</h1>
+          <p className="text-blue-100 mb-[var(--spacing-md)]">Escritório especializado em contabilidade judicial, custas processuais e cálculos especializados para advocacia.</p>
+          <div className="flex gap-2 text-[var(--font-size-sm)]">
             <Link to={createPageUrl('Home')} className="hover:underline">Início</Link>
             <span>/</span>
             <span>Sobre Nós</span>
@@ -37,27 +37,27 @@ export default function About() {
       </section>
 
       {/* About Section */}
-       <section className="py-12 md:py-20">
-         <div className="max-w-6xl mx-auto px-4">
-           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+       <section className="py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--spacing-md)] md:gap-[var(--spacing-xl)] items-center">
              {/* Left Content */}
              <div>
-               <div className="mb-8">
-                 <span className="text-blue-600 font-semibold text-sm md:text-base">Quem somos</span>
-                 <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Especialistas em Contabilidade Judicial</h2>
-                 <p className="text-gray-600 text-sm md:text-base">Contaux é um escritório de contabilidade especializado em contabilidade judicial, cálculos de custas processuais, pareceres técnicos e recolhimentos para escritórios de advocacia e empresas.</p>
+               <div className="mb-[var(--spacing-lg)]">
+                 <span className="text-blue-600 font-semibold text-[var(--font-size-sm)]">Quem somos</span>
+                 <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)] mb-[var(--spacing-md)]">Especialistas em Contabilidade Judicial</h2>
+                 <p className="text-gray-600 text-[var(--font-size-sm)] md:text-[var(--font-size-base)]">Contaux é um escritório de contabilidade especializado em contabilidade judicial, cálculos de custas processuais, pareceres técnicos e recolhimentos para escritórios de advocacia e empresas.</p>
                </div>
 
               {/* Tabs */}
-                  <div className="border-b border-gray-200 mb-6 overflow-x-auto">
-                      <div className="flex gap-4 md:gap-8">
+                  <div className="border-b border-gray-200 mb-[var(--spacing-md)] overflow-x-auto">
+                      <div className="flex gap-[var(--spacing-md)] md:gap-[var(--spacing-lg)]">
                         {['missao', 'visao', 'valores'].map(tab => {
                           const labels = { missao: 'Missão', visao: 'Visão', valores: 'Valores' };
                           return (
                             <button
                               key={tab}
                               onClick={() => setActiveTab(tab)}
-                              className={`py-4 font-semibold capitalize whitespace-nowrap text-sm md:text-base ${
+                              className={`py-[var(--spacing-md)] font-semibold capitalize whitespace-nowrap text-[var(--font-size-sm)] md:text-[var(--font-size-base)] ${
                                 activeTab === tab ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'
                               }`}
                             >
@@ -69,12 +69,12 @@ export default function About() {
                     </div>
 
               {/* Tab Content */}
-              <div className="space-y-4">
+              <div className="space-y-[var(--spacing-md)]">
                 {activeTab === 'missao' && (
                   <>
                     <p className="text-gray-600">Fornecer serviços especializados de contabilidade judicial, custas processuais e pareceres técnicos de excelência para escritórios de advocacia e empresas, otimizando custos e garantindo conformidade legal em todos os processos judiciais.</p>
-                    <ul className="space-y-3">
-                      <li className="flex gap-3 items-start">
+                    <ul className="space-y-[var(--spacing-md)]">
+                      <li className="flex gap-[var(--spacing-md)] items-start">
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-600">Calcular custas e honorários judiciais com precisão</span>
                       </li>
@@ -133,20 +133,20 @@ export default function About() {
       </section>
 
       {/* Services Section */}
-      <section className="bg-gray-50 py-12 md:py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-8 md:mb-12">
-            <span className="text-blue-600 font-semibold text-sm md:text-base">Serviços Principais</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2 mb-4">Especialidades Contaux</h2>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">Somos especializados em contabilidade judicial com soluções integradas para escritórios de advocacia e empresas.</p>
+      <section className="bg-gray-50 py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-[var(--spacing-lg)] md:mb-[var(--spacing-xl)]">
+            <span className="text-blue-600 font-semibold text-[var(--font-size-sm)]">Serviços Principais</span>
+            <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)] mb-[var(--spacing-md)]">Especialidades Contaux</h2>
+            <p className="text-gray-600 text-[var(--font-size-sm)] md:text-[var(--font-size-base)] max-w-2xl mx-auto">Somos especializados em contabilidade judicial com soluções integradas para escritórios de advocacia e empresas.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--spacing-md)] md:gap-[var(--spacing-lg)]">
             {services.map((service, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-lg text-center hover:shadow-lg transition-shadow">
-                <div className="text-4xl mb-4">{service.icon}</div>
-                <h3 className="font-bold text-lg mb-3">{service.title}</h3>
-                <p className="text-gray-600 text-sm">{service.desc}</p>
+              <div key={idx} className="bg-white p-[var(--spacing-component-padding)] rounded-lg text-center hover:shadow-lg transition-shadow">
+                <div className="text-[var(--font-size-4xl)] mb-[var(--spacing-md)]">{service.icon}</div>
+                <h3 className="font-bold text-[var(--font-size-lg)] mb-[var(--spacing-sm)]">{service.title}</h3>
+                <p className="text-gray-600 text-[var(--font-size-sm)]">{service.desc}</p>
               </div>
             ))}
           </div>
@@ -154,21 +154,21 @@ export default function About() {
       </section>
 
       {/* Team Section */}
-      <section className="py-12 md:py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-8 md:mb-12">
-            <span className="text-blue-600 font-semibold text-sm md:text-base">Conheça Nossa Equipe</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-2">Profissionais Experientes</h2>
+      <section className="py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-[var(--spacing-lg)] md:mb-[var(--spacing-xl)]">
+            <span className="text-blue-600 font-semibold text-[var(--font-size-sm)]">Conheça Nossa Equipe</span>
+            <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)]">Profissionais Experientes</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--spacing-md)] md:gap-[var(--spacing-lg)]">
             {teamMembers.map((member, idx) => (
-              <div key={idx} className="bg-gray-50 p-6 rounded-lg text-center hover:shadow-lg transition-shadow">
-                <div className="w-16 h-16 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+              <div key={idx} className="bg-gray-50 p-[var(--spacing-md)] rounded-lg text-center hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 bg-blue-600 rounded-full mx-auto mb-[var(--spacing-md)] flex items-center justify-center text-white text-[var(--font-size-2xl)] font-bold">
                   {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                <h3 className="font-bold text-lg mb-1">{member.name}</h3>
-                <p className="text-gray-600 text-sm">{member.role}</p>
+                <h3 className="font-bold text-[var(--font-size-lg)] mb-[var(--spacing-xs)]">{member.name}</h3>
+                <p className="text-gray-600 text-[var(--font-size-sm)]">{member.role}</p>
               </div>
             ))}
           </div>
@@ -179,13 +179,13 @@ export default function About() {
       <VirtualCounterWidget />
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-4xl font-bold mb-4">Pronto para Melhorar Seus Processos Judiciais?</h2>
-          <p className="text-blue-100 mb-8 text-sm md:text-base">Trabalhe com especialistas em contabilidade judicial e otimize seus custos processuais.</p>
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mb-[var(--spacing-md)]">Pronto para Melhorar Seus Processos Judiciais?</h2>
+          <p className="text-blue-100 mb-[var(--spacing-lg)] text-[var(--font-size-sm)] md:text-[var(--font-size-base)]">Trabalhe com especialistas em contabilidade judicial e otimize seus custos processuais.</p>
           <Link 
             to={createPageUrl('Contact')}
-            className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+            className="inline-block bg-white text-blue-600 px-[var(--spacing-lg)] py-[var(--spacing-sm)] rounded-lg font-semibold hover:bg-blue-50 transition-colors"
           >
             Fale Conosco
           </Link>
