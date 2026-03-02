@@ -42,10 +42,10 @@ export default function QuoteList({ onEdit, onRefresh }) {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-        <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-        <p className="text-red-600 mb-4">Erro ao carregar orçamentos</p>
-        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center transition-colors">
+        <AlertCircle className="w-8 h-8 text-red-400 dark:text-red-500 mx-auto mb-2" aria-hidden="true" />
+        <p className="text-red-600 dark:text-red-300 mb-4">Erro ao carregar orçamentos</p>
+        <button onClick={() => refetch()} className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 underline" aria-label="Tentar novamente">
           Tentar novamente
         </button>
       </div>
@@ -53,59 +53,59 @@ export default function QuoteList({ onEdit, onRefresh }) {
   }
 
   if (isLoading) {
-    return <div className="text-center py-8 text-slate-500">Carregando orçamentos...</div>;
+    return <div className="text-center py-8 text-slate-500 dark:text-slate-400" role="status" aria-live="polite">Carregando orçamentos...</div>;
   }
 
   const statusColors = {
-    draft: 'bg-slate-100 text-slate-800',
-    sent: 'bg-blue-100 text-blue-800',
-    accepted: 'bg-green-100 text-green-800',
-    rejected: 'bg-red-100 text-red-800'
+    draft: 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200',
+    sent: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300',
+    accepted: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+    rejected: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
   };
 
   if (quotes.length === 0) {
     return (
-      <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 text-center">
-        <AlertCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-        <p className="text-slate-600">Nenhum orçamento cadastrado</p>
+      <div className="bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700 rounded-lg p-6 text-center transition-colors">
+        <AlertCircle className="w-8 h-8 text-slate-400 dark:text-slate-500 mx-auto mb-2" aria-hidden="true" />
+        <p className="text-slate-600 dark:text-slate-400">Nenhum orçamento cadastrado</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <div className="px-6 py-4 border-b border-slate-200">
-        <h2 className="font-semibold text-slate-900">Orçamentos ({quotes.length})</h2>
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
+      <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
+        <h2 className="font-semibold text-slate-900 dark:text-slate-100">Orçamentos ({quotes.length})</h2>
       </div>
-      <table className="w-full">
-        <thead className="bg-slate-50 border-b">
+      <table className="w-full" role="table" aria-label="Lista de orçamentos">
+        <thead className="bg-slate-50 dark:bg-slate-700/30 border-b border-slate-200 dark:border-slate-700">
           <tr>
-            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Número</th>
-            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Data Validade</th>
-            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Valor</th>
-            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900">Status</th>
-            <th className="px-6 py-3 text-right text-sm font-medium text-slate-900">Ações</th>
+            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900 dark:text-slate-100">Número</th>
+            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900 dark:text-slate-100">Data Validade</th>
+            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900 dark:text-slate-100">Valor</th>
+            <th className="px-6 py-3 text-left text-sm font-medium text-slate-900 dark:text-slate-100">Status</th>
+            <th className="px-6 py-3 text-right text-sm font-medium text-slate-900 dark:text-slate-100">Ações</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
           {quotes.map((quote) => (
-            <tr key={quote.id} className="border-b hover:bg-slate-50">
-              <td className="px-6 py-4 text-sm font-medium text-slate-900">{quote.quote_number}</td>
-              <td className="px-6 py-4 text-sm text-slate-600">{new Date(quote.expiry_date).toLocaleDateString('pt-BR')}</td>
-              <td className="px-6 py-4 text-sm font-medium text-slate-900">
+            <tr key={quote.id} className="border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+              <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-100">{quote.quote_number}</td>
+              <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{new Date(quote.expiry_date).toLocaleDateString('pt-BR')}</td>
+              <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-100">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(quote.total_amount || 0)}
               </td>
               <td className="px-6 py-4 text-sm">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[quote.status] || 'bg-gray-100'}`}>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[quote.status] || 'bg-gray-100 dark:bg-gray-700'}`}>
                   {quote.status}
                 </span>
               </td>
               <td className="px-6 py-4 text-right space-x-2 flex justify-end">
-                <button onClick={() => onEdit(quote)} className="p-1 hover:bg-slate-200 rounded">
-                  <Edit2 className="w-4 h-4 text-blue-600" />
+                <button onClick={() => onEdit(quote)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" aria-label={`Editar orçamento ${quote.quote_number}`}>
+                  <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                 </button>
-                <button onClick={() => handleDelete(quote.id)} className="p-1 hover:bg-slate-200 rounded">
-                  <Trash2 className="w-4 h-4 text-red-600" />
+                <button onClick={() => handleDelete(quote.id)} className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors" aria-label={`Deletar orçamento ${quote.quote_number}`}>
+                  <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" aria-hidden="true" />
                 </button>
               </td>
             </tr>
