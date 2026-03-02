@@ -6,23 +6,23 @@ import { Edit2, Trash2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 const EntryRow = React.memo(({ entry, onEdit, onDelete }) => (
-  <tr className="hover:bg-slate-50">
-    <td className="px-6 py-4 text-sm">{new Date(entry.entry_date).toLocaleDateString('pt-BR')}</td>
-    <td className="px-6 py-4 text-sm font-medium">{entry.reference_number || '-'}</td>
-    <td className="px-6 py-4 text-sm">{entry.description}</td>
-    <td className="px-6 py-4 text-sm text-center">{entry.line_items?.length || 0}</td>
+  <tr className="border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+    <td className="px-6 py-4 text-sm text-slate-900 dark:text-slate-100">{new Date(entry.entry_date).toLocaleDateString('pt-BR')}</td>
+    <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-100">{entry.reference_number || '-'}</td>
+    <td className="px-6 py-4 text-sm text-slate-900 dark:text-slate-100">{entry.description}</td>
+    <td className="px-6 py-4 text-sm text-center text-slate-900 dark:text-slate-100">{entry.line_items?.length || 0}</td>
     <td className="px-6 py-4 text-sm">
-      <span className={`px-2 py-1 rounded text-xs font-medium ${entry.is_posted ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+      <span className={`px-2 py-1 rounded text-xs font-medium ${entry.is_posted ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'}`}>
         {entry.is_posted ? 'Lançada' : 'Rascunho'}
       </span>
     </td>
     <td className="px-6 py-4 text-right">
       <div className="flex justify-end gap-2">
-        <Button variant="ghost" size="sm" onClick={() => onEdit(entry)}>
-          <Edit2 className="w-4 h-4" />
+        <Button variant="ghost" size="sm" onClick={() => onEdit(entry)} className="dark:hover:bg-slate-600" aria-label={`Editar lançamento ${entry.reference_number || entry.id}`}>
+          <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
         </Button>
-        <Button variant="ghost" size="sm" onClick={() => onDelete(entry.id, entry.reference_number || entry.id)}>
-          <Trash2 className="w-4 h-4 text-red-500" />
+        <Button variant="ghost" size="sm" onClick={() => onDelete(entry.id, entry.reference_number || entry.id)} className="dark:hover:bg-slate-600" aria-label={`Deletar lançamento ${entry.reference_number || entry.id}`}>
+          <Trash2 className="w-4 h-4 text-red-500 dark:text-red-400" aria-hidden="true" />
         </Button>
       </div>
     </td>
