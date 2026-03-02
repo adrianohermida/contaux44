@@ -71,28 +71,28 @@ export default function RLSDebugger() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-[var(--spacing-lg)]">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-[var(--spacing-2xl)]">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">RLS Debugger</h1>
-            <p className="text-slate-600">Validar e testar Row Level Security</p>
+            <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)] mb-[var(--spacing-sm)]">RLS Debugger</h1>
+            <p className="text-[var(--color-foreground-secondary)]">Validar e testar Row Level Security</p>
           </div>
           {(results || error) && (
-            <Button onClick={clearResults} variant="outline" size="sm" className="gap-2">
+            <Button onClick={clearResults} variant="outline" size="sm" className="gap-[var(--spacing-sm)]">
               <RefreshCw className="w-4 h-4" />
               Limpar
             </Button>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--spacing-md)] mb-[var(--spacing-2xl)]">
           <Button
             onClick={validateRLS}
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)]"
           >
-            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            {loading ? <Loader2 className="w-4 h-4 mr-[var(--spacing-sm)] animate-spin" /> : null}
             Validar RLS Status
           </Button>
           <Button
@@ -100,7 +100,7 @@ export default function RLSDebugger() {
             disabled={loading}
             className="bg-amber-600 hover:bg-amber-700"
           >
-            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            {loading ? <Loader2 className="w-4 h-4 mr-[var(--spacing-sm)] animate-spin" /> : null}
             Testar Isolamento
           </Button>
           <Button
@@ -108,14 +108,14 @@ export default function RLSDebugger() {
             disabled={loading}
             className="bg-slate-600 hover:bg-slate-700"
           >
-            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            {loading ? <Loader2 className="w-4 h-4 mr-[var(--spacing-sm)] animate-spin" /> : null}
             Ver SQL Example
           </Button>
         </div>
 
         {error && (
-          <Card className="p-4 mb-6 bg-red-50 border-red-300">
-            <div className="flex gap-3 items-start">
+          <Card className="p-[var(--spacing-md)] mb-[var(--spacing-lg)] bg-red-50 border-red-300">
+            <div className="flex gap-[var(--spacing-md)] items-start">
               <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
               <div>
                 <h3 className="font-semibold text-red-900">Erro</h3>
@@ -126,8 +126,8 @@ export default function RLSDebugger() {
         )}
 
         {results && (
-          <Card className="p-6">
-            <div className="mb-4 flex items-center gap-2">
+          <Card className="p-[var(--spacing-lg)]">
+            <div className="mb-[var(--spacing-md)] flex items-center gap-[var(--spacing-sm)]">
               {results.summary?.overall_status?.includes('✅') ? (
                 <CheckCircle2 className="w-6 h-6 text-green-600" />
               ) : (
@@ -138,7 +138,7 @@ export default function RLSDebugger() {
               </h2>
             </div>
 
-            <pre className="bg-slate-100 p-4 rounded-lg overflow-x-auto text-sm">
+            <pre className="bg-slate-100 p-[var(--spacing-md)] rounded-lg overflow-x-auto text-sm">
               {JSON.stringify(results, null, 2)}
             </pre>
           </Card>

@@ -136,19 +136,19 @@ export default function ReportsAnalytics() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-[var(--spacing-md)] sm:p-[var(--spacing-lg)] space-y-[var(--spacing-lg)] max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-[var(--spacing-md)]">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <BarChart2 className="w-6 h-6 text-blue-600" aria-hidden="true" />
+          <h1 className="text-[var(--font-size-2xl)] font-bold text-[var(--color-foreground-primary)] flex items-center gap-[var(--spacing-sm)]">
+            <BarChart2 className="w-6 h-6 text-[var(--color-interactive-default)]" aria-hidden="true" />
             Analytics
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">
             Visão completa do seu CRM
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-[var(--spacing-sm)]">
           <ExportEngine
             data={contacts}
             filename="contatos-analytics"
@@ -160,7 +160,7 @@ export default function ReportsAnalytics() {
 
       {/* KPI Cards */}
       {(isEnabled('kpi_contacts') || isEnabled('kpi_revenue') || isEnabled('kpi_pipeline') || isEnabled('kpi_conversion')) && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-[var(--spacing-md)]">
           {isEnabled('kpi_contacts') && (
             <KPIWidget
               title="Total de Contatos"
@@ -205,12 +205,12 @@ export default function ReportsAnalytics() {
       )}
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--spacing-lg)]">
         {/* Growth Chart */}
         {isEnabled('contact_growth') && (
-          <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-blue-600" aria-hidden="true" />
+          <div className="p-[var(--spacing-md)] bg-[var(--color-background-primary)] rounded-xl border border-[var(--color-border-default)]">
+            <h3 className="font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-md)] flex items-center gap-[var(--spacing-sm)]">
+              <TrendingUp className="w-4 h-4 text-[var(--color-interactive-default)]" aria-hidden="true" />
               Crescimento de Contatos (6 meses)
             </h3>
             <ResponsiveContainer width="100%" height={200}>
@@ -233,8 +233,8 @@ export default function ReportsAnalytics() {
 
         {/* Pipeline by Stage */}
         {isEnabled('sales_pipeline') && (
-          <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+          <div className="p-[var(--spacing-md)] bg-[var(--color-background-primary)] rounded-xl border border-[var(--color-border-default)]">
+            <h3 className="font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-md)] flex items-center gap-[var(--spacing-sm)]">
               <Activity className="w-4 h-4 text-green-600" aria-hidden="true" />
               Pipeline por Estágio
             </h3>
@@ -258,8 +258,8 @@ export default function ReportsAnalytics() {
 
         {/* Tag Distribution */}
         {isEnabled('tag_distribution') && analytics.tagDistribution.length > 0 && (
-          <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
+          <div className="p-[var(--spacing-md)] bg-[var(--color-background-primary)] rounded-xl border border-[var(--color-border-default)]">
+            <h3 className="font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-md)]">
               Distribuição de Tags
             </h3>
             <ResponsiveContainer width="100%" height={200}>
@@ -286,11 +286,11 @@ export default function ReportsAnalytics() {
 
         {/* Status Breakdown */}
         {isEnabled('kpi_contacts') && analytics.statusBreakdown.length > 0 && (
-          <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
+          <div className="p-[var(--spacing-md)] bg-[var(--color-background-primary)] rounded-xl border border-[var(--color-border-default)]">
+            <h3 className="font-semibold text-[var(--color-foreground-primary)] mb-[var(--spacing-md)]">
               Status de Contatos
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-[var(--spacing-md)]">
               {analytics.statusBreakdown.map((item, i) => {
                 const pct = analytics.totalContacts > 0
                   ? (item.count / analytics.totalContacts) * 100

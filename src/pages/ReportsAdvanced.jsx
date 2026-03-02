@@ -38,19 +38,19 @@ export default function ReportsAdvanced() {
   if (authLoading || advancedLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
+        <div className="text-[var(--color-foreground-secondary)]">Carregando...</div>
       </div>
     );
   }
 
   if (advancedError && !advancedData) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-900">Relatórios - Avançado</h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
-          <p className="text-red-600 mb-4">Erro ao carregar relatórios avançados</p>
-          <Button onClick={() => refetch()} className="gap-2">
+      <div className="space-y-[var(--spacing-lg)]">
+        <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Relatórios - Avançado</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-[var(--spacing-2xl)] text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-[var(--spacing-md)]" />
+          <p className="text-red-600 mb-[var(--spacing-md)]">Erro ao carregar relatórios avançados</p>
+          <Button onClick={() => refetch()} className="gap-[var(--spacing-sm)]">
             <RefreshCw className="w-4 h-4" />
             Tentar Novamente
           </Button>
@@ -60,32 +60,32 @@ export default function ReportsAdvanced() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Relatórios - Avançado</h1>
-        <p className="text-slate-600 mt-1">IA, automação e análises customizadas</p>
+        <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Relatórios - Avançado</h1>
+        <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">IA, automação e análises customizadas</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-3 gap-[var(--spacing-sm)]">
           <TabsTrigger value="ai-builder">IA Report Builder</TabsTrigger>
           <TabsTrigger value="scheduled">Agendados</TabsTrigger>
           <TabsTrigger value="custom">Customizados</TabsTrigger>
         </TabsList>
 
         {/* AI Report Builder */}
-        <TabsContent value="ai-builder" className="mt-6">
+        <TabsContent value="ai-builder" className="mt-[var(--spacing-lg)]">
           {workspaceId && <AIReportBuilder workspaceId={workspaceId} />}
         </TabsContent>
 
         {/* Scheduled Reports */}
-        <TabsContent value="scheduled" className="mt-6">
+        <TabsContent value="scheduled" className="mt-[var(--spacing-lg)]">
           {workspaceId && <ScheduledReportsManager workspaceId={workspaceId} />}
         </TabsContent>
 
         {/* Custom Reports */}
-        <TabsContent value="custom" className="mt-6">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
+        <TabsContent value="custom" className="mt-[var(--spacing-lg)]">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-[var(--spacing-2xl)] text-center">
             <p className="text-blue-600">Seção de relatórios customizados em desenvolvimento</p>
           </div>
         </TabsContent>
