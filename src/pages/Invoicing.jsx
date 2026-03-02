@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import InvoiceForm from '../components/dashboard/InvoiceForm';
 import InvoiceList from '../components/dashboard/InvoiceList';
 import { Button } from '@/components/ui/button';

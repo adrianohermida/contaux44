@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Plus, Download } from 'lucide-react';
-import ProtectedInternalRoute from '../components/auth/ProtectedInternalRoute';
 import PaymentForm from '../components/dashboard/PaymentForm';
 import PaymentList from '../components/dashboard/PaymentList';
 import { Button } from '@/components/ui/button';
