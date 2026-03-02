@@ -1,191 +1,335 @@
-import React, { useState, useMemo } from 'react';
+/**
+ * Reports Analytics Page
+ * Advanced analytics dashboard with AI insights and KPI tracking
+ */
+
+import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import {
+  Users, TrendingUp, DollarSign, Target, Activity,
+  BarChart2, RefreshCw, Download
+} from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useGlobalAuth } from '@/components/auth/useGlobalAuth';
-import { toast } from 'sonner';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import RevenueChart from '@/components/dashboard/RevenueChart';
-import PaymentStatusChart from '@/components/dashboard/PaymentStatusChart';
-import TicketAnalyticsChart from '@/components/dashboard/TicketAnalyticsChart';
-import ComparisonCard from '@/components/dashboard/ComparisonCard';
-import PredictiveAnalyticsDashboard from '@/components/dashboard/analytics/PredictiveAnalyticsDashboard';
-import CustomerInsightsDashboard from '@/components/dashboard/analytics/CustomerInsightsDashboard';
-import RevenueForecaster from '@/components/dashboard/analytics/RevenueForecaster';
-import ExportReportButton from '@/components/dashboard/ExportReportButton';
-import { TrendingUp, CheckCircle, AlertCircle, Clock, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import {
+  AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+} from 'recharts';
+import KPIWidget from '@/components/analytics/KPIWidget';
+import PredictiveReport from '@/components/analytics/PredictiveReport';
+import DashboardCustomizer, { useDashboardConfig } from '@/components/analytics/DashboardCustomizer';
+import ExportEngine from '@/components/analytics/ExportEngine';
+import { format, subDays, startOfMonth } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
-/**
- * REPORTS - ANALYTICS MODULE
- * Core analytics & insights
- */
+const CHART_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+
 export default function ReportsAnalytics() {
-  const { workspaceId, loading: authLoading } = useGlobalAuth('internal');
-  const [activeTab, setActiveTab] = useState('overview');
+  const { user, workspaceId } = useGlobalAuth();
+  const { isEnabled } = useDashboardConfig();
 
-  const { data: analyticsData, isLoading: analyticsLoading, refetch: refetchAnalytics, error: analyticsError } = useQuery({
-    queryKey: ['reports-analytics', workspaceId],
-    queryFn: async () => {
-      if (!workspaceId) return null;
-      try {
-        const [invoices, tickets, clients] = await Promise.all([
-          base44.entities.Invoice.filter({ tenant_id: workspaceId }),
-          base44.entities.Ticket.filter({ tenant_id: workspaceId }),
-          base44.entities.Client.filter({ tenant_id: workspaceId })
-        ]);
-
-        const today = new Date();
-        const totalInvoiced = invoices.reduce((sum, i) => sum + (i.total_amount || 0), 0);
-        const totalPaid = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + (i.total_amount || 0), 0);
-        const overdue = invoices.filter(i => new Date(i.due_date) < today && i.status !== 'paid').reduce((sum, i) => sum + (i.total_amount || 0), 0);
-
-        return {
-          invoices,
-          tickets,
-          clients,
-          metrics: {
-            totalInvoiced,
-            totalPaid,
-            overdue,
-            paymentRate: totalInvoiced > 0 ? Math.round((totalPaid / totalInvoiced) * 100) : 0
-          }
-        };
-      } catch (err) {
-        toast.error('Erro ao carregar analytics');
-        throw err;
-      }
-    },
-    enabled: !!workspaceId && !authLoading,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-    retry: 2
+  // Fetch contacts
+  const { data: contacts = [], isLoading: loadingContacts } = useQuery({
+    queryKey: ['analytics-contacts', workspaceId],
+    queryFn: () => base44.entities.Client.filter({ workspace_id: workspaceId }),
+    enabled: !!workspaceId,
+    staleTime: 60 * 1000,
   });
 
-  if (authLoading || analyticsLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
-      </div>
-    );
-  }
+  // Fetch opportunities
+  const { data: opportunities = [], isLoading: loadingOps } = useQuery({
+    queryKey: ['analytics-opportunities', workspaceId],
+    queryFn: () => base44.entities.SalesOpportunity.filter({ workspace_id: workspaceId }),
+    enabled: !!workspaceId,
+    staleTime: 60 * 1000,
+  });
 
-  if (analyticsError && !analyticsData) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-900">Relatórios - Analytics</h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
-          <p className="text-red-600 mb-4">Erro ao carregar dados de análise</p>
-          <Button onClick={() => refetchAnalytics()} className="gap-2">
-            <RefreshCw className="w-4 h-4" />
-            Tentar Novamente
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // Fetch tags
+  const { data: tags = [] } = useQuery({
+    queryKey: ['analytics-tags', workspaceId],
+    queryFn: () => base44.entities.ContactTag.filter({ workspace_id: workspaceId }),
+    enabled: !!workspaceId,
+    staleTime: 60 * 1000,
+  });
+
+  // Compute analytics
+  const analytics = useMemo(() => {
+    const now = new Date();
+    const startOfThisMonth = startOfMonth(now);
+    const thirtyDaysAgo = subDays(now, 30);
+    const sixtyDaysAgo = subDays(now, 60);
+
+    const activeContacts = contacts.filter(c => c.status === 'active').length;
+    const newThisMonth = contacts.filter(c => new Date(c.created_date) >= startOfThisMonth).length;
+    const newPrev = contacts.filter(c => {
+      const d = new Date(c.created_date);
+      return d >= sixtyDaysAgo && d < thirtyDaysAgo;
+    }).length;
+    const growthRate = newPrev > 0 ? ((newThisMonth - newPrev) / newPrev) * 100 : 0;
+
+    const openOps = opportunities.filter(o => !['won', 'lost'].includes(o.pipeline_stage));
+    const wonOps = opportunities.filter(o => o.pipeline_stage === 'won');
+    const pipelineValue = openOps.reduce((sum, o) => sum + (o.deal_value || 0), 0);
+    const wonValue = wonOps.reduce((sum, o) => sum + (o.deal_value || 0), 0);
+    const conversionRate = opportunities.length > 0
+      ? (wonOps.length / opportunities.length) * 100
+      : 0;
+
+    // Monthly contact growth (last 6 months)
+    const months = Array.from({ length: 6 }, (_, i) => {
+      const date = subDays(now, (5 - i) * 30);
+      const label = format(date, 'MMM', { locale: ptBR });
+      const count = contacts.filter(c => {
+        const d = new Date(c.created_date);
+        return d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear();
+      }).length;
+      return { month: label, contatos: count };
+    });
+
+    // Pipeline by stage
+    const stages = ['prospect', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
+    const pipelineByStage = stages.map(stage => ({
+      stage,
+      count: opportunities.filter(o => o.pipeline_stage === stage).length,
+      value: opportunities
+        .filter(o => o.pipeline_stage === stage)
+        .reduce((sum, o) => sum + (o.deal_value || 0), 0),
+    })).filter(s => s.count > 0);
+
+    // Tag distribution
+    const tagDistribution = tags
+      .filter(t => t.contact_count > 0)
+      .sort((a, b) => b.contact_count - a.contact_count)
+      .slice(0, 6)
+      .map(t => ({ name: t.name, value: t.contact_count }));
+
+    // Status breakdown
+    const statusBreakdown = ['active', 'inactive', 'suspended'].map(status => ({
+      status,
+      count: contacts.filter(c => c.status === status).length,
+    })).filter(s => s.count > 0);
+
+    return {
+      totalContacts: contacts.length,
+      activeContacts,
+      newThisMonth,
+      growthRate: Number(growthRate.toFixed(1)),
+      openOpportunities: openOps.length,
+      pipelineValue,
+      wonValue,
+      conversionRate: Number(conversionRate.toFixed(1)),
+      months,
+      pipelineByStage,
+      tagDistribution,
+      statusBreakdown,
+    };
+  }, [contacts, opportunities, tags]);
+
+  const isLoading = loadingContacts || loadingOps;
+
+  // Export columns
+  const contactColumns = [
+    { key: 'company_name', label: 'Nome' },
+    { key: 'email', label: 'Email' },
+    { key: 'status', label: 'Status' },
+    { key: 'created_date', label: 'Data Criação' },
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Relatórios - Analytics</h1>
-          <p className="text-slate-600 mt-1">Dashboard de análises e insights</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <BarChart2 className="w-6 h-6 text-blue-600" aria-hidden="true" />
+            Analytics
+          </h1>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+            Visão completa do seu CRM
+          </p>
         </div>
-        <ExportReportButton tenantId={workspaceId} />
+        <div className="flex gap-2">
+          <ExportEngine
+            data={contacts}
+            filename="contatos-analytics"
+            columns={contactColumns}
+          />
+          <DashboardCustomizer />
+        </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="overview">Dashboard</TabsTrigger>
-          <TabsTrigger value="predictive">Previsões</TabsTrigger>
-          <TabsTrigger value="customers">Clientes</TabsTrigger>
-          <TabsTrigger value="revenue">Receita</TabsTrigger>
-          <TabsTrigger value="comparison">Comparação</TabsTrigger>
-        </TabsList>
-
-        {/* Overview Dashboard */}
-        <TabsContent value="overview" className="mt-6 space-y-6">
-          {analyticsData && (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-slate-600 text-sm">Total Faturado</p>
-                      <p className="text-2xl font-bold mt-1">R$ {analyticsData.metrics.totalInvoiced.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    </div>
-                    <TrendingUp className="w-8 h-8 text-blue-500 opacity-20" />
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-slate-600 text-sm">Total Recebido</p>
-                      <p className="text-2xl font-bold mt-1">R$ {analyticsData.metrics.totalPaid.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    </div>
-                    <CheckCircle className="w-8 h-8 text-green-500 opacity-20" />
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg shadow p-6 border-l-4 border-amber-500">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-slate-600 text-sm">Vencido</p>
-                      <p className="text-2xl font-bold mt-1">R$ {analyticsData.metrics.overdue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    </div>
-                    <AlertCircle className="w-8 h-8 text-amber-500 opacity-20" />
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-slate-600 text-sm">Taxa de Recebimento</p>
-                      <p className="text-2xl font-bold mt-1">{analyticsData.metrics.paymentRate}%</p>
-                    </div>
-                    <Clock className="w-8 h-8 text-blue-500 opacity-20" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold mb-4">Receita Mensal</h3>
-                  <RevenueChart invoices={analyticsData.invoices} />
-                </div>
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold mb-4">Status de Pagamentos</h3>
-                  <PaymentStatusChart invoices={analyticsData.invoices} />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">Tickets por Status</h3>
-                <TicketAnalyticsChart tickets={analyticsData.tickets} />
-              </div>
-            </>
+      {/* KPI Cards */}
+      {(isEnabled('kpi_contacts') || isEnabled('kpi_revenue') || isEnabled('kpi_pipeline') || isEnabled('kpi_conversion')) && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {isEnabled('kpi_contacts') && (
+            <KPIWidget
+              title="Total de Contatos"
+              value={analytics.totalContacts}
+              previousValue={analytics.totalContacts - analytics.newThisMonth}
+              icon={Users}
+              color="blue"
+              isLoading={isLoading}
+            />
           )}
-        </TabsContent>
+          {isEnabled('kpi_revenue') && (
+            <KPIWidget
+              title="Receita Ganha"
+              value={analytics.wonValue}
+              format="currency"
+              icon={DollarSign}
+              color="green"
+              isLoading={isLoading}
+            />
+          )}
+          {isEnabled('kpi_pipeline') && (
+            <KPIWidget
+              title="Pipeline Aberto"
+              value={analytics.pipelineValue}
+              format="currency"
+              icon={Activity}
+              color="orange"
+              isLoading={isLoading}
+            />
+          )}
+          {isEnabled('kpi_conversion') && (
+            <KPIWidget
+              title="Taxa de Conversão"
+              value={analytics.conversionRate}
+              format="percent"
+              icon={Target}
+              color="purple"
+              isLoading={isLoading}
+            />
+          )}
+        </div>
+      )}
 
-        {/* Predictive Analytics */}
-        <TabsContent value="predictive" className="mt-6">
-          {analyticsData && <PredictiveAnalyticsDashboard invoices={analyticsData.invoices} />}
-        </TabsContent>
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Growth Chart */}
+        {isEnabled('contact_growth') && (
+          <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-blue-600" aria-hidden="true" />
+              Crescimento de Contatos (6 meses)
+            </h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <AreaChart data={analytics.months} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.2)" />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip />
+                <Area
+                  type="monotone"
+                  dataKey="contatos"
+                  stroke="#3b82f6"
+                  fill="rgba(59,130,246,0.15)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
-        {/* Customer Insights */}
-        <TabsContent value="customers" className="mt-6">
-          {workspaceId && <CustomerInsightsDashboard workspaceId={workspaceId} />}
-        </TabsContent>
+        {/* Pipeline by Stage */}
+        {isEnabled('sales_pipeline') && (
+          <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+              <Activity className="w-4 h-4 text-green-600" aria-hidden="true" />
+              Pipeline por Estágio
+            </h3>
+            {analytics.pipelineByStage.length > 0 ? (
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={analytics.pipelineByStage} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.2)" />
+                  <XAxis dataKey="stage" tick={{ fontSize: 11 }} />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-48 flex items-center justify-center text-slate-400 text-sm">
+                Nenhuma oportunidade registrada
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* Revenue Forecaster */}
-        <TabsContent value="revenue" className="mt-6">
-          {analyticsData && <RevenueForecaster invoices={analyticsData.invoices} />}
-        </TabsContent>
+        {/* Tag Distribution */}
+        {isEnabled('tag_distribution') && analytics.tagDistribution.length > 0 && (
+          <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              Distribuição de Tags
+            </h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart>
+                <Pie
+                  data={analytics.tagDistribution}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={40}
+                  outerRadius={80}
+                  dataKey="value"
+                  nameKey="name"
+                >
+                  {analytics.tagDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
-        {/* Comparison Card */}
-        <TabsContent value="comparison" className="mt-6">
-          {workspaceId && <ComparisonCard tenantId={workspaceId} />}
-        </TabsContent>
-      </Tabs>
+        {/* Status Breakdown */}
+        {isEnabled('kpi_contacts') && analytics.statusBreakdown.length > 0 && (
+          <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              Status de Contatos
+            </h3>
+            <div className="space-y-3">
+              {analytics.statusBreakdown.map((item, i) => {
+                const pct = analytics.totalContacts > 0
+                  ? (item.count / analytics.totalContacts) * 100
+                  : 0;
+                return (
+                  <div key={item.status}>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-slate-700 dark:text-slate-300 capitalize">{item.status}</span>
+                      <span className="text-slate-500 dark:text-slate-400">{item.count}</span>
+                    </div>
+                    <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${pct}%`,
+                          background: CHART_COLORS[i],
+                        }}
+                        role="progressbar"
+                        aria-valuenow={pct}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={`${item.status}: ${pct.toFixed(0)}%`}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Predictive AI */}
+      {isEnabled('predictive') && (
+        <PredictiveReport
+          metrics={analytics}
+          workspaceId={workspaceId}
+        />
+      )}
     </div>
   );
 }
