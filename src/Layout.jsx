@@ -2,6 +2,7 @@ import React from 'react';
 import { ThemeProvider } from './components/hooks/useTheme';
 import { AuthProvider } from './components/auth/AuthContext';
 import { CacheProvider } from './components/context/CacheContext';
+import AccessibilityProvider from './components/a11y/AccessibilityProvider';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import DashboardLayout from './components/dashboard/DashboardLayout';
@@ -116,6 +117,7 @@ export default function Layout({ children, currentPageName }) {
       <AuthProvider>
         <CacheProvider>
           <ThemeProvider>
+            <AccessibilityProvider>
             <DashboardLayout>
               <ProtectedInternalRoute>
                 <RouteTransition>
@@ -131,6 +133,7 @@ export default function Layout({ children, currentPageName }) {
             </DashboardLayout>
             <BottomNav />
             <ReactQueryDevtools initialIsOpen={false} />
+            </AccessibilityProvider>
           </ThemeProvider>
         </CacheProvider>
       </AuthProvider>
@@ -141,6 +144,7 @@ export default function Layout({ children, currentPageName }) {
     <AuthProvider>
       <CacheProvider>
         <ThemeProvider>
+          <AccessibilityProvider>
           <OfflineIndicator />
           <PWAInstallPrompt />
           <SyncStatus />
@@ -154,6 +158,7 @@ export default function Layout({ children, currentPageName }) {
             <Footer />
           </div>
           <ReactQueryDevtools initialIsOpen={false} />
+          </AccessibilityProvider>
         </ThemeProvider>
       </CacheProvider>
     </AuthProvider>
