@@ -1,9 +1,10 @@
 /**
- * Contact Import CSV Dialog
- * Import contacts from CSV with column mapping, validation, and preview
+ * Unified Contact Import CSV Dialog
+ * Import contacts from CSV with column mapping, validation, preview and mobile support
+ * Replaces both ContactImportCSV and old ContactImportCSVDialog
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Upload, AlertCircle, CheckCircle, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

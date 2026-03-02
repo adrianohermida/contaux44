@@ -1,10 +1,11 @@
 /**
- * Contact Export CSV
- * Export contacts to CSV with column selection and formatting
+ * Unified Contact Export CSV
+ * Export contacts to CSV with column selection, formatting, and mobile support
+ * Replaces both ContactExportButton and old ContactExportCSV
  */
 
-import React, { useState } from 'react';
-import { Download, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { Download, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -17,8 +18,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
 
 const AVAILABLE_COLUMNS = [
   { key: 'company_name', label: 'Empresa/Nome', default: true },
