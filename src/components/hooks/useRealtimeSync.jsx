@@ -1,130 +1,148 @@
 /**
  * useRealtimeSync Hook
- * Manage real-time data synchronization
+ * Real-time data synchronization with conflict resolution
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
-import { useWebSocket } from './useWebSocket';
+import { useState, useCallback, useEffect } from 'react';
 
-export function useRealtimeSync(channel, userId, entityType = null) {
-  const [syncData, setSyncData] = useState(null);
-  const [syncStatus, setSyncStatus] = useState('idle'); // idle, syncing, synced, error
-  const [lastSyncTime, setLastSyncTime] = useState(null);
-  const [conflictQueue, setConflictQueue] = useState([]);
-  
-  const { isConnected, lastMessage, sendMessage } = useWebSocket(channel, userId);
-  const syncTimerRef = useRef(null);
+export function useRealtimeSync() {
+  const [syncState, setSyncState] = useState({
+    isOnline: true,
+    isSyncing: false,
+    lastSync: null,
+    conflicts: [],
+    activeUsers: [],
+  });
 
-  // Handle incoming messages
-  useEffect(() => {
-    if (!lastMessage) return;
+  const [data, setData] = useState({});
+  const [changeLog, setChangeLog] = useState([]);
+  const [pendingChanges, setPendingChanges] = useState([]);
 
-    setSyncStatus('syncing');
-    
-    // Process different message types
-    if (lastMessage.type === 'entity_update') {
-      setSyncData(lastMessage.data);
-      setLastSyncTime(new Date());
-      setSyncStatus('synced');
-    } else if (lastMessage.type === 'conflict') {
-      setConflictQueue(prev => [...prev, lastMessage.conflict]);
-      setSyncStatus('error');
-    } else if (lastMessage.type === 'sync_error') {
-      setSyncStatus('error');
-    }
-  }, [lastMessage]);
+  // Track local changes
+  const trackChange = useCallback((key, value, userId) => {
+    const change = {
+      id: Date.now() + Math.random(),
+      key,
+      value,
+      userId,
+      timestamp: Date.now(),
+      synced: false,
+    };
 
-  // Subscribe to channel
-  const subscribe = useCallback(
-    (opts = {}) => {
-      if (isConnected) {
-        sendMessage({
-          type: 'subscribe',
-          channel,
-          userId,
-          entityType,
-          options: opts,
-        });
-      }
-    },
-    [channel, userId, entityType, isConnected, sendMessage]
-  );
+    setChangeLog((prev) => [change, ...prev]);
+    setPendingChanges((prev) => [...prev, change]);
+    setData((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
-  // Unsubscribe from channel
-  const unsubscribe = useCallback(() => {
-    if (isConnected) {
-      sendMessage({
-        type: 'unsubscribe',
-        channel,
+  // Sync with remote
+  const syncWithRemote = useCallback(async (remoteData) => {
+    setSyncState((prev) => ({ ...prev, isSyncing: true }));
+
+    try {
+      // Detect conflicts
+      const conflicts = [];
+      pendingChanges.forEach((local) => {
+        if (remoteData[local.key] && remoteData[local.key].value !== local.value) {
+          conflicts.push({
+            key: local.key,
+            local: local.value,
+            remote: remoteData[local.key].value,
+            timestamp: Date.now(),
+          });
+        }
       });
-    }
-  }, [channel, isConnected, sendMessage]);
 
-  // Publish changes
-  const publish = useCallback(
-    (data) => {
-      if (isConnected) {
-        sendMessage({
-          type: 'publish',
-          channel,
-          userId,
-          data,
-          timestamp: new Date().toISOString(),
-        });
-      }
-    },
-    [channel, userId, isConnected, sendMessage]
-  );
+      setSyncState((prev) => ({
+        ...prev,
+        conflicts,
+        isSyncing: false,
+        lastSync: new Date(),
+      }));
+
+      // Merge changes (remote takes precedence by default)
+      const merged = { ...data };
+      Object.entries(remoteData).forEach(([key, val]) => {
+        merged[key] = val.value;
+      });
+
+      setData(merged);
+
+      // Clear synced changes
+      setPendingChanges([]);
+
+      return { conflicts, merged };
+    } catch (error) {
+      setSyncState((prev) => ({ ...prev, isSyncing: false }));
+      throw error;
+    }
+  }, [data, pendingChanges]);
 
   // Resolve conflict
-  const resolveConflict = useCallback(
-    (conflictId, resolution) => {
-      if (isConnected) {
-        sendMessage({
-          type: 'resolve_conflict',
-          conflictId,
-          resolution,
-          timestamp: new Date().toISOString(),
-        });
-        setConflictQueue(prev => prev.filter(c => c.id !== conflictId));
-        if (conflictQueue.length <= 1) {
-          setSyncStatus('synced');
-        }
-      }
-    },
-    [isConnected, sendMessage, conflictQueue]
-  );
+  const resolveConflict = useCallback((key, resolution) => {
+    setSyncState((prev) => ({
+      ...prev,
+      conflicts: prev.conflicts.filter((c) => c.key !== key),
+    }));
 
-  // Auto-sync every 30 seconds if needed
+    setData((prev) => ({
+      ...prev,
+      [key]: resolution === 'local' ? prev[key] : syncState.conflicts.find((c) => c.key === key)?.remote,
+    }));
+  }, [syncState.conflicts]);
+
+  // Broadcast presence
+  const updatePresence = useCallback((userId, info) => {
+    setSyncState((prev) => {
+      const others = prev.activeUsers.filter((u) => u.id !== userId);
+      return {
+        ...prev,
+        activeUsers: [{ id: userId, ...info, lastSeen: Date.now() }, ...others],
+      };
+    });
+  }, []);
+
+  // Get sync status
+  const getSyncStatus = useCallback(() => {
+    return {
+      ...syncState,
+      pendingChanges: pendingChanges.length,
+      changeLogSize: changeLog.length,
+    };
+  }, [syncState, pendingChanges, changeLog]);
+
+  // Cleanup offline changes
   useEffect(() => {
-    if (isConnected && syncStatus === 'synced') {
-      syncTimerRef.current = setInterval(() => {
-        subscribe();
-      }, 30000);
-    }
+    const timeout = setTimeout(() => {
+      setChangeLog((prev) => prev.slice(0, 100)); // Keep only last 100 changes
+    }, 60000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // Handle online/offline
+  useEffect(() => {
+    const handleOnline = () => setSyncState((prev) => ({ ...prev, isOnline: true }));
+    const handleOffline = () => setSyncState((prev) => ({ ...prev, isOnline: false }));
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      if (syncTimerRef.current) clearInterval(syncTimerRef.current);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
-  }, [isConnected, syncStatus, subscribe]);
-
-  // Subscribe on connect
-  useEffect(() => {
-    if (isConnected) {
-      subscribe();
-    }
-  }, [isConnected, subscribe]);
+  }, []);
 
   return {
-    syncData,
-    syncStatus,
-    lastSyncTime,
-    conflictQueue,
-    isConnected,
-    publish,
-    subscribe,
-    unsubscribe,
+    data,
+    syncState,
+    changeLog,
+    pendingChanges,
+    trackChange,
+    syncWithRemote,
     resolveConflict,
+    updatePresence,
+    getSyncStatus,
   };
 }
 
