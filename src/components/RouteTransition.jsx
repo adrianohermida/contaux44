@@ -1,32 +1,39 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import { useResponsiveLayout } from './mobile/useResponsiveLayout';
 
 export default function RouteTransition({ children }) {
   const location = useLocation();
+  const { isMobile } = useResponsiveLayout();
 
-  const slideVariants = {
+  // Mobile-only slide animation; tablet/desktop skip animations
+  const slideVariants = useMemo(() => ({
     initial: {
-      opacity: 0,
-      x: 100
+      opacity: isMobile ? 0 : 1,
+      x: isMobile ? 100 : 0
     },
     animate: {
       opacity: 1,
       x: 0,
-      transition: {
+      transition: isMobile ? {
         duration: 0.3,
         ease: 'easeInOut'
+      } : {
+        duration: 0
       }
     },
     exit: {
-      opacity: 0,
-      x: -100,
-      transition: {
+      opacity: isMobile ? 0 : 1,
+      x: isMobile ? -100 : 0,
+      transition: isMobile ? {
         duration: 0.2,
         ease: 'easeInOut'
+      } : {
+        duration: 0
       }
     }
-  };
+  }), [isMobile]);
 
   return (
     <AnimatePresence mode="wait">
@@ -36,6 +43,8 @@ export default function RouteTransition({ children }) {
         initial="initial"
         animate="animate"
         exit="exit"
+        role="main"
+        aria-label="Conteúdo principal da página"
       >
         {children}
       </motion.div>
