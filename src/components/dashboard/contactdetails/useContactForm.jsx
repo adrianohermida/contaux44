@@ -1,6 +1,20 @@
 import { useState, useCallback } from 'react';
 import { sanitizeInput, hasSecurityRisk } from '../../security/InputValidator';
-import { validateContactForm, validateEmailUniqueness } from '../ContactFormValidation';
+import { 
+  validateContactForm, 
+  validateEmailUniqueness,
+  validateCPF,
+  validateCNPJ,
+  validatePhone,
+  validateCEP,
+  validateEmail
+} from '@/functions/validators';
+import {
+  formatCPF,
+  formatCNPJ,
+  formatPhone,
+  formatCEP
+} from '@/functions/formatters';
 
 export function useContactForm(initialData, contactId, workspaceId, base44, onSuccess, onError) {
   const [formData, setFormData] = useState(initialData);
@@ -17,6 +31,17 @@ export function useContactForm(initialData, contactId, workspaceId, base44, onSu
 
     const fieldType = name === 'email' ? 'email' : name === 'phone' ? 'phone' : 'text';
     let newValue = sanitizeInput(value, fieldType);
+
+    // Apply formatters to specific fields
+    if (name === 'cpf' && formData.client_type === 'pf') {
+      newValue = formatCPF(newValue);
+    } else if (name === 'cnpj' && formData.client_type === 'pj') {
+      newValue = formatCNPJ(newValue);
+    } else if (name === 'phone') {
+      newValue = formatPhone(newValue);
+    } else if (name === 'cep') {
+      newValue = formatCEP(newValue);
+    }
 
     if (name === 'client_type' && formData.client_type !== newValue) {
       setFormData(prev => ({ 

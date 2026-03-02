@@ -10,7 +10,7 @@ import { ToastContainer } from '../components/ui/toast-notification';
 import { useDebounce } from '../components/hooks/useDebounce';
 import { sanitizeInput } from '../components/security/InputValidator';
 import { useCSRFToken } from '../components/security/CSRFProtection';
-import { validateContactForm, validateEmailUniqueness } from '../components/dashboard/ContactFormValidation';
+import { validateContactForm, validateEmailUniqueness } from '@/functions/validators';
 import ContactRouteValidator from '../components/dashboard/ContactRouteValidator';
 import ContactDetailsHeader from '../components/dashboard/contactdetails/ContactDetailsHeader';
 import ContactDetailsTabs from '../components/dashboard/contactdetails/ContactDetailsTabs';
