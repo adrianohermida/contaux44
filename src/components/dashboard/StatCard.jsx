@@ -22,7 +22,7 @@ const StatCard = memo(function StatCard({ icon: Icon, title, value, subtitle, tr
       </div>
       <h3 className="text-slate-600 dark:text-slate-400 text-xs md:text-sm mb-1">{title}</h3>
       <p className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">{value}</p>
-      {subtitle && <p className="text-xs text-slate-500 dark:text-slate-500">{subtitle}</p>}
+      {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
     </div>
   );
 }, (prevProps, nextProps) => {
