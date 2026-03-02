@@ -96,8 +96,20 @@ export default function ModalWrapper({
       }
     };
 
+    // Handler para Enter (submit form)
+    const handleEnter = (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        const form = modalRef.current?.querySelector('form');
+        if (form) {
+          e.preventDefault();
+          form.requestSubmit();
+        }
+      }
+    };
+
     document.addEventListener('keydown', handleEscape);
     document.addEventListener('keydown', handleTab);
+    document.addEventListener('keydown', handleEnter);
     if (showBackdrop) {
       modalRef.current?.parentElement?.addEventListener('click', handleBackdropClick);
     }
