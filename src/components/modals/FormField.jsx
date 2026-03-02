@@ -19,6 +19,7 @@ export default function FormField({
   placeholder,
   options,
   rows,
+  id,
   ...props
 }) {
   const errorId = error ? `${name}-error` : undefined;
