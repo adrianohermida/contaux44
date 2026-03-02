@@ -14,7 +14,7 @@ export default function Invoicing() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
+        <div className="text-[var(--color-foreground-secondary)]">Carregando...</div>
       </div>
     );
   }
@@ -31,18 +31,18 @@ export default function Invoicing() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Faturamento</h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">Gerenciar faturas e faturamento</p>
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Faturamento</h1>
+          <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Gerenciar faturas e faturamento</p>
         </div>
         <Button
           onClick={() => { setEditingInvoice(null); setShowForm(true); }}
-          className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
+          className="bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)] active:bg-[var(--color-interactive-active)]"
           aria-label="Criar nova fatura"
         >
-          <Plus className="w-5 h-5 mr-2" aria-hidden="true" />
+          <Plus className="w-5 h-5 mr-[var(--spacing-sm)]" aria-hidden="true" />
           Nova Fatura
         </Button>
       </div>

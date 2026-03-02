@@ -42,7 +42,7 @@ export default function Payments() {
   if (!user) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-slate-600 dark:text-slate-400">
+        <div className="text-[var(--color-foreground-secondary)]">
           Você precisa estar autenticado para acessar esta página
         </div>
       </div>
@@ -50,64 +50,64 @@ export default function Payments() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-[var(--spacing-md)]">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">
             Pagamentos
           </h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">
             Gerencie e reconcilie pagamentos de faturas
           </p>
         </div>
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="flex gap-[var(--spacing-sm)] w-full sm:w-auto">
           <Button
             onClick={handleOpenForm}
-            className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+            className="flex-1 sm:flex-none bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)]"
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="w-4 h-4 mr-[var(--spacing-sm)]" />
             Novo Pagamento
           </Button>
           <Button
             onClick={() => setActiveTab(activeTab === 'list' ? 'reconciliation' : 'list')}
             variant="outline"
-            className="flex-1 sm:flex-none dark:border-slate-600 dark:text-slate-300"
+            className="flex-1 sm:flex-none border-[var(--color-border-default)] text-[var(--color-foreground-primary)]"
           >
-            <Scale className="w-4 h-4 mr-2" />
+            <Scale className="w-4 h-4 mr-[var(--spacing-sm)]" />
             {activeTab === 'list' ? 'Reconciliar' : 'Ver Pagamentos'}
           </Button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-slate-200 dark:border-slate-700">
+      <div className="flex gap-[var(--spacing-md)] border-b border-[var(--color-border-default)]">
         <button
-          onClick={() => setActiveTab('list')}
-          className={`px-4 py-2 border-b-2 font-medium transition-colors ${
-            activeTab === 'list'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-          }`}
-        >
-          Histórico de Pagamentos
-        </button>
-        <button
-          onClick={() => setActiveTab('reconciliation')}
-          className={`px-4 py-2 border-b-2 font-medium transition-colors ${
-            activeTab === 'reconciliation'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-          }`}
-        >
-          Reconciliação
-        </button>
-      </div>
+           onClick={() => setActiveTab('list')}
+           className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] border-b-2 font-medium transition-colors ${
+             activeTab === 'list'
+               ? 'border-[var(--color-interactive-default)] text-[var(--color-interactive-default)]'
+               : 'border-transparent text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
+           }`}
+         >
+           Histórico de Pagamentos
+         </button>
+         <button
+           onClick={() => setActiveTab('reconciliation')}
+           className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] border-b-2 font-medium transition-colors ${
+             activeTab === 'reconciliation'
+               ? 'border-[var(--color-interactive-default)] text-[var(--color-interactive-default)]'
+               : 'border-transparent text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
+           }`}
+         >
+           Reconciliação
+         </button>
+        </div>
 
-      {/* Content */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow">
-        {activeTab === 'list' ? (
-          <div className="p-6">
+        {/* Content */}
+        <div className="bg-[var(--color-background-primary)] rounded-lg shadow">
+         {activeTab === 'list' ? (
+           <div className="p-[var(--spacing-lg)]">
             <PaymentList
               tenantId={workspaceId}
               onEdit={handleEditPayment}

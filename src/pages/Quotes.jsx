@@ -18,7 +18,7 @@ export default function QuotesPage() {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-600 dark:text-slate-400">
+      <div className="p-[var(--spacing-2xl)] text-center text-[var(--color-foreground-secondary)]">
         Carregando...
       </div>
     );
@@ -26,7 +26,7 @@ export default function QuotesPage() {
 
   if (!user) {
     return (
-      <div className="p-8 text-center text-red-600 dark:text-red-400">
+      <div className="p-[var(--spacing-2xl)] text-center text-[var(--color-error)]">
         Acesso restrito a usuários internos
       </div>
     );
@@ -44,19 +44,19 @@ export default function QuotesPage() {
   };
 
   return (
-    <div className="space-y-6 dark:bg-slate-900 min-h-screen p-6">
+    <div className="space-y-[var(--spacing-lg)] min-h-screen p-[var(--spacing-lg)]">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Cotações</h1>
-          <p className="text-slate-600 dark:text-slate-400">Gerenciar e converter cotações em faturas</p>
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Cotações</h1>
+          <p className="text-[var(--color-foreground-secondary)]">Gerenciar e converter cotações em faturas</p>
         </div>
         <Button
           onClick={() => {
             setEditingQuote(null);
             setShowForm(true);
           }}
-          className="gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+          className="gap-[var(--spacing-sm)] bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)]"
         >
           <Plus className="w-5 h-5" />
           Nova Cotação
@@ -78,7 +78,7 @@ export default function QuotesPage() {
       )}
 
       {/* List */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
+       <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)]">
         <QuoteList
           key={refreshKey}
           tenantId={user.workspace_id}
