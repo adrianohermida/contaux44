@@ -12,11 +12,13 @@ const teamMembers = [
 ];
 
 const services = [
-  { icon: '⚖️', title: 'Contabilidade Judicial', desc: 'Cálculos complexos de custas, honorários e planos de pagamento para processos judiciais' },
-  { icon: '📋', title: 'Pareceres Técnicos', desc: 'Emissão de pareceres contábeis e técnicos para assessoria jurídica' },
-  { icon: '💼', title: 'Cálculos Especializados', desc: 'Revisão bancária, cálculos trabalhistas, pensão alimentícia e superendividamento' },
-  { icon: '📄', title: 'Guias de Recolhimento', desc: 'Geração automatizada de guias de recolhimento e documentação fiscal' },
+  { icon: <BarChart3 className="w-10 h-10" />, title: 'Contabilidade Judicial', desc: 'Cálculos complexos de custas, honorários e planos de pagamento para processos judiciais' },
+  { icon: <FileSearch className="w-10 h-10" />, title: 'Pareceres Técnicos', desc: 'Emissão de pareceres contábeis e técnicos para assessoria jurídica' },
+  { icon: <Calculator className="w-10 h-10" />, title: 'Cálculos Especializados', desc: 'Revisão bancária, cálculos trabalhistas, pensão alimentícia e superendividamento' },
+  { icon: <Receipt className="w-10 h-10" />, title: 'Guias de Recolhimento', desc: 'Geração automatizada de guias de recolhimento e documentação fiscal' },
 ];
+
+import { Calculator, FileSearch, Receipt, BarChart3 } from 'lucide-react';
 
 export default function About() {
   const [activeTab, setActiveTab] = useState('missao');
@@ -24,32 +26,32 @@ export default function About() {
   return (
     <div className="min-h-screen bg-[var(--color-background-primary)]">
       {/* Breadcrumbs */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-[var(--font-size-3xl)] md:text-[var(--font-size-4xl)] font-bold mb-[var(--spacing-md)]">Sobre Contaux</h1>
-          <p className="text-blue-100 mb-[var(--spacing-md)]">Escritório especializado em contabilidade judicial, custas processuais e cálculos especializados para advocacia.</p>
-          <div className="flex gap-2 text-[var(--font-size-sm)]">
-            <Link to={createPageUrl('Home')} className="hover:underline">Início</Link>
-            <span>/</span>
-            <span>Sobre Nós</span>
-          </div>
-        </div>
-      </section>
+       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-md)] sm:px-[var(--spacing-lg)] max-w-7xl mx-auto">
+         <div>
+           <h1 className="text-[var(--font-size-3xl)] md:text-[var(--font-size-4xl)] font-bold mb-[var(--spacing-md)]">Sobre Contaux</h1>
+           <p className="text-blue-100 mb-[var(--spacing-md)]">Escritório especializado em contabilidade judicial, custas processuais e cálculos especializados para advocacia.</p>
+           <div className="flex gap-[var(--spacing-sm)] text-[var(--font-size-sm)]">
+             <Link to={createPageUrl('Home')} className="hover:underline">Início</Link>
+             <span>/</span>
+             <span>Sobre Nós</span>
+           </div>
+         </div>
+       </section>
 
-      {/* About Section */}
-       <section className="py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
-          <div className="max-w-6xl mx-auto">
+       {/* About Section */}
+        <section className="py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-md)] sm:px-[var(--spacing-lg)] max-w-7xl mx-auto">
+           <div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--spacing-md)] md:gap-[var(--spacing-xl)] items-center">
              {/* Left Content */}
              <div>
                <div className="mb-[var(--spacing-lg)]">
-                 <span className="text-blue-600 font-semibold text-[var(--font-size-sm)]">Quem somos</span>
-                 <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)] mb-[var(--spacing-md)]">Especialistas em Contabilidade Judicial</h2>
-                 <p className="text-gray-600 text-[var(--font-size-sm)] md:text-[var(--font-size-base)]">Contaux é um escritório de contabilidade especializado em contabilidade judicial, cálculos de custas processuais, pareceres técnicos e recolhimentos para escritórios de advocacia e empresas.</p>
+                 <span className="text-[var(--color-interactive-default)] font-semibold text-[var(--font-size-sm)]">Quem somos</span>
+                 <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)] mb-[var(--spacing-md)] text-[var(--color-foreground-primary)]">Especialistas em Contabilidade Judicial</h2>
+                 <p className="text-[var(--color-foreground-secondary)] text-[var(--font-size-sm)] md:text-[var(--font-size-base)]">Contaux é um escritório de contabilidade especializado em contabilidade judicial, cálculos de custas processuais, pareceres técnicos e recolhimentos para escritórios de advocacia e empresas.</p>
                </div>
 
               {/* Tabs */}
-                  <div className="border-b border-gray-200 mb-[var(--spacing-md)] overflow-x-auto">
+                  <div className="border-b border-[var(--color-border-default)] mb-[var(--spacing-md)] overflow-x-auto">
                       <div className="flex gap-[var(--spacing-md)] md:gap-[var(--spacing-lg)]">
                         {['missao', 'visao', 'valores'].map(tab => {
                           const labels = { missao: 'Missão', visao: 'Visão', valores: 'Valores' };
@@ -58,7 +60,7 @@ export default function About() {
                               key={tab}
                               onClick={() => setActiveTab(tab)}
                               className={`py-[var(--spacing-md)] font-semibold capitalize whitespace-nowrap text-[var(--font-size-sm)] md:text-[var(--font-size-base)] ${
-                                activeTab === tab ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'
+                                activeTab === tab ? 'border-b-2 border-[var(--color-interactive-default)] text-[var(--color-interactive-default)]' : 'text-[var(--color-foreground-secondary)]'
                               }`}
                             >
                               {labels[tab]}
@@ -133,20 +135,20 @@ export default function About() {
       </section>
 
       {/* Services Section */}
-      <section className="bg-gray-50 py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
-        <div className="max-w-6xl mx-auto">
+       <section className="bg-[var(--color-background-secondary)] py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-md)] sm:px-[var(--spacing-lg)] max-w-7xl mx-auto">
+         <div>
           <div className="text-center mb-[var(--spacing-lg)] md:mb-[var(--spacing-xl)]">
-            <span className="text-blue-600 font-semibold text-[var(--font-size-sm)]">Serviços Principais</span>
-            <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)] mb-[var(--spacing-md)]">Especialidades Contaux</h2>
-            <p className="text-gray-600 text-[var(--font-size-sm)] md:text-[var(--font-size-base)] max-w-2xl mx-auto">Somos especializados em contabilidade judicial com soluções integradas para escritórios de advocacia e empresas.</p>
+            <span className="text-[var(--color-interactive-default)] font-semibold text-[var(--font-size-sm)]">Serviços Principais</span>
+            <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)] mb-[var(--spacing-md)] text-[var(--color-foreground-primary)]">Especialidades Contaux</h2>
+            <p className="text-[var(--color-foreground-secondary)] text-[var(--font-size-sm)] md:text-[var(--font-size-base)] max-w-2xl mx-auto">Somos especializados em contabilidade judicial com soluções integradas para escritórios de advocacia e empresas.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--spacing-md)] md:gap-[var(--spacing-lg)]">
             {services.map((service, idx) => (
-              <div key={idx} className="bg-white p-[var(--spacing-component-padding)] rounded-lg text-center hover:shadow-lg transition-shadow">
-                <div className="text-[var(--font-size-4xl)] mb-[var(--spacing-md)]">{service.icon}</div>
-                <h3 className="font-bold text-[var(--font-size-lg)] mb-[var(--spacing-sm)]">{service.title}</h3>
-                <p className="text-gray-600 text-[var(--font-size-sm)]">{service.desc}</p>
+              <div key={idx} className="bg-[var(--color-background-primary)] p-[var(--spacing-component-padding)] rounded-lg text-center hover:shadow-lg transition-shadow border border-[var(--color-border-default)]">
+                <div className="text-[var(--font-size-4xl)] mb-[var(--spacing-md)] text-[var(--color-interactive-default)]">{service.icon}</div>
+                <h3 className="font-bold text-[var(--font-size-lg)] mb-[var(--spacing-sm)] text-[var(--color-foreground-primary)]">{service.title}</h3>
+                <p className="text-[var(--color-foreground-secondary)] text-[var(--font-size-sm)]">{service.desc}</p>
               </div>
             ))}
           </div>
@@ -154,21 +156,21 @@ export default function About() {
       </section>
 
       {/* Team Section */}
-      <section className="py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-md)] sm:px-[var(--spacing-lg)] max-w-7xl mx-auto">
+        <div>
           <div className="text-center mb-[var(--spacing-lg)] md:mb-[var(--spacing-xl)]">
-            <span className="text-blue-600 font-semibold text-[var(--font-size-sm)]">Conheça Nossa Equipe</span>
-            <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)]">Profissionais Experientes</h2>
+            <span className="text-[var(--color-interactive-default)] font-semibold text-[var(--font-size-sm)]">Conheça Nossa Equipe</span>
+            <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mt-[var(--spacing-sm)] text-[var(--color-foreground-primary)]">Profissionais Experientes</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--spacing-md)] md:gap-[var(--spacing-lg)]">
             {teamMembers.map((member, idx) => (
-              <div key={idx} className="bg-gray-50 p-[var(--spacing-md)] rounded-lg text-center hover:shadow-lg transition-shadow">
-                <div className="w-16 h-16 bg-blue-600 rounded-full mx-auto mb-[var(--spacing-md)] flex items-center justify-center text-white text-[var(--font-size-2xl)] font-bold">
+              <div key={idx} className="bg-[var(--color-background-secondary)] p-[var(--spacing-md)] rounded-lg text-center hover:shadow-lg transition-shadow border border-[var(--color-border-default)]">
+                <div className="w-16 h-16 bg-[var(--color-interactive-default)] rounded-full mx-auto mb-[var(--spacing-md)] flex items-center justify-center text-white text-[var(--font-size-2xl)] font-bold">
                   {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                <h3 className="font-bold text-[var(--font-size-lg)] mb-[var(--spacing-xs)]">{member.name}</h3>
-                <p className="text-gray-600 text-[var(--font-size-sm)]">{member.role}</p>
+                <h3 className="font-bold text-[var(--font-size-lg)] mb-[var(--spacing-xs)] text-[var(--color-foreground-primary)]">{member.name}</h3>
+                <p className="text-[var(--color-foreground-secondary)] text-[var(--font-size-sm)]">{member.role}</p>
               </div>
             ))}
           </div>
@@ -179,8 +181,8 @@ export default function About() {
       <VirtualCounterWidget />
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-sm)] md:px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-[var(--spacing-lg)] md:py-[var(--spacing-xl)] px-[var(--spacing-md)] sm:px-[var(--spacing-lg)] max-w-7xl mx-auto">
+        <div className="text-center">
           <h2 className="text-[var(--font-size-2xl)] md:text-[var(--font-size-4xl)] font-bold mb-[var(--spacing-md)]">Pronto para Melhorar Seus Processos Judiciais?</h2>
           <p className="text-blue-100 mb-[var(--spacing-lg)] text-[var(--font-size-sm)] md:text-[var(--font-size-base)]">Trabalhe com especialistas em contabilidade judicial e otimize seus custos processuais.</p>
           <Link 
