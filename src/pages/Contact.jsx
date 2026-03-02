@@ -9,7 +9,7 @@ import UnifiedFiltersBar from '../components/shared/UnifiedFiltersBar';
 import UnifiedGrid from '../components/shared/UnifiedGrid';
 import ContactGridItem from '../components/dashboard/contact/ContactGridItem';
 import { Tag, TrendingUp, SearchCheck } from 'lucide-react';
-import ContactExportButton from '../components/dashboard/ContactExportButton';
+
 import ContactModals from '../components/dashboard/contact/ContactModals';
 import UnifiedContactForm from '../components/contact/shared/UnifiedContactForm';
 import ContactBulkActions from '../components/dashboard/ContactBulkActions';
