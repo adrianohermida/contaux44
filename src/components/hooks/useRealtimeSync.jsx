@@ -1,31 +1,131 @@
-import { useEffect, useCallback, useRef } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import wsService from '../services/WebSocketService';
-
 /**
- * Hook para sincronização em tempo real de entidades
- * Invalida cache automaticamente quando dados mudam
+ * useRealtimeSync Hook
+ * Manage real-time data synchronization
  */
-export function useRealtimeSync(entityName, workspaceId) {
-  const queryClient = useQueryClient();
-  const unsubscribeRef = useRef(() => {});
 
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useWebSocket } from './useWebSocket';
+
+export function useRealtimeSync(channel, userId, entityType = null) {
+  const [syncData, setSyncData] = useState(null);
+  const [syncStatus, setSyncStatus] = useState('idle'); // idle, syncing, synced, error
+  const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [conflictQueue, setConflictQueue] = useState([]);
+  
+  const { isConnected, lastMessage, sendMessage } = useWebSocket(channel, userId);
+  const syncTimerRef = useRef(null);
+
+  // Handle incoming messages
   useEffect(() => {
-    // WebSocket support disabled for now - app works without real-time sync
-    return () => {};
-  }, []);
+    if (!lastMessage) return;
 
-  const syncEntity = useCallback((action, data) => {
-    wsService.send('entity:update', {
-      entity: entityName,
-      action,
-      data,
-      workspace_id: workspaceId
-    });
-  }, [entityName, workspaceId]);
+    setSyncStatus('syncing');
+    
+    // Process different message types
+    if (lastMessage.type === 'entity_update') {
+      setSyncData(lastMessage.data);
+      setLastSyncTime(new Date());
+      setSyncStatus('synced');
+    } else if (lastMessage.type === 'conflict') {
+      setConflictQueue(prev => [...prev, lastMessage.conflict]);
+      setSyncStatus('error');
+    } else if (lastMessage.type === 'sync_error') {
+      setSyncStatus('error');
+    }
+  }, [lastMessage]);
+
+  // Subscribe to channel
+  const subscribe = useCallback(
+    (opts = {}) => {
+      if (isConnected) {
+        sendMessage({
+          type: 'subscribe',
+          channel,
+          userId,
+          entityType,
+          options: opts,
+        });
+      }
+    },
+    [channel, userId, entityType, isConnected, sendMessage]
+  );
+
+  // Unsubscribe from channel
+  const unsubscribe = useCallback(() => {
+    if (isConnected) {
+      sendMessage({
+        type: 'unsubscribe',
+        channel,
+      });
+    }
+  }, [channel, isConnected, sendMessage]);
+
+  // Publish changes
+  const publish = useCallback(
+    (data) => {
+      if (isConnected) {
+        sendMessage({
+          type: 'publish',
+          channel,
+          userId,
+          data,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    },
+    [channel, userId, isConnected, sendMessage]
+  );
+
+  // Resolve conflict
+  const resolveConflict = useCallback(
+    (conflictId, resolution) => {
+      if (isConnected) {
+        sendMessage({
+          type: 'resolve_conflict',
+          conflictId,
+          resolution,
+          timestamp: new Date().toISOString(),
+        });
+        setConflictQueue(prev => prev.filter(c => c.id !== conflictId));
+        if (conflictQueue.length <= 1) {
+          setSyncStatus('synced');
+        }
+      }
+    },
+    [isConnected, sendMessage, conflictQueue]
+  );
+
+  // Auto-sync every 30 seconds if needed
+  useEffect(() => {
+    if (isConnected && syncStatus === 'synced') {
+      syncTimerRef.current = setInterval(() => {
+        subscribe();
+      }, 30000);
+    }
+
+    return () => {
+      if (syncTimerRef.current) clearInterval(syncTimerRef.current);
+    };
+  }, [isConnected, syncStatus, subscribe]);
+
+  // Subscribe on connect
+  useEffect(() => {
+    if (isConnected) {
+      subscribe();
+    }
+  }, [isConnected, subscribe]);
 
   return {
-    isConnected: false,
-    syncEntity: () => {}
+    syncData,
+    syncStatus,
+    lastSyncTime,
+    conflictQueue,
+    isConnected,
+    publish,
+    subscribe,
+    unsubscribe,
+    resolveConflict,
   };
 }
+
+export default useRealtimeSync;
