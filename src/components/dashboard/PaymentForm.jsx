@@ -9,9 +9,9 @@ import { useQuery } from '@tanstack/react-query';
 import FormField from '@/components/modals/FormField';
 import FormActions from '@/components/modals/FormActions';
 import ModalWrapper from '@/components/modals/ModalWrapper';
-import useFormState from '@/components/modals/useFormState';
-import useFormValidation from '@/components/hooks/useFormValidation';
-import useFormSubmit from '@/components/modals/useFormSubmit';
+import { useFormState } from '@/components/modals/useFormState';
+import { useFormValidation } from '@/components/hooks/useFormValidation';
+import { useFormSubmit } from '@/components/modals/useFormSubmit';
 import { AlertCircle } from 'lucide-react';
 
 const VALIDATION_RULES = {
