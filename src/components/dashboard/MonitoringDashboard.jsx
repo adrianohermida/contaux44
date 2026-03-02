@@ -1,289 +1,254 @@
-import React, { useState, useEffect } from 'react';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, CheckCircle, Clock, Zap, Activity, TrendingUp } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
-
 /**
- * Real-time Monitoring Dashboard - PHASE 14.3
- * Displays performance, infrastructure, and business metrics
+ * MonitoringDashboard Component
+ * Application health and performance monitoring
  */
 
+import React, { useState } from 'react';
+import { useHealthCheck } from '../hooks/useHealthCheck';
+import { useErrorTracking } from '../hooks/useErrorTracking';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import { Activity, AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react';
+
 export default function MonitoringDashboard() {
-  const [metrics, setMetrics] = useState(null);
-  const [anomalies, setAnomalies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [systemStatus, setSystemStatus] = useState('healthy');
+  const { getHealthStatus, getHealthHistory } = useHealthCheck();
+  const { errorStats, getErrorFrequency } = useErrorTracking();
+  const [selectedTab, setSelectedTab] = useState('health');
 
-  // Fetch metrics every 10 seconds
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      try {
-        const response = await base44.functions.invoke('monitoringMetrics', {});
-        setMetrics(response.data.metrics);
-        setAnomalies(response.data.anomalies);
-        setSystemStatus(response.data.status);
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch metrics:', error);
-      }
-    };
+  const health = getHealthStatus();
+  const history = getHealthHistory();
+  const errorFrequency = getErrorFrequency();
 
-    fetchMetrics();
-    const interval = setInterval(fetchMetrics, 10000);
-    return () => clearInterval(interval);
-  }, []);
+  // Prepare chart data
+  const healthData = history.map((h) => ({
+    time: new Date(h.timestamp).toLocaleTimeString(),
+    status: h.status === 'healthy' ? 1 : 0.5,
+    api: h.checks?.api?.responseTime || 0,
+  }));
 
-  if (loading || !metrics) {
-    return <div className="p-8 text-center">Loading metrics...</div>;
-  }
+  const errorData = errorFrequency.map((e) => ({
+    type: e.type,
+    count: e.count,
+  }));
 
-  const { performance, infrastructure, business } = metrics;
+  const statusColor = health.status === 'healthy' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
+  const statusBg = health.status === 'healthy' ? 'bg-green-50 dark:bg-green-900/30' : 'bg-red-50 dark:bg-red-900/30';
 
   return (
-    <div className="w-full space-y-6 p-6 bg-slate-50 dark:bg-slate-900">
-      {/* System Status */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">System Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              {systemStatus === 'healthy' ? (
-                <CheckCircle className="w-5 h-5 text-green-500" />
+    <div className="space-y-6 dark:bg-slate-900">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold dark:text-slate-100">Monitoring Dashboard</h2>
+        <Badge className={`${health.status === 'healthy' ? 'bg-green-100 text-green-800 dark:bg-green-900' : 'bg-red-100 text-red-800 dark:bg-red-900'}`}>
+          {health.status === 'healthy' ? 'Healthy' : 'Degraded'}
+        </Badge>
+      </div>
+
+      {/* Status Summary Cards */}
+      <div className="grid md:grid-cols-4 gap-4">
+        <Card className={`${statusBg} dark:border-slate-700`}>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">System Status</p>
+                <p className={`text-2xl font-bold ${statusColor}`}>
+                  {health.status === 'healthy' ? 'Healthy' : 'Degraded'}
+                </p>
+              </div>
+              {health.status === 'healthy' ? (
+                <CheckCircle className="w-8 h-8 text-green-500" />
               ) : (
-                <AlertCircle className="w-5 h-5 text-red-500" />
+                <AlertTriangle className="w-8 h-8 text-red-500" />
               )}
-              <span className="capitalize font-semibold">{systemStatus}</span>
             </div>
-            <p className="text-xs text-slate-500 mt-2">Uptime: 99.95%</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Avg Latency</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {Math.round(performance.query_latency.avg)}ms
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Uptime</p>
+                <p className="text-2xl font-bold dark:text-slate-100">{health.uptime.toFixed(1)}%</p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-blue-500" />
             </div>
-            <p className="text-xs text-green-500 mt-2">↓ 70% from baseline</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Cache Hit Rate</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {Math.round(performance.cache_metrics.hit_rate)}%
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Response Time</p>
+                <p className="text-2xl font-bold dark:text-slate-100">{health.responseTime.toFixed(0)}ms</p>
+              </div>
+              <Activity className="w-8 h-8 text-green-500" />
             </div>
-            <p className="text-xs text-slate-500 mt-2">Target: 80%</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {business.requests.error_rate}%
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Total Errors</p>
+                <p className="text-2xl font-bold dark:text-slate-100">{errorStats.total}</p>
+              </div>
+              {errorStats.total === 0 ? (
+                <CheckCircle className="w-8 h-8 text-green-500" />
+              ) : (
+                <AlertTriangle className="w-8 h-8 text-red-500" />
+              )}
             </div>
-            <p className="text-xs text-green-500 mt-2">Within SLA</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Alerts */}
-      {anomalies.length > 0 && (
-        <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20">
+      {/* Tab Navigation */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setSelectedTab('health')}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            selectedTab === 'health'
+              ? 'bg-blue-600 text-white dark:bg-blue-700'
+              : 'bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-600'
+          }`}
+        >
+          Health Check
+        </button>
+        <button
+          onClick={() => setSelectedTab('errors')}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            selectedTab === 'errors'
+              ? 'bg-blue-600 text-white dark:bg-blue-700'
+              : 'bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-600'
+          }`}
+        >
+          Errors
+        </button>
+      </div>
+
+      {/* Health Chart */}
+      {selectedTab === 'health' && (
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
           <CardHeader>
-            <CardTitle className="text-base">Active Alerts</CardTitle>
+            <CardTitle className="text-base dark:text-slate-100">Health History</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-            {anomalies.map((anomaly, idx) => (
-              <div key={idx} className="flex items-start gap-3 p-2 bg-white/50 dark:bg-slate-800/50 rounded">
-                <AlertCircle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium">{anomaly.message}</p>
-                  <p className="text-xs text-slate-500">Severity: {anomaly.severity}</p>
-                </div>
-              </div>
-            ))}
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={healthData}>
+                <XAxis dataKey="time" />
+                <YAxis domain={[0, 1]} />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="status"
+                  stroke="#10b981"
+                  name="Status"
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="api"
+                  stroke="#3b82f6"
+                  name="API Response (ms)"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       )}
 
-      {/* Performance Metrics */}
-      <Card>
+      {/* Error Chart */}
+      {selectedTab === 'errors' && (
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-base dark:text-slate-100">Error Frequency</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {errorData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={errorData}>
+                  <XAxis dataKey="type" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="count" fill="#ef4444" name="Error Count" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-center py-12">
+                <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
+                <p className="text-slate-600 dark:text-slate-400">No errors detected</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Dependencies Status */}
+      <Card className="dark:bg-slate-800 dark:border-slate-700">
         <CardHeader>
-          <CardTitle>Query Latency Percentiles</CardTitle>
-          <CardDescription>Last 24 hours</CardDescription>
+          <CardTitle className="text-base dark:text-slate-100">Dependencies</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div>
-              <p className="text-sm text-slate-600">p50</p>
-              <p className="text-2xl font-bold">{performance.query_latency.p50}ms</p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-600">p95</p>
-              <p className="text-2xl font-bold">{performance.query_latency.p95}ms</p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-600">p99</p>
-              <p className="text-2xl font-bold">{performance.query_latency.p99}ms</p>
-            </div>
+          <div className="space-y-2">
+            {health.checks?.dependencies ? (
+              Object.entries(health.checks.dependencies).map(([dep, status]) => (
+                <div key={dep} className="flex items-center justify-between p-2 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                  <span className="capitalize text-slate-700 dark:text-slate-100">{dep}</span>
+                  <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                    {status?.status || 'healthy'}
+                  </Badge>
+                </div>
+              ))
+            ) : (
+              <p className="text-slate-600 dark:text-slate-400">Loading dependencies...</p>
+            )}
           </div>
-
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={[
-              { time: '00:00', p50: 35, p95: 85, p99: 120 },
-              { time: '04:00', p50: 38, p95: 90, p99: 130 },
-              { time: '08:00', p50: 42, p95: 110, p99: 150 },
-              { time: '12:00', p50: 45, p95: 115, p99: 160 },
-              { time: '16:00', p50: 48, p95: 120, p99: 165 },
-              { time: '20:00', p50: 46, p95: 110, p99: 155 },
-            ]}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis label={{ value: 'Latency (ms)', angle: -90, position: 'insideLeft' }} />
-              <Tooltip />
-              <Area type="monotone" dataKey="p99" stackId="1" stroke="#ef4444" fill="#ef4444" opacity={0.1} name="p99" />
-              <Area type="monotone" dataKey="p95" stackId="1" stroke="#f97316" fill="#f97316" opacity={0.1} name="p95" />
-              <Area type="monotone" dataKey="p50" stackId="1" stroke="#22c55e" fill="#22c55e" opacity={0.1} name="p50" />
-            </AreaChart>
-          </ResponsiveContainer>
         </CardContent>
       </Card>
 
-      {/* Infrastructure */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
+      {/* Error Statistics */}
+      {selectedTab === 'errors' && (
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
           <CardHeader>
-            <CardTitle>Memory Usage</CardTitle>
+            <CardTitle className="text-base dark:text-slate-100">Error Statistics</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm">Heap Used</span>
-                  <span className="text-sm font-semibold">
-                    {infrastructure.memory.heap_used_mb.toFixed(0)}MB / {infrastructure.memory.heap_limit_mb}MB
-                  </span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div
-                    className="bg-blue-500 h-2 rounded-full"
-                    style={{
-                      width: `${(infrastructure.memory.heap_used_mb / infrastructure.memory.heap_limit_mb) * 100}%`,
-                    }}
-                  />
-                </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="p-3 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                <p className="text-xs text-slate-600 dark:text-slate-400">Total Errors</p>
+                <p className="text-2xl font-bold dark:text-slate-100">{errorStats.total}</p>
               </div>
-
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm">RSS</span>
-                  <span className="text-sm font-semibold">{infrastructure.memory.rss_mb.toFixed(0)}MB</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div className="bg-purple-500 h-2 rounded-full" style={{ width: '45%' }} />
-                </div>
+              <div className="p-3 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                <p className="text-xs text-slate-600 dark:text-slate-400">Error Types</p>
+                <p className="text-2xl font-bold dark:text-slate-100">{Object.keys(errorStats.byType).length}</p>
+              </div>
+              <div className="p-3 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                <p className="text-xs text-slate-600 dark:text-slate-400">Levels</p>
+                <p className="text-2xl font-bold dark:text-slate-100">{Object.keys(errorStats.byLevel).length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>CPU & Load</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm">User CPU</span>
-                  <span className="text-sm font-semibold">{infrastructure.cpu.user_percent.toFixed(1)}%</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div
-                    className="bg-green-500 h-2 rounded-full"
-                    style={{ width: `${infrastructure.cpu.user_percent}%` }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm">System CPU</span>
-                  <span className="text-sm font-semibold">{infrastructure.cpu.system_percent.toFixed(1)}%</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div
-                    className="bg-orange-500 h-2 rounded-full"
-                    style={{ width: `${infrastructure.cpu.system_percent}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="pt-2 border-t">
-                <p className="text-sm">Load Avg: {infrastructure.cpu.load_avg}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Business Metrics */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Request Statistics</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            <div>
-              <p className="text-sm text-slate-600">Total Requests</p>
-              <p className="text-2xl font-bold">{business.requests.total}</p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-600">Success Rate</p>
-              <p className="text-2xl font-bold text-green-500">
-                {((business.requests.success / business.requests.total) * 100).toFixed(2)}%
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-600">RPS (current)</p>
-              <p className="text-2xl font-bold">{business.rps.current}</p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-600">Errors (5xx)</p>
-              <p className="text-2xl font-bold text-red-500">{business.errors._5xx}</p>
-            </div>
-          </div>
-
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={[
-              { time: '00:00', success: 2400, error: 10 },
-              { time: '06:00', success: 2300, error: 8 },
-              { time: '12:00', success: 2500, error: 5 },
-              { time: '18:00', success: 2490, error: 10 },
-            ]}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="success" fill="#22c55e" name="Successful" />
-              <Bar dataKey="error" fill="#ef4444" name="Failed" />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+      )}
     </div>
   );
 }
