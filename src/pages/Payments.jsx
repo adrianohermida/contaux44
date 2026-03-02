@@ -69,44 +69,46 @@ export default function Payments() {
 
   return (
     <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">Pagamentos</h1>
-              <p className="text-slate-600 mt-1">Gerenciar pagamentos recebidos</p>
-            </div>
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleExport}
-                variant="outline"
-                className="border-slate-300"
-              >
-                <Download className="w-5 h-5 mr-2" />
-                Exportar CSV
-              </Button>
-              <Button 
-                onClick={() => { setEditingPayment(null); setShowForm(true); }}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Novo Pagamento
-              </Button>
-            </div>
-          </div>
-
-          {showForm && (
-            <PaymentForm
-              payment={editingPayment}
-              tenantId={workspaceId}
-              onSave={handleSave}
-              onCancel={() => { setShowForm(false); setEditingPayment(null); }}
-            />
-          )}
-
-          <PaymentList
-            tenantId={workspaceId}
-            onEdit={handleEdit}
-            onRefresh={refreshKey}
-          />
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Pagamentos</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1">Gerenciar pagamentos recebidos</p>
         </div>
-        );
-        }
+        <div className="flex gap-2 flex-wrap">
+          <Button
+            onClick={handleExport}
+            variant="outline"
+            className="border-slate-300 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+            aria-label="Exportar pagamentos como CSV"
+          >
+            <Download className="w-4 h-4 mr-2" aria-hidden="true" />
+            Exportar CSV
+          </Button>
+          <Button
+            onClick={() => { setEditingPayment(null); setShowForm(true); }}
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
+            aria-label="Registrar novo pagamento"
+          >
+            <Plus className="w-4 h-4 mr-2" aria-hidden="true" />
+            Novo Pagamento
+          </Button>
+        </div>
+      </div>
+
+      {showForm && (
+        <PaymentForm
+          payment={editingPayment}
+          tenantId={workspaceId}
+          onSave={handleSave}
+          onCancel={() => { setShowForm(false); setEditingPayment(null); }}
+        />
+      )}
+
+      <PaymentList
+        tenantId={workspaceId}
+        onEdit={handleEdit}
+        onRefresh={refreshKey}
+      />
+    </div>
+  );
+}
