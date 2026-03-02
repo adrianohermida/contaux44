@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { base44 } from '@/api/base44Client';
 import { useSortAndFilter } from '../hooks/useSortAndFilter';
+import { getCacheConfig } from '../hooks/useQueryCacheConfig';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Download } from 'lucide-react';
 import { useCacheStrategy } from '../hooks/useCacheStrategy';
@@ -22,9 +23,7 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
       });
     },
     enabled: !!tenantId,
-    staleTime: 5 * 60 * 1000,
-    retry: 2,
-    retryDelay: 1000
+    ...getCacheConfig('critical')
   });
 
   // Virtualização
