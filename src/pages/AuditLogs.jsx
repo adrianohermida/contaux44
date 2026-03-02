@@ -178,9 +178,15 @@ export default function AuditLogs() {
                       </div>
                     </div>
                     <p className="text-sm mb-2">{log.status}</p>
-                    <div className="flex items-center gap-2 text-xs text-slate-600">
-                      <span>👤 {log.user_email}</span>
-                      {log.ip_address && <span>🌐 {log.ip_address}</span>}
+                    <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                      <User className="w-3 h-3" aria-hidden="true" />
+                      <span>{log.user_email}</span>
+                      {log.ip_address && (
+                        <>
+                          <Globe className="w-3 h-3 ml-1" aria-hidden="true" />
+                          <span>{log.ip_address}</span>
+                        </>
+                      )}
                     </div>
                   </div>
                   <Badge className={getActionBadge(log.action)}>
