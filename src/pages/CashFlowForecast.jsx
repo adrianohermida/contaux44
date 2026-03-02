@@ -47,22 +47,22 @@ export default function CashFlowForecast() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
+        <div className="text-[var(--color-foreground-secondary)]">Carregando...</div>
       </div>
     );
   }
 
   if (error && !projections.length) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-[var(--spacing-lg)]">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Previsão de Fluxo de Caixa</h1>
-          <p className="text-slate-600 mt-1">Projeção de caixa para os próximos 90 dias</p>
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Previsão de Fluxo de Caixa</h1>
+          <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Projeção de caixa para os próximos 90 dias</p>
         </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-3" />
-          <p className="text-red-600 mb-4">Erro ao carregar projeções</p>
-          <Button onClick={() => refetch()} className="gap-2">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-[var(--spacing-2xl)] text-center">
+          <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-[var(--spacing-md)]" />
+          <p className="text-red-600 mb-[var(--spacing-md)]">Erro ao carregar projeções</p>
+          <Button onClick={() => refetch()} className="gap-[var(--spacing-sm)]">
             <RefreshCw className="w-4 h-4" />
             Tentar Novamente
           </Button>
@@ -72,34 +72,34 @@ export default function CashFlowForecast() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Previsão de Fluxo de Caixa</h1>
-          <p className="text-slate-600 mt-1">Projeção de caixa para os próximos 90 dias</p>
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Previsão de Fluxo de Caixa</h1>
+          <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Projeção de caixa para os próximos 90 dias</p>
         </div>
-        <Button onClick={() => refetch()} size="sm" variant="outline" className="gap-2">
+        <Button onClick={() => refetch()} size="sm" variant="outline" className="gap-[var(--spacing-sm)]">
           <RefreshCw className="w-4 h-4" />
           Atualizar
         </Button>
       </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-[var(--spacing-md)]">
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-[var(--spacing-lg)]">
                 <div>
-                  <p className="text-sm text-slate-600">Saldo Médio</p>
-                  <p className="text-2xl font-bold text-blue-600">R$ {stats.averageBalance.toFixed(2)}</p>
+                  <p className="text-sm text-[var(--color-foreground-secondary)]">Saldo Médio</p>
+                  <p className="text-[var(--font-size-2xl)] font-bold text-blue-600">R$ {stats.averageBalance.toFixed(2)}</p>
                 </div>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-[var(--spacing-lg)]">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-600">Saldo Mínimo</p>
-                    <p className={`text-2xl font-bold ${stats.minBalance < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    <p className="text-sm text-[var(--color-foreground-secondary)]">Saldo Mínimo</p>
+                    <p className={`text-[var(--font-size-2xl)] font-bold ${stats.minBalance < 0 ? 'text-red-600' : 'text-green-600'}`}>
                       R$ {stats.minBalance.toFixed(2)}
                     </p>
                   </div>
@@ -108,19 +108,19 @@ export default function CashFlowForecast() {
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-[var(--spacing-lg)]">
                 <div>
-                  <p className="text-sm text-slate-600">Saldo Máximo</p>
-                  <p className="text-2xl font-bold text-green-600">R$ {stats.maxBalance.toFixed(2)}</p>
+                  <p className="text-sm text-[var(--color-foreground-secondary)]">Saldo Máximo</p>
+                  <p className="text-[var(--font-size-2xl)] font-bold text-green-600">R$ {stats.maxBalance.toFixed(2)}</p>
                 </div>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-[var(--spacing-lg)]">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-600">Dias Críticos</p>
-                    <p className={`text-2xl font-bold ${stats.criticalDays > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    <p className="text-sm text-[var(--color-foreground-secondary)]">Dias Críticos</p>
+                    <p className={`text-[var(--font-size-2xl)] font-bold ${stats.criticalDays > 0 ? 'text-red-600' : 'text-green-600'}`}>
                       {stats.criticalDays}
                     </p>
                   </div>
@@ -128,18 +128,18 @@ export default function CashFlowForecast() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+            </div>
 
-          {/* Gráficos */}
-          <Card>
+            {/* Gráficos */}
+            <Card>
             <CardHeader>
               <CardTitle>Evolução do Saldo Projetado</CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <div className="text-center py-8">Carregando dados...</div>
+                <div className="text-center py-[var(--spacing-lg)]">Carregando dados...</div>
               ) : chartData.length === 0 ? (
-                <div className="text-center py-8 text-slate-600">Nenhuma projeção disponível</div>
+                <div className="text-center py-[var(--spacing-lg)] text-[var(--color-foreground-secondary)]">Nenhuma projeção disponível</div>
               ) : (
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={chartData}>

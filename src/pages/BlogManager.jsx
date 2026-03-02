@@ -62,12 +62,12 @@ export default function BlogManager() {
 
   if (categoriesError && !categories.length) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-900">Gerenciador de Blogs</h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
-          <p className="text-red-600 mb-4">Erro ao carregar categorias</p>
-          <Button onClick={() => refetchCategories()} className="gap-2">
+      <div className="space-y-[var(--spacing-lg)]">
+        <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Gerenciador de Blogs</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-[var(--spacing-2xl)] text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-[var(--spacing-md)]" />
+          <p className="text-red-600 mb-[var(--spacing-md)]">Erro ao carregar categorias</p>
+          <Button onClick={() => refetchCategories()} className="gap-[var(--spacing-sm)]">
             <RefreshCw className="w-4 h-4" />
             Tentar Novamente
           </Button>
@@ -77,21 +77,21 @@ export default function BlogManager() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Gerenciador de Blogs</h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">Crie, edite, otimize e agende seus artigos com IA</p>
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Gerenciador de Blogs</h1>
+          <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Crie, edite, otimize e agende seus artigos com IA</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-[var(--spacing-sm)]">
           {view === 'list' && (
             <>
-              <Button onClick={() => refetchCategories()} variant="outline" size="sm" className="gap-2">
+              <Button onClick={() => refetchCategories()} variant="outline" size="sm" className="gap-[var(--spacing-sm)]">
                 <RefreshCw className="w-4 h-4" />
                 Atualizar
               </Button>
-              <Button onClick={handleNewBlog} className="gap-2 bg-blue-600 hover:bg-blue-700">
+              <Button onClick={handleNewBlog} className="gap-[var(--spacing-sm)] bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)]">
                 <Plus className="w-4 h-4" />
                 Novo Blog
               </Button>
@@ -101,73 +101,73 @@ export default function BlogManager() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex gap-2 bg-white dark:bg-slate-800 rounded-lg shadow p-1 overflow-x-auto">
+      <div className="flex gap-[var(--spacing-sm)] bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-xs)] overflow-x-auto">
         <button
           onClick={() => setView('list')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
+          className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] rounded-lg font-medium transition-colors whitespace-nowrap ${
             view === 'list'
-              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              ? 'bg-blue-100 text-blue-700'
+              : 'text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
           }`}
         >
           📋 Lista
         </button>
         <button
           onClick={() => setView('editor')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
+          className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] rounded-lg font-medium transition-colors whitespace-nowrap ${
             view === 'editor'
-              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              ? 'bg-blue-100 text-blue-700'
+              : 'text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
           }`}
         >
           ✍️ Editor
         </button>
         <button
           onClick={() => setView('analytics')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-2 ${
+          className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-[var(--spacing-sm)] ${
             view === 'analytics'
-              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              ? 'bg-blue-100 text-blue-700'
+              : 'text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
           }`}
         >
           <BarChart3 className="w-4 h-4" /> Analytics
         </button>
         <button
           onClick={() => setView('scheduler')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-2 ${
+          className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-[var(--spacing-sm)] ${
             view === 'scheduler'
-              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              ? 'bg-blue-100 text-blue-700'
+              : 'text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
           }`}
         >
           <Clock className="w-4 h-4" /> Agendamento
         </button>
         <button
           onClick={() => setView('moderator')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-2 ${
+          className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-[var(--spacing-sm)] ${
             view === 'moderator'
-              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              ? 'bg-blue-100 text-blue-700'
+              : 'text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
           }`}
         >
           <MessageSquare className="w-4 h-4" /> Moderação
         </button>
         <button
           onClick={() => setView('assistant')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
+          className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] rounded-lg font-medium transition-colors whitespace-nowrap ${
             view === 'assistant'
-              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              ? 'bg-blue-100 text-blue-700'
+              : 'text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
           }`}
         >
           🤖 Assistente IA
         </button>
         <button
           onClick={() => setView('import')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-2 ${
+          className={`px-[var(--spacing-md)] py-[var(--spacing-sm)] rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-[var(--spacing-sm)] ${
             view === 'import'
-              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              ? 'bg-blue-100 text-blue-700'
+              : 'text-[var(--color-foreground-secondary)] hover:text-[var(--color-foreground-primary)]'
           }`}
         >
           <Upload className="w-4 h-4" /> Importar CSV
@@ -184,10 +184,10 @@ export default function BlogManager() {
       )}
 
       {view === 'editor' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[var(--spacing-lg)]">
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+            <div className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-lg)]">
+              <h2 className="text-xl font-bold text-[var(--color-foreground-primary)] mb-[var(--spacing-md)]">
                 {editingBlog?.id ? '✏️ Editar Blog' : '📝 Novo Blog'}
               </h2>
               <BlogEditor
@@ -198,24 +198,24 @@ export default function BlogManager() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-[var(--spacing-lg)]">
             {editingBlog && (
               <SEOAnalyzer blogData={editingBlog} />
             )}
           </div>
-        </div>
-      )}
+          </div>
+          )}
 
-      {view === 'analytics' && editingBlog && (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">📊 Analytics - {editingBlog.title}</h2>
+          {view === 'analytics' && editingBlog && (
+          <div className="space-y-[var(--spacing-lg)]">
+          <h2 className="text-[var(--font-size-2xl)] font-bold text-[var(--color-foreground-primary)]">📊 Analytics - {editingBlog.title}</h2>
           <BlogAnalyticsDashboard blogPostId={editingBlog.id} days={30} />
         </div>
       )}
 
       {view === 'scheduler' && editingBlog && (
         <div className="max-w-2xl">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">⏰ Agendar Publicação</h2>
+          <h2 className="text-[var(--font-size-2xl)] font-bold text-[var(--color-foreground-primary)] mb-[var(--spacing-lg)]">⏰ Agendar Publicação</h2>
           <BlogScheduler 
             blogPostId={editingBlog.id}
             currentStatus={editingBlog.status}
@@ -226,7 +226,7 @@ export default function BlogManager() {
 
       {view === 'moderator' && editingBlog && (
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">💬 Moderação de Comentários</h2>
+          <h2 className="text-[var(--font-size-2xl)] font-bold text-[var(--color-foreground-primary)] mb-[var(--spacing-lg)]">💬 Moderação de Comentários</h2>
           <CommentModerator 
             blogPostId={editingBlog.id}
             onUpdate={() => setRefreshKey(prev => prev + 1)}
@@ -235,14 +235,14 @@ export default function BlogManager() {
       )}
 
       {view === 'assistant' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--spacing-lg)]">
           <AIAssistant
             onContentGenerated={handleContentGenerated}
           />
 
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-4">💡 Como Usar</h3>
-            <ul className="space-y-3 text-sm text-blue-800 dark:text-blue-300">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-[var(--spacing-lg)]">
+            <h3 className="text-lg font-semibold text-blue-900 mb-[var(--spacing-md)]">💡 Como Usar</h3>
+            <ul className="space-y-[var(--spacing-sm)] text-sm text-blue-800">
               <li className="flex gap-2">
                 <span className="font-bold">1.</span>
                 <span>Insira um tema ou tópico que você quer explorar</span>
@@ -274,7 +274,7 @@ export default function BlogManager() {
 
       {view === 'import' && (
         <div className="max-w-2xl">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">📥 Importar Publicações</h2>
+          <h2 className="text-[var(--font-size-2xl)] font-bold text-[var(--color-foreground-primary)] mb-[var(--spacing-lg)]">📥 Importar Publicações</h2>
           <BlogPostCSVUploader 
             onSuccess={() => setRefreshKey(prev => prev + 1)}
           />

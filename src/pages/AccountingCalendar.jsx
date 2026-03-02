@@ -14,7 +14,7 @@ export default function AccountingCalendar() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="text-slate-500">Carregando...</div>
+        <div className="text-[var(--color-foreground-secondary)]">Carregando...</div>
       </div>
     );
   }
@@ -26,14 +26,14 @@ export default function AccountingCalendar() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Calendário Contábil</h1>
-          <p className="text-slate-600 mt-1">Prazos e eventos contábeis</p>
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Calendário Contábil</h1>
+          <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Prazos e eventos contábeis</p>
         </div>
-        <Button onClick={() => setShowForm(true)} className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="w-5 h-5 mr-2" />
+        <Button onClick={() => setShowForm(true)} className="bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)]">
+          <Plus className="w-5 h-5 mr-[var(--spacing-sm)]" />
           Novo Evento
         </Button>
       </div>

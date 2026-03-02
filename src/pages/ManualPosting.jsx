@@ -31,20 +31,20 @@ export default function ManualPosting() {
     setRefreshKey(prev => prev + 1);
   };
 
-  if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
+  if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-[var(--spacing-lg)]">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Baixa Manual</h1>
-          <p className="text-slate-600 mt-1">Registrar baixa manual de documentos</p>
+          <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Baixa Manual</h1>
+          <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Registrar baixa manual de documentos</p>
         </div>
         <Button 
           onClick={() => { setEditingPosting(null); setShowForm(true); }}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-[var(--color-interactive-default)] hover:bg-[var(--color-interactive-hover)]"
         >
-          <Plus className="w-5 h-5 mr-2" />
+          <Plus className="w-5 h-5 mr-[var(--spacing-sm)]" />
           Nova Baixa
         </Button>
       </div>

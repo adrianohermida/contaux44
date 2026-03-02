@@ -23,10 +23,10 @@ export default function ImportCSV() {
   if (!tenantId) return <ProtectedRoute><DashboardLayout><div className="text-center py-8">Carregando...</div></DashboardLayout></ProtectedRoute>;
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-[var(--spacing-lg)] max-w-2xl">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Importação CSV</h1>
-        <p className="text-slate-600 mt-1">Importar dados contábeis</p>
+        <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Importação CSV</h1>
+        <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-xs)]">Importar dados contábeis</p>
       </div>
 
       <CSVUploadForm
