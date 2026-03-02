@@ -1,133 +1,143 @@
-import React, { useState, useCallback } from 'react';
-import { Settings, GripVertical, Plus, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-
 /**
- * Dashboard Customizer - Permite personalizar widgets e layout
- * Drag-and-drop, adicionar/remover widgets, salvar configuração
+ * Dashboard Customizer
+ * Allow users to choose which widgets to show on their dashboard
  */
-export default function DashboardCustomizer({ onConfigChange }) {
+
+import React, { useState, useEffect } from 'react';
+import { Settings2, Eye, EyeOff, Save } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { Switch } from '@/components/ui/switch';
+
+const DEFAULT_WIDGETS = [
+  { id: 'kpi_contacts', label: 'KPI - Contatos', enabled: true },
+  { id: 'kpi_revenue', label: 'KPI - Receita', enabled: true },
+  { id: 'kpi_pipeline', label: 'KPI - Pipeline', enabled: true },
+  { id: 'kpi_conversion', label: 'KPI - Conversão', enabled: true },
+  { id: 'predictive', label: 'Análise Preditiva (IA)', enabled: true },
+  { id: 'contact_growth', label: 'Gráfico de Crescimento', enabled: true },
+  { id: 'revenue_chart', label: 'Gráfico de Receita', enabled: true },
+  { id: 'activity_feed', label: 'Feed de Atividades', enabled: true },
+  { id: 'sales_pipeline', label: 'Pipeline de Vendas', enabled: true },
+  { id: 'tag_distribution', label: 'Distribuição de Tags', enabled: false },
+  { id: 'campaign_analytics', label: 'Análise de Campanhas', enabled: false },
+  { id: 'loyalty_stats', label: 'Estatísticas de Fidelidade', enabled: false },
+];
+
+const STORAGE_KEY = 'dashboard_widget_config';
+
+export function useDashboardConfig() {
   const [widgets, setWidgets] = useState(() => {
-    const saved = localStorage.getItem('dashboardConfig');
-    return saved ? JSON.parse(saved) : getDefaultWidgets();
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : DEFAULT_WIDGETS;
+    } catch {
+      return DEFAULT_WIDGETS;
+    }
   });
-  const [editMode, setEditMode] = useState(false);
 
-  const saveConfig = useCallback(() => {
-    localStorage.setItem('dashboardConfig', JSON.stringify(widgets));
-    onConfigChange?.(widgets);
-    setEditMode(false);
-  }, [widgets, onConfigChange]);
+  const isEnabled = (widgetId) =>
+    widgets.find(w => w.id === widgetId)?.enabled ?? true;
 
-  const addWidget = useCallback((type) => {
-    const newWidget = {
-      id: `widget-${Date.now()}`,
-      type,
-      title: getWidgetTitle(type),
-      position: widgets.length,
-      size: 'medium'
-    };
-    setWidgets([...widgets, newWidget]);
-  }, [widgets]);
+  const saveConfig = (newWidgets) => {
+    setWidgets(newWidgets);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newWidgets));
+  };
 
-  const removeWidget = useCallback((id) => {
-    setWidgets(widgets.filter(w => w.id !== id));
-  }, [widgets]);
+  return { widgets, isEnabled, saveConfig };
+}
 
-  const moveWidget = useCallback((fromIdx, toIdx) => {
-    const newWidgets = [...widgets];
-    const [moved] = newWidgets.splice(fromIdx, 1);
-    newWidgets.splice(toIdx, 0, moved);
-    setWidgets(newWidgets.map((w, i) => ({ ...w, position: i })));
-  }, [widgets]);
+export default function DashboardCustomizer() {
+  const { widgets, saveConfig } = useDashboardConfig();
+  const [localWidgets, setLocalWidgets] = useState(widgets);
+  const [open, setOpen] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setLocalWidgets(widgets);
+  }, [widgets, open]);
+
+  const toggleWidget = (id) => {
+    setLocalWidgets(prev =>
+      prev.map(w => w.id === id ? { ...w, enabled: !w.enabled } : w)
+    );
+  };
+
+  const handleSave = () => {
+    saveConfig(localWidgets);
+    setSaved(true);
+    setTimeout(() => {
+      setSaved(false);
+      setOpen(false);
+    }, 1200);
+  };
+
+  const enabledCount = localWidgets.filter(w => w.enabled).length;
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Personalizar Dashboard</h3>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
         <Button
-          variant={editMode ? 'default' : 'outline'}
+          variant="outline"
           size="sm"
-          onClick={() => editMode ? saveConfig() : setEditMode(true)}
+          className="gap-2 min-h-[40px]"
+          aria-label="Personalizar dashboard"
         >
-          <Settings className="w-4 h-4 mr-1" />
-          {editMode ? 'Salvar' : 'Editar'}
+          <Settings2 className="w-4 h-4" aria-hidden="true" />
+          <span className="hidden sm:inline">Personalizar</span>
         </Button>
-      </div>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-full max-w-sm">
+        <SheetHeader>
+          <SheetTitle className="text-slate-900 dark:text-slate-100">
+            Personalizar Dashboard
+          </SheetTitle>
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            {enabledCount} widget{enabledCount !== 1 ? 's' : ''} ativo{enabledCount !== 1 ? 's' : ''}
+          </p>
+        </SheetHeader>
 
-      {editMode && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <p className="text-sm text-blue-900 mb-3">Arraste widgets para reorganizar ou clique para remover</p>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {['kpi', 'chart', 'table', 'forecast', 'alert'].map(type => (
-              <Button
-                key={type}
-                variant="outline"
-                size="sm"
-                onClick={() => addWidget(type)}
-              >
-                <Plus className="w-3 h-3 mr-1" /> {getWidgetTitle(type)}
-              </Button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="space-y-2">
-        {widgets.map((widget, idx) => (
-          <div
-            key={widget.id}
-            className={`flex items-center gap-3 p-4 border rounded-lg transition-all ${
-              editMode ? 'bg-gray-50 cursor-move' : 'bg-white'
-            }`}
-            draggable={editMode}
-            onDragStart={(e) => {
-              e.dataTransfer.setData('index', idx);
-            }}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-              const fromIdx = parseInt(e.dataTransfer.getData('index'));
-              if (fromIdx !== idx) moveWidget(fromIdx, idx);
-            }}
-          >
-            {editMode && <GripVertical className="w-5 h-5 text-gray-400" />}
-            <div className="flex-1">
-              <p className="font-medium text-sm">{widget.title}</p>
-              <p className="text-xs text-gray-500">Tipo: {widget.type}</p>
+        <div className="mt-6 space-y-3">
+          {localWidgets.map((widget) => (
+            <div
+              key={widget.id}
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                {widget.enabled ? (
+                  <Eye className="w-4 h-4 text-blue-500" aria-hidden="true" />
+                ) : (
+                  <EyeOff className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                )}
+                <span className={`text-sm ${widget.enabled ? 'text-slate-900 dark:text-slate-100' : 'text-slate-400 dark:text-slate-600'}`}>
+                  {widget.label}
+                </span>
+              </div>
+              <Switch
+                checked={widget.enabled}
+                onCheckedChange={() => toggleWidget(widget.id)}
+                aria-label={`${widget.enabled ? 'Desativar' : 'Ativar'} ${widget.label}`}
+              />
             </div>
-            {editMode && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => removeWidget(widget.id)}
-              >
-                <Trash2 className="w-4 h-4 text-red-500" />
-              </Button>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+          ))}
+        </div>
+
+        <div className="mt-6">
+          <Button
+            onClick={handleSave}
+            className="w-full gap-2 min-h-[44px]"
+          >
+            <Save className="w-4 h-4" aria-hidden="true" />
+            {saved ? 'Salvo!' : 'Salvar Configurações'}
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
-}
-
-function getDefaultWidgets() {
-  return [
-    { id: 'kpi-1', type: 'kpi', title: 'KPI - Receita', position: 0, size: 'medium' },
-    { id: 'kpi-2', type: 'kpi', title: 'KPI - Pagamentos', position: 1, size: 'medium' },
-    { id: 'chart-1', type: 'chart', title: 'Gráfico - Receita Mensal', position: 2, size: 'large' },
-    { id: 'table-1', type: 'table', title: 'Tabela - Últimas Transações', position: 3, size: 'large' }
-  ];
-}
-
-function getWidgetTitle(type) {
-  const titles = {
-    kpi: 'KPI',
-    chart: 'Gráfico',
-    table: 'Tabela',
-    forecast: 'Previsão',
-    alert: 'Alertas'
-  };
-  return titles[type] || type;
 }

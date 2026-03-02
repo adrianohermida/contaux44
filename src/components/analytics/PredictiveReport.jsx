@@ -1,156 +1,160 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
-import { Loader2, TrendingUp, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
 /**
- * Predictive Report - Gera relatórios com análise preditiva
- * Integra com AI para insights futuros
+ * Predictive Report
+ * AI-powered predictions using InvokeLLM
  */
-export default function PredictiveReport({ workspaceId, reportType = 'revenue' }) {
-  const [predictiveAnalysis, setPredictiveAnalysis] = useState(null);
-  const [generating, setGenerating] = useState(false);
 
-  const { data: reportData, isLoading } = useQuery({
-    queryKey: ['predictive-data', workspaceId, reportType],
-    queryFn: async () => {
-      if (reportType === 'revenue') {
-        return base44.entities.Invoice.filter({ workspace_id: workspaceId });
-      } else if (reportType === 'payment') {
-        return base44.entities.Payment.filter({ workspace_id: workspaceId });
-      }
-      return [];
-    },
-    enabled: !!workspaceId
-  });
+import React, { useState } from 'react';
+import { Brain, Loader2, RefreshCw, AlertCircle, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { base44 } from '@/api/base44Client';
 
-  const generatePrediction = async () => {
-    if (!reportData) return;
-    setGenerating(true);
+export default function PredictiveReport({ metrics, workspaceId }) {
+  const [insight, setInsight] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const generateInsights = async () => {
+    setLoading(true);
     try {
-      const analysis = await base44.integrations.Core.InvokeLLM({
-        prompt: buildPredictivePrompt(reportType, reportData),
+      const prompt = `
+        Você é um especialista em CRM e análise de dados.
+        Analise as seguintes métricas de um workspace CRM e forneça insights e recomendações:
+
+        Métricas:
+        - Total de contatos: ${metrics.totalContacts}
+        - Contatos ativos: ${metrics.activeContacts}
+        - Novos contatos este mês: ${metrics.newThisMonth}
+        - Taxa de crescimento: ${metrics.growthRate}%
+        - Oportunidades em aberto: ${metrics.openOpportunities}
+        - Valor total em pipeline: R$ ${metrics.pipelineValue}
+        - Taxa de conversão: ${metrics.conversionRate}%
+
+        Forneça:
+        1. 3 insights principais sobre o estado atual
+        2. 3 recomendações de ação imediata
+        3. 1 previsão de crescimento para os próximos 30 dias
+        
+        Seja direto, conciso e focado em ações práticas. Responda em português.
+      `;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
         response_json_schema: {
           type: 'object',
           properties: {
-            forecast: { type: 'string' },
-            risks: { type: 'array', items: { type: 'string' } },
-            opportunities: { type: 'array', items: { type: 'string' } },
+            insights: { type: 'array', items: { type: 'string' } },
             recommendations: { type: 'array', items: { type: 'string' } },
-            confidence: { type: 'number' }
-          }
-        }
+            forecast: { type: 'string' },
+          },
+        },
       });
-      setPredictiveAnalysis(analysis);
-    } catch (error) {
-      console.error('Erro:', error);
+
+      setInsight(result);
+    } catch (err) {
+      console.error('Predictive report error:', err);
     } finally {
-      setGenerating(false);
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (reportData) {
-      generatePrediction();
-    }
-  }, [reportData]);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="w-5 h-5 animate-spin mr-2" />
-        <span>Carregando dados...</span>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      {generating && (
-        <div className="flex items-center justify-center p-4 bg-blue-50 rounded-lg">
-          <Loader2 className="w-4 h-4 animate-spin mr-2" />
-          <span className="text-sm">Gerando análise preditiva...</span>
+    <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+            <Brain className="w-4 h-4 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+              Análise Preditiva com IA
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Insights baseados nos seus dados
+            </p>
+          </div>
+        </div>
+        <Button
+          onClick={generateInsights}
+          disabled={loading}
+          variant="outline"
+          size="sm"
+          className="gap-2 min-h-[40px]"
+        >
+          {loading ? (
+            <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <RefreshCw className="w-4 h-4" aria-hidden="true" />
+          )}
+          {loading ? 'Analisando...' : insight ? 'Atualizar' : 'Gerar Análise'}
+        </Button>
+      </div>
+
+      {/* Content */}
+      {!insight && !loading && (
+        <div className="flex flex-col items-center justify-center py-8 gap-3">
+          <Brain className="w-10 h-10 text-slate-300 dark:text-slate-600" aria-hidden="true" />
+          <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
+            Clique em "Gerar Análise" para obter insights personalizados sobre seus dados
+          </p>
         </div>
       )}
 
-      {predictiveAnalysis && (
-        <>
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6">
-            <div className="flex items-start gap-3">
-              <TrendingUp className="w-5 h-5 text-blue-600 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-blue-900 mb-2">Previsão</h3>
-                <p className="text-sm text-blue-800">{predictiveAnalysis.forecast}</p>
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="text-xs bg-blue-200 text-blue-900 px-2 py-1 rounded">
-                    Confiança: {Math.round(predictiveAnalysis.confidence * 100)}%
-                  </span>
-                </div>
-              </div>
-            </div>
+      {loading && (
+        <div className="flex flex-col items-center justify-center py-8 gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-purple-600 dark:text-purple-400" aria-hidden="true" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Analisando dados com IA...
+          </p>
+        </div>
+      )}
+
+      {insight && !loading && (
+        <div className="space-y-4">
+          {/* Insights */}
+          <div>
+            <h4 className="text-xs font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-2 flex items-center gap-1">
+              <AlertCircle className="w-4 h-4 text-blue-500" aria-hidden="true" />
+              Insights Principais
+            </h4>
+            <ul className="space-y-2">
+              {insight.insights?.map((item, i) => (
+                <li key={i} className="flex gap-2 text-sm text-slate-700 dark:text-slate-300">
+                  <span className="text-blue-500 font-bold shrink-0">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {predictiveAnalysis.risks?.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-red-900 mb-2">Riscos Identificados</h3>
-                  <ul className="text-sm text-red-800 space-y-1">
-                    {predictiveAnalysis.risks.map((risk, i) => (
-                      <li key={i}>• {risk}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+          {/* Recommendations */}
+          <div>
+            <h4 className="text-xs font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-2 flex items-center gap-1">
+              <TrendingUp className="w-4 h-4 text-green-500" aria-hidden="true" />
+              Recomendações
+            </h4>
+            <ul className="space-y-2">
+              {insight.recommendations?.map((item, i) => (
+                <li key={i} className="flex gap-2 text-sm text-slate-700 dark:text-slate-300">
+                  <span className="text-green-500 font-bold shrink-0">{i + 1}.</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Forecast */}
+          {insight.forecast && (
+            <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-100 dark:border-purple-800">
+              <h4 className="text-xs font-semibold text-purple-900 dark:text-purple-300 uppercase tracking-wide mb-1">
+                Previsão 30 dias
+              </h4>
+              <p className="text-sm text-purple-800 dark:text-purple-300">
+                {insight.forecast}
+              </p>
             </div>
           )}
-
-          {predictiveAnalysis.opportunities?.length > 0 && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h3 className="font-semibold text-green-900 mb-3">Oportunidades</h3>
-              <ul className="text-sm text-green-800 space-y-1">
-                {predictiveAnalysis.opportunities.map((opp, i) => (
-                  <li key={i}>✓ {opp}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {predictiveAnalysis.recommendations?.length > 0 && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-              <h3 className="font-semibold text-blue-900 mb-3">Recomendações</h3>
-              <ul className="text-sm text-blue-800 space-y-1">
-                {predictiveAnalysis.recommendations.map((rec, i) => (
-                  <li key={i}>→ {rec}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <Button onClick={generatePrediction} disabled={generating} className="w-full">
-            Atualizar Análise
-          </Button>
-        </>
+        </div>
       )}
     </div>
   );
-}
-
-function buildPredictivePrompt(reportType, data) {
-  const context = reportType === 'revenue'
-    ? `Dados de faturamento: ${JSON.stringify(data.slice(0, 10))}`
-    : `Dados de pagamento: ${JSON.stringify(data.slice(0, 10))}`;
-
-  return `Você é um analista de negócios especializado em análise preditiva.
-
-${context}
-
-Gere uma análise preditiva que inclua:
-- Previsão sobre a tendência futura
-- Riscos potenciais
-- Oportunidades de melhoria
-- Recomendações acionáveis
-- Confiança da análise (0-1)`;
 }
