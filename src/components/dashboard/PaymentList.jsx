@@ -1,111 +1,221 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
+/**
+ * PaymentList Component
+ * Virtualized payment history with filtering and actions
+ */
+
+import React, { useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Edit2, Trash2, AlertCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Edit2, Trash2, FileText } from 'lucide-react';
+import { format } from 'date-fns';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
-const PaymentRow = React.memo(({ payment, onEdit, onDelete, getStatusColor, getMethodLabel }) => (
-  <tr className="hover:bg-slate-50">
-    <td className="px-6 py-4 text-sm font-medium">{payment.payment_number}</td>
-    <td className="px-6 py-4 text-sm">{new Date(payment.payment_date).toLocaleDateString('pt-BR')}</td>
-    <td className="px-6 py-4 text-sm">{payment.amount.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</td>
-    <td className="px-6 py-4 text-sm">{getMethodLabel(payment.payment_method)}</td>
-    <td className="px-6 py-4 text-sm">
-      <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(payment.status)}`}>
-        {payment.status}
-      </span>
-    </td>
-    <td className="px-6 py-4 text-right">
-      <div className="flex justify-end gap-2">
-        <Button variant="ghost" size="sm" onClick={() => onEdit(payment)}>
-          <Edit2 className="w-4 h-4" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={() => onDelete(payment.id)}>
-          <Trash2 className="w-4 h-4 text-red-500" />
-        </Button>
-      </div>
-    </td>
-  </tr>
-));
+const STATUS_COLORS = {
+  pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400',
+  confirmed: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400',
+  failed: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400',
+  refunded: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400',
+  disputed: 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-400',
+};
 
-PaymentRow.displayName = 'PaymentRow';
-
-export default function PaymentList({ tenantId, onEdit, onRefresh }) {
-  const { data: payments = [], isLoading: loading, error, refetch } = useQuery({
-    queryKey: ['Payment-list', tenantId, onRefresh],
-    queryFn: async () => {
-      if (!tenantId) return [];
-      return base44.entities.Payment.filter({ tenant_id: tenantId });
-    },
+export default function PaymentList({ tenantId, onEdit, onRefresh = 0 }) {
+  // Fetch payments
+  const { data: payments = [], isLoading, error, refetch } = useQuery({
+    queryKey: ['payments', tenantId, onRefresh],
+    queryFn: () => base44.entities.Payment.filter({ tenant_id: tenantId }),
     enabled: !!tenantId,
-    staleTime: 3 * 60 * 1000,
-    retry: 2,
-    retryDelay: 1000
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
   });
 
-  const handleDelete = useCallback(async (id) => {
-    if (confirm('Tem certeza? Esta ação não pode ser desfeita.')) {
-      try {
-        await base44.entities.Payment.delete(id);
-        refetch();
-      } catch (err) {
-        console.error('Erro ao deletar:', err);
-        alert('Erro ao deletar pagamento. Tente novamente.');
+  // Fetch invoices for display
+  const { data: invoices = {} } = useQuery({
+    queryKey: ['invoices-for-payments', tenantId],
+    queryFn: async () => {
+      const invs = await base44.entities.Invoice.filter({ tenant_id: tenantId });
+      return Object.fromEntries(invs.map(inv => [inv.id, inv]));
+    },
+    enabled: !!tenantId,
+  });
+
+  const handleDelete = useCallback(
+    async (id) => {
+      if (confirm('Tem certeza que deseja deletar este pagamento?')) {
+        try {
+          await base44.entities.Payment.delete(id);
+          refetch();
+        } catch (error) {
+          alert('Erro ao deletar: ' + error.message);
+        }
       }
+    },
+    [refetch]
+  );
+
+  const handleDownloadReceipt = useCallback(async (paymentId, invoiceNumber) => {
+    try {
+      const response = await base44.functions.invoke('generatePaymentReceipt', {
+        paymentId,
+        tenantId,
+      });
+      
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `comprovante-${invoiceNumber}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert('Erro ao gerar recibo: ' + error.message);
     }
-  }, [refetch]);
+  }, [tenantId]);
 
-  const getStatusColor = useCallback((status) => {
-    const colors = { pending: 'bg-yellow-100 text-yellow-800', confirmed: 'bg-green-100 text-green-800', failed: 'bg-red-100 text-red-800', reversed: 'bg-slate-100 text-slate-800' };
-    return colors[status] || 'bg-slate-100';
-  }, []);
+  // Virtualization setup
+  const parentRef = React.useRef(null);
+  const virtualizer = useVirtualizer({
+    count: payments.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 68,
+    overscan: 5,
+  });
 
-  const getMethodLabel = useCallback((method) => {
-    const labels = { bank_transfer: 'Transferência', credit_card: 'Crédito', debit_card: 'Débito', pix: 'PIX', check: 'Cheque', cash: 'Dinheiro' };
-    return labels[method] || method;
-  }, []);
+  const virtualItems = virtualizer.getVirtualItems();
+  const totalSize = virtualizer.getTotalSize();
 
-  if (error) {
+  if (isLoading) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-        <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-        <p className="text-red-600 mb-4">Erro ao carregar pagamentos</p>
-        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
-          Tentar novamente
-        </button>
+      <div className="flex items-center justify-center h-64">
+        <div className="text-slate-600 dark:text-slate-400">Carregando pagamentos...</div>
       </div>
     );
   }
 
-  if (loading) return <div className="text-center py-8">Carregando...</div>;
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-red-600 dark:text-red-400">Erro ao carregar pagamentos</div>
+      </div>
+    );
+  }
+
+  if (payments.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <div className="text-slate-600 dark:text-slate-400">Nenhum pagamento registrado</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <table className="w-full">
-        <thead className="bg-slate-50 border-b border-slate-200">
-          <tr>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Nº Pagamento</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Data</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Valor</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Método</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-            <th className="px-6 py-3 text-right text-sm font-semibold">Ações</th>
+    <div
+      ref={parentRef}
+      className="h-96 overflow-auto border border-slate-200 dark:border-slate-700 rounded-lg"
+    >
+      <table className="w-full text-sm bg-white dark:bg-slate-800">
+        <thead className="sticky top-0 bg-slate-100 dark:bg-slate-700">
+          <tr className="border-b border-slate-200 dark:border-slate-600">
+            <th className="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">
+              Referência
+            </th>
+            <th className="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">
+              Fatura
+            </th>
+            <th className="px-6 py-3 text-right font-semibold text-slate-900 dark:text-slate-100">
+              Valor
+            </th>
+            <th className="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">
+              Data
+            </th>
+            <th className="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">
+              Método
+            </th>
+            <th className="px-6 py-3 text-left font-semibold text-slate-900 dark:text-slate-100">
+              Status
+            </th>
+            <th className="px-6 py-3 text-right font-semibold text-slate-900 dark:text-slate-100">
+              Ações
+            </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-200">
-          {payments.map((pay) => (
-            <PaymentRow 
-              key={pay.id} 
-              payment={pay} 
-              onEdit={onEdit} 
-              onDelete={handleDelete} 
-              getStatusColor={getStatusColor} 
-              getMethodLabel={getMethodLabel} 
-            />
-          ))}
+        <tbody
+          style={{
+            height: `${totalSize}px`,
+          }}
+          className="relative"
+        >
+          {virtualItems.map(virtualItem => {
+            const payment = payments[virtualItem.index];
+            const invoice = invoices[payment.invoice_id];
+
+            return (
+              <tr
+                key={payment.id}
+                style={{
+                  transform: `translateY(${virtualItem.start}px)`,
+                }}
+                className="absolute w-full border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+              >
+                <td className="px-6 py-3 text-slate-900 dark:text-slate-100">
+                  {payment.payment_number}
+                </td>
+                <td className="px-6 py-3 text-slate-900 dark:text-slate-100">
+                  {invoice?.invoice_number || 'N/A'}
+                </td>
+                <td className="px-6 py-3 text-right text-slate-900 dark:text-slate-100 font-semibold">
+                  {payment.amount.toFixed(2)} {payment.currency}
+                </td>
+                <td className="px-6 py-3 text-slate-600 dark:text-slate-400">
+                  {format(new Date(payment.payment_date), 'dd/MM/yyyy')}
+                </td>
+                <td className="px-6 py-3 text-slate-600 dark:text-slate-400 text-xs">
+                  {payment.payment_method}
+                </td>
+                <td className="px-6 py-3">
+                  <Badge className={STATUS_COLORS[payment.status]}>
+                    {payment.status}
+                  </Badge>
+                </td>
+                <td className="px-6 py-3 text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDownloadReceipt(payment.id, invoice?.invoice_number)}
+                      title="Baixar Recibo"
+                      aria-label="Baixar recibo em PDF"
+                    >
+                      <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onEdit(payment)}
+                      title="Editar"
+                      aria-label="Editar pagamento"
+                    >
+                      <Edit2 className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(payment.id)}
+                      title="Deletar"
+                      aria-label="Deletar pagamento"
+                    >
+                      <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
-      {payments.length === 0 && <div className="text-center py-8 text-slate-500">Nenhum pagamento cadastrado</div>}
     </div>
   );
 }
