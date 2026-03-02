@@ -51,33 +51,33 @@ export default function ServicesList({ tenantId, onEdit, onRefresh }) {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-        <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-        <p className="text-red-600 mb-4">Erro ao carregar serviços</p>
-        <button onClick={() => refetch()} className="text-red-500 hover:text-red-700 underline">
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center transition-colors">
+        <AlertCircle className="w-8 h-8 text-red-400 dark:text-red-500 mx-auto mb-2" aria-hidden="true" />
+        <p className="text-red-600 dark:text-red-300 mb-4">Erro ao carregar serviços</p>
+        <button onClick={() => refetch()} className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 underline" aria-label="Tentar novamente">
           Tentar novamente
         </button>
       </div>
     );
   }
 
-  if (loading) return <div className="text-center py-8 text-slate-500">Carregando serviços...</div>;
+  if (loading) return <div className="text-center py-8 text-slate-500 dark:text-slate-400" role="status" aria-live="polite">Carregando serviços...</div>;
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <table className="w-full text-sm">
-        <thead className="bg-slate-50 border-b">
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
+      <table className="w-full text-sm" role="table" aria-label="Lista de serviços">
+        <thead className="bg-slate-50 dark:bg-slate-700/30 border-b border-slate-200 dark:border-slate-700">
           <tr>
-            <th className="text-left py-3 px-4">Serviço</th>
-            <th className="text-left py-3 px-4">Categoria</th>
-            <th className="text-left py-3 px-4">Taxa Horária</th>
-            <th className="text-left py-3 px-4">Status</th>
-            <th className="text-left py-3 px-4">Ações</th>
+            <th className="text-left py-3 px-4 font-medium text-slate-900 dark:text-slate-100">Serviço</th>
+            <th className="text-left py-3 px-4 font-medium text-slate-900 dark:text-slate-100">Categoria</th>
+            <th className="text-left py-3 px-4 font-medium text-slate-900 dark:text-slate-100">Taxa Horária</th>
+            <th className="text-left py-3 px-4 font-medium text-slate-900 dark:text-slate-100">Status</th>
+            <th className="text-left py-3 px-4 font-medium text-slate-900 dark:text-slate-100">Ações</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
           {services.length === 0 ? (
-            <tr><td colSpan="5" className="text-center py-8 text-slate-500">Nenhum serviço cadastrado</td></tr>
+            <tr><td colSpan="5" className="text-center py-8 text-slate-500 dark:text-slate-400">Nenhum serviço cadastrado</td></tr>
           ) : (
             services.map(service => (
               <ServiceRow key={service.id} service={service} onEdit={onEdit} onDelete={handleDelete} />
