@@ -122,9 +122,9 @@ const DashboardHeader = memo(function DashboardHeader() {
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-white" />
+              <button className="flex items-center gap-2 p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" aria-label={`Menu do usuário ${user?.full_name || 'Usuário'}`}>
+                <div className="w-8 h-8 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" aria-hidden="true" />
                 </div>
                 <div className="text-left hidden md:block">
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-200">
