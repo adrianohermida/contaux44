@@ -70,27 +70,30 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="sobre" className="py-12 sm:py-20 bg-slate-50">
+      <section id="sobre" className="py-12 sm:py-20 bg-slate-50 dark:bg-slate-800">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
-            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&h=400&fit=crop" alt="Sobre Contaux" className="rounded-lg w-full" />
+            <img 
+              src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&h=400&fit=crop" 
+              alt="Escritório de contabilidade jurídica Contaux" 
+              className="rounded-xl w-full shadow-lg object-cover"
+              loading="lazy"
+            />
             <div>
-              <p className="text-blue-600 font-semibold mb-2">O que fazemos</p>
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">Simplificamos a Contadoria dos seus Processos</h2>
-              <p className="text-slate-600 mb-6">Conheça nossos serviços especializados e diferenciais que fazem da Contaux Contadoria a escolha ideal de contadoria em serviços de processos judiciais.</p>
+              <p className="text-blue-600 dark:text-blue-400 font-semibold mb-2">O que fazemos</p>
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">Simplificamos a Contadoria dos seus Processos</h2>
+              <p className="text-slate-600 dark:text-slate-300 mb-6">Conheça nossos serviços especializados e diferenciais que fazem da Contaux Contadoria a escolha ideal de contadoria em serviços de processos judiciais.</p>
               <div className="space-y-4">
-                <div className="border-l-4 border-blue-600 pl-4">
-                  <h3 className="font-bold text-slate-900 mb-2">Personalizado</h3>
-                  <p className="text-slate-600 text-sm">Na Contaux, nossos clientes têm acesso a um atendimento personalizado e de qualidade, com profissionais capacitados e experientes em contabilidade do setor jurídico.</p>
-                </div>
-                <div className="border-l-4 border-slate-200 pl-4">
-                  <h3 className="font-bold text-slate-900 mb-2">Moderno</h3>
-                  <p className="text-slate-600 text-sm">Garantindo eficiência, segurança e conformidade nos padrões de cálculos judiciais com dados confiáveis.</p>
-                </div>
-                <div className="border-l-4 border-slate-200 pl-4">
-                  <h3 className="font-bold text-slate-900 mb-2">Acessível</h3>
-                  <p className="text-slate-600 text-sm">Oferecemos preços justos e transparentes em nossos serviços, sem taxas ocultas ou surpresas.</p>
-                </div>
+                {[
+                  { label: 'Personalizado', color: 'border-blue-600', desc: 'Na Contaux, nossos clientes têm acesso a um atendimento personalizado e de qualidade, com profissionais capacitados e experientes em contabilidade do setor jurídico.' },
+                  { label: 'Moderno', color: 'border-slate-300 dark:border-slate-600', desc: 'Garantindo eficiência, segurança e conformidade nos padrões de cálculos judiciais com dados confiáveis.' },
+                  { label: 'Acessível', color: 'border-slate-300 dark:border-slate-600', desc: 'Oferecemos preços justos e transparentes em nossos serviços, sem taxas ocultas ou surpresas.' }
+                ].map((item) => (
+                  <div key={item.label} className={`border-l-4 ${item.color} pl-4`}>
+                    <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">{item.label}</h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -98,15 +101,18 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-20 px-4">
+      <section className="py-12 sm:py-20 px-4 bg-white dark:bg-slate-900">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 sm:mb-6">Pronto para Começar?</h2>
-          <p className="text-base sm:text-lg text-slate-600 mb-8">Crie sua conta grátis para solicitar serviços, acompanhar seus pedidos com transparência e facilidade.</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 sm:mb-6">Pronto para Começar?</h2>
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 mb-8">
+            Crie sua conta grátis para solicitar serviços, acompanhar seus pedidos com transparência e facilidade.
+          </p>
           <Link 
             to={createPageUrl('Contact')}
-            className="inline-flex items-center justify-center bg-blue-600 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm sm:text-base"
+            className="inline-flex items-center justify-center bg-blue-600 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-semibold hover:bg-blue-700 active:bg-blue-800 transition-colors text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label="Criar conta grátis"
           >
-            Criar Conta Grátis <ArrowRight className="w-4 h-4 ml-2" />
+            Criar Conta Grátis <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
           </Link>
         </div>
       </section>
