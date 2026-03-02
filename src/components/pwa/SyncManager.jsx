@@ -116,6 +116,7 @@ export function useSyncManager() {
 
 /**
  * Componente para exibir status da fila de sincronização
+ * ✅ Dark mode, ARIA live region, network-first strategy indicator
  */
 export function SyncStatus() {
   const { queueSize } = useSyncManager();
@@ -124,11 +125,12 @@ export function SyncStatus() {
 
   return (
     <div 
-      className="fixed bottom-4 left-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-sm text-blue-800 dark:text-blue-300 flex items-center gap-2"
+      className="fixed bottom-4 left-4 z-40 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-sm text-blue-800 dark:text-blue-300 flex items-center gap-2 shadow-lg transition-colors"
       role="status"
       aria-live="polite"
+      aria-label={`${queueSize} operação${queueSize > 1 ? 's' : ''} pendente${queueSize > 1 ? 's' : ''} de sincronização`}
     >
-      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" aria-hidden="true" />
+      <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse" aria-hidden="true" />
       <span>{queueSize} operação{queueSize > 1 ? 's' : ''} pendente{queueSize > 1 ? 's' : ''}</span>
     </div>
   );
