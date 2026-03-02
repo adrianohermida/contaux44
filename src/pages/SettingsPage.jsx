@@ -1,141 +1,238 @@
+/**
+ * Settings Page
+ * Unified settings: Branding, Language, Theme, Notifications, Security
+ */
+
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
-import IntegrationsManager from '../components/dashboard/IntegrationsManager';
-import CustomFieldsManager from '../components/dashboard/CustomFieldsManager';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Save, LogOut, Settings, Trash2, Sliders } from 'lucide-react';
+import {
+  Palette, Globe, Bell, Shield, User, ChevronRight, Sun, Moon
+} from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import BrandingSettings from '@/components/settings/BrandingSettings';
+import LanguageSwitcher from '@/components/settings/LanguageSwitcher';
+import { useGlobalAuth } from '@/components/auth/useGlobalAuth';
+import { useTranslation } from '@/components/hooks/useTranslation';
+import { LANGUAGES } from '@/components/i18n/translations';
 
 export default function SettingsPage() {
-  const { workspaceId } = useMultitenantAuthOptimized('internal');
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [formData, setFormData] = useState({});
-  const [activeTab, setActiveTab] = useState('profile');
+  const { user, workspaceId } = useGlobalAuth();
+  const { t, language, changeLanguage } = useTranslation();
+  const [darkMode, setDarkMode] = useState(
+    document.documentElement.classList.contains('dark')
+  );
 
-  React.useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const userData = await base44.auth.me();
-        setUser(userData);
-        setFormData(userData);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadUser();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const { toast } = await import('sonner');
-      await base44.auth.updateMe(formData);
-      setUser(formData);
-      toast.success('Configurações salvas com sucesso');
-    } catch (error) {
-      const { toast } = await import('sonner');
-      toast.error('Erro ao salvar: ' + error.message);
-    } finally {
-      setSaving(false);
+  const handleThemeToggle = (enabled) => {
+    setDarkMode(enabled);
+    const root = document.documentElement;
+    if (enabled) {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
   };
-
-  const handleLogout = () => {
-    if (confirm('Tem certeza que deseja fazer logout?')) {
-      base44.auth.logout();
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!confirm('Tem certeza que deseja deletar sua conta? Esta ação é irreversível.')) return;
-    if (!confirm('Esta ação não pode ser desfeita. Tem certeza?')) return;
-    
-    try {
-      const { toast } = await import('sonner');
-      await base44.functions.invoke('deleteUserAccount', { userId: user.id });
-      toast.success('Conta deletada com sucesso');
-      base44.auth.logout();
-    } catch (error) {
-      const { toast } = await import('sonner');
-      toast.error('Erro ao deletar conta: ' + error.message);
-    }
-  };
-
-  if (loading) return <div className="text-center py-8">Carregando...</div>;
 
   return (
-    <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Configurações</h1>
-            <p className="text-slate-600 mt-1">Gerencie sua conta e integrações</p>
+    <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          {t('settings.title')}
+        </h1>
+        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          Gerencie as preferências do seu workspace
+        </p>
+      </div>
+
+      <Tabs defaultValue="branding" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto gap-1 mb-6">
+          <TabsTrigger value="branding" className="gap-2 py-2 text-xs sm:text-sm">
+            <Palette className="w-4 h-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{t('settings.branding')}</span>
+            <span className="sm:hidden">Marca</span>
+          </TabsTrigger>
+          <TabsTrigger value="language" className="gap-2 py-2 text-xs sm:text-sm">
+            <Globe className="w-4 h-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{t('settings.language')}</span>
+            <span className="sm:hidden">Idioma</span>
+          </TabsTrigger>
+          <TabsTrigger value="appearance" className="gap-2 py-2 text-xs sm:text-sm">
+            <Sun className="w-4 h-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{t('settings.theme')}</span>
+            <span className="sm:hidden">Tema</span>
+          </TabsTrigger>
+          <TabsTrigger value="account" className="gap-2 py-2 text-xs sm:text-sm">
+            <User className="w-4 h-4" aria-hidden="true" />
+            <span className="hidden sm:inline">Conta</span>
+            <span className="sm:hidden">Conta</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Branding Tab */}
+        <TabsContent value="branding">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6">
+            <BrandingSettings workspaceId={workspaceId} />
           </div>
+        </TabsContent>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="profile" className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                Meu Perfil
-              </TabsTrigger>
-              <TabsTrigger value="custom-fields" className="flex items-center gap-2">
-                <Sliders className="w-4 h-4" />
-                Campos Customizados
-              </TabsTrigger>
-              <TabsTrigger value="integrations" className="flex items-center gap-2">
-                🔌 Integrações
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="profile" className="space-y-6">
-              <div className="bg-white rounded-lg shadow p-6 space-y-4">
-                <h2 className="text-lg font-semibold">Informações da Conta</h2>
-                <Input label="Email" type="email" value={formData.email || ''} disabled />
-                <Input label="Nome Completo" name="full_name" value={formData.full_name || ''} onChange={handleChange} />
-                <Input label="Função" value={formData.role || ''} disabled />
-                
-                <div className="flex flex-col gap-3 pt-4">
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 sm:flex-1">
-                      <Save className="w-4 h-4 mr-2" />
-                      {saving ? 'Salvando...' : 'Salvar Alterações'}
-                    </Button>
-                    <Button onClick={handleLogout} variant="outline" className="text-red-600 hover:text-red-700 sm:flex-1">
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </Button>
-                  </div>
-                  <div className="border-t pt-4 mt-2">
-                    <h3 className="font-semibold text-red-600 mb-3 text-sm">Zona de Perigo</h3>
-                    <Button onClick={handleDeleteAccount} variant="destructive" className="w-full bg-red-600 hover:bg-red-700">
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Deletar Conta Permanentemente
-                    </Button>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-                      Esta ação é irreversível. Sua conta e todos os dados serão deletados.
+        {/* Language Tab */}
+        <TabsContent value="language">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 space-y-4">
+            <div>
+              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                Idioma da Interface
+              </h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Escolha o idioma preferido para navegação
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => changeLanguage(lang.code)}
+                  className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all min-h-[70px] text-left ${
+                    language === lang.code
+                      ? 'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                      : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-800'
+                  }`}
+                  aria-pressed={language === lang.code}
+                  aria-label={`Selecionar idioma ${lang.label}`}
+                >
+                  <span className="text-2xl" aria-hidden="true">{lang.flag}</span>
+                  <div>
+                    <p className={`font-medium text-sm ${
+                      language === lang.code
+                        ? 'text-blue-900 dark:text-blue-200'
+                        : 'text-slate-900 dark:text-slate-100'
+                    }`}>
+                      {lang.label}
                     </p>
+                    {language === lang.code && (
+                      <p className="text-xs text-blue-600 dark:text-blue-400">Ativo</p>
+                    )}
                   </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Appearance Tab */}
+        <TabsContent value="appearance">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 space-y-6">
+            <div>
+              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                Aparência
+              </h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Personalize a experiência visual
+              </p>
+            </div>
+
+            {/* Dark mode */}
+            <div className="flex items-center justify-between p-4 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3">
+                {darkMode ? (
+                  <Moon className="w-5 h-5 text-indigo-500" aria-hidden="true" />
+                ) : (
+                  <Sun className="w-5 h-5 text-yellow-500" aria-hidden="true" />
+                )}
+                <div>
+                  <Label className="font-medium cursor-pointer" htmlFor="dark-mode">
+                    Modo Escuro
+                  </Label>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    {darkMode ? 'Tema escuro ativo' : 'Tema claro ativo'}
+                  </p>
                 </div>
               </div>
-            </TabsContent>
+              <Switch
+                id="dark-mode"
+                checked={darkMode}
+                onCheckedChange={handleThemeToggle}
+                aria-label="Ativar modo escuro"
+              />
+            </div>
 
-            <TabsContent value="custom-fields">
-              <div className="bg-white rounded-lg shadow p-6">
-                <CustomFieldsManager workspaceId={workspaceId} />
+            {/* Preview */}
+            <div className="grid grid-cols-2 gap-3">
+              <div
+                className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${!darkMode ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'}`}
+                onClick={() => handleThemeToggle(false)}
+                role="button"
+                tabIndex={0}
+                aria-label="Modo claro"
+                onKeyDown={(e) => e.key === 'Enter' && handleThemeToggle(false)}
+              >
+                <div className="bg-white rounded-lg p-3 border border-slate-200 mb-2">
+                  <div className="h-2 bg-slate-200 rounded w-3/4 mb-1" />
+                  <div className="h-2 bg-slate-100 rounded w-1/2" />
+                </div>
+                <p className="text-xs font-medium text-center text-slate-700">
+                  Claro {!darkMode && '✓'}
+                </p>
               </div>
-            </TabsContent>
-
-            <TabsContent value="integrations">
-              <IntegrationsManager />
-            </TabsContent>
-          </Tabs>
+              <div
+                className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${darkMode ? 'border-blue-500 bg-slate-800' : 'border-slate-200 hover:border-slate-300'}`}
+                onClick={() => handleThemeToggle(true)}
+                role="button"
+                tabIndex={0}
+                aria-label="Modo escuro"
+                onKeyDown={(e) => e.key === 'Enter' && handleThemeToggle(true)}
+              >
+                <div className="bg-slate-900 rounded-lg p-3 border border-slate-700 mb-2">
+                  <div className="h-2 bg-slate-700 rounded w-3/4 mb-1" />
+                  <div className="h-2 bg-slate-800 rounded w-1/2" />
+                </div>
+                <p className="text-xs font-medium text-center text-slate-300">
+                  Escuro {darkMode && '✓'}
+                </p>
+              </div>
+            </div>
           </div>
-          );
-          }
+        </TabsContent>
+
+        {/* Account Tab */}
+        <TabsContent value="account">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 space-y-4">
+            <div>
+              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-1">
+                Informações da Conta
+              </h3>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
+                <div>
+                  <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Nome</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{user?.full_name || '—'}</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
+                <div>
+                  <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Email</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{user?.email || '—'}</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
+                <div>
+                  <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Workspace</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 font-mono text-xs">{workspaceId || '—'}</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
+                <div>
+                  <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Role</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 capitalize">{user?.role || '—'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
