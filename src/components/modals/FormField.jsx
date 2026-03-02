@@ -28,12 +28,12 @@ export default function FormField({
   // Select
   if (type === 'select' && options) {
     return (
-      <div className="flex flex-col gap-[var(--spacing-sm)]">
-        <label htmlFor={name} className="text-[var(--font-size-sm)] font-[var(--font-weight-medium)] text-[var(--color-foreground-secondary)]">
-          {label}
-          {requiredIndicator}
-        </label>
-        <Select value={value} onValueChange={onChange} disabled={disabled}>
+      <div className="flex flex-col gap-[var(--spacing-md)]">
+         <label htmlFor={name} className="text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)]">
+           {label}
+           {requiredIndicator}
+         </label>
+         <Select value={value} onValueChange={onChange} disabled={disabled}>
           <SelectTrigger id={name} className={`bg-[var(--color-background-primary)] border-[var(--color-border-default)] text-[var(--color-foreground-primary)] ${error ? 'border-[var(--color-error)]' : ''}`} aria-describedby={errorId} aria-invalid={!!error}>
             <SelectValue placeholder={placeholder || `Selecione ${label.toLowerCase()}`} />
           </SelectTrigger>
@@ -45,20 +45,20 @@ export default function FormField({
             ))}
           </SelectContent>
         </Select>
-        {error && <span id={errorId} className="text-xs text-[var(--color-error)]">{error}</span>}
-      </div>
-    );
-  }
+        {error && <span id={errorId} className="text-[var(--font-size-xs)] text-[var(--color-error)] mt-[var(--spacing-xs)]">{error}</span>}
+        </div>
+        );
+        }
 
-  // Textarea
-  if (type === 'textarea') {
+        // Textarea
+        if (type === 'textarea') {
     return (
-      <div className="flex flex-col gap-[var(--spacing-sm)]">
-        <label htmlFor={name} className="text-[var(--font-size-sm)] font-[var(--font-weight-medium)] text-[var(--color-foreground-secondary)]">
-          {label}
-          {requiredIndicator}
-        </label>
-        <Textarea
+      <div className="flex flex-col gap-[var(--spacing-md)]">
+         <label htmlFor={name} className="text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)]">
+           {label}
+           {requiredIndicator}
+         </label>
+         <Textarea
           id={name}
           name={name}
           value={value}
@@ -71,19 +71,19 @@ export default function FormField({
           aria-invalid={!!error}
           {...props}
         />
-        {error && <span id={errorId} className="text-xs text-[var(--color-error)]">{error}</span>}
-      </div>
-    );
-  }
+        {error && <span id={errorId} className="text-[var(--font-size-xs)] text-[var(--color-error)] mt-[var(--spacing-xs)]">{error}</span>}
+        </div>
+        );
+        }
 
-  // Input padrão
+        // Input padrão
   return (
-    <div className="flex flex-col gap-[var(--spacing-sm)]">
-      <label htmlFor={name} className="text-[var(--font-size-sm)] font-[var(--font-weight-medium)] text-[var(--color-foreground-secondary)]">
-        {label}
-        {requiredIndicator}
-      </label>
-      <Input
+    <div className="flex flex-col gap-[var(--spacing-md)]">
+       <label htmlFor={name} className="text-[var(--font-size-sm)] font-semibold text-[var(--color-foreground-primary)]">
+         {label}
+         {requiredIndicator}
+       </label>
+       <Input
         id={name}
         name={name}
         type={type}
@@ -96,7 +96,7 @@ export default function FormField({
         aria-invalid={!!error}
         {...props}
       />
-      {error && <span id={errorId} className="text-xs text-[var(--color-error)]">{error}</span>}
-    </div>
-  );
-}
+      {error && <span id={errorId} className="text-[var(--font-size-xs)] text-[var(--color-error)] mt-[var(--spacing-xs)]">{error}</span>}
+      </div>
+      );
+      }
