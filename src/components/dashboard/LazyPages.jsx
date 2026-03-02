@@ -25,15 +25,21 @@ export const LazyReports = lazy(() => import('../../pages/Reports'));
 export const LazyCommunication = lazy(() => import('../../pages/Communication'));
 export const LazyClientPortal = lazy(() => import('../../pages/ClientPortal'));
 export const LazySettings = lazy(() => import('../../pages/SettingsPage'));
-export const LazyBlogManager = lazy(() => import('../../pages/BlogManager'));
+// Heavy pages with additional lazy wrappers
+export const LazyBlogManager = lazy(() => import('../performance/LazyPageBlogManager'));
 export const LazyAuditLogs = lazy(() => import('../../pages/AuditLogs'));
-export const LazySecurityCenter = lazy(() => import('../../pages/SecurityCenter'));
+export const LazySecurityCenter = lazy(() => import('../performance/LazyPageSecurityCenter'));
 export const LazyTransactions = lazy(() => import('../../pages/Transactions'));
-export const LazyCashFlowForecast = lazy(() => import('../../pages/CashFlowForecast'));
-export const LazyDocumentManagement = lazy(() => import('../../pages/DocumentManagement'));
-export const LazyRLSDebugger = lazy(() => import('../../pages/RLSDebugger'));
+export const LazyCashFlowForecast = lazy(() => import('../performance/LazyPageCashFlow'));
+export const LazyDocumentManagement = lazy(() => import('../performance/LazyPageDocuments'));
+export const LazyRLSDebugger = lazy(() => import('../performance/LazyPageRLSDebugger'));
 
 // Lazy load de componentes pesados
+// Additional heavy page lazy loaders
+export const LazyAdvancedReports = lazy(() => import('../performance/LazyPageAdvancedReports'));
+export const LazyReportsOperations = lazy(() => import('../performance/LazyPageOperations'));
+
+// Heavy components
 export const LazyBlogEditor = lazy(() => import('./blog/BlogEditor'));
 export const LazyReportForm = lazy(() => import('./ReportForm'));
 export const LazyDocumentTemplateForm = lazy(() => import('./DocumentTemplateForm'));
