@@ -21,7 +21,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[var(--spacing-lg)]">
       <div>
         <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Dashboard</h1>
         <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-sm)]">Visão geral do seu workspace</p>
