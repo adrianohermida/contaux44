@@ -134,13 +134,13 @@ const DashboardHeader = memo(function DashboardHeader() {
                 </div>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="dark:bg-slate-700 dark:border-slate-600">
-              <DropdownMenuItem onClick={() => setPreferencesOpen(true)}>
-                <Settings className="w-4 h-4 mr-2" />
+            <DropdownMenuContent align="end" className="dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200">
+              <DropdownMenuItem onClick={() => setPreferencesOpen(true)} className="dark:hover:bg-slate-600">
+                <Settings className="w-4 h-4 mr-2" aria-hidden="true" />
                 Preferências
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout} className="text-amber-600">
-                <LogOut className="w-4 h-4 mr-2" />
+              <DropdownMenuItem onClick={handleLogout} className="text-amber-600 dark:text-amber-400 dark:hover:bg-slate-600">
+                <LogOut className="w-4 h-4 mr-2" aria-hidden="true" />
                 Sair
               </DropdownMenuItem>
             </DropdownMenuContent>
