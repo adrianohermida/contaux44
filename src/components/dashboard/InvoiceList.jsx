@@ -17,7 +17,7 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
     queryFn: async () => {
       if (!tenantId) return [];
       return base44.entities.Invoice.filter({ 
-        workspace_id: tenantId 
+        tenant_id: tenantId 
       });
     },
     enabled: !!tenantId,
@@ -52,8 +52,15 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
   }, [invalidateRelated, refetch]);
 
   const getStatusColor = useCallback((status) => {
-    const colors = { draft: 'bg-slate-100 text-slate-800', sent: 'bg-blue-100 text-blue-800', paid: 'bg-green-100 text-green-800', overdue: 'bg-red-100 text-red-800' };
-    return colors[status] || 'bg-slate-100';
+    const colors = {
+      draft: 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200',
+      sent: 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+      paid: 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+      overdue: 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200',
+      viewed: 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
+      cancelled: 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
+    };
+    return colors[status] || 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200';
   }, []);
 
   if (error) {
@@ -70,15 +77,15 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
   if (loading) return <div className="text-center py-8">Carregando...</div>;
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow overflow-hidden">
       <table className="w-full">
-        <thead className="bg-slate-50 border-b border-slate-200">
+        <thead className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
           <tr>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Nº Fatura</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Data</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Valor</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-            <th className="px-6 py-3 text-right text-sm font-semibold">Ações</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Nº Fatura</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Data</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Valor</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Status</th>
+            <th className="px-6 py-3 text-right text-sm font-semibold text-slate-900 dark:text-slate-100">Ações</th>
           </tr>
         </thead>
         <tbody 
@@ -91,15 +98,15 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
             return (
               <tr 
                 key={invoice.id}
-                className="hover:bg-slate-50 absolute top-0 left-0 w-full"
+                className="hover:bg-slate-50 dark:hover:bg-slate-700 border-b dark:border-slate-700 absolute top-0 left-0 w-full"
                 style={{
                   height: `${virtualRow.size}px`,
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
               >
-                <td className="px-6 py-4 text-sm font-medium">{invoice.invoice_number}</td>
-                <td className="px-6 py-4 text-sm">{new Date(invoice.issue_date).toLocaleDateString('pt-BR')}</td>
-                <td className="px-6 py-4 text-sm">{invoice.total_amount.toLocaleString('pt-BR', {style: 'currency', currency: invoice.currency})}</td>
+                <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-100">{invoice.invoice_number}</td>
+                <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{new Date(invoice.issue_date).toLocaleDateString('pt-BR')}</td>
+                <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-100">{invoice.total_amount.toLocaleString('pt-BR', {style: 'currency', currency: invoice.currency})}</td>
                 <td className="px-6 py-4 text-sm">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(invoice.status)}`}>
                     {invoice.status}
@@ -120,7 +127,7 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
           })}
         </tbody>
       </table>
-      {invoices.length === 0 && <div className="text-center py-8 text-slate-500">Nenhuma fatura cadastrada</div>}
+      {invoices.length === 0 && <div className="text-center py-8 text-slate-500 dark:text-slate-400">Nenhuma fatura cadastrada</div>}
     </div>
   );
 }
