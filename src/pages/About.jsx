@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Play, Users, BarChart3 } from 'lucide-react';
+import { CheckCircle2, Play, Users, BarChart3, Calculator, FileSearch, Receipt } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import VirtualCounterWidget from '../components/dashboard/widgets/VirtualCounterWidget';
@@ -17,8 +17,6 @@ const services = [
   { icon: <Calculator className="w-10 h-10" />, title: 'Cálculos Especializados', desc: 'Revisão bancária, cálculos trabalhistas, pensão alimentícia e superendividamento' },
   { icon: <Receipt className="w-10 h-10" />, title: 'Guias de Recolhimento', desc: 'Geração automatizada de guias de recolhimento e documentação fiscal' },
 ];
-
-import { Calculator, FileSearch, Receipt, BarChart3 } from 'lucide-react';
 
 export default function About() {
   const [activeTab, setActiveTab] = useState('missao');
