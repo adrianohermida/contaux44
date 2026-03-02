@@ -16,32 +16,32 @@ export default function Reports() {
   const [activeTab, setActiveTab] = useState('analytics');
 
   return (
-    <div className="space-y-6 pb-20 min-h-screen bg-white dark:bg-slate-900 transition-colors" role="main" aria-label="Página de Relatórios">
-      <UnifiedHeader
-        title="Relatórios"
-        filteredCount={0}
-        totalCount={0}
-        itemName="relatório"
-        hideImportExport
-      />
+     <div className="space-y-[var(--spacing-lg)] pb-20 min-h-screen bg-[var(--color-background-primary)] transition-colors" role="main" aria-label="Página de Relatórios">
+       <UnifiedHeader
+         title="Relatórios"
+         filteredCount={0}
+         totalCount={0}
+         itemName="relatório"
+         hideImportExport
+       />
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 min-h-[44px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-          <TabsTrigger value="analytics" className="gap-2 dark:text-slate-300 dark:data-[state=active]:text-slate-100" aria-label="Aba de Análise">
-            <TrendingUp className="w-4 h-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Análise</span>
-          </TabsTrigger>
-          <TabsTrigger value="reports" className="gap-2 dark:text-slate-300 dark:data-[state=active]:text-slate-100" aria-label="Aba de Relatórios">
-            <BarChart3 className="w-4 h-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Relatórios</span>
-          </TabsTrigger>
-        </TabsList>
+       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+         <TabsList className="grid w-full grid-cols-2 min-h-[44px] bg-[var(--color-background-secondary)] border border-[var(--color-border-default)]">
+           <TabsTrigger value="analytics" className="gap-[var(--spacing-sm)] text-[var(--color-foreground-secondary)] data-[state=active]:text-[var(--color-interactive-default)]" aria-label="Aba de Análise">
+             <TrendingUp className="w-4 h-4" aria-hidden="true" />
+             <span className="hidden sm:inline">Análise</span>
+           </TabsTrigger>
+           <TabsTrigger value="reports" className="gap-[var(--spacing-sm)] text-[var(--color-foreground-secondary)] data-[state=active]:text-[var(--color-interactive-default)]" aria-label="Aba de Relatórios">
+             <BarChart3 className="w-4 h-4" aria-hidden="true" />
+             <span className="hidden sm:inline">Relatórios</span>
+           </TabsTrigger>
+         </TabsList>
 
-        <TabsContent value="analytics" className="space-y-6">
+         <TabsContent value="analytics" className="space-y-[var(--spacing-lg)]">
           <ReportAnalytics workspaceId={workspaceId} />
         </TabsContent>
 
-        <TabsContent value="reports" className="space-y-6">
+        <TabsContent value="reports" className="space-y-[var(--spacing-lg)]">
           <ReportsDashboard workspaceId={workspaceId} />
         </TabsContent>
       </Tabs>
