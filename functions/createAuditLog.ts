@@ -1,52 +1,62 @@
+/**
+ * Create Audit Log
+ * Backend function to log all actions for compliance
+ */
+
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-/**
- * Função de auditoria automática para entity automations
- * Registra todas as alterações em entities
- */
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const body = await req.json();
-
-    // Suporte para body direto (não apenas de automations)
-    const event = body.event || {};
-    const data = body.data || {};
-    const old_data = body.old_data || body.oldData || null;
-    const action = body.action || (event?.type ? event.type : 'update');
-    const entity_type = body.entity_type || event?.entity_name || 'Unknown';
-    const entity_id = body.entity_id || event?.entity_id || null;
-
     const user = await base44.auth.me();
 
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const workspaceId = body.tenant_id || data?.tenant_id || data?.workspace_id || user.workspace_id;
-    
-    if (!workspaceId) {
-      return Response.json({ error: 'Workspace ID required' }, { status: 403 });
-    }
+    const body = await req.json();
+    const {
+      action,
+      entityType,
+      entityId,
+      entityName,
+      oldValues,
+      newValues,
+      status = 'success',
+      reasonDenied,
+    } = body;
 
-    // Cria log de auditoria
-    await base44.asServiceRole.entities.AuditLog.create({
-      tenant_id: workspaceId,
+    // Extract client info
+    const userAgent = req.headers.get('user-agent') || '';
+    const ipAddress = req.headers.get('x-forwarded-for')?.split(',')[0] || 
+                     req.headers.get('x-real-ip') || 
+                     'unknown';
+
+    // Create audit log
+    const auditLog = await base44.asServiceRole.entities.AuditLog?.create({
+      workspace_id: user.workspace_id,
       user_email: user.email,
       action,
-      entity_type,
-      entity_id,
-      old_values: old_data || null,
-      new_values: data || null,
-      ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-      status: 'success',
-      timestamp: new Date().toISOString()
+      entity_type: entityType,
+      entity_id: entityId,
+      entity_name: entityName,
+      old_values: oldValues,
+      new_values: newValues,
+      ip_address: ipAddress,
+      user_agent: userAgent,
+      status,
+      reason_denied: reasonDenied,
     });
 
-    return Response.json({ success: true, logId: entity_id });
+    return Response.json({
+      success: true,
+      auditLogId: auditLog?.id,
+    });
   } catch (error) {
-    console.error('Erro ao criar auditlog:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Audit log creation failed:', error);
+    return Response.json(
+      { error: error.message },
+      { status: 500 }
+    );
   }
 });
