@@ -20,13 +20,13 @@ const ContextMenuSubTrigger = React.forwardRef(({ className, inset, children, ..
   <ContextMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent dark:focus:bg-slate-700 focus:text-accent-foreground dark:focus:text-slate-200 data-[state=open]:bg-accent dark:data-[state=open]:bg-slate-700 data-[state=open]:text-accent-foreground dark:data-[state=open]:text-slate-200",
       inset && "pl-8",
       className
     )}
     {...props}>
     {children}
-    <ChevronRight className="ml-auto h-4 w-4" />
+    <ChevronRight className="ml-auto h-4 w-4" aria-hidden="true" />
   </ContextMenuPrimitive.SubTrigger>
 ))
 ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName
