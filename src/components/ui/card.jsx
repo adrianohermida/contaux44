@@ -14,7 +14,7 @@ Card.displayName = "Card"
 const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-[var(--spacing-component-padding)]", className)}
+    className={cn("flex flex-col space-y-[var(--spacing-xs)] p-[var(--spacing-component-padding)]", className)}
     {...props} />
 ))
 CardHeader.displayName = "CardHeader"

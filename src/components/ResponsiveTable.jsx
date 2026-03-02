@@ -18,28 +18,28 @@ export default function ResponsiveTable({ columns, data, children, className = '
       {/* Desktop Table */}
       <div className={`hidden md:block overflow-x-auto ${className}`}>
         <table className="w-full border-collapse">
-          <thead className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+          <thead className="bg-[var(--color-background-secondary)] border-b border-[var(--color-border-default)]">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300"
+                  className="px-[var(--spacing-md)] py-[var(--spacing-sm)] text-left text-sm font-semibold text-[var(--color-foreground-primary)]"
                 >
                   {col.label}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+          <tbody className="divide-y divide-[var(--color-border-default)]">
             {data.map((row, idx) => (
               <tr
                 key={row.id || idx}
-                className="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                className="hover:bg-[var(--color-background-secondary)] transition-colors"
               >
                 {columns.map((col) => (
                   <td
                     key={`${row.id || idx}-${col.key}`}
-                    className="px-4 py-3 text-sm text-slate-700 dark:text-slate-300"
+                    className="px-[var(--spacing-md)] py-[var(--spacing-sm)] text-sm text-[var(--color-foreground-primary)]"
                   >
                     {col.render ? col.render(row[col.key], row) : row[col.key]}
                   </td>
@@ -51,18 +51,18 @@ export default function ResponsiveTable({ columns, data, children, className = '
       </div>
 
       {/* Mobile Cards */}
-      <div className="md:hidden space-y-3">
+      <div className="md:hidden space-y-[var(--spacing-md)]">
         {data.map((row, idx) => (
           <div
             key={row.id || idx}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 border border-slate-200 dark:border-slate-700"
+            className="bg-[var(--color-background-primary)] rounded-lg shadow p-[var(--spacing-md)] border border-[var(--color-border-default)]"
           >
             {columns.map((col) => (
-              <div key={`${row.id || idx}-${col.key}`} className="flex justify-between py-2 last:pb-0">
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+              <div key={`${row.id || idx}-${col.key}`} className="flex justify-between py-[var(--spacing-xs)] last:pb-0">
+                <span className="text-sm font-medium text-[var(--color-foreground-secondary)]">
                   {col.label}
                 </span>
-                <span className="text-sm text-slate-900 dark:text-slate-100 text-right">
+                <span className="text-sm text-[var(--color-foreground-primary)] text-right">
                   {col.render ? col.render(row[col.key], row) : row[col.key]}
                 </span>
               </div>
