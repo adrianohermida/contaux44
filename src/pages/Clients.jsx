@@ -75,7 +75,7 @@ export default function Clients() {
 
   return (
     <ProtectedInternalRoute>
-      <div className="space-y-6 pb-20 min-h-screen" role="main" aria-label="Gerenciador de clientes">
+      <div className="space-y-[var(--spacing-lg)] pb-20 min-h-screen" role="main" aria-label="Gerenciador de clientes">
         <UnifiedHeader
           title="Clientes"
           filteredCount={filteredAndSortedClients.length}
@@ -114,7 +114,7 @@ export default function Clients() {
           renderItem={(client) => (
             <Card
               key={client.id}
-              className="p-4 sm:p-5 hover:shadow-lg transition-shadow cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded min-h-[120px] flex flex-col justify-between"
+              className="p-[var(--spacing-sm)] sm:p-[var(--spacing-md)] hover:shadow-lg transition-shadow cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] rounded min-h-[120px] flex flex-col justify-between"
               onClick={() => navigate(`/contact/${client.id}`)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -126,37 +126,37 @@ export default function Clients() {
               role="button"
               aria-label={`Ver detalhes do cliente ${client.company_name}`}
             >
-              <div className="space-y-3">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100 line-clamp-2 flex-1">
+              <div className="space-y-[var(--spacing-sm)]">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-[var(--spacing-sm)]">
+                  <h3 className="font-semibold text-[var(--color-foreground-primary)] line-clamp-2 flex-1">
                     {client.company_name}
                   </h3>
                   <Badge 
-                    className={`whitespace-nowrap ${client.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300'}`}
+                    className={`whitespace-nowrap ${client.status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-800'}`}
                     aria-label={`Status: ${client.status === 'active' ? 'Ativo' : 'Inativo'}`}
                   >
                     {client.status === 'active' ? 'Ativo' : 'Inativo'}
                   </Badge>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 min-h-[28px]">
+                <div className="flex items-center gap-[var(--spacing-xs)] text-[var(--font-size-sm)] text-[var(--color-foreground-secondary)] min-h-[28px]">
                   <Mail className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-                  <a href={`mailto:${client.email}`} className="hover:text-blue-600 dark:hover:text-blue-400 truncate focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-1">
+                  <a href={`mailto:${client.email}`} className="hover:text-[var(--color-interactive-hover)] truncate focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-default)] rounded px-1">
                     {client.email}
                   </a>
                 </div>
 
                 {client.phone && (
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 min-h-[28px]">
+                  <div className="flex items-center gap-[var(--spacing-xs)] text-[var(--font-size-sm)] text-[var(--color-foreground-secondary)] min-h-[28px]">
                     <Phone className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                     <span className="break-all">{client.phone}</span>
                   </div>
                 )}
 
-                <div className="flex gap-2 pt-2 flex-wrap">
+                <div className="flex gap-[var(--spacing-sm)] pt-[var(--spacing-md)] flex-wrap">
                   <Badge 
                     variant="outline" 
-                    className="text-xs bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-600 min-h-[28px] flex items-center"
+                    className="text-[var(--font-size-xs)] bg-[var(--color-background-secondary)] text-[var(--color-foreground-primary)] border-[var(--color-border-default)] min-h-[28px] flex items-center"
                     aria-label={`Tipo: ${client.client_type === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}`}
                   >
                     {client.client_type === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}

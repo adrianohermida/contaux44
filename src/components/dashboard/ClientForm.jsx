@@ -206,8 +206,8 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
       title={client ? 'Editar Cliente' : 'Novo Cliente'}
       size="md"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="space-y-[var(--spacing-md)]">
+         <div className="grid grid-cols-2 gap-[var(--spacing-md)]">
           <FormField
             label="Tipo de Cliente"
             type="select"
@@ -236,8 +236,8 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
                 error={errors.cpf}
               />
               {documentValidation.cpf && (
-                <div className={`mt-1 flex items-center gap-2 text-sm ${
-                  documentValidation.cpf.valid ? 'text-green-600' : 'text-red-600'
+                <div className={`mt-[var(--spacing-xs)] flex items-center gap-[var(--spacing-sm)] text-[var(--font-size-sm)] ${
+                  documentValidation.cpf.valid ? 'text-emerald-600' : 'text-[var(--color-error)]'
                 }`}>
                   {documentValidation.cpf.valid ? (
                     <CheckCircle className="w-4 h-4" />
@@ -260,8 +260,8 @@ export default function ClientForm({ client, onSave, onCancel, tenantId, isOpen 
                 error={errors.cnpj}
               />
               {documentValidation.cnpj && (
-                <div className={`mt-1 flex items-center gap-2 text-sm ${
-                  documentValidation.cnpj.valid ? 'text-green-600' : 'text-red-600'
+                <div className={`mt-[var(--spacing-xs)] flex items-center gap-[var(--spacing-sm)] text-[var(--font-size-sm)] ${
+                  documentValidation.cnpj.valid ? 'text-emerald-600' : 'text-[var(--color-error)]'
                 }`}>
                   {documentValidation.cnpj.valid ? (
                     <CheckCircle className="w-4 h-4" />
