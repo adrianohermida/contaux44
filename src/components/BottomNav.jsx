@@ -12,7 +12,7 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 z-40 select-none"
+    <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-[var(--color-background-primary)] border-t border-[var(--color-border-default)] z-40 select-none"
          style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 0px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
          aria-label="Navegação principal mobile">
        <div className="flex justify-around items-center h-16">
@@ -20,7 +20,7 @@ export default function BottomNav() {
           <Link
             key={page}
             to={createPageUrl(page)}
-            className="flex flex-col items-center justify-center w-full h-full text-xs text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+            className="flex flex-col items-center justify-center w-full h-full text-xs text-[var(--color-foreground-disabled)] hover:text-[var(--color-interactive-hover)] transition-colors min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] rounded"
             aria-label={label}
             title={label}
           >
