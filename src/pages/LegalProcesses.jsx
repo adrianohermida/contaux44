@@ -42,34 +42,35 @@ export default function LegalProcesses() {
 
   return (
     <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">Processos Judiciais</h1>
-              <p className="text-slate-600 mt-1">Gerenciar processos e casos legais</p>
-            </div>
-            <Button 
-              onClick={handleNewProcess}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Novo Processo
-            </Button>
-          </div>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Processos Judiciais</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1">Gerenciar processos e casos legais</p>
+        </div>
+        <Button
+          onClick={handleNewProcess}
+          className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
+          aria-label="Criar novo processo"
+        >
+          <Plus className="w-5 h-5 mr-2" aria-hidden="true" />
+          Novo Processo
+        </Button>
+      </div>
 
-          {showForm && (
-            <LegalProcessForm
-              process={editingProcess}
-              tenantId={workspaceId}
-              onSave={handleSave}
-              onCancel={handleCancel}
-            />
-          )}
+      {showForm && (
+        <LegalProcessForm
+          process={editingProcess}
+          tenantId={workspaceId}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      )}
 
-          <LegalProcessList
-            tenantId={workspaceId}
-            onEdit={handleEdit}
-            onRefresh={refreshKey}
-          />
-          </div>
-          );
-          }
+      <LegalProcessList
+        tenantId={workspaceId}
+        onEdit={handleEdit}
+        onRefresh={refreshKey}
+      />
+    </div>
+  );
+}
