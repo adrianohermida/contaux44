@@ -40,8 +40,10 @@ export default function Layout({ children, currentPageName }) {
       const root = document.documentElement;
       if (isDark) {
         root.classList.add('dark');
+        root.setAttribute('data-theme', 'dark');
       } else {
         root.classList.remove('dark');
+        root.removeAttribute('data-theme');
       }
     } catch (e) {
       // Ignore errors
