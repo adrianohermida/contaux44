@@ -30,71 +30,41 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="servicos" className="py-12 sm:py-20 bg-white">
+      <section id="servicos" className="py-12 sm:py-20 bg-white dark:bg-slate-900">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mb-12">
-            <p className="text-blue-600 font-semibold">Expertise</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Serviços Especializados.</h2>
+            <p className="text-blue-600 dark:text-blue-400 font-semibold">Expertise</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">Serviços Especializados.</h2>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="mb-4 text-blue-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect width="16" height="20" x="4" y="2" rx="2"></rect>
-                  <line x1="8" x2="16" y1="6" y2="6"></line>
-                  <line x1="16" x2="16" y1="14" y2="18"></line>
-                  <path d="M16 10h.01"></path>
-                  <path d="M12 10h.01"></path>
-                  <path d="M8 10h.01"></path>
-                  <path d="M12 14h.01"></path>
-                  <path d="M8 14h.01"></path>
-                  <path d="M12 18h.01"></path>
-                  <path d="M8 18h.01"></path>
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold mb-2 text-slate-900">Cálculos Judiciais</h3>
-              <p className="text-slate-600 text-sm">Garanta cálculos precisos e alinhados às normas dos Tribunais para atender às exigências processuais.</p>
-            </div>
-
-            <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="mb-4 text-blue-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
-                  <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-                  <path d="M10 9H8"></path>
-                  <path d="M16 13H8"></path>
-                  <path d="M16 17H8"></path>
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold mb-2 text-slate-900">Parecer técnico e perícia contábil</h3>
-              <p className="text-slate-600 text-sm">Oferecemos suporte técnico especializado para análise financeira e perícia contábil em processos judiciais.</p>
-            </div>
-
-            <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="mb-4 text-blue-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path>
-                  <path d="M13 5v2"></path>
-                  <path d="M13 17v2"></path>
-                  <path d="M13 11v2"></path>
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold mb-2 text-slate-900">Emissão de Guias de Custas</h3>
-              <p className="text-slate-600 text-sm">Simplifique o preenchimento e a emissão de guias judiciais com nosso serviço especializado.</p>
-            </div>
-
-            <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="mb-4 text-blue-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
-                  <path d="M18 17V9"></path>
-                  <path d="M13 17V5"></path>
-                  <path d="M8 17v-3"></path>
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold mb-2 text-slate-900">Planos de Pagamento e de Recuperação Judicial</h3>
-              <p className="text-slate-600 text-sm">Consultoria estratégica para criação de planos de pagamento e recuperação judicial.</p>
-            </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: <Calculator className="w-10 h-10" aria-hidden="true" />,
+                title: 'Cálculos Judiciais',
+                desc: 'Garanta cálculos precisos e alinhados às normas dos Tribunais para atender às exigências processuais.'
+              },
+              {
+                icon: <FileSearch className="w-10 h-10" aria-hidden="true" />,
+                title: 'Parecer técnico e perícia contábil',
+                desc: 'Oferecemos suporte técnico especializado para análise financeira e perícia contábil em processos judiciais.'
+              },
+              {
+                icon: <Receipt className="w-10 h-10" aria-hidden="true" />,
+                title: 'Emissão de Guias de Custas',
+                desc: 'Simplifique o preenchimento e a emissão de guias judiciais com nosso serviço especializado.'
+              },
+              {
+                icon: <BarChart3 className="w-10 h-10" aria-hidden="true" />,
+                title: 'Planos de Pagamento e de Recuperação Judicial',
+                desc: 'Consultoria estratégica para criação de planos de pagamento e recuperação judicial.'
+              }
+            ].map((service) => (
+              <article key={service.title} className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-transparent hover:border-blue-100 dark:hover:border-blue-900">
+                <div className="mb-4 text-blue-600 dark:text-blue-400">{service.icon}</div>
+                <h3 className="text-lg font-bold mb-2 text-slate-900 dark:text-slate-100">{service.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{service.desc}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
