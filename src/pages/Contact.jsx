@@ -24,6 +24,7 @@ import { useDebounce } from '../components/hooks/useDebounce';
 import { useSortAndFilter } from '../components/hooks/useSortAndFilter';
 import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../components/dashboard/ContactQueryHelpers';
 import { withRateLimit } from '../components/security/RateLimiter';
+import { getCacheConfig } from '../components/hooks/useQueryCacheConfig';
 
 export default function Contact() {
   const navigate = useNavigate();
@@ -68,15 +69,12 @@ export default function Contact() {
      [backendQuery]
    );
 
-   // Query 1: Contacts (with rate limiting + error handling)
+   // Query 1: Contacts (with rate limiting + critical cache config)
    const { data: contacts = [], isLoading, error: contactsError, refetch } = useQuery({
      queryKey: ['contacts', workspaceId, filters],
      queryFn: limitedContactFetch,
      enabled: !!workspaceId && !authLoading,
-     staleTime: 5 * 60 * 1000,
-     gcTime: 10 * 60 * 1000,
-     retry: 2,
-     retryDelay: 1000
+     ...getCacheConfig('critical')
    });
 
   // Subscribe to real-time contact updates
@@ -90,27 +88,25 @@ export default function Contact() {
     return unsubscribe;
   }, [workspaceId, queryClient]);
 
-  // Query 2: Tags (once per workspace) - longer cache
-  const { data: tags = [] } = useQuery({
-    queryKey: ['contact-tags', workspaceId],
-    queryFn: async () => {
-      return await base44.entities.ContactTag.filter({ workspace_id: workspaceId });
-    },
-    enabled: !!workspaceId,
-    staleTime: 30 * 60 * 1000,
-    gcTime: 60 * 60 * 1000,
-  });
+  // Query 2: Tags (static data - long cache)
+   const { data: tags = [] } = useQuery({
+     queryKey: ['contact-tags', workspaceId],
+     queryFn: async () => {
+       return await base44.entities.ContactTag.filter({ workspace_id: workspaceId });
+     },
+     enabled: !!workspaceId,
+     ...getCacheConfig('long')
+   });
 
-  // Query 3: Assignments (once per workspace) - longer cache
-  const { data: allAssignments = [] } = useQuery({
-    queryKey: ['all-contact-tag-assignments', workspaceId],
-    queryFn: async () => {
-      return await base44.entities.ContactTagAssignment.filter({ workspace_id: workspaceId });
-    },
-    enabled: !!workspaceId,
-    staleTime: 30 * 60 * 1000,
-    gcTime: 60 * 60 * 1000,
-  });
+  // Query 3: Assignments (static data - long cache)
+   const { data: allAssignments = [] } = useQuery({
+     queryKey: ['all-contact-tag-assignments', workspaceId],
+     queryFn: async () => {
+       return await base44.entities.ContactTagAssignment.filter({ workspace_id: workspaceId });
+     },
+     enabled: !!workspaceId,
+     ...getCacheConfig('long')
+   });
 
   // Memoize normalized lookups (O(1) instead of O(n))
   const assignmentMap = useMemo(() => normalizeAssignments(allAssignments), [allAssignments]);
