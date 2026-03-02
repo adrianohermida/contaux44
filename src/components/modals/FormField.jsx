@@ -19,7 +19,7 @@ export default function FormField({
   placeholder,
   options,
   rows,
-  ...props,
+  ...props
 }) {
   const errorId = error ? `${name}-error` : undefined;
   // Indicador de campo obrigatório
