@@ -1,108 +1,166 @@
-import React, { useState, useMemo } from 'react';
-import { TrendingUp, BarChart3 } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-
 /**
- * Forecasting Dashboard - Previsões com modelos ML
- * ARIMA, Prophet, exponential smoothing
+ * ForecastingDashboard Component
+ * Display predictive analytics and forecasts
  */
-export default function ForecastingDashboard({ data = [] }) {
-  const [forecastPeriod, setForecastPeriod] = useState(3);
-  const [forecast, setForecast] = useState([]);
 
-  const historicalData = useMemo(() => [
-    { period: 'Q1', value: 1200, actual: 1180 },
-    { period: 'Q2', value: 1350, actual: 1320 },
-    { period: 'Q3', value: 1500, actual: 1550 },
-    { period: 'Q4', value: 1450, actual: 1480 },
-  ], []);
+import React, { useState } from 'react';
+import { usePredictiveAnalytics } from '../hooks/usePredictiveAnalytics';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { TrendingUp, Activity, BarChart3 } from 'lucide-react';
+import PredictionCard from './PredictionCard';
 
-  const generateForecast = () => {
-    const lastValue = historicalData[historicalData.length - 1].value;
-    const trend = (historicalData[historicalData.length - 1].value - historicalData[0].value) / historicalData.length;
+export default function ForecastingDashboard({ workspaceId, predictions = [] }) {
+  const { getPredictionStats, getInsights } = usePredictiveAnalytics(workspaceId, predictions);
+  const [selectedPrediction, setSelectedPrediction] = useState(null);
 
-    const forecastData = Array(forecastPeriod).fill(0).map((_, i) => {
-      const confidence = Math.max(0.65, 0.9 - (i * 0.1));
-      return {
-        period: `Q${i + 1}`,
-        forecast: Math.round(lastValue + trend * (i + 1)),
-        lower: Math.round(lastValue + trend * (i + 1) - 100),
-        upper: Math.round(lastValue + trend * (i + 1) + 100),
-        confidence
-      };
-    });
+  const stats = getPredictionStats();
+  const insights = getInsights();
 
-    setForecast(forecastData);
-  };
+  // Prepare chart data
+  const chartData = selectedPrediction
+    ? [
+        ...selectedPrediction.predictions.slice(0, 5).map((pred, idx) => ({
+          period: `P${pred.period}`,
+          predicted: pred.value,
+          lower: pred.lower_bound,
+          upper: pred.upper_bound,
+        })),
+      ]
+    : [];
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <TrendingUp className="w-5 h-5 text-green-600" />
-        <h3 className="font-semibold">Previsões</h3>
+    <div className="space-y-6 dark:bg-slate-900">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold dark:text-slate-100">Predictive Analytics</h2>
       </div>
 
-      <Card className="p-4 space-y-3">
-        <div className="flex items-center gap-3">
-          <label className="text-sm font-medium">Períodos a Prever:</label>
-          <input
-            type="range"
-            min="1"
-            max="6"
-            value={forecastPeriod}
-            onChange={(e) => setForecastPeriod(parseInt(e.target.value))}
-            className="flex-1"
-          />
-          <span className="text-sm font-bold">{forecastPeriod}</span>
-        </div>
-
-        <Button onClick={generateForecast} className="w-full">
-          <BarChart3 className="w-4 h-4 mr-2" />
-          Gerar Previsão
-        </Button>
-      </Card>
-
-      <div className="space-y-3">
-        <div className="text-sm font-medium">Dados Históricos</div>
-        <div className="space-y-2">
-          {historicalData.map((item, idx) => (
-            <Card key={idx} className="p-3 bg-blue-50">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{item.period}</span>
-                <div className="text-xs">
-                  Realizado: <span className="font-bold">{item.actual}</span>
-                </div>
+      {/* Statistics Cards */}
+      <div className="grid md:grid-cols-3 gap-4">
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Total Predictions</p>
+                <p className="text-3xl font-bold dark:text-slate-100">{stats.total}</p>
               </div>
-            </Card>
-          ))}
-        </div>
+              <Activity className="w-8 h-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Avg Confidence</p>
+                <p className="text-3xl font-bold dark:text-slate-100">{stats.avgConfidence}%</p>
+              </div>
+              <BarChart3 className="w-8 h-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Upward Trends</p>
+                <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                  {stats.trendBreakdown.up}
+                </p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {forecast.length > 0 && (
-        <div className="space-y-3">
-          <div className="text-sm font-medium">Previsão</div>
-          <div className="space-y-2">
-            {forecast.map((item, idx) => (
-              <Card key={idx} className="p-3 bg-green-50 border-green-200">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{item.period}</span>
-                    <span className="text-xs font-bold text-green-600">{Math.round(item.confidence * 100)}%</span>
-                  </div>
-                  <p className="text-xs text-gray-600">
-                    Previsão: <span className="font-bold">{item.forecast}</span> (intervalo: {item.lower}-{item.upper})
-                  </p>
-                  <div className="mt-1 bg-gray-200 h-1 rounded-full overflow-hidden">
-                    <div
-                      className="bg-green-500 h-full"
-                      style={{ width: `${item.confidence * 100}%` }}
-                    />
-                  </div>
-                </div>
-              </Card>
+      {/* Insights */}
+      {insights.length > 0 && (
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-base dark:text-slate-100">Insights</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {insights.map((insight, idx) => (
+              <div
+                key={idx}
+                className="p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg"
+              >
+                <p className="font-medium text-blue-900 dark:text-blue-200">{insight.title}</p>
+                <p className="text-sm text-blue-800 dark:text-blue-300">{insight.message}</p>
+              </div>
             ))}
-          </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Forecast Chart */}
+      {selectedPrediction && chartData.length > 0 && (
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-base dark:text-slate-100">
+              {selectedPrediction.name} - Forecast
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <XAxis dataKey="period" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="predicted"
+                  stroke="#3b82f6"
+                  name="Prediction"
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="lower"
+                  stroke="#9ca3af"
+                  name="Lower Bound"
+                  strokeDasharray="5 5"
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="upper"
+                  stroke="#9ca3af"
+                  name="Upper Bound"
+                  strokeDasharray="5 5"
+                  dot={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Predictions List */}
+      {predictions.length === 0 ? (
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
+          <CardContent className="pt-12 pb-12 text-center">
+            <TrendingUp className="w-12 h-12 mx-auto text-slate-400 mb-4" />
+            <p className="text-slate-600 dark:text-slate-400">No predictions yet</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-4">
+          {predictions.map((prediction) => (
+            <div
+              key={prediction.id}
+              onClick={() => setSelectedPrediction(prediction)}
+              className="cursor-pointer"
+            >
+              <PredictionCard prediction={prediction} />
+            </div>
+          ))}
         </div>
       )}
     </div>
