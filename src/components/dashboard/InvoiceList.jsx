@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, Download } from 'lucide-react';
 import { useCacheStrategy } from '../hooks/useCacheStrategy';
 import { useRealtimeSync } from '../hooks/useRealtimeSync';
 
@@ -50,6 +50,29 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
       }
     }
   }, [invalidateRelated, refetch]);
+
+  const handleDownloadPDF = useCallback(async (invoiceId, invoiceNumber) => {
+    try {
+      const response = await base44.functions.invoke('generateInvoicePDF', {
+        invoiceId,
+        tenantId
+      });
+      
+      // Create blob from response
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `fatura-${invoiceNumber}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('Erro ao gerar PDF. Tente novamente.');
+    }
+  }, [tenantId]);
 
   const getStatusColor = useCallback((status) => {
     const colors = {
@@ -114,11 +137,32 @@ export default function InvoiceList({ tenantId, onEdit, onRefresh }) {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex justify-end gap-2">
-                    <Button variant="ghost" size="sm" onClick={() => onEdit(invoice)}>
-                      <Edit2 className="w-4 h-4" />
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleDownloadPDF(invoice.id, invoice.invoice_number)}
+                      title="Baixar PDF"
+                      aria-label="Baixar fatura em PDF"
+                    >
+                      <Download className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleDelete(invoice.id)}>
-                      <Trash2 className="w-4 h-4 text-red-500" />
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => onEdit(invoice)}
+                      title="Editar"
+                      aria-label="Editar fatura"
+                    >
+                      <Edit2 className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleDelete(invoice.id)}
+                      title="Deletar"
+                      aria-label="Deletar fatura"
+                    >
+                      <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
                     </Button>
                   </div>
                 </td>
