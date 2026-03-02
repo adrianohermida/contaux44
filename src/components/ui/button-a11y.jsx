@@ -38,7 +38,7 @@ const ButtonA11y = forwardRef(({
       ref={ref}
       disabled={disabled}
       onClick={onClick}
-      className={`${className} ${focusVisible && !disabled ? 'ring-2 ring-offset-2 ring-primary' : ''}`}
+      className={`${className} ${focusVisible && !disabled ? 'ring-2 ring-offset-2 ring-[var(--color-interactive-default)]' : ''}`}
       {...ariaProps}
       {...props}
     >

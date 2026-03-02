@@ -4,21 +4,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function ToastNotification({ message, type = 'success', onClose }) {
   const icons = {
-    success: <CheckCircle2 className="w-5 h-5 text-green-600" />,
-    error: <AlertCircle className="w-5 h-5 text-red-600" />,
-    info: <Info className="w-5 h-5 text-blue-600" />,
+    success: <CheckCircle2 className="w-5 h-5 text-[var(--color-success)]" />,
+    error: <AlertCircle className="w-5 h-5 text-[var(--color-error)]" />,
+    info: <Info className="w-5 h-5 text-[var(--color-interactive-default)]" />,
   };
 
   const colors = {
-    success: 'bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700',
-    error: 'bg-red-50 dark:bg-red-900 border-red-200 dark:border-red-700',
-    info: 'bg-blue-50 dark:bg-blue-900 border-blue-200 dark:border-blue-700',
+    success: 'bg-[var(--color-background-secondary)] border-[var(--color-border-default)]',
+    error: 'bg-[var(--color-background-secondary)] border-[var(--color-border-default)]',
+    info: 'bg-[var(--color-background-secondary)] border-[var(--color-border-default)]',
   };
 
   const textColors = {
-    success: 'text-green-800 dark:text-green-200',
-    error: 'text-red-800 dark:text-red-200',
-    info: 'text-blue-800 dark:text-blue-200',
+    success: 'text-[var(--color-foreground-primary)]',
+    error: 'text-[var(--color-foreground-primary)]',
+    info: 'text-[var(--color-foreground-primary)]',
   };
 
   return (
@@ -26,10 +26,10 @@ export function ToastNotification({ message, type = 'success', onClose }) {
       initial={{ opacity: 0, y: -20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      className={`${colors[type]} border rounded-lg p-4 shadow-lg flex items-center gap-3 min-w-[300px] max-w-md`}
+      className={`${colors[type]} border rounded-lg p-[var(--spacing-md)] shadow-lg flex items-center gap-[var(--spacing-md)] min-w-[300px] max-w-md`}
     >
       {icons[type]}
-      <p className={`${textColors[type]} text-sm font-medium flex-1`}>{message}</p>
+      <p className={`${textColors[type]} text-[var(--font-size-sm)] font-medium flex-1`}>{message}</p>
       {onClose && (
         <button
           onClick={onClose}
@@ -45,7 +45,7 @@ export function ToastNotification({ message, type = 'success', onClose }) {
 
 export function ToastContainer({ toasts, onRemove }) {
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+    <div className="fixed top-[var(--spacing-md)] right-[var(--spacing-md)] z-50 gap-[var(--spacing-sm)] flex flex-col">
       <AnimatePresence>
         {toasts.map((toast) => (
           <ToastNotification
