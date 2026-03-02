@@ -11,9 +11,9 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-[var(--spacing-2xl)]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-[var(--color-interactive-default)] border-t-transparent rounded-full animate-spin mx-auto mb-4" aria-busy="true" />
+          <div className="w-12 h-12 border-4 border-[var(--color-interactive-default)] border-t-transparent rounded-full animate-spin mx-auto mb-[var(--spacing-md)]" aria-busy="true" />
           <p className="text-[var(--color-foreground-secondary)]">Carregando dashboard...</p>
         </div>
       </div>
@@ -22,10 +22,10 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-[var(--spacing-lg)]">
-      <div>
-        <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]">Dashboard</h1>
-        <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-sm)]">Visão geral do seu workspace</p>
-      </div>
+    <div>
+       <h1 className="text-[var(--font-size-3xl)] font-bold text-[var(--color-foreground-primary)]" role="heading" aria-level="1">Dashboard</h1>
+       <p className="text-[var(--color-foreground-secondary)] mt-[var(--spacing-sm)]">Visão geral do seu workspace</p>
+     </div>
 
       <DashboardStatsRow workspaceId={workspaceId} />
       <DashboardActivityRow workspaceId={workspaceId} />

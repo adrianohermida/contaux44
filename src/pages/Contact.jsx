@@ -176,11 +176,11 @@ export default function Contact() {
   if (contactsError) {
     return (
       <ProtectedInternalRoute>
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center" role="alert" aria-live="polite">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-[var(--spacing-lg)] text-center" role="alert" aria-live="polite">
           <p className="text-[var(--color-error)] mb-[var(--spacing-md)]">Erro ao carregar contatos</p>
           <button 
             onClick={() => refetch()} 
-            className="text-[var(--color-error)] hover:opacity-80 underline focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] rounded px-2 py-1"
+            className="text-[var(--color-error)] hover:opacity-80 underline focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] rounded px-[var(--spacing-sm)] py-[var(--spacing-xs)]"
             aria-label="Tentar carregar contatos novamente"
           >
             Tentar novamente
@@ -192,7 +192,7 @@ export default function Contact() {
 
   return (
     <ProtectedInternalRoute>
-      <div className="space-y-6 pb-20 min-h-screen" role="main" aria-label="Gerenciador de contatos">
+      <div className="space-y-[var(--spacing-lg)] pb-20 min-h-screen" role="main" aria-label="Gerenciador de contatos">
         <UnifiedHeader
           title="Contatos"
           filteredCount={filteredAndSortedContacts.length}
