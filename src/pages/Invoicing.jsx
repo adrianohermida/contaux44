@@ -33,34 +33,35 @@ export default function Invoicing() {
 
   return (
     <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">Faturamento</h1>
-              <p className="text-slate-600 mt-1">Gerenciar faturas e faturamento</p>
-            </div>
-            <Button 
-              onClick={() => { setEditingInvoice(null); setShowForm(true); }}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Nova Fatura
-            </Button>
-          </div>
-
-          {showForm && (
-            <InvoiceForm
-              invoice={editingInvoice}
-              tenantId={workspaceId}
-              onSave={handleSave}
-              onCancel={() => { setShowForm(false); setEditingInvoice(null); }}
-            />
-          )}
-
-          <InvoiceList
-            tenantId={workspaceId}
-            onEdit={handleEdit}
-            onRefresh={refreshKey}
-          />
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Faturamento</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1">Gerenciar faturas e faturamento</p>
         </div>
-        );
-        }
+        <Button
+          onClick={() => { setEditingInvoice(null); setShowForm(true); }}
+          className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
+          aria-label="Criar nova fatura"
+        >
+          <Plus className="w-5 h-5 mr-2" aria-hidden="true" />
+          Nova Fatura
+        </Button>
+      </div>
+
+      {showForm && (
+        <InvoiceForm
+          invoice={editingInvoice}
+          tenantId={workspaceId}
+          onSave={handleSave}
+          onCancel={() => { setShowForm(false); setEditingInvoice(null); }}
+        />
+      )}
+
+      <InvoiceList
+        tenantId={workspaceId}
+        onEdit={handleEdit}
+        onRefresh={refreshKey}
+      />
+    </div>
+  );
+}
