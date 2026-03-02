@@ -1,162 +1,107 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
-import { useMultitenantAuthOptimized } from '../components/auth/useMultitenantAuthOptimized';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2, Play, Pause } from 'lucide-react';
+/**
+ * Campaigns Page
+ * Marketing campaign management interface
+ */
 
-const STATUS_COLORS = {
-  draft: 'bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300',
-  active: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300',
-  paused: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300',
-  completed: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-};
+import React, { useState, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import CampaignForm from '@/components/dashboard/CampaignForm';
+import CampaignList from '@/components/dashboard/CampaignList';
 
 export default function CampaignsPage() {
-  const { workspaceId, loading } = useMultitenantAuthOptimized('internal');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingCampaign, setEditingCampaign] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  const { data: campaigns = [], isLoading } = useQuery({
-    queryKey: ['campaigns', workspaceId],
-    queryFn: async () => {
-      const response = await base44.asServiceRole.entities.Campaign.filter({
-        workspace_id: workspaceId
-      });
-      return response || [];
-    },
-    enabled: !!workspaceId,
-    staleTime: 1000 * 60 * 5
-  });
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        if (!currentUser?.workspace_id) {
+          await base44.auth.redirectToLogin();
+          return;
+        }
+        setUser(currentUser);
+      } catch (error) {
+        await base44.auth.redirectToLogin();
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (loading || isLoading) {
+    checkAuth();
+  }, []);
+
+  if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-600 dark:text-slate-400">Carregando campanhas...</p>
-        </div>
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-slate-500">Carregando...</p>
       </div>
     );
   }
 
-  const filteredCampaigns = filterStatus === 'all' 
-    ? campaigns 
-    : campaigns.filter(c => c.status === filterStatus);
+  if (!user?.workspace_id) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-red-500">Acesso restrito</p>
+      </div>
+    );
+  }
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setEditingCampaign(null);
+  };
+
+  const handleEditCampaign = (campaign) => {
+    setEditingCampaign(campaign);
+    setShowForm(true);
+  };
+
+  const handleFormSuccess = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Campanhas</h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">Gerencie suas campanhas de email</p>
+          <h1 className="text-3xl font-bold">Campanhas de Marketing</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-2">
+            Gerencie suas campanhas de email, SMS e redes sociais
+          </p>
         </div>
-        <Button className="gap-2">
-          <Plus className="w-4 h-4" />
-          Nova Campanha
+        <Button
+          onClick={() => setShowForm(true)}
+          className="bg-indigo-600 hover:bg-indigo-700 flex items-center gap-2"
+        >
+          <Plus className="w-5 h-5" /> Nova Campanha
         </Button>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-2">
-        {['all', 'draft', 'active', 'paused', 'completed'].map(status => (
-          <button
-            key={status}
-            onClick={() => setFilterStatus(status)}
-            className={`px-3 py-1 rounded text-sm ${
-              filterStatus === status
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-            }`}
-          >
-            {status.charAt(0).toUpperCase() + status.slice(1)}
-          </button>
-        ))}
-      </div>
+      {/* Form Modal */}
+      {showForm && (
+        <CampaignForm
+          campaign={editingCampaign}
+          workspaceId={user.workspace_id}
+          isOpen={showForm}
+          onCancel={handleCloseForm}
+          onSuccess={handleFormSuccess}
+        />
+      )}
 
-      {/* Campaigns List */}
-      <div className="grid gap-4">
-        {filteredCampaigns.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center text-slate-500 dark:text-slate-400">
-              Nenhuma campanha encontrada
-            </CardContent>
-          </Card>
-        ) : (
-          filteredCampaigns.map(campaign => {
-            const openRate = campaign.sent_count > 0 
-              ? ((campaign.open_count / campaign.sent_count) * 100).toFixed(1) 
-              : 0;
-            const clickRate = campaign.sent_count > 0 
-              ? ((campaign.click_count / campaign.sent_count) * 100).toFixed(1) 
-              : 0;
-
-            return (
-              <Card key={campaign.id}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-slate-900 dark:text-slate-100">
-                          {campaign.name}
-                        </h3>
-                        <span className={`text-xs px-2 py-1 rounded ${STATUS_COLORS[campaign.status]}`}>
-                          {campaign.status}
-                        </span>
-                      </div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                        {campaign.description || 'Sem descrição'}
-                      </p>
-                      <div className="grid grid-cols-4 gap-4 text-sm">
-                        <div>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">Enviados</p>
-                          <p className="font-semibold text-slate-900 dark:text-slate-100">
-                            {campaign.sent_count || 0}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">Abertos</p>
-                          <p className="font-semibold text-slate-900 dark:text-slate-100">
-                            {openRate}%
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">Cliques</p>
-                          <p className="font-semibold text-slate-900 dark:text-slate-100">
-                            {clickRate}%
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">Conversões</p>
-                          <p className="font-semibold text-slate-900 dark:text-slate-100">
-                            {campaign.conversion_count || 0}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded">
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded">
-                        {campaign.status === 'active' ? (
-                          <Pause className="w-4 h-4" />
-                        ) : (
-                          <Play className="w-4 h-4" />
-                        )}
-                      </button>
-                      <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-red-600">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
-        )}
-      </div>
+      {/* Campaign List */}
+      <CampaignList
+        key={refreshKey}
+        workspaceId={user.workspace_id}
+        onEdit={handleEditCampaign}
+        onRefresh={() => setRefreshKey(prev => prev + 1)}
+      />
     </div>
   );
 }
