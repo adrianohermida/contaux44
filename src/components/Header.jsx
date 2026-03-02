@@ -43,12 +43,12 @@ export default function Header() {
     <header className="bg-[var(--color-background-primary)] border-b border-[var(--color-border-default)] shadow-sm sticky top-0 z-50 transition-colors"
     style={{ paddingTop: 'max(env(safe-area-inset-top), 12px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <nav className="flex items-center justify-between py-[var(--spacing-xs)] sm:py-[var(--spacing-sm)]">
+        <nav className="flex items-center justify-between py-[var(--spacing-sm)] sm:py-[var(--spacing-md)]">
           {/* Logo */}
           <Logo />
 
           {/* Desktop Menu */}
-          <ul className="hidden md:flex items-center gap-[var(--spacing-md)] lg:gap-[var(--spacing-lg)]" role="navigation" aria-label="Menu principal">
+          <ul className="hidden md:flex items-center gap-[var(--spacing-lg)] lg:gap-[var(--spacing-xl)]" role="navigation" aria-label="Menu principal">
             <li><Link to={createPageUrl('About')} className="text-[var(--font-size-sm)] lg:text-base text-[var(--color-foreground-primary)] hover:text-[var(--color-interactive-hover)] transition-colors duration-200">Sobre</Link></li>
             <li><a href="#servicos" className="text-[var(--font-size-sm)] lg:text-base text-[var(--color-foreground-primary)] hover:text-[var(--color-interactive-hover)] transition-colors duration-200">Serviços</a></li>
             <li><Link to={createPageUrl('Blog')} className="text-[var(--font-size-sm)] lg:text-base text-[var(--color-foreground-primary)] hover:text-[var(--color-interactive-hover)] transition-colors duration-200">Blog</Link></li>
@@ -56,7 +56,7 @@ export default function Header() {
           </ul>
 
           {/* Desktop Auth Section */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-[var(--spacing-md)]">
             {user ? (
               <div className="relative">
                     <button
@@ -64,20 +64,20 @@ export default function Header() {
                       aria-haspopup="menu"
                       aria-expanded={dropdownOpen}
                       aria-label={`Menu do usuário: ${user.full_name || user.email}`}
-                      className="flex items-center gap-2 px-3 lg:px-4 py-2 rounded-lg transition-colors text-sm lg:text-base min-h-[44px] text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]"
+                      className="flex items-center gap-[var(--spacing-sm)] px-[var(--spacing-sm)] lg:px-[var(--spacing-md)] py-[var(--spacing-xs)] rounded-lg transition-colors text-[var(--font-size-sm)] lg:text-[var(--font-size-base)] min-h-[44px] text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]"
                     >
                   <User className="w-4 h-4" />
                   <span className="hidden lg:inline">{user.full_name || user.email}</span>
                 </button>
                 {dropdownOpen && (
-                   <div className="absolute right-0 mt-2 w-48 border rounded-lg shadow-lg z-10 bg-[var(--color-background-secondary)] border-[var(--color-border-default)]"
+                   <div className="absolute right-0 mt-[var(--spacing-sm)] w-48 border rounded-lg shadow-lg z-10 bg-[var(--color-background-secondary)] border-[var(--color-border-default)]"
                    role="menu"
                    onKeyDown={(e) => {
                      if (e.key === 'Escape') setDropdownOpen(false);
                    }}>
                      <Link
                        to={createPageUrl('Dashboard')}
-                       className="block w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-tertiary)]"
+                       className="block w-full text-left px-[var(--spacing-md)] py-[var(--spacing-sm)] text-[var(--font-size-sm)] flex items-center gap-[var(--spacing-sm)] transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-tertiary)]"
                        onClick={closeMobileMenu}
                      >
                        <User className="w-4 h-4" />
@@ -85,7 +85,7 @@ export default function Header() {
                      </Link>
                      <Link
                        to={createPageUrl('SettingsPage')}
-                       className="block w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-tertiary)]"
+                       className="block w-full text-left px-[var(--spacing-md)] py-[var(--spacing-sm)] text-[var(--font-size-sm)] flex items-center gap-[var(--spacing-sm)] transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-tertiary)]"
                        onClick={() => setDropdownOpen(false)}
                      >
                        <User className="w-4 h-4" />
@@ -94,7 +94,7 @@ export default function Header() {
                      <hr className="my-2 border-[var(--color-border-default)]" />
                      <button
                        onClick={() => { handleLogout(); setDropdownOpen(false); }}
-                       className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 transition-colors text-[var(--color-error)] hover:bg-[var(--color-background-tertiary)]"
+                       className="w-full text-left px-[var(--spacing-md)] py-[var(--spacing-sm)] text-[var(--font-size-sm)] flex items-center gap-[var(--spacing-sm)] transition-colors text-[var(--color-error)] hover:bg-[var(--color-background-tertiary)]"
                      >
                        <LogOut className="w-4 h-4" />
                        Sair
@@ -105,7 +105,7 @@ export default function Header() {
             ) : (
               <button 
                 onClick={() => base44.auth.redirectToLogin(window.location.origin + createPageUrl('Dashboard'))}
-                className="px-4 lg:px-6 py-2 bg-[var(--color-interactive-default)] text-white rounded-lg hover:bg-[var(--color-interactive-hover)] transition-colors text-sm lg:text-base"
+                className="px-[var(--spacing-md)] lg:px-[var(--spacing-lg)] py-[var(--spacing-sm)] bg-[var(--color-interactive-default)] text-white rounded-lg hover:bg-[var(--color-interactive-hover)] transition-colors text-[var(--font-size-sm)] lg:text-[var(--font-size-base)]"
               >
                 Login
               </button>
@@ -133,12 +133,12 @@ export default function Header() {
             <div className="fixed left-0 right-0 top-16 bottom-0 overflow-y-auto z-40 md:hidden transition-colors bg-[var(--color-background-primary)]">
               <div className="px-4 py-4">
                 {/* Navigation Links */}
-                  <ul className="space-y-1 mb-6" role="navigation" aria-label="Menu principal mobile">
-                     <li><Link to={createPageUrl('About')} className="block px-3 py-2 text-base rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Sobre</Link></li>
-                     <li><a href="#servicos" className="block px-3 py-2 text-base rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Serviços</a></li>
-                     <li><Link to={createPageUrl('Blog')} className="block px-3 py-2 text-base rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Blog</Link></li>
-                     <li><Link to={createPageUrl('Contact')} className="block px-3 py-2 text-base rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Contato</Link></li>
-                   </ul>
+                  <ul className="space-y-[var(--spacing-xs)] mb-[var(--spacing-lg)]" role="navigation" aria-label="Menu principal mobile">
+                      <li><Link to={createPageUrl('About')} className="block px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-base)] rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Sobre</Link></li>
+                      <li><a href="#servicos" className="block px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-base)] rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Serviços</a></li>
+                      <li><Link to={createPageUrl('Blog')} className="block px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-base)] rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Blog</Link></li>
+                      <li><Link to={createPageUrl('Contact')} className="block px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-base)] rounded transition-colors min-h-[44px] flex items-center text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]" onClick={closeMobileMenu}>Contato</Link></li>
+                    </ul>
 
                   {/* Auth Section */}
                   <div className="border-t border-[var(--color-border-default)] pt-4">
@@ -146,19 +146,19 @@ export default function Header() {
                     <div>
                       <button
                         onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]"
+                        className="w-full flex items-center justify-between px-[var(--spacing-sm)] py-[var(--spacing-sm)] rounded transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-secondary)]"
                       >
-                        <span className="flex items-center gap-2">
-                          <User className="w-4 h-4" />
-                          <span className="text-base">{user.full_name || user.email}</span>
+                        <span className="flex items-center gap-[var(--spacing-sm)]">
+                        <User className="w-4 h-4" />
+                        <span className="text-[var(--font-size-base)]">{user.full_name || user.email}</span>
                         </span>
                         <span className={`text-sm transition-transform ${mobileDropdownOpen ? 'rotate-180' : ''}`}>▼</span>
                       </button>
                       {mobileDropdownOpen && (
-                        <div className="mt-2 space-y-1 rounded-lg p-2 ml-2 bg-[var(--color-background-secondary)]">
+                        <div className="mt-[var(--spacing-sm)] space-y-[var(--spacing-xs)] rounded-lg p-[var(--spacing-sm)] ml-[var(--spacing-sm)] bg-[var(--color-background-secondary)]">
                           <Link
                             to={createPageUrl('Dashboard')}
-                            className="block px-3 py-2 text-base rounded flex items-center gap-2 transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-tertiary)]"
+                            className="block px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-base)] rounded flex items-center gap-[var(--spacing-sm)] transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-tertiary)]"
                             onClick={closeMobileMenu}
                           >
                             <User className="w-4 h-4" />
@@ -166,7 +166,7 @@ export default function Header() {
                           </Link>
                           <Link
                             to={createPageUrl('SettingsPage')}
-                            className="block px-3 py-2 text-base rounded flex items-center gap-2 transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-tertiary)]"
+                            className="block px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-base)] rounded flex items-center gap-[var(--spacing-sm)] transition-colors text-[var(--color-foreground-primary)] hover:bg-[var(--color-background-tertiary)]"
                             onClick={closeMobileMenu}
                           >
                             <User className="w-4 h-4" />
@@ -174,7 +174,7 @@ export default function Header() {
                           </Link>
                           <button
                             onClick={() => { handleLogout(); closeMobileMenu(); }}
-                            className="w-full text-left px-3 py-2 text-base rounded flex items-center gap-2 transition-colors text-[var(--color-error)] hover:bg-[var(--color-background-tertiary)]"
+                            className="w-full text-left px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-base)] rounded flex items-center gap-[var(--spacing-sm)] transition-colors text-[var(--color-error)] hover:bg-[var(--color-background-tertiary)]"
                           >
                             <LogOut className="w-4 h-4" />
                             Sair
@@ -188,7 +188,7 @@ export default function Header() {
                        base44.auth.redirectToLogin(window.location.origin + createPageUrl('Dashboard'));
                        closeMobileMenu();
                      }}
-                     className="w-full px-3 py-3 bg-[var(--color-interactive-default)] text-white rounded-lg hover:bg-[var(--color-interactive-hover)] transition-colors flex items-center justify-center gap-2 text-base font-medium"
+                     className="w-full px-[var(--spacing-sm)] py-[var(--spacing-md)] bg-[var(--color-interactive-default)] text-white rounded-lg hover:bg-[var(--color-interactive-hover)] transition-colors flex items-center justify-center gap-[var(--spacing-sm)] text-[var(--font-size-base)] font-medium"
                     >
                       <User className="w-4 h-4" />
                       Login

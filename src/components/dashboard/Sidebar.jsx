@@ -14,7 +14,7 @@ const Sidebar = memo(function Sidebar({ collapsed, setCollapsed }) {
   }, [collapsed]);
 
   return (
-    <aside className={`bg-gradient-to-b from-blue-900 to-blue-950 dark:from-slate-900 dark:to-slate-950 text-white dark:text-slate-100 h-full transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col shadow-lg dark:shadow-slate-950 overflow-y-auto`}>
+    <aside className={`bg-[var(--color-background-primary)] border-r border-[var(--color-border-default)] text-[var(--color-foreground-primary)] h-full transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} flex flex-col shadow-lg overflow-y-auto`}>
       <SidebarHeader collapsed={collapsed} onToggleCollapse={() => setCollapsed(!collapsed)} />
       <SidebarMenuList
         items={SIDEBAR_MENU_ITEMS}

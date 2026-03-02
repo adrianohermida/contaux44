@@ -28,7 +28,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
   }, [sidebarCollapsed]);
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-slate-950 transition-colors" role="application" aria-label="Dashboard principal">
+    <div className="flex min-h-screen bg-[var(--color-background-primary)] transition-colors" role="application" aria-label="Dashboard principal">
       {/* Skip Link - keyboard navigation */}
       <a 
         href="#main-content" 
@@ -58,12 +58,12 @@ const DashboardLayout = memo(function DashboardLayout({ children }) {
         <DashboardHeader />
         
         <main 
-          id="main-content"
-          className="flex-1 p-4 sm:p-6 md:p-8 bg-white dark:bg-slate-950 pb-24 md:pb-8 overflow-y-auto safe-area-inset focus:outline-none"
-          role="main"
-          aria-label="Conteúdo principal"
-          tabIndex={-1}
-        >
+           id="main-content"
+           className="flex-1 p-[var(--spacing-md)] sm:p-[var(--spacing-lg)] md:p-[var(--spacing-xl)] bg-[var(--color-background-primary)] pb-24 md:pb-[var(--spacing-lg)] overflow-y-auto safe-area-inset focus:outline-none"
+           role="main"
+           aria-label="Conteúdo principal"
+           tabIndex={-1}
+         >
           {children}
         </main>
       </div>

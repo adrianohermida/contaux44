@@ -16,17 +16,17 @@ export default function BottomNav() {
          style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 0px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
          aria-label="Navegação principal mobile">
        <div className="flex justify-around items-center h-16">
-        {navItems.map(({ icon: Icon, label, page }) => (
-          <Link
-            key={page}
-            to={createPageUrl(page)}
-            className="flex flex-col items-center justify-center w-full h-full text-xs text-[var(--color-foreground-disabled)] hover:text-[var(--color-interactive-hover)] transition-colors min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] rounded"
-            aria-label={label}
-            title={label}
-          >
-            <Icon className="w-6 h-6 mb-1" aria-hidden="true" />
-            <span className="text-xs truncate">{label}</span>
-          </Link>
+         {navItems.map(({ icon: Icon, label, page }) => (
+           <Link
+             key={page}
+             to={createPageUrl(page)}
+             className="flex flex-col items-center justify-center w-full h-full text-[var(--font-size-xs)] text-[var(--color-foreground-disabled)] hover:text-[var(--color-interactive-hover)] transition-colors min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] rounded"
+             aria-label={label}
+             title={label}
+           >
+             <Icon className="w-6 h-6 mb-[var(--spacing-xs)]" aria-hidden="true" />
+             <span className="text-[var(--font-size-xs)] truncate">{label}</span>
+           </Link>
         ))}
       </div>
     </nav>
