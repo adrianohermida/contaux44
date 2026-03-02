@@ -9,7 +9,7 @@ import DashboardLayout from './components/dashboard/DashboardLayout';
 import ProtectedInternalRoute from './components/auth/ProtectedInternalRoute';
 import BottomNav from './components/BottomNav';
 import RouteTransition from './components/RouteTransition';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 import SecurityDashboard from './components/security/SecurityDashboard';
 import OfflineIndicator from './components/pwa/OfflineIndicator';
 import PWAInstallPrompt from './components/pwa/PWAInstallPrompt';
@@ -134,7 +134,6 @@ export default function Layout({ children, currentPageName }) {
               )}
             </DashboardLayout>
             <BottomNav />
-            <ReactQueryDevtools initialIsOpen={false} />
             </AccessibilityProvider>
           </ThemeProvider>
         </CacheProvider>
@@ -159,7 +158,6 @@ export default function Layout({ children, currentPageName }) {
             </main>
             <Footer />
           </div>
-          <ReactQueryDevtools initialIsOpen={false} />
           </AccessibilityProvider>
         </ThemeProvider>
       </CacheProvider>
