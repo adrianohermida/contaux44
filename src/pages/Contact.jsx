@@ -21,6 +21,7 @@ import ContactRelationshipManagerDialog from '../components/dashboard/contact/Co
 import ContactDeduplicationDialog from '../components/dashboard/contact/ContactDeduplicationDialog';
 import { usePagination } from '../components/hooks/usePagination';
 import { useDebounce } from '../components/hooks/useDebounce';
+import { useSortAndFilter } from '../components/hooks/useSortAndFilter';
 import { buildContactQuery, normalizeAssignments, createTagMap, getContactTags, filterBySearch, sortContacts } from '../components/dashboard/ContactQueryHelpers';
 import { withRateLimit } from '../components/security/RateLimiter';
 

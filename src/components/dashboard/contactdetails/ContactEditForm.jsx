@@ -12,7 +12,13 @@ import {
   formatCNPJ,
   formatPhone,
   formatCEP,
-} from '../ContactFormValidation';
+} from '@/functions/formatters';
+import {
+  validateCPF,
+  validateCNPJ,
+  validatePhone,
+  validateCEP,
+} from '@/functions/validators';
 
 export default function ContactEditForm({
   formData,
