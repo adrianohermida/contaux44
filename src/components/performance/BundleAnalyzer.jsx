@@ -1,76 +1,111 @@
-import React, { useState, useMemo } from 'react';
-import { Package, AlertCircle } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+/**
+ * Bundle Analyzer
+ * Tracks bundle size, chunk sizes, and provides optimization recommendations
+ */
+
+import { useEffect, useState, useCallback } from 'react';
 
 /**
- * Bundle Analyzer - Analisa tamanho do bundle
- * Identifica modules pesados, oportunidades de otimização
+ * Hook para analisar bundle size
  */
-export default function BundleAnalyzer() {
-  const [selectedModule, setSelectedModule] = useState(null);
+export function useBundleAnalyzer() {
+  const [bundleMetrics, setBundleMetrics] = useState({
+    totalSize: 0,
+    chunks: [],
+    mainBundle: 0,
+    vendorBundle: 0,
+    timestamp: null,
+  });
 
-  const bundleData = useMemo(() => [
-    { name: 'react', size: 42.5, percentage: 28, type: 'core' },
-    { name: 'react-dom', size: 38.2, percentage: 25, type: 'core' },
-    { name: 'recharts', size: 35.1, percentage: 23, type: 'charts' },
-    { name: '@tanstack/react-query', size: 18.3, percentage: 12, type: 'state' },
-    { name: 'tailwindcss', size: 8.5, percentage: 6, type: 'styling' },
-    { name: 'lucide-react', size: 5.2, percentage: 3, type: 'icons' },
-    { name: 'Other', size: 4.2, percentage: 3, type: 'other' },
-  ], []);
+  const calculateBundleSize = useCallback(() => {
+    // Use PerformanceResourceTiming to get script sizes
+    const resources = performance.getEntriesByType('resource');
+    const scripts = resources.filter(r => r.name.includes('.js'));
+    
+    const metrics = {
+      chunks: scripts.map(script => ({
+        name: script.name.split('/').pop(),
+        size: script.transferSize || script.decodedBodySize || 0,
+        gzipSize: script.transferSize || 0,
+        duration: script.duration,
+      })),
+      totalSize: scripts.reduce((sum, s) => sum + (s.transferSize || s.decodedBodySize || 0), 0),
+      timestamp: new Date().toISOString(),
+    };
 
-  const totalSize = useMemo(() => bundleData.reduce((sum, m) => sum + m.size, 0), [bundleData]);
+    // Categorize bundles
+    metrics.mainBundle = metrics.chunks
+      .filter(c => c.name.includes('main') || c.name.includes('index'))
+      .reduce((sum, c) => sum + c.size, 0);
 
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <Package className="w-5 h-5 text-blue-600" />
-        <h3 className="font-semibold">Análise de Bundle</h3>
-        <span className="ml-auto text-sm font-bold">{totalSize.toFixed(1)} KB</span>
-      </div>
+    metrics.vendorBundle = metrics.chunks
+      .filter(c => c.name.includes('vendor') || c.name.includes('node_modules'))
+      .reduce((sum, c) => sum + c.size, 0);
 
-      <Card className="p-4 space-y-3">
-        {bundleData.map((module) => (
-          <div
-            key={module.name}
-            className="space-y-1 cursor-pointer hover:bg-gray-50 p-2 rounded transition"
-            onClick={() => setSelectedModule(selectedModule === module.name ? null : module.name)}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">{module.name}</span>
-              <span className="text-xs font-bold">{module.size} KB</span>
-            </div>
-            <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
-              <div
-                className={`h-full ${
-                  module.type === 'core'
-                    ? 'bg-blue-500'
-                    : module.type === 'charts'
-                    ? 'bg-green-500'
-                    : module.type === 'state'
-                    ? 'bg-purple-500'
-                    : 'bg-gray-500'
-                }`}
-                style={{ width: `${module.percentage}%` }}
-              />
-            </div>
-            {selectedModule === module.name && (
-              <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-100 rounded">
-                <p>Tamanho: {module.size} KB ({module.percentage}% do total)</p>
-                <p>Tipo: {module.type}</p>
-                <p className="mt-1 text-blue-600">💡 Considere lazy loading para otimizar</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </Card>
+    setBundleMetrics(metrics);
+    return metrics;
+  }, []);
 
-      <Card className="p-3 bg-blue-50 border-blue-200 flex gap-2">
-        <AlertCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-blue-800">
-          Bundle atual: {totalSize.toFixed(1)} KB. Target: &lt; 200 KB. Oportunidade de redução: {(totalSize - 200).toFixed(1)} KB.
-        </p>
-      </Card>
-    </div>
-  );
+  useEffect(() => {
+    // Calculate on mount
+    setTimeout(() => {
+      calculateBundleSize();
+    }, 1000);
+
+    // Recalculate on window load
+    window.addEventListener('load', calculateBundleSize);
+    return () => window.removeEventListener('load', calculateBundleSize);
+  }, [calculateBundleSize]);
+
+  const getOptimizationScore = useCallback(() => {
+    const { totalSize } = bundleMetrics;
+    
+    // Scoring: <100KB = 100, 100-300KB = 80, 300-500KB = 60, >500KB = 40
+    if (totalSize === 0) return 0;
+    if (totalSize < 100 * 1024) return 100;
+    if (totalSize < 300 * 1024) return 80;
+    if (totalSize < 500 * 1024) return 60;
+    return 40;
+  }, [bundleMetrics.totalSize]);
+
+  const getRecommendations = useCallback(() => {
+    const { totalSize, mainBundle } = bundleMetrics;
+    const recommendations = [];
+
+    if (totalSize > 500 * 1024) {
+      recommendations.push({
+        priority: 'high',
+        title: 'Large bundle size',
+        description: `Total bundle is ${(totalSize / 1024).toFixed(0)}KB. Consider code splitting or lazy loading.`,
+      });
+    }
+
+    if (mainBundle > 200 * 1024) {
+      recommendations.push({
+        priority: 'medium',
+        title: 'Heavy main bundle',
+        description: `Main bundle is ${(mainBundle / 1024).toFixed(0)}KB. Extract vendor libraries.`,
+      });
+    }
+
+    return recommendations;
+  }, [bundleMetrics]);
+
+  const formatBytes = useCallback((bytes) => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }, []);
+
+  return {
+    bundleMetrics,
+    getOptimizationScore,
+    getRecommendations,
+    formatBytes,
+    calculateBundleSize,
+  };
 }
+
+export default useBundleAnalyzer;
