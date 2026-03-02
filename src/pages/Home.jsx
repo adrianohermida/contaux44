@@ -8,16 +8,22 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Hero Section */}
-      <section id="home" className="bg-gradient-to-br from-blue-50 to-slate-50 py-12 sm:py-20">
+      <section id="home" className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-slate-900 dark:to-slate-800 py-12 sm:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
-            <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">Contabilidade Especializada para Advogados e Escritórios de Advocacia</h1>
-            <p className="text-lg sm:text-xl text-slate-600 mb-8">Serviços de cálculo, emissão de guias, pareceres e planos de pagamento.</p>
+            <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-4 leading-tight">
+              Contabilidade Especializada para Advogados e Escritórios de Advocacia
+            </h1>
+            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 mb-8">
+              Serviços de cálculo, emissão de guias, pareceres e planos de pagamento.
+            </p>
             <Link 
               to={createPageUrl('Contact')}
-              className="inline-block px-6 sm:px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label="Criar conta grátis na Contaux"
             >
               Crie sua conta grátis
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </div>
         </div>
